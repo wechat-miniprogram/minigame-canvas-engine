@@ -1,8 +1,9 @@
 # minigame-canvas-engine
 
-[![](https://img.shields.io/npm/l/wxml-to-canvas)](https://github.com/yuanzm/opendatacontextenginetest)
+[![npm version](https://badge.fury.io/js/minigame-canvas-engine.svg)](https://badge.fury.io/js/minigame-canvas-engine)
 [![Build Status](https://travis-ci.org/wechat-miniprogram/minigame-canvas-engine.svg?branch=master)](https://travis-ci.org/wechat-miniprogram/minigame-canvas-engine)
 [![Coverage Status](https://coveralls.io/repos/github/wechat-miniprogram/minigame-canvas-engine/badge.svg?branch=master)](https://coveralls.io/github/wechat-miniprogram/minigame-canvas-engine?branch=master)
+[![](https://img.shields.io/npm/l/wxml-to-canvas)](https://github.com/yuanzm/opendatacontextenginetest)
 
 ## 简介
 对小游戏游戏开发而言，开放数据域开发一直存在引入游戏引擎导致代码包体积偏大和利用canvas原生开发绘制界面麻烦的矛盾。其实对于大部分小游戏而言，开放数据域仅仅需要绘制一个可滚动的游戏列表和添加一些简单的点击交互，这和常见的Web开发非常相似。本项目旨在引入一段相对游戏引擎而言体积非常小的通用库后以Web开发的方式开发canvas界面，因此，本项目仅支持简单的UI绘制，不会支持动画等功能。
@@ -22,9 +23,12 @@
 
 ## 安装使用
 
- 1. 克隆本项目到合适的文件夹
+ 1. 克隆本项目到合适的文件夹或者通过npm安装（参考[小程序npm支持](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html))
  ```
+    // git安装方式
     git clone https://github.com/wechat-miniprogram/minigame-canvas-engine
+    // npm安装方式
+    npm install  --save minigame-canvas-engine
  ```
 
  2. 引用渲染引擎：
