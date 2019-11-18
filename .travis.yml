@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - 10
+sudo: false
+install:
+  - npm install -g coveralls
+  - npm install
+script:
+  - npm run coverage-report
