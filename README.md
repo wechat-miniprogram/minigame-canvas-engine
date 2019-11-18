@@ -1,9 +1,8 @@
 # minigame-open-data-context-engine
 
 [![](https://img.shields.io/npm/l/wxml-to-canvas)](https://github.com/yuanzm/opendatacontextenginetest)
-[![](https://travis-ci.org/yuanzm/opendatacontextenginetest.svg?branch=master)](https://travis-ci.org/yuanzm/opendatacontextenginetest)
-[![Coverage Status](https://coveralls.io/repos/github/yuanzm/opendatacontextenginetest/badge.svg)](https://coveralls.io/github/yuanzm/opendatacontextenginetest)
-
+[![Build Status](https://travis-ci.org/wechat-miniprogram/minigame-canvas-engine.svg?branch=master)](https://travis-ci.org/wechat-miniprogram/minigame-canvas-engine)
+[![Coverage Status](https://coveralls.io/repos/github/wechat-miniprogram/minigame-canvas-engine/badge.svg?branch=master)](https://coveralls.io/github/wechat-miniprogram/minigame-canvas-engine?branch=master)
 
 ## 简介
 对小游戏游戏开发而言，开放数据域开发一直存在引入游戏引擎导致代码包体积偏大和利用canvas原生开发绘制界面麻烦的矛盾。其实对于大部分小游戏而言，开放数据域仅仅需要绘制一个可滚动的游戏列表和添加一些简单的点击交互，这和常见的Web开发非常相似。本项目旨在引入一段相对游戏引擎而言体积非常小的通用库后以Web开发的方式开发canvas界面，因此，本项目仅支持简单的UI绘制，不会支持动画等功能。
