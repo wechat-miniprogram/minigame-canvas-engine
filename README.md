@@ -1,4 +1,4 @@
-# minigame-open-data-context-engine
+# minigame-canvas-engine
 
 [![](https://img.shields.io/npm/l/wxml-to-canvas)](https://github.com/yuanzm/opendatacontextenginetest)
 [![Build Status](https://travis-ci.org/wechat-miniprogram/minigame-canvas-engine.svg?branch=master)](https://travis-ci.org/wechat-miniprogram/minigame-canvas-engine)
@@ -12,7 +12,7 @@
 对于上述问题，最麻烦的是计算一颗树的布局，得出每个元素的位置和尺寸属性，幸运的是，早已有人造出这样的[轮子](https://www.npmjs.com/package/css-layout)，乍一看觉得这库没什么用，实际上非常契合canvas的场景：没有DOM，纯JavaScript实现CSS的子集，包括flexbox和box模型。当最麻烦的布局解决之后，就需要将每个元素按照canvas的API将borderColor、textAlign、color等属性表达出来，本项目应运而生。
 
 ## web端调试
-为了方便UI调试，可以在线编辑预览效果: [Playground](https://yuanzm.github.io/opendatacontextenginetest)
+为了方便UI调试，可以在线编辑预览效果: [Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/)
 
 ## 效果预览
 ![screenshot](docs/imgs/screenshot.gif)
