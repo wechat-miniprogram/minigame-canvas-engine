@@ -1,5 +1,6 @@
 export default
-`/**
+`
+/**
   * xml为编辑器实例，挂载到window对象，通过xml.getValue可以拿到模板字符串
   * style为编辑器实例，挂载到window对象，通过style.getValue可以拿到样式对象的字符串值
   */
@@ -10,7 +11,7 @@ let styleValue = style.getValue();
 let item = {
     nickname: "zim",
     rankScore: 1,
-    avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191111/Buffet_icon_GiftPlate.png',
+    avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
     starSum: 1,
 };
 let datasource =  {
@@ -52,6 +53,12 @@ function getElementPagePosition(element){
 let canvas = document.getElementById('canvas');
 let context = canvas.getContext('2d');
 
+// 设置canvas的尺寸和样式的container比例一致
+canvas.style.width = 300 + 'px';
+canvas.style.height = 1680 / 1100 * 300 + 'px';
+canvas.width = 1100;
+canvas.height = 1680;
+
 function init() {
     let pos = getElementPagePosition(canvas);
     Layout.clear();
@@ -68,5 +75,5 @@ function init() {
 }
 
 init();
-window.onresize = init;`;
-
+window.onresize = init;
+`

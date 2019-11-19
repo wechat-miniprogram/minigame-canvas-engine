@@ -102,13 +102,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var localTemplate = localStorage.getItem('template');
+var localCss = localStorage.getItem('css');
+var localJs = localStorage.getItem('js');
 
 
 
 window.doT = dot__WEBPACK_IMPORTED_MODULE_5___default.a;
 window.CodeMirror = codemirror__WEBPACK_IMPORTED_MODULE_3___default.a;
 window.Layout = _index__WEBPACK_IMPORTED_MODULE_4___default.a;
-/*require('codemirror/lib/codemirror.css');*/
 
 __webpack_require__(7);
 
@@ -127,18 +129,12 @@ __webpack_require__(13);
 __webpack_require__(14);
 
 window.xml = codemirror__WEBPACK_IMPORTED_MODULE_3___default()(document.getElementById("xml"), {
-  value: _template_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+  value: localTemplate || _template_js__WEBPACK_IMPORTED_MODULE_0__["default"],
   mode: "text/html",
-  lineNumbers: true,
-  matchTags: {
-    bothTags: true
-  },
-  extraKeys: {
-    "Ctrl-J": "toMatchingTag"
-  }
+  lineNumbers: true
 });
 window.style = codemirror__WEBPACK_IMPORTED_MODULE_3___default()(document.getElementById("style"), {
-  value: _style_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  value: localCss || _style_js__WEBPACK_IMPORTED_MODULE_1__["default"],
   lineNumbers: true,
   mode: "text/javascript",
   matchTags: {
@@ -149,7 +145,7 @@ window.style = codemirror__WEBPACK_IMPORTED_MODULE_3___default()(document.getEle
   }
 });
 window.js = codemirror__WEBPACK_IMPORTED_MODULE_3___default()(document.getElementById("js"), {
-  value: _js_js__WEBPACK_IMPORTED_MODULE_2__["default"],
+  value: localJs || _js_js__WEBPACK_IMPORTED_MODULE_2__["default"],
   lineNumbers: true,
   mode: "text/javascript",
   matchTags: {
@@ -165,7 +161,11 @@ function run() {
 
   try {
     eval(window.js.getValue());
+    localStorage.setItem('template', window.xml.getValue());
+    localStorage.setItem('css', window.style.getValue());
+    localStorage.setItem('js', window.js.getValue());
   } catch (e) {
+    console.log(e);
     document.getElementById('error').innerHTML = e;
   }
 }
@@ -176,13 +176,22 @@ document.getElementById('run').onclick = function () {
   run();
 };
 
+document.getElementById('reset').onclick = function () {
+  window.xml.setValue(_template_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  window.style.setValue(_style_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+  window.js.setValue(_js_js__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  setTimeout(function () {
+    run();
+  }, 0);
+};
+
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<view class=\"container\" id=\"main\">\n    <view class=\"rankList\">\n        <scrollview class=\"list\">\n            {{~it.data :item:index}}\n                <view class=\"listItem\">\n                    <text class=\"listItemNum\" value=\"{{= index + 1}}\"></text>\n                    <image class=\"listHeadImg\" src=\"{{= item.avatarUrl }}\"></image>\n                    <view class=\"infoContainer\">\n                        <view class=\"nameContainer\">\n                            <text class=\"itemListName\" value=\"{{= item.nickname}}\"></text>\n                        </view>\n                        <view class=\"scoreContainer\">\n                            <image class=\"listStarImg\" src=\"https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191111/UI_Icon_Rating.png\"></image>\n                            <text class=\"listScore\" value =\"{{=item.starSum}}\"></text>\n                        </view>\n                    </view>\n                    <view class=\"giftBtnContainer\">\n                        <image class = \"giftBtn\" id=\"img{{=index}}\" src=\"https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191111/Buffet_icon_GiftPlate.png\"></image>\n                    </view>\n                </view>\n            {{~}}\n        </scrollview>\n        <view class=\"selfRank\">\n            <text class=\"listItemNum\" value=\"{{= it.selfIndex || 1}}\"></text>\n            <image class=\"listHeadImg\" src=\"{{= it.self.avatarUrl }}\"></image>\n            <text class=\"selfListName\" value=\"{{= it.self.nickname}}\"></text>\n            <image class=\"selfListStarImg\" src=\"https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191111/UI_Icon_Rating.png\"></image>\n            <text class=\"listScore\" value =\"{{= it.self.starSum}}\"></text>\n        </view>\n    </view>\n</view>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("\n<view class=\"container\" id=\"main\">\n  <view class=\"header\">\n    <text class=\"title\" value=\"\u6392\u884C\u699C\"></text>\n  </view>\n  <view class=\"rankList\">\n        <scrollview class=\"list\">\n            {{~it.data :item:index}}\n                {{? index % 2 === 1 }}\n                <view class=\"listItem listItemOld\">\n                {{?}}\n                {{? index % 2 === 0 }}\n                <view class=\"listItem\">\n                {{?}}\n                    <text class=\"listItemNum\" value=\"{{= index + 1}}\"></text>\n                    <image class=\"listHeadImg\" src=\"{{= item.avatarUrl }}\"></image>\n                  <text class=\"listItemName\" value=\"{{= item.nickname}}\"></text>\n                  <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n                  <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n                </view>\n            {{~}}\n        </scrollview>\n        <text class=\"listTips\" value=\"\u4EC5\u5C55\u793A\u524D50\u4F4D\u597D\u53CB\u6392\u540D\"></text>\n\n        <view class=\"listItem selfListItem\">\n            <text class=\"listItemNum\" value=\"{{= it.selfIndex}}\"></text>\n            <image class=\"listHeadImg\" src=\"{{= it.self.avatarUrl }}\"></image>\n            <text class=\"listItemName\" value=\"{{= it.self.nickname}}\"></text>\n            <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n            <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n        </view>\n    </view>\n</view>\n");
 
 /***/ }),
 /* 2 */
@@ -190,7 +199,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("window.styleValue = {\n    container: {\n        width: 1100,\n        height: 1600,\n    },\n\n    rankList: {\n        width: 1100,\n        height: 1580,\n        backgroundColor: '#FCF5EA',\n    },\n\n    selfRank: {\n        marginTop : 10,\n        borderRadius : 60,\n        // position : 'absolute',\n        width: 1100,\n        height: 194,\n        flexDirection: 'row',\n        alignItems: 'center',\n        backgroundColor : '#FFD975',\n    },\n\n    list: {\n        width: 1100,\n        height: 1350,\n    },\n\n    groupList :{\n        width: 1100,\n        height: 1350,\n    },\n\n    listItem: {\n        borderRadius : 60,\n        backgroundColor: '#F4E6C4',\n        marginLeft : 10,\n        marginBottom : 40,\n        width: 1080,\n        height: 194,\n        flexDirection: 'row',\n        alignItems: 'center',\n    },\n\n    listItemBgWhite: {\n        backgroundColor: '#ffffff',\n    },\n\n    listItemNum: {\n        fontSize: 52,\n        fontWeight: 'bold',\n        color: '#452E27',\n        lineHeight: 90,\n        height: 90,\n        textAlign: 'center',\n        width: 120,\n    },\n\n    listHeadImgSp: {\n        borderRadius: 4,\n        width: 100,\n        height: 100,\n    },\n\n    listHeadImg: {\n        borderRadius: 4,\n        width: 100,\n        height: 100,\n    },\n    kingContainer: {\n        position : 'absolute',\n        left: 130,\n        top : -10,\n        width: 80,\n        height: 220,\n    },\n\n    kingImg: {\n        width: 80,\n        height: 220,\n    },\n\n    infoContainer:{\n        marginLeft : 20,\n    },\n\n    scoreContainer : {\n        width: 500,\n        // backgroundColor : '#f8f8f8',\n        flexDirection: 'row',\n        alignItems: 'center',\n    },\n\n    listStarImg: {\n        width: 50,\n        height: 50,\n        marginLeft: 60,\n    },\n\n    selfListStarImg : {\n        width: 50,\n        height: 50,\n    },\n\n    nameContainer:{\n        width: 500,\n        height: 60,\n        marginBottom : 10,\n    },\n\n    listName: {\n        fontSize: 52,\n        fontWeight: 'bold',\n        color: '#452E27',\n        height: 60,\n        lineHeight: 60,\n        width: 230,\n    },\n\n    listScore: {\n        fontSize: 48,\n        fontWeight: 'bold',\n        color: '#452E27',\n        marginLeft : 10,\n        marginTop : 10,\n        // backgroundColor : \"8f8f8f\",\n        height: 48,\n        lineHeight: 48,\n        width: 300,\n        // textAlign: 'left',\n    },\n\n    itemListName:{\n        fontSize: 52,\n        fontWeight: 'bold',\n        color: '#452E27',\n        height: 60,\n        lineHeight: 60,\n        width: 230,\n        marginLeft : 60,\n    },\n\n    selfListName: {\n        fontSize: 52,\n        fontWeight: 'bold',\n        color: '#452E27',\n        height: 60,\n        lineHeight: 60,\n        width: 550,\n        textAlign: 'center',\n    },\n\n    listScoreUnit: {\n        opacity: 0.5,\n        color: '#000000',\n        fontSize: 20,\n        height: 100,\n        lineHeight: 100,\n        marginLeft: 8,\n    },\n\n    giftBtnContainer: {\n        position : 'absolute',\n        top : 40,\n        right: 40,\n        width : 100,\n        height : 106,\n    },\n\n    giftBtn: {\n        alignItems: 'center',\n        width : 100,\n        height : 106,\n    },\n\n    selfListItem: {\n        borderRadius: 10,\n        backgroundColor: '#ffffff',\n    },\n}\n");
+/* harmony default export */ __webpack_exports__["default"] = ("\n\nwindow.styleValue = {\n    container: {\n        width: 1100,\n        height: 1680,\n        borderRadius: 10,\n    },\n\n    header: {\n        height: 150,\n        width: 1100,\n        flexDirection: 'column',\n        alignItems: 'center',\n      \tbackgroundColor: '#ffffff',\n    },\n\n    title: {\n        width: 250,\n        fontSize: 60,\n        height: 150,\n        lineHeight: 150,\n        textAlign: 'center',\n        fontWeight: 'bold',\n        borderBottomWidth: 5,\n        borderColor: '#000000',\n    },\n\n    rankList: {\n        width: 1100,\n        height: 1530,\n    },\n\n    list: {\n        width: 1100,\n        height: 1200,\n      \tbackgroundColor: '#ffffff',\n    },\n\n    listItem: {\n        backgroundColor: '#F7F7F7',\n        width: 1100,\n        height: 194,\n        flexDirection: 'row',\n        alignItems: 'center',\n    },\n\n    listItemOld: {\n       backgroundColor: '#ffffff',\n    },\n\n    listItemNum: {\n        fontSize: 52,\n        fontWeight: 'bold',\n        color: '#452E27',\n        lineHeight: 90,\n        height: 90,\n        textAlign: 'center',\n        width: 120,\n    },\n\n    listHeadImg: {\n        borderRadius: 4,\n        width: 100,\n        height: 100,\n    },\n\n    listName: {\n        fontSize: 52,\n        fontWeight: 'bold',\n        color: '#452E27',\n        height: 60,\n        lineHeight: 60,\n        width: 230,\n    },\n\n    listItemScore: {\n        fontSize: 48,\n        fontWeight: 'bold',\n        color: '#452E27',\n        marginLeft : 10,\n        height: 48,\n        lineHeight: 48,\n        width: 320,\n        textAlign: 'right',\n    },\n\n    listItemName:{\n        fontSize: 52,\n        fontWeight: 'bold',\n        color: '#452E27',\n        height: 60,\n        lineHeight: 60,\n        width: 400,\n        marginLeft : 60,\n    },\n\n    listScoreUnit: {\n        opacity: 0.5,\n        color: '#000000',\n        fontSize: 45,\n        height: 100,\n        lineHeight: 100,\n        marginLeft: 8,\n    },\n\n    selfListItem: {\n        borderRadius: 20,\n        marginTop: 50,\n        backgroundColor: '#ffffff',\n    },\n\n  \tlistTips: {\n      \twidth: 1100,\n        height: 100,\n      \tlineHeight: 100,\n      \ttextAlign: 'center',\n      \tfontSize: 40,\n      \tcolor: 'rgba(0,0,0,0.5)',\n      \tbackgroundColor: '#ffffff',\n        borderRadius: 10,\n      \tborderTopWidth: 2,\n      \tborderTopColor: '#000000',\n    }\n}\n");
 
 /***/ }),
 /* 3 */
@@ -198,7 +207,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("/**\n  * xml\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7xml.getValue\u53EF\u4EE5\u62FF\u5230\u6A21\u677F\u5B57\u7B26\u4E32\n  * style\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7style.getValue\u53EF\u4EE5\u62FF\u5230\u6837\u5F0F\u5BF9\u8C61\u7684\u5B57\u7B26\u4E32\u503C\n  */\nlet xmlValue   = xml.getValue();\nlet styleValue = style.getValue();\n\n// \u521B\u5EFAmock\u6570\u636E\nlet item = {\n    nickname: \"zim\",\n    rankScore: 1,\n    avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191111/Buffet_icon_GiftPlate.png',\n    starSum: 1,\n};\nlet datasource =  {\n    data     :[],\n    selfIndex: 0,\n    self     : item\n}\nfor ( let i = 0; i < 20;i++ ) {\n    var cp = JSON.parse(JSON.stringify(item));\n    cp.rankScore = i + 1;\n    cp.starSum   = i + 1;\n    datasource.data.push(cp);\n}\n\n// \u5C06XML\u6A21\u677F\u7F16\u8BD1\u6210XML\u5B57\u7B26\u4E32\nlet tempFn     = doT.template(xmlValue);\nlet resultText = tempFn(datasource);\n\n// \u83B7\u53D6\u5143\u7D20\u7684\u7EDD\u5BF9\u4F4D\u7F6E\u5750\u6807\uFF08\u50CF\u5BF9\u4E8E\u9875\u9762\u5DE6\u4E0A\u89D2\uFF09\nfunction getElementPagePosition(element){\n  //\u8BA1\u7B97x\u5750\u6807\n  var actualLeft = element.offsetLeft;\n  var current = element.offsetParent;\n  while (current !== null){\n    actualLeft += current.offsetLeft;\n    current = current.offsetParent;\n  }\n  //\u8BA1\u7B97y\u5750\u6807\n  var actualTop = element.offsetTop;\n  var current = element.offsetParent;\n  while (current !== null){\n    actualTop += (current.offsetTop+current.clientTop);\n    current = current.offsetParent;\n  }\n  //\u8FD4\u56DE\u7ED3\u679C\n  return {x: actualLeft, y: actualTop}\n}\n\nlet canvas = document.getElementById('canvas');\nlet context = canvas.getContext('2d');\n\nfunction init() {\n    let pos = getElementPagePosition(canvas);\n    Layout.clear();\n    Layout.init(resultText, eval(styleValue));\n    Layout.updateViewPort({\n        x     : pos.x,\n        y     : pos.y,\n        width : canvas.offsetWidth,\n        height: canvas.offsetHeight,\n    });\n\n    Layout.layout(context);\n\n}\n\ninit();\nwindow.onresize = init;");
+/* harmony default export */ __webpack_exports__["default"] = ("\n/**\n  * xml\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7xml.getValue\u53EF\u4EE5\u62FF\u5230\u6A21\u677F\u5B57\u7B26\u4E32\n  * style\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7style.getValue\u53EF\u4EE5\u62FF\u5230\u6837\u5F0F\u5BF9\u8C61\u7684\u5B57\u7B26\u4E32\u503C\n  */\nlet xmlValue   = xml.getValue();\nlet styleValue = style.getValue();\n\n// \u521B\u5EFAmock\u6570\u636E\nlet item = {\n    nickname: \"zim\",\n    rankScore: 1,\n    avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',\n    starSum: 1,\n};\nlet datasource =  {\n    data     :[],\n    selfIndex: 0,\n    self     : item\n}\nfor ( let i = 0; i < 20;i++ ) {\n    var cp = JSON.parse(JSON.stringify(item));\n    cp.rankScore = i + 1;\n    cp.starSum   = i + 1;\n    datasource.data.push(cp);\n}\n\n// \u5C06XML\u6A21\u677F\u7F16\u8BD1\u6210XML\u5B57\u7B26\u4E32\nlet tempFn     = doT.template(xmlValue);\nlet resultText = tempFn(datasource);\n\n// \u83B7\u53D6\u5143\u7D20\u7684\u7EDD\u5BF9\u4F4D\u7F6E\u5750\u6807\uFF08\u50CF\u5BF9\u4E8E\u9875\u9762\u5DE6\u4E0A\u89D2\uFF09\nfunction getElementPagePosition(element){\n  //\u8BA1\u7B97x\u5750\u6807\n  var actualLeft = element.offsetLeft;\n  var current = element.offsetParent;\n  while (current !== null){\n    actualLeft += current.offsetLeft;\n    current = current.offsetParent;\n  }\n  //\u8BA1\u7B97y\u5750\u6807\n  var actualTop = element.offsetTop;\n  var current = element.offsetParent;\n  while (current !== null){\n    actualTop += (current.offsetTop+current.clientTop);\n    current = current.offsetParent;\n  }\n  //\u8FD4\u56DE\u7ED3\u679C\n  return {x: actualLeft, y: actualTop}\n}\n\nlet canvas = document.getElementById('canvas');\nlet context = canvas.getContext('2d');\n\n// \u8BBE\u7F6Ecanvas\u7684\u5C3A\u5BF8\u548C\u6837\u5F0F\u7684container\u6BD4\u4F8B\u4E00\u81F4\ncanvas.style.width = 300 + 'px';\ncanvas.style.height = 1680 / 1100 * 300 + 'px';\ncanvas.width = 1100;\ncanvas.height = 1680;\n\nfunction init() {\n    let pos = getElementPagePosition(canvas);\n    Layout.clear();\n    Layout.init(resultText, eval(styleValue));\n    Layout.updateViewPort({\n        x     : pos.x,\n        y     : pos.y,\n        width : canvas.offsetWidth,\n        height: canvas.offsetHeight,\n    });\n\n    Layout.layout(context);\n\n}\n\ninit();\nwindow.onresize = init;\n");
 
 /***/ }),
 /* 4 */
@@ -14212,6 +14221,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         ctx.lineWidth = style.borderWidth || 0;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
+        this.renderBorder(ctx);
         ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
         ctx.restore();
 

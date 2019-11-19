@@ -133,6 +133,8 @@ export default class Image extends Element {
         let drawX = box.absoluteX;
         let drawY = box.absoluteY;
 
+        this.renderBorder(ctx);
+
         ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
 
         ctx.restore();

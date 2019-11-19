@@ -4,13 +4,6 @@
 <meta charset="utf-8"/>
 <link rel="stylesheet" type="text/css" href="css/codemirror.css">
 <style>
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(//themes.googleusercontent.com/static/fonts/sourcesanspro/v5/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
-}
-
 body, html { margin: 0; padding: 0; height: 100%; }
 section, article { display: block; padding: 0; }
 
@@ -325,16 +318,25 @@ strong {
 }
 
 .button {
-    width: 40px;
     height: 20px;
     line-height: 20px;
     text-align: center;
     border:solid 1px rgb(216, 216, 216);
     border-radius: 13px;
-    padding-bottom: 2px;
+    padding: 2px 10px;
     cursor: pointer;
-    margin: 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
 }
+
+#run {
+    margin-left: 10px;
+}
+
+
 .button a {
     text-underline: none;
 }
@@ -344,6 +346,10 @@ strong {
     max-heigth: 100px;
     overflow: scroll;
     color: red;
+}
+
+.result {
+    background-color: #f5f5f5;
 }
 
 </style>
@@ -362,8 +368,9 @@ strong {
     <div id="js" class="code__content"></div>
 </div>
 
-<div class="code">
+<div class="code result">
     <div class="button" id="run">run</div>
+    <div class="button" id="reset">reset</div>
     <div class="code__tag">result</div>
 
     <div id="error"></div>

@@ -3558,6 +3558,7 @@ function (_Element) {
       ctx.lineWidth = style.borderWidth || 0;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
+      this.renderBorder(ctx);
       ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
       ctx.restore();
 

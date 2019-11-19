@@ -1,32 +1,34 @@
 export default
-`<view class="container" id="main">
-    <view class="rankList">
+`
+<view class="container" id="main">
+  <view class="header">
+    <text class="title" value="排行榜"></text>
+  </view>
+  <view class="rankList">
         <scrollview class="list">
             {{~it.data :item:index}}
+                {{? index % 2 === 1 }}
+                <view class="listItem listItemOld">
+                {{?}}
+                {{? index % 2 === 0 }}
                 <view class="listItem">
+                {{?}}
                     <text class="listItemNum" value="{{= index + 1}}"></text>
                     <image class="listHeadImg" src="{{= item.avatarUrl }}"></image>
-                    <view class="infoContainer">
-                        <view class="nameContainer">
-                            <text class="itemListName" value="{{= item.nickname}}"></text>
-                        </view>
-                        <view class="scoreContainer">
-                            <image class="listStarImg" src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191111/UI_Icon_Rating.png"></image>
-                            <text class="listScore" value ="{{=item.starSum}}"></text>
-                        </view>
-                    </view>
-                    <view class="giftBtnContainer">
-                        <image class = "giftBtn" id="img{{=index}}" src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191111/Buffet_icon_GiftPlate.png"></image>
-                    </view>
+                  <text class="listItemName" value="{{= item.nickname}}"></text>
+                  <text class="listItemScore" value="{{= item.rankScore}}"></text>
+                  <text class="listScoreUnit" value="分"></text>
                 </view>
             {{~}}
         </scrollview>
-        <view class="selfRank">
-            <text class="listItemNum" value="{{= it.selfIndex || 1}}"></text>
+        <text class="listTips" value="仅展示前50位好友排名"></text>
+
+        <view class="listItem selfListItem">
+            <text class="listItemNum" value="{{= it.selfIndex}}"></text>
             <image class="listHeadImg" src="{{= it.self.avatarUrl }}"></image>
-            <text class="selfListName" value="{{= it.self.nickname}}"></text>
-            <image class="selfListStarImg" src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191111/UI_Icon_Rating.png"></image>
-            <text class="listScore" value ="{{= it.self.starSum}}"></text>
+            <text class="listItemName" value="{{= it.self.nickname}}"></text>
+            <text class="listItemScore" value="{{= item.rankScore}}"></text>
+            <text class="listScoreUnit" value="分"></text>
         </view>
     </view>
 </view>
