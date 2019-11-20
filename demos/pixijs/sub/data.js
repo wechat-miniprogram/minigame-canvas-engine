@@ -1,6 +1,6 @@
-import {
-    getCurrTime
-} from './time.js';
+function getCurrTime() {
+    return parseInt(+new Date() / 1000);
+}
 
 function none() {}
 
@@ -19,17 +19,25 @@ export function getUserInfo(callback = none) {
 
 export function getDataFromSource(item) {
     let source;
-    try {
-        source = JSON.parse(item.KVDataList[0].value);
-    } catch(e) {
-        source = {
-            "wxgame":{
-                "score"      : 0,
-                "update_time": getCurrTime()
-            }
+    // try {
+    //     source = JSON.parse(item.KVDataList[0].value);
+    // } catch(e) {
+    //     source = {
+    //         "wxgame":{
+    //             "rankScore"      : 0,
+    //             "update_time": getCurrTime()
+    //         }
+    //     }
+    // }
+
+    /******debug******/
+    source = {
+        "wxgame":{
+            "rankScore"  : 0,
+            "update_time": getCurrTime()
         }
     }
-
+    /******debug******/
     return source.wxgame;
 }
 
@@ -38,7 +46,9 @@ export function getDataFromSource(item) {
  * @param { Array } list
  * @param { Object } selfData: 通过getUserInfo拿到的用户信息
  */
+
 export function findSelf(list, selfData) {
+    // console.log("selfData",  selfData);
     let result = {
         index: -1,
         self : null,
@@ -47,12 +57,21 @@ export function findSelf(list, selfData) {
     list.forEach( (item, index) => {
         if ( item.avatarUrl === selfData.avatarUrl ) {
             result.self       = item;
+            let { rankScore, update_time } = getDataFromSource(item);
 
-            let { score, update_time } = getDataFromSource(item);
-
-            result.self.score       = score;
+            result.self.rankScore       = rankScore;
             result.self.update_time = update_time;
             result.index            = index;
+        }
+        else {
+            /******debug******/
+            result.self       = item;
+            let { rankScore, update_time } = getDataFromSource(item);
+
+            result.self.rankScore       = rankScore;
+            result.self.update_time = update_time;
+            result.index            = index;
+            /******debug******/
         }
     });
 
@@ -65,10 +84,10 @@ export function findSelf(list, selfData) {
  * 所以如果拉取排行榜之前已经知道用户的分数了，可以getFriendCloudStorage然后手动插入数据
  * 可以大大提高拉取速度
  */
-export function injectSelfToList(list, userinfo, score) {
+export function injectSelfToList(list, userinfo, rankScore) {
     let item = {
         rank: 1,
-        score,
+        rankScore,
         avatarUrl: userinfo.avatarUrl,
         nickname : userinfo.nickname || userinfo.nickName,
     }
@@ -76,11 +95,11 @@ export function injectSelfToList(list, userinfo, score) {
     list.push(item);
 }
 
-export function replaceSelfDataInList(list, info, score) {
+export function replaceSelfDataInList(list, info, rankScore) {
     list.forEach( (item) => {
         if (   item.avatarUrl === info.avatarUrl
-            && score > item.score ) {
-            item.score = score;
+            && rankScore > item.rankScore ) {
+            item.rankScore = rankScore;
         }
     });
 }
@@ -92,11 +111,14 @@ export function getFriendData(key, callback = none) {
     wx.getFriendCloudStorage({
         keyList: [key],
         success: res => {
+
+            /*****debug*****/
             res.data = res.data.filter( item => item.KVDataList.length );
+            /*****debug*****/
 
             let data = res.data.map( item => {
-                let { score, update_time } = getDataFromSource(item);
-                item.score       = score;
+                let { rankScore, update_time } = getDataFromSource(item);
+                item.rankScore       = rankScore;
                 item.update_time = update_time;
 
                 return item;
@@ -115,9 +137,9 @@ export function getFriendData(key, callback = none) {
  * 拉取用户当前的分数记录，如果当前分数大于历史最高分数，执行上报
  */
 export function setUserRecord(key, userData, startTime) {
-    let score = userData.score;
+    let rankScore = userData.rankScore;
 
-    if ( score === undefined || score === null ) {
+    if ( rankScore === undefined || rankScore === null ) {
         return;
     }
 
@@ -130,18 +152,18 @@ export function setUserRecord(key, userData, startTime) {
         success: data => {
             // 查找个人的最高历史记录
             if ( data.KVDataList.length > 0 ) {
-                let { score, update_time} = getDataFromSource(data);
-                record           = score;
+                let { rankScore, update_time} = getDataFromSource(data);
+                record           = rankScore;
                 last_update_time = update_time;
             }
 
-            if ( score > record || last_update_time < startTime ) {
+            if ( rankScore > record || last_update_time < startTime ) {
                 wx.setUserCloudStorage({
                     KVDataList: [
                         {   key  : key,
                             value: JSON.stringify({
                                 wxgame: {
-                                    score,
+                                    rankScore,
                                     update_time: time,
                                 }
                             })

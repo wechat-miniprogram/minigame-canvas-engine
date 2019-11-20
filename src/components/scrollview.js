@@ -7,6 +7,8 @@ import {
     createCanvas,
 } from '../common/util.js';
 
+let id = 0;
+
 const canvasPool = new Pool('canvasPool');
 
 export default class ScrollView extends View {
@@ -172,12 +174,6 @@ export default class ScrollView extends View {
             if (   startY < this.pageHeight * ( i + 1 )
                 && endY > this.pageHeight * i  ) {
 
-                // let start = new Date();
-                // this.canvasMap[i].elements.forEach( ele => {
-                //     ele.element.insert(this.canvasMap[i].context, ele.box);
-                // });
-                // console.log(new Date() - start);
-
                 /**
                  * 这里不能按照box.width * box.height的区域去裁剪
                  * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
@@ -235,6 +231,7 @@ export default class ScrollView extends View {
 
             this.renderChildren(child);
         });
+
     }
 
     insertElements(pageIndex) {
@@ -243,22 +240,14 @@ export default class ScrollView extends View {
 
         can.width  = this.renderport.width;
         can.height = this.pageHeight;
+        ctx.id     = ++id;
 
         this.canvasMap[pageIndex].canvas  = can;
         this.canvasMap[pageIndex].context = ctx;
 
-        /*canvasPool.set(pageIndex, this.canvasMap[pageIndex]);*/
-        /*let ctx = this.canvasMap[pageIndex].context;*/
-
-        // console.log('elements count', this.canvasMap[pageIndex].elements.length);
-
-        // let start2 = new Date();
-
         this.canvasMap[pageIndex].elements.forEach( ele => {
             ele.element.insert(ctx, ele.box);
         });
-
-        // console.log(new Date() - start2);
 
         if ( pageIndex < this.pageCount - 1 ) {
             let timer = setTimeout(() => {

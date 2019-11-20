@@ -96,7 +96,7 @@ export default class Text extends Element {
         let drawX = box.absoluteX;
         let drawY = box.absoluteY;
 
-        this.renderBorder(ctx);
+        this.renderBorder(ctx, layoutBox);
 
         if ( style.backgroundColor ) {
             ctx.fillStyle = style.backgroundColor;

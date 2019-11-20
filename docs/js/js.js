@@ -21,7 +21,7 @@ let datasource =  {
 }
 for ( let i = 0; i < 20;i++ ) {
     var cp = JSON.parse(JSON.stringify(item));
-    cp.rankScore = i + 1;
+    cp.rankScore = Math.floor(Math.random()*1000+1)
     cp.starSum   = i + 1;
     datasource.data.push(cp);
 }
@@ -55,9 +55,9 @@ let context = canvas.getContext('2d');
 
 // 设置canvas的尺寸和样式的container比例一致
 canvas.style.width = 300 + 'px';
-canvas.style.height = 1680 / 1100 * 300 + 'px';
-canvas.width = 1100;
-canvas.height = 1680;
+canvas.style.height = 1410/ 960* 300 + 'px';
+canvas.width = 960;
+canvas.height = 1410;
 
 function init() {
     let pos = getElementPagePosition(canvas);

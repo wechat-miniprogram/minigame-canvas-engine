@@ -1,5 +1,4 @@
-export default
-`
+const template = `
 <view class="container" id="main">
   <view class="header">
     <text class="title" value="排行榜"></text>
@@ -32,5 +31,5 @@ export default
         </view>
     </view>
 </view>
+`;
 
-`

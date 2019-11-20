@@ -191,7 +191,7 @@ document.getElementById('reset').onclick = function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("\n<view class=\"container\" id=\"main\">\n  <view class=\"header\">\n    <text class=\"title\" value=\"\u6392\u884C\u699C\"></text>\n  </view>\n  <view class=\"rankList\">\n        <scrollview class=\"list\">\n            {{~it.data :item:index}}\n                {{? index % 2 === 1 }}\n                <view class=\"listItem listItemOld\">\n                {{?}}\n                {{? index % 2 === 0 }}\n                <view class=\"listItem\">\n                {{?}}\n                    <text class=\"listItemNum\" value=\"{{= index + 1}}\"></text>\n                    <image class=\"listHeadImg\" src=\"{{= item.avatarUrl }}\"></image>\n                  <text class=\"listItemName\" value=\"{{= item.nickname}}\"></text>\n                  <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n                  <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n                </view>\n            {{~}}\n        </scrollview>\n        <text class=\"listTips\" value=\"\u4EC5\u5C55\u793A\u524D50\u4F4D\u597D\u53CB\u6392\u540D\"></text>\n\n        <view class=\"listItem selfListItem\">\n            <text class=\"listItemNum\" value=\"{{= it.selfIndex}}\"></text>\n            <image class=\"listHeadImg\" src=\"{{= it.self.avatarUrl }}\"></image>\n            <text class=\"listItemName\" value=\"{{= it.self.nickname}}\"></text>\n            <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n            <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n        </view>\n    </view>\n</view>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("\n<view class=\"container\" id=\"main\">\n  <view class=\"header\">\n    <text class=\"title\" value=\"\u6392\u884C\u699C\"></text>\n  </view>\n  <view class=\"rankList\">\n        <scrollview class=\"list\">\n            {{~it.data :item:index}}\n                {{? index % 2 === 1 }}\n                <view class=\"listItem listItemOld\">\n                {{?}}\n                {{? index % 2 === 0 }}\n                <view class=\"listItem\">\n                {{?}}\n                    <text class=\"listItemNum\" value=\"{{= index + 1}}\"></text>\n                    <image class=\"listHeadImg\" src=\"{{= item.avatarUrl }}\"></image>\n                  <text class=\"listItemName\" value=\"{{= item.nickname}}\"></text>\n                  <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n                  <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n                </view>\n            {{~}}\n        </scrollview>\n        <text class=\"listTips\" value=\"\u4EC5\u5C55\u793A\u524D50\u4F4D\u597D\u53CB\u6392\u540D\"></text>\n\n        <view class=\"listItem selfListItem\">\n            <text class=\"listItemNum\" value=\"{{= it.selfIndex}}\"></text>\n            <image class=\"listHeadImg\" src=\"{{= it.self.avatarUrl }}\"></image>\n            <text class=\"listItemName\" value=\"{{= it.self.nickname}}\"></text>\n            <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n            <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n        </view>\n    </view>\n</view>\n\n");
 
 /***/ }),
 /* 2 */
@@ -207,7 +207,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("\n/**\n  * xml\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7xml.getValue\u53EF\u4EE5\u62FF\u5230\u6A21\u677F\u5B57\u7B26\u4E32\n  * style\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7style.getValue\u53EF\u4EE5\u62FF\u5230\u6837\u5F0F\u5BF9\u8C61\u7684\u5B57\u7B26\u4E32\u503C\n  */\nlet xmlValue   = xml.getValue();\nlet styleValue = style.getValue();\n\n// \u521B\u5EFAmock\u6570\u636E\nlet item = {\n    nickname: \"zim\",\n    rankScore: 1,\n    avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',\n    starSum: 1,\n};\nlet datasource =  {\n    data     :[],\n    selfIndex: 0,\n    self     : item\n}\nfor ( let i = 0; i < 20;i++ ) {\n    var cp = JSON.parse(JSON.stringify(item));\n    cp.rankScore = i + 1;\n    cp.starSum   = i + 1;\n    datasource.data.push(cp);\n}\n\n// \u5C06XML\u6A21\u677F\u7F16\u8BD1\u6210XML\u5B57\u7B26\u4E32\nlet tempFn     = doT.template(xmlValue);\nlet resultText = tempFn(datasource);\n\n// \u83B7\u53D6\u5143\u7D20\u7684\u7EDD\u5BF9\u4F4D\u7F6E\u5750\u6807\uFF08\u50CF\u5BF9\u4E8E\u9875\u9762\u5DE6\u4E0A\u89D2\uFF09\nfunction getElementPagePosition(element){\n  //\u8BA1\u7B97x\u5750\u6807\n  var actualLeft = element.offsetLeft;\n  var current = element.offsetParent;\n  while (current !== null){\n    actualLeft += current.offsetLeft;\n    current = current.offsetParent;\n  }\n  //\u8BA1\u7B97y\u5750\u6807\n  var actualTop = element.offsetTop;\n  var current = element.offsetParent;\n  while (current !== null){\n    actualTop += (current.offsetTop+current.clientTop);\n    current = current.offsetParent;\n  }\n  //\u8FD4\u56DE\u7ED3\u679C\n  return {x: actualLeft, y: actualTop}\n}\n\nlet canvas = document.getElementById('canvas');\nlet context = canvas.getContext('2d');\n\n// \u8BBE\u7F6Ecanvas\u7684\u5C3A\u5BF8\u548C\u6837\u5F0F\u7684container\u6BD4\u4F8B\u4E00\u81F4\ncanvas.style.width = 300 + 'px';\ncanvas.style.height = 1680 / 1100 * 300 + 'px';\ncanvas.width = 1100;\ncanvas.height = 1680;\n\nfunction init() {\n    let pos = getElementPagePosition(canvas);\n    Layout.clear();\n    Layout.init(resultText, eval(styleValue));\n    Layout.updateViewPort({\n        x     : pos.x,\n        y     : pos.y,\n        width : canvas.offsetWidth,\n        height: canvas.offsetHeight,\n    });\n\n    Layout.layout(context);\n\n}\n\ninit();\nwindow.onresize = init;\n");
+/* harmony default export */ __webpack_exports__["default"] = ("\n/**\n  * xml\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7xml.getValue\u53EF\u4EE5\u62FF\u5230\u6A21\u677F\u5B57\u7B26\u4E32\n  * style\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7style.getValue\u53EF\u4EE5\u62FF\u5230\u6837\u5F0F\u5BF9\u8C61\u7684\u5B57\u7B26\u4E32\u503C\n  */\nlet xmlValue   = xml.getValue();\nlet styleValue = style.getValue();\n\n// \u521B\u5EFAmock\u6570\u636E\nlet item = {\n    nickname: \"zim\",\n    rankScore: 1,\n    avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',\n    starSum: 1,\n};\nlet datasource =  {\n    data     :[],\n    selfIndex: 0,\n    self     : item\n}\nfor ( let i = 0; i < 20;i++ ) {\n    var cp = JSON.parse(JSON.stringify(item));\n    cp.rankScore = Math.floor(Math.random()*1000+1)\n    cp.starSum   = i + 1;\n    datasource.data.push(cp);\n}\n\n// \u5C06XML\u6A21\u677F\u7F16\u8BD1\u6210XML\u5B57\u7B26\u4E32\nlet tempFn     = doT.template(xmlValue);\nlet resultText = tempFn(datasource);\n\n// \u83B7\u53D6\u5143\u7D20\u7684\u7EDD\u5BF9\u4F4D\u7F6E\u5750\u6807\uFF08\u50CF\u5BF9\u4E8E\u9875\u9762\u5DE6\u4E0A\u89D2\uFF09\nfunction getElementPagePosition(element){\n  //\u8BA1\u7B97x\u5750\u6807\n  var actualLeft = element.offsetLeft;\n  var current = element.offsetParent;\n  while (current !== null){\n    actualLeft += current.offsetLeft;\n    current = current.offsetParent;\n  }\n  //\u8BA1\u7B97y\u5750\u6807\n  var actualTop = element.offsetTop;\n  var current = element.offsetParent;\n  while (current !== null){\n    actualTop += (current.offsetTop+current.clientTop);\n    current = current.offsetParent;\n  }\n  //\u8FD4\u56DE\u7ED3\u679C\n  return {x: actualLeft, y: actualTop}\n}\n\nlet canvas = document.getElementById('canvas');\nlet context = canvas.getContext('2d');\n\n// \u8BBE\u7F6Ecanvas\u7684\u5C3A\u5BF8\u548C\u6837\u5F0F\u7684container\u6BD4\u4F8B\u4E00\u81F4\ncanvas.style.width = 300 + 'px';\ncanvas.style.height = 1410/ 960* 300 + 'px';\ncanvas.width = 960;\ncanvas.height = 1410;\n\nfunction init() {\n    let pos = getElementPagePosition(canvas);\n    Layout.clear();\n    Layout.init(resultText, eval(styleValue));\n    Layout.updateViewPort({\n        x     : pos.x,\n        y     : pos.y,\n        width : canvas.offsetWidth,\n        height: canvas.offsetHeight,\n    });\n\n    Layout.layout(context);\n\n}\n\ninit();\nwindow.onresize = init;\n");
 
 /***/ }),
 /* 4 */
@@ -11158,14 +11158,13 @@ function (module, __webpack_exports__, __webpack_require__) {
         var borderColor = style.borderColor;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
+        ctx.beginPath();
 
         if (borderWidth && borderColor) {
-          ctx.lineWidth = borderWidth * 2;
+          ctx.lineWidth = borderWidth;
           ctx.strokeStyle = borderColor;
-          ctx.stroke();
+          ctx.strokeRect(drawX, drawY, box.width, box.height);
         }
-
-        ctx.beginPath();
 
         if (borderTopWidth && (borderColor || style.borderTopColor)) {
           ctx.lineWidth = borderTopWidth;
@@ -14221,7 +14220,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         ctx.lineWidth = style.borderWidth || 0;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
-        this.renderBorder(ctx);
+        this.renderBorder(ctx, layoutBox);
         ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
         ctx.restore();
 
@@ -14463,7 +14462,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         ctx.textAlign = this.textAlign;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
-        this.renderBorder(ctx);
+        this.renderBorder(ctx, layoutBox);
 
         if (style.backgroundColor) {
           ctx.fillStyle = style.backgroundColor;
@@ -14606,6 +14605,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     return _setPrototypeOf(o, p);
   }
 
+  var id = 0;
   var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
 
   var ScrollView =
@@ -14782,12 +14782,6 @@ function (module, __webpack_exports__, __webpack_require__) {
           var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
 
           if (startY < this.pageHeight * (i + 1) && endY > this.pageHeight * i) {
-            // let start = new Date();
-            // this.canvasMap[i].elements.forEach( ele => {
-            //     ele.element.insert(this.canvasMap[i].context, ele.box);
-            // });
-            // console.log(new Date() - start);
-
             /**
              * 这里不能按照box.width * box.height的区域去裁剪
              * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
@@ -14854,17 +14848,12 @@ function (module, __webpack_exports__, __webpack_require__) {
         var ctx = can.getContext('2d');
         can.width = this.renderport.width;
         can.height = this.pageHeight;
+        ctx.id = ++id;
         this.canvasMap[pageIndex].canvas = can;
         this.canvasMap[pageIndex].context = ctx;
-        /*canvasPool.set(pageIndex, this.canvasMap[pageIndex]);*/
-
-        /*let ctx = this.canvasMap[pageIndex].context;*/
-        // console.log('elements count', this.canvasMap[pageIndex].elements.length);
-        // let start2 = new Date();
-
         this.canvasMap[pageIndex].elements.forEach(function (ele) {
           ele.element.insert(ctx, ele.box);
-        }); // console.log(new Date() - start2);
+        });
 
         if (pageIndex < this.pageCount - 1) {
           var timer = setTimeout(function () {

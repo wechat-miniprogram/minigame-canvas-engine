@@ -1,21 +1,24 @@
 import * as PIXI   from '../libs/pixi.js';
-import config      from './config.js';
-import subContext from './subcontext.js';
+
+const info        = wx.getSystemInfoSync();
+const scale       = 3;
+const GAME_WIDTH  = info.windowWidth * scale;
+const GAME_HEIGHT = info.windowHeight * scale;
 
 export default class App extends PIXI.Application {
     constructor() {
-        super(config.GAME_WIDTH, config.GAME_HEIGHT, config.pixiOptions);
+        super(GAME_WIDTH, GAME_HEIGHT, {
+            backgroundColor: 0xf5f5f5,
+            antialias      : false,
+            sharedTicker   : true,
+            view           : canvas,
+        });
 
         // 适配小游戏的触摸事件
         this.renderer.plugins.interaction.mapPositionToPoint = (point, x, y) => {
-            point.x = x * config.dpr;
-            point.y = y * config.dpr;
+            point.x = x * info.devicePixelRatio;
+            point.y = y * info.devicePixelRatio;
         };
-
-        subContext.init(this);
-
-        subContext.reportScore(1);
-        subContext.showRank();
 
         this.aniId    = null;
         this.bindLoop = this.loop.bind(this);
@@ -29,17 +32,55 @@ export default class App extends PIXI.Application {
 
         let icon = this.createBtn({
             img    : 'http://wximg.qq.com/wxgame/tmp/zimyuan/gamebtn.png',
-            x      : config.GAME_WIDTH / 2,
-            y      : config.GAME_HEIGHT / 2,
+            x      : GAME_WIDTH / 2,
+            y      : GAME_HEIGHT / 2,
             text   : '',
             onclick: () => {
-                subContext.reportScore(1);
-                subContext.showRank();
+                this.showRank();
             }
-        })
-        this.stage.addChild(
-            icon
-        );
+        });
+        this.stage.addChild(icon);
+
+        this.initShareCanvas();
+
+        setTimeout(()=> {
+            this.showRank();
+        }, 30)
+    }
+
+    showRank() {
+        if ( this.friendRankShow ) {
+            return;
+        }
+
+        this.openDataContext.postMessage({
+            event: 'showFriendRank',
+        });
+
+        this.friendRankShow = true;
+    }
+
+    initShareCanvas() {
+        this.friendRankShow  = false;
+        this.openDataContext = wx.getOpenDataContext();
+        this.sharedCanvas    = this.openDataContext.canvas;
+
+        // 中间挖了个坑用填充排行榜
+        this.sharedCanvas.width  = 960;
+        this.sharedCanvas.height = 1410;
+
+        const realWidth  = this.sharedCanvas.width / GAME_WIDTH * info.windowWidth;
+        const realHeight = this.sharedCanvas.height / GAME_HEIGHT * info.windowHeight;
+
+        this.openDataContext.postMessage({
+            event: 'updateViewPort',
+            box       : {
+                width  : realWidth,
+                height : realHeight,
+                x      : ( info.windowWidth - realWidth ) / 2,
+                y      : ( info.windowHeight - realHeight ) / 2,
+            }
+        });
     }
 
     createBtn(options) {
@@ -70,13 +111,58 @@ export default class App extends PIXI.Application {
         return btn;
     }
 
+    renderFriendRank() {
+        let texture = PIXI.Texture.fromCanvas(this.sharedCanvas);
+        texture.update();
+        let shared = new PIXI.Sprite(texture);
+        shared.name = 'shared';
+
+        /**
+         * 根据dpr改变子域展示区域的大小
+         * 记得要更新真实渲染位置的大小
+         */
+        shared.width  *= 1.2;
+        shared.height *= 1.2;
+
+        shared.x = GAME_WIDTH / 2 - shared.width / 2;
+        shared.y = GAME_HEIGHT / 2 - shared.height / 2;
+
+        this.stage.addChild(shared);
+
+        return;
+        let close = new PIXI.Sprite.fromImage('img/close.png');
+        close.width       = 100;
+        close.height      = 100;
+        close.x           = GAME_WIDTH / 2 - close.width / 2;
+        close.y           = GAME_HEIGHT - 250;
+        close.interactive = true;
+        this.stage.addChild(close);
+
+        close.on('pointerdown', () => {
+            this.friendRankShow = false;
+            this.openDataContext.postMessage({
+                event: postTypeMap.close,
+                gameid    : this.gameid,
+            });
+            this.renderer.stage.removeChild(close);
+
+            close = null;
+
+        });
+
+        close.name = 'friendRankClose';
+    }
+
     _update(dt) {
         // 每一帧都先清除子域
-        subContext.clearFriendRank();
+        let sub = this.stage.getChildByName('shared');
+        if ( sub ) {
+            this.stage.removeChild(sub);
+        }
 
         // 如果需要展示好友排行榜，将最新的子域绘制出来
-        if ( subContext.sharedCanvas && subContext.friendRankShow ) {
-            subContext.renderFriendRank();
+        if ( this.friendRankShow ) {
+            this.renderFriendRank();
         }
     }
 

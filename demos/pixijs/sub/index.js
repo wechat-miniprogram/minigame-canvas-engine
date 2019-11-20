@@ -1,5 +1,7 @@
-import config from 'common/config.js';
-import render from './render.js';
+import style    from 'render/style.js';
+import tplFn    from 'render/tplfn.js';
+import Layout   from './engine.js'
+
 import {
     getFriendData,
     setUserRecord,
@@ -7,15 +9,27 @@ import {
     findSelf,
     injectSelfToList,
     replaceSelfDataInList,
-} from 'common/data.js';
+} from 'data.js';
 
-let postTypeMap = config.postTypeMap;
 let postType;
 let userinfo;
 let selfData;
-let key             = 'score';
+let key             = 'rankScore';
 let currentMaxScore = 0;
 let cacheRankData   = [];
+
+let sharedCanvas  = wx.getSharedCanvas();
+let sharedContext = sharedCanvas.getContext('2d');
+function draw(data = []) {
+    let template = tplFn({
+        data,
+        self     : data[0],
+        selfIndex: 1,
+    });
+
+    Layout.init(template, style);
+    Layout.layout(sharedContext);
+}
 
 function loadFriendDataAndRender(key, info, needRender = true) {
     getFriendData(key, (data) => {
@@ -39,31 +53,40 @@ function loadFriendDataAndRender(key, info, needRender = true) {
         // 缓存数据，加速下次渲染
         cacheRankData = data;
 
-        console.log(data)
-
         // mock
-         for ( let i = 0; i< 20; i++ ) {
+         for ( let i = 0; i < 20; i++ ) {
              data[i] = JSON.parse(JSON.stringify(data[0]));
              data[i].rank = i;
-             data[i].score = i;
-         }
+             data[i].rankScore = Math.floor(Math.random()*1000+1)
+        }
 
         if ( needRender ) {
-            render.draw(data, selfData, currentMaxScore);
+            draw(data, selfData, currentMaxScore);
+        }
+
+        let btnList = Layout.getElementsByClassName('giftBtn');
+        for (let i = 0;i < btnList.length;i ++) {
+            btnList[i].on('click',(e) => {
+                let img = Layout.getElementsById('img' + i);
+                img[0].src = img[0].src === "sub/Buffet_icon_GiftPlate_0.png" ? "sub/Buffet_icon_GiftPlate.png":  "sub/Buffet_icon_GiftPlate_0.png"
+            });
         }
     });
 }
 
-/**
- * 在初始化阶段先把用户信息和排行榜数据拉取一份
- * 在第一次点击排行榜按钮的时候就能实现秒开的效果
- */
 function init() {
     currentMaxScore = 0;
     cacheRankData   = [];
-    getUserInfo((info) => {
-        userinfo = info;
-        loadFriendDataAndRender(key, info, false)
+
+    wx.onMessage(data => {
+        console.log('onMessage', data);
+        if ( data.event === 'updateViewPort' ) {
+            Layout.updateViewPort(data.box);
+            getUserInfo((info) => {
+                userinfo = info;
+                loadFriendDataAndRender(key, info)
+            });
+        }
     });
 }
 
@@ -74,7 +97,7 @@ function showFriendRank() {
             replaceSelfDataInList(cacheRankData, userinfo, currentMaxScore);
         }
 
-        render.draw(cacheRankData, selfData, currentMaxScore);
+        draw(cacheRankData, selfData, currentMaxScore);
     }
 
     /**
@@ -91,43 +114,5 @@ function showFriendRank() {
     }
 }
 
-/**
- * 监听主域消息，派发相应指令
- */
-wx.onMessage(userData => {
-    postType = userData.postType;
-    key      = userData.key || key;
+init();
 
-    let value = userData.value;
-
-    switch(postType) {
-        case postTypeMap.init:
-            init();
-            break;
-        case postTypeMap.friendRank:
-            showFriendRank();
-            break;
-        case postTypeMap.report:
-            currentMaxScore = userData.score;
-            setUserRecord(key, userData, render.startTime);
-            break;
-        case postTypeMap.setTitle:
-            render.setTitle(value);
-            break;
-        case postTypeMap.setUnit:
-            render.setUnit(value);
-            break;
-        case postTypeMap.setSort:
-            render.setSort(value);
-            break;
-        case postTypeMap.setPeriod:
-            render.setPeriod(value);
-            break;
-        case postTypeMap.close:
-            render.disable();
-            break;
-        case postTypeMap.updateViewPort:
-            render.updateViewPort(userData.box);
-            break;
-    }
-});

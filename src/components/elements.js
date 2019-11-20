@@ -186,13 +186,13 @@ export default class Element {
         let drawX         = box.absoluteX;
         let drawY         = box.absoluteY;
 
-        if ( borderWidth && borderColor ) {
-            ctx.lineWidth   = borderWidth * 2;
-            ctx.strokeStyle = borderColor;
-            ctx.stroke();
-        }
-
         ctx.beginPath();
+
+        if ( borderWidth && borderColor ) {
+            ctx.lineWidth   = borderWidth;
+            ctx.strokeStyle = borderColor;
+            ctx.strokeRect(drawX, drawY, box.width, box.height);
+        }
 
         if ( borderTopWidth && ( borderColor  || style.borderTopColor ) ) {
             ctx.lineWidth = borderTopWidth;

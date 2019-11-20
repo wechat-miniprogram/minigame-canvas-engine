@@ -856,14 +856,13 @@ function () {
       var borderColor = style.borderColor;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
+      ctx.beginPath();
 
       if (borderWidth && borderColor) {
-        ctx.lineWidth = borderWidth * 2;
+        ctx.lineWidth = borderWidth;
         ctx.strokeStyle = borderColor;
-        ctx.stroke();
+        ctx.strokeRect(drawX, drawY, box.width, box.height);
       }
-
-      ctx.beginPath();
 
       if (borderTopWidth && (borderColor || style.borderTopColor)) {
         ctx.lineWidth = borderTopWidth;
@@ -3558,7 +3557,7 @@ function (_Element) {
       ctx.lineWidth = style.borderWidth || 0;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
-      this.renderBorder(ctx);
+      this.renderBorder(ctx, layoutBox);
       ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
       ctx.restore();
 
@@ -3724,7 +3723,7 @@ function (_Element) {
       ctx.textAlign = this.textAlign;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
-      this.renderBorder(ctx);
+      this.renderBorder(ctx, layoutBox);
 
       if (style.backgroundColor) {
         ctx.fillStyle = style.backgroundColor;
@@ -3787,6 +3786,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+var id = 0;
 var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
 
 var ScrollView =
@@ -3963,12 +3963,6 @@ function (_View) {
         var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
 
         if (startY < this.pageHeight * (i + 1) && endY > this.pageHeight * i) {
-          // let start = new Date();
-          // this.canvasMap[i].elements.forEach( ele => {
-          //     ele.element.insert(this.canvasMap[i].context, ele.box);
-          // });
-          // console.log(new Date() - start);
-
           /**
            * 这里不能按照box.width * box.height的区域去裁剪
            * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
@@ -4035,17 +4029,12 @@ function (_View) {
       var ctx = can.getContext('2d');
       can.width = this.renderport.width;
       can.height = this.pageHeight;
+      ctx.id = ++id;
       this.canvasMap[pageIndex].canvas = can;
       this.canvasMap[pageIndex].context = ctx;
-      /*canvasPool.set(pageIndex, this.canvasMap[pageIndex]);*/
-
-      /*let ctx = this.canvasMap[pageIndex].context;*/
-      // console.log('elements count', this.canvasMap[pageIndex].elements.length);
-      // let start2 = new Date();
-
       this.canvasMap[pageIndex].elements.forEach(function (ele) {
         ele.element.insert(ctx, ele.box);
-      }); // console.log(new Date() - start2);
+      });
 
       if (pageIndex < this.pageCount - 1) {
         var timer = setTimeout(function () {
