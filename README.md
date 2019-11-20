@@ -1,4 +1,5 @@
 # minigame-canvas-engine
+轻量级canvas渲染引擎。
 
 [![npm version](https://badge.fury.io/js/minigame-canvas-engine.svg)](https://badge.fury.io/js/minigame-canvas-engine)
 [![Build Status](https://travis-ci.org/wechat-miniprogram/minigame-canvas-engine.svg?branch=master)](https://travis-ci.org/wechat-miniprogram/minigame-canvas-engine)
@@ -6,11 +7,7 @@
 [![](https://img.shields.io/npm/l/wxml-to-canvas)](https://github.com/yuanzm/opendatacontextenginetest)
 
 ## 简介
-对小游戏游戏开发而言，开放数据域开发一直存在引入游戏引擎导致代码包体积偏大和利用canvas原生开发绘制界面麻烦的矛盾。其实对于大部分小游戏而言，开放数据域仅仅需要绘制一个可滚动的游戏列表和添加一些简单的点击交互，这和常见的Web开发非常相似。本项目旨在引入一段相对游戏引擎而言体积非常小的通用库后以Web开发的方式开发canvas界面，因此，本项目仅支持简单的UI绘制，不会支持动画等功能。
-
-对于Web开发而言，开发者仅需要编写HTML+CSS，浏览器会理解这些代码并渲染出开发者需要的界面。对于canvas开发而言，仅有一系列很原子的API，开发者需要自己合理组织API的时序来完成布局。如果想让canvas开发类Web开发，我们在采用HTML+CSS或者类HTML+类CSS开发的时候，需要有一个简单的渲染引擎能够解析和渲染到canvas上面。
-
-对于上述问题，最麻烦的是计算一颗树的布局，得出每个元素的位置和尺寸属性，幸运的是，早已有人造出这样的[轮子](https://www.npmjs.com/package/css-layout)，乍一看觉得这库没什么用，实际上非常契合canvas的场景：没有DOM，纯JavaScript实现CSS的子集，包括flexbox和box模型。当最麻烦的布局解决之后，就需要将每个元素按照canvas的API将borderColor、textAlign、color等属性表达出来，本项目应运而生。
+原生js开发canvas界面困难而可维护性差，而引入一款游戏引擎又显得太过笨重。本项目旨在让开发者通过类Web开发的方式来降低canvas的开发门槛。
 
 ## web端调试
 为了方便UI调试，可以在线编辑预览效果: [Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/)
