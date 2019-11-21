@@ -20,12 +20,12 @@
 
 ## 安装使用
 
- 1. 克隆本项目到合适的文件夹或者通过npm安装（参考[小程序npm支持](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html))
+ 1. 克隆本项目到合适的文件夹或者通过Bower安装。
  ```
     // git安装方式
     git clone https://github.com/wechat-miniprogram/minigame-canvas-engine
     // npm安装方式
-    npm install  --save minigame-canvas-engine
+    bower install minigame-canvas-engine
  ```
 
  2. 引用渲染引擎：

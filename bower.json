@@ -1,0 +1,22 @@
+{
+  "name": "minigame-canvas-engine",
+  "description": "轻量级canvas渲染引擎",
+  "main": "index.js",
+  "authors": [
+    "yuanzm <1229084233@qq.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "canvas"
+  ],
+  "homepage": "https://github.com/wechat-miniprogram/minigame-canvas-engine",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "demos",
+    "docs",
+    "tests"
+  ]
+}
