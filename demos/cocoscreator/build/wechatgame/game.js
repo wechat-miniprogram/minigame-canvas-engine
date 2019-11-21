@@ -7,7 +7,7 @@ var settings = window._CCSettings;
 require('main');
 
 // Will be replaced with cocos2d-js path in editor
-require('cocos/cocos2d-js.js');
+require('cocos/cocos2d-js-min.js');
 
 require('./libs/engine/index.js');
 

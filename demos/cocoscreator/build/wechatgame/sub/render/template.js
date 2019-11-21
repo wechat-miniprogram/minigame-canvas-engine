@@ -1,35 +1,35 @@
-let doT = require('./dot.js');
-
 const template = `
-    <view class="container" id="main">
-        <view class="rankList">
-            <view class="header">
-                <text class="headerItem headerItemCurr" value="{{= it.title }}"></text>
-            </view>
+<view class="container" id="main">
+  <view class="header">
+    <text class="title" value="排行榜"></text>
+  </view>
+  <view class="rankList">
+        <scrollview class="list">
+            {{~it.data :item:index}}
+                {{? index % 2 === 1 }}
+                <view class="listItem listItemOld">
+                {{?}}
+                {{? index % 2 === 0 }}
+                <view class="listItem">
+                {{?}}
+                    <text class="listItemNum" value="{{= index + 1}}"></text>
+                    <image class="listHeadImg" src="{{= item.avatarUrl }}"></image>
+                  <text class="listItemName" value="{{= item.nickname}}"></text>
+                  <text class="listItemScore" value="{{= item.rankScore}}"></text>
+                  <text class="listScoreUnit" value="分"></text>
+                </view>
+            {{~}}
+        </scrollview>
+        <text class="listTips" value="仅展示前50位好友排名"></text>
 
-            <scrollview class="list">
-                {{~it.data :item:index}}
-                    <view class="listItem">
-                        <text class="listItemNum" value="{{= index + 1}}"></text>
-                        <image class="listHeadImg" src="{{= item.avatarUrl }}"></image>
-                        <view class="infoContainer">
-                            <view class="nameContainer">
-                                <text class="listName" value="{{= item.nickname}}"></text>
-                            </view>
-                            <view class="scoreContainer">
-                                <image class="listStarImg" src="sub/UI_Icon_Rating.png"></image>
-                                <text class="listName" id="text{{=index}}" value ="{{=item.rankScore }}"></text>
-                            </view>
-                        </view>
-
-                        <image class="giftBtn" id="img{{=index}}" src="{{=item.imgSrc}}"></image>
-                    </view>
-                {{~}}
-            </scrollview>
+        <view class="listItem selfListItem">
+            <text class="listItemNum" value="{{= it.selfIndex}}"></text>
+            <image class="listHeadImg" src="{{= it.self.avatarUrl }}"></image>
+            <text class="listItemName" value="{{= it.self.nickname}}"></text>
+            <text class="listItemScore" value="{{= item.rankScore}}"></text>
+            <text class="listScoreUnit" value="分"></text>
         </view>
     </view>
+</view>
 `;
 
-let tplFn = doT.template(template);
-
-console.log(tplFn);

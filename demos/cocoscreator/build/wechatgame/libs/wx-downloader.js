@@ -405,10 +405,11 @@ var FileType = {
     'FONT': 2,
     'AUDIO': 3,
     'SCRIPT': 4,
-    'TEXT': 5,
-    'BIN': 6,
-    'DEFAULT': 7,
-    'LOADABLE_MIN': 5
+    'VIDEO': 5,
+    'TEXT': 6,
+    'BIN': 7,
+    'DEFAULT': 8,
+    'LOADABLE_MIN': 6
 };
 
 var map = {
@@ -431,6 +432,15 @@ var map = {
     'ogg' : FileType.AUDIO,
     'wav' : FileType.AUDIO,
     'm4a' : FileType.AUDIO,
+    
+    // Video
+    'mp4' : FileType.VIDEO,
+    'avi' : FileType.VIDEO,
+    'mov' : FileType.VIDEO,
+    'mpg' : FileType.VIDEO,
+    'mpeg' : FileType.VIDEO,
+    'rm' : FileType.VIDEO,
+    'rmvb' : FileType.VIDEO,
 
     // Txt
     'txt' : FileType.TEXT,

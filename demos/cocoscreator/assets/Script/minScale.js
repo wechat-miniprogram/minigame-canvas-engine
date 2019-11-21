@@ -3,7 +3,7 @@ cc.Class({
 
     properties: {
         // holdDlgSize : false,
-        actionFlag : false,
+        actionFlag : true,
     },
 
     fixSize() {
@@ -15,14 +15,15 @@ cc.Class({
     },
 
     start () {
-        // this.cbId = global.addResizeCallback(this, this.fixSize);
+        
     },
 
     onDestroy() {
-        // global.removeResizeCallback(this.cbId); 
+    
     },
 
     onEnable () {
+        cc.director.setClearColor(cc.color(245, 245, 245, 1)); 
         this.fixSize();
 
         if (!this.actionFlag) {

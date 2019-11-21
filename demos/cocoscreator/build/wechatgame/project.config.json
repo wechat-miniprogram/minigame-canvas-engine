@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": true,
 		"minified": false,
@@ -21,9 +21,6 @@
 	"libVersion": "game",
 	"appid": "wx6ac3f5090a6b99c5",
 	"projectname": "hello_world",
-	"isGameTourist": true,
-	"simulatorType": "wechat",
-	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -42,5 +39,6 @@
 			"current": -1,
 			"list": []
 		}
-	}
+	},
+	"isGameTourist": true
 }

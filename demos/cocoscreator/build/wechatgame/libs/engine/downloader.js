@@ -69,6 +69,14 @@ function downloadWebp (item, callback) {
     return downloadImage(item, callback);
 }
 
+function downloadVideo (item, callback) {
+    callback(null, item.url);
+}
+
+function loadVideo (item, callback) {
+    callback(null, item.url);
+}
+
 cc.loader.downloader.addHandlers({
     js : downloadScript,
     png : downloadImage,
@@ -79,10 +87,28 @@ cc.loader.downloader.addHandlers({
     ico : downloadImage,
     tiff : downloadImage,
     webp : downloadWebp,
-    image : downloadImage
+    image : downloadImage,
+    
+    // Video
+    mp4: downloadVideo,
+    avi: downloadVideo,
+    mov: downloadVideo,
+    mpg: downloadVideo,
+    mpeg: downloadVideo,
+    rm: downloadVideo,
+    rmvb: downloadVideo,
 });
 
 cc.loader.loader.addHandlers({
+    // Video
+    mp4: loadVideo,
+    avi: loadVideo,
+    mov: loadVideo,
+    mpg: loadVideo,
+    mpeg: loadVideo,
+    rm: loadVideo,
+    rmvb: loadVideo,
+
     // Font
     font: loadFont,
     eot: loadFont,

@@ -1,6 +1,6 @@
-import config from 'common/config.js';
-import render from './render.js';
-import Layout from './engine.js'
+import style    from 'render/style.js';
+import tplFn    from 'render/tplfn.js';
+import Layout   from './engine.js'
 
 import {
     getFriendData,
@@ -9,15 +9,27 @@ import {
     findSelf,
     injectSelfToList,
     replaceSelfDataInList,
-} from 'common/data.js';
+} from 'data.js';
 
-let postTypeMap = config.postTypeMap;
 let postType;
 let userinfo;
 let selfData;
 let key             = 'rankScore';
 let currentMaxScore = 0;
 let cacheRankData   = [];
+
+let sharedCanvas  = wx.getSharedCanvas();
+let sharedContext = sharedCanvas.getContext('2d');
+function draw(data = []) {
+    let template = tplFn({
+        data,
+        self     : data[0],
+        selfIndex: 1,
+    });
+
+    Layout.init(template, style);
+    Layout.layout(sharedContext);
+}
 
 function loadFriendDataAndRender(key, info, needRender = true) {
     getFriendData(key, (data) => {
@@ -42,19 +54,14 @@ function loadFriendDataAndRender(key, info, needRender = true) {
         cacheRankData = data;
 
         // mock
-         for ( let i = 0; i< 150; i++ ) {
+         for ( let i = 0; i < 20; i++ ) {
              data[i] = JSON.parse(JSON.stringify(data[0]));
              data[i].rank = i;
-             data[i].rankScore = i;
-
-             data[i].imgSrc = "sub/Buffet_icon_GiftPlate.png";
-
+             data[i].rankScore = Math.floor(Math.random()*1000+1)
         }
 
-        // data[0].imgSrc = "";
-
         if ( needRender ) {
-            render.draw(data, selfData, currentMaxScore);
+            draw(data, selfData, currentMaxScore);
         }
 
         let btnList = Layout.getElementsByClassName('giftBtn');
@@ -67,17 +74,43 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     });
 }
 
+function updateViewPort(data) {
+    let sys = wx.getSystemInfoSync();
+    let { box, winSize } = data;
+
+    /**
+    * 设置子域绘制的真实物理尺寸
+    * 子域不理解主域用的引擎，又需要独立进行事件处理，需要将真实的物理尺寸传给渲染引擎
+    */
+    let offsetX = sys.screenWidth * (box.x / winSize.width);
+    let offsetY = sys.screenHeight * (box.y / winSize.height);
+
+    const renderW = sys.screenWidth * (box.width / winSize.width);
+    const renderH = sys.screenHeight * (box.height / winSize.height);
+
+    // console.log('oneMessageData', data)
+    // console.log('viewPort', offsetX, offsetY, renderW, renderH);
+
+    Layout.updateViewPort({
+        width : renderW,
+        height: renderH,
+        x     : offsetX,
+        y     : offsetY,
+    });
+}
+
 function init() {
     currentMaxScore = 0;
     cacheRankData   = [];
-    getUserInfo((info) => {
-        userinfo = info;
-        loadFriendDataAndRender(key, info)
-    });
 
     wx.onMessage(data => {
+        console.log('onMessage', data);
         if ( data.event === 'updateViewPort' ) {
-            render.updateViewPort(data)
+            updateViewPort(data);
+            getUserInfo((info) => {
+                userinfo = info;
+                loadFriendDataAndRender(key, info)
+            });
         }
     });
 }
@@ -89,7 +122,7 @@ function showFriendRank() {
             replaceSelfDataInList(cacheRankData, userinfo, currentMaxScore);
         }
 
-        render.draw(cacheRankData, selfData, currentMaxScore);
+        draw(cacheRankData, selfData, currentMaxScore);
     }
 
     /**
@@ -105,14 +138,6 @@ function showFriendRank() {
         loadFriendDataAndRender(key, userinfo);
     }
 }
-
-// // 预加载资源
-Layout.loadImgs([
-    'sub/Buffet_icon_GiftPlate_0.png',
-    'sub/Buffet_icon_GiftPlate.png',
-    'sub/UI_Icon_Rating.png',
-    'https://wx.qlogo.cn/mmopen/vi_32/ksK0P6tuawz1BcicI…PPv1fZuQibUQT4tvXPSTLnEkfavNWFocduia5gl3cDZCQ/132',
-]);
 
 init();
 

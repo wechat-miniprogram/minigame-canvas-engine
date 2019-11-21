@@ -1,47 +1,50 @@
 export default
 `
-
 window.styleValue = {
     container: {
-        width: 1100,
-        height: 1680,
-        borderRadius: 10,
+        width: 960,
+        height: 1410,
+        borderRadius: 12,
     },
 
     header: {
-        height: 150,
-        width: 1100,
+        height: 120,
+        width: 960,
         flexDirection: 'column',
         alignItems: 'center',
       	backgroundColor: '#ffffff',
+        borderBottomWidth: 0.5,
+        borderColor: 'rgba(0, 0, 0, 0.3)',
     },
 
     title: {
-        width: 250,
-        fontSize: 60,
-        height: 150,
-        lineHeight: 150,
+        width: 144,
+        fontSize: 48,
+        height: 120,
+        lineHeight: 120,
         textAlign: 'center',
         fontWeight: 'bold',
-        borderBottomWidth: 5,
+        borderBottomWidth: 6,
         borderColor: '#000000',
     },
 
     rankList: {
-        width: 1100,
-        height: 1530,
+        width: 960,
+        height: 1000,
+      	backgroundColor: '#ffffff',
     },
 
     list: {
-        width: 1100,
-        height: 1200,
+        width          : 960,
+        height         : 950,
       	backgroundColor: '#ffffff',
+        marginTop: 30,
     },
 
     listItem: {
         backgroundColor: '#F7F7F7',
-        width: 1100,
-        height: 194,
+        width: 960,
+        height: 150,
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -51,57 +54,45 @@ window.styleValue = {
     },
 
     listItemNum: {
-        fontSize: 52,
+        fontSize: 32,
         fontWeight: 'bold',
         color: '#452E27',
-        lineHeight: 90,
-        height: 90,
+        lineHeight: 150,
+        height: 150,
         textAlign: 'center',
         width: 120,
     },
 
     listHeadImg: {
-        borderRadius: 4,
-        width: 100,
-        height: 100,
-    },
-
-    listName: {
-        fontSize: 52,
-        fontWeight: 'bold',
-        color: '#452E27',
-        height: 60,
-        lineHeight: 60,
-        width: 230,
+        borderRadius: 6,
+        width: 90,
+        height: 90,
     },
 
     listItemScore: {
         fontSize: 48,
         fontWeight: 'bold',
-        color: '#452E27',
         marginLeft : 10,
-        height: 48,
-        lineHeight: 48,
-        width: 320,
+        height: 150,
+        lineHeight: 150,
+        width: 300,
         textAlign: 'right',
     },
 
     listItemName:{
-        fontSize: 52,
-        fontWeight: 'bold',
-        color: '#452E27',
-        height: 60,
-        lineHeight: 60,
-        width: 400,
-        marginLeft : 60,
+        fontSize: 36,
+        height: 150,
+        lineHeight: 150,
+        width: 350,
+        marginLeft: 30,
     },
 
     listScoreUnit: {
         opacity: 0.5,
         color: '#000000',
-        fontSize: 45,
-        height: 100,
-        lineHeight: 100,
+        fontSize: 30,
+        height: 150,
+        lineHeight: 150,
         marginLeft: 8,
     },
 
@@ -112,17 +103,19 @@ window.styleValue = {
     },
 
   	listTips: {
-      	width: 1100,
-        height: 100,
-      	lineHeight: 100,
+      	width: 960,
+        height: 90,
+      	lineHeight: 90,
       	textAlign: 'center',
-      	fontSize: 40,
+      	fontSize: 30,
       	color: 'rgba(0,0,0,0.5)',
       	backgroundColor: '#ffffff',
         borderRadius: 10,
-      	borderTopWidth: 2,
-      	borderTopColor: '#000000',
+        /*borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.3)',*/
     }
 }
+
+
 `
 

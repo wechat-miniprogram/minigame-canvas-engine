@@ -112,19 +112,26 @@ window.boot = function () {
         }
 
         function loadScene(launchScene) {
-            cc.director.loadScene(launchScene, null,
-                function () {
-                    if (cc.sys.isBrowser) {
-                        // show canvas
-                        var canvas = document.getElementById('GameCanvas');
-                        canvas.style.visibility = '';
-                        var div = document.getElementById('GameDiv');
-                        if (div) {
-                            div.style.backgroundImage = '';
+            cc.director.loadScene(launchScene,
+                function (err) {
+                    if (!err) {
+                        if (cc.sys.isBrowser) {
+                            // show canvas
+                            var canvas = document.getElementById('GameCanvas');
+                            canvas.style.visibility = '';
+                            var div = document.getElementById('GameDiv');
+                            if (div) {
+                                div.style.backgroundImage = '';
+                            }
                         }
+                        cc.loader.onProgress = null;
+                        console.log('Success to load scene: ' + launchScene);
                     }
-                    cc.loader.onProgress = null;
-                    console.log('Success to load scene: ' + launchScene);
+                    else if (CC_BUILD) {
+                        setTimeout(function () {
+                            loadScene(launchScene);
+                        }, 1000);
+                    }
                 }
             );
 
