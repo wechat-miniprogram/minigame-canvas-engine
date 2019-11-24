@@ -204,6 +204,7 @@ text.value = 'newtextvalue';
 | verticalAlign   | top, middle, bottom | top         |
 | color           | string              | #000000     |
 | backgroundColor | string              | transparent |
+| textOverflow    | ellipsis, clip       | 默认为空，出于性能考虑，只有显式指定textOverflow属性的时候才会对文字进行截断处理 |
 
 **容器**
 

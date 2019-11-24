@@ -1,7 +1,7 @@
 import Element from './elements.js';
 import { createCanvas } from '../common/util.js';
 
-const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,SimSun,sans-serif';
+const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, Helvetica Neue, Helvetica, Arial, Microsoft YaHei, SimSun, sans-serif';
 let context = null;
 const getContext = () => {
     if (context) {
@@ -17,6 +17,51 @@ const getContext = () => {
 }
 
 
+function getTextWidth(style, value) {
+    const context = getContext();
+
+    context.font = `${style.fontWeight || 'normal'} ${style.fontSize || 12}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
+
+    return context.measureText(value).width || 0;
+}
+
+function getTextWidthWithoutSetFont(value) {
+    return getContext().measureText(value).width || 0;
+}
+
+function parseText(style, value) {
+    value = String(value);
+
+    let maxWidth  = style.width;
+    let wordWidth = getTextWidth(style, value);
+
+    // 对文字溢出的处理，默认用...
+    let textOverflow = style.textOverflow || 'ellipsis';
+
+    // 文字最大长度不超限制
+    if ( wordWidth <= maxWidth ) {
+        return value;
+    }
+
+    // 对于用点点点处理的情况，先将最大宽度减去...的宽度
+    if ( textOverflow === 'ellipsis' ) {
+        maxWidth -= getTextWidthWithoutSetFont('...');
+    }
+
+    let length = value.length - 1;
+    let str    = value.substring(0, length);
+
+    while ( getTextWidthWithoutSetFont(str) > maxWidth && length > 0 ) {
+        length--;
+        str = value.substring(0, length);
+    }
+
+    return (  length && textOverflow === 'ellipsis'
+            ? str  + '...'
+            : str  );
+}
+
+
 export default class Text extends Element {
     constructor({
         style={},
@@ -25,10 +70,11 @@ export default class Text extends Element {
         className='',
         value=''
     }) {
+        // 没有设置宽度的时候通过canvas计算出文字宽度
         if ( style.width === undefined ) {
-            const context = getContext();
-            context.font = `${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY} ${style.fontWeight || ''}`;
-            style.width = context.measureText(value).width || 0;
+            style.width = getTextWidth(style, value);
+        } else if ( style.textOverflow === 'ellipsis' ) {
+            value = parseText(style, value);
         }
 
         super({
@@ -38,9 +84,9 @@ export default class Text extends Element {
             style,
         });
 
-        this.type  = 'Text';
-        this.ctx   = null;
-        this.valuesrc = value;
+        this.type        = 'Text';
+        this.ctx         = null;
+        this.valuesrc    = value;
 
         this.renderBoxes = [];
 
@@ -65,9 +111,9 @@ export default class Text extends Element {
 
         this.fontSize = style.fontSize || 12;
         this.textBaseline = 'top';
-        this.font = `${style.fontWeight || ''} ${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY}`;
+        this.font = `${style.fontWeight  || ''} ${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY}`;
         this.textAlign = style.textAlign || 'left';
-        this.fillStyle = style.color || '#000';
+        this.fillStyle = style.color     || '#000';
     }
 
     insert(ctx, box) {

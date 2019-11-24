@@ -3614,7 +3614,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,SimSun,sans-serif';
+var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, Helvetica Neue, Helvetica, Arial, Microsoft YaHei, SimSun, sans-serif';
 var context = null;
 
 var getContext = function getContext() {
@@ -3628,6 +3628,43 @@ var getContext = function getContext() {
   context = canvas.getContext('2d');
   return context;
 };
+
+function getTextWidth(style, value) {
+  var context = getContext();
+  context.font = "".concat(style.fontWeight || 'normal', " ").concat(style.fontSize || 12, "px ").concat(style.fontFamily || DEFAULT_FONT_FAMILY);
+  return context.measureText(value).width || 0;
+}
+
+function getTextWidthWithoutSetFont(value) {
+  return getContext().measureText(value).width || 0;
+}
+
+function parseText(style, value) {
+  value = String(value);
+  var maxWidth = style.width;
+  var wordWidth = getTextWidth(style, value); // 对文字溢出的处理，默认用...
+
+  var textOverflow = style.textOverflow || 'ellipsis'; // 文字最大长度不超限制
+
+  if (wordWidth <= maxWidth) {
+    return value;
+  } // 对于用点点点处理的情况，先将最大宽度减去...的宽度
+
+
+  if (textOverflow === 'ellipsis') {
+    maxWidth -= getTextWidthWithoutSetFont('...');
+  }
+
+  var length = value.length - 1;
+  var str = value.substring(0, length);
+
+  while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
+    length--;
+    str = value.substring(0, length);
+  }
+
+  return length && textOverflow === 'ellipsis' ? str + '...' : str;
+}
 
 var Text =
 /*#__PURE__*/
@@ -3650,11 +3687,11 @@ function (_Element) {
 
     _classCallCheck(this, Text);
 
+    // 没有设置宽度的时候通过canvas计算出文字宽度
     if (style.width === undefined) {
-      var _context = getContext();
-
-      _context.font = "".concat(style.fontSize || 12, "px ").concat(DEFAULT_FONT_FAMILY, " ").concat(style.fontWeight || '');
-      style.width = _context.measureText(value).width || 0;
+      style.width = getTextWidth(style, value);
+    } else if (style.textOverflow === 'ellipsis') {
+      value = parseText(style, value);
     }
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Text).call(this, {

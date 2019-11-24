@@ -54,6 +54,8 @@ function run() {
         localStorage.setItem('template', window.xml.getValue());
         localStorage.setItem('css', window.style.getValue());
         localStorage.setItem('js', window.js.getValue());
+
+        console.log(Layout);
     } catch(e) {
         console.log(e);
         document.getElementById('error').innerHTML = e;
