@@ -1,0 +1,59 @@
+{
+	"description": "项目配置文件。",
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"enhance": false,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true,
+		"coverView": true,
+		"autoAudits": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		}
+	},
+	"cloudfunctionRoot": "cloud/",
+	"jsserverRoot": "jsserver/",
+	"compileType": "game",
+	"libVersion": "2.9.4",
+	"appid": "wxb44e2096fe38c90d",
+	"projectname": "aircraft-war",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"cloudfunctionTemplateRoot": "cloudfunctionTemplate",
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"current": 0,
+			"list": [
+				{
+					"id": 0,
+					"name": "房间对战",
+					"query": "accessInfo=uJ6wwLPV54CW4YYwlA5U0XTjypPQLCwITvb9uCiJyq4",
+					"scene": "1001"
+				}
+			]
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": []
+		}
+	}
+}
