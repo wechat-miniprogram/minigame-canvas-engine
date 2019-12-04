@@ -8,14 +8,9 @@ exports.main = function(arg) {
         const inviteStorageKey = 'invite';
         const friendsStorage   = wx.getFriendUserStorage([inviteStorageKey]);
 
-        console.log(friendsStorage);
-
         // 过滤和邀请不相关的用户
         const userList         = friendsStorage.user_item.filter( item => item.kv_list && item.kv_list.length);
-
         let ok                 = false;
-
-        console.log(userList);
 
         // 用户每天只能给同一个好友赠送一次金币,每天最多送5次
         const friendData = userList.find(userItem => userItem.openid === toOpenid) || { kv_list: []};
@@ -51,6 +46,7 @@ exports.main = function(arg) {
             }
         }
 
+        // 判断是否已经邀请成功过
         const hasInvite = friendGift.inviteRecords.find(item => item.openid === myOpenid );
         if ( hasInvite ) {
             ok = false;

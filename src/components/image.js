@@ -52,7 +52,15 @@ export default class Image extends Element {
      // 子类填充实现
     destroySelf() {
         this.isDestroyed = true;
+        if ( this.img ) {
+            this.img.onloadcbks = [];
+            this.img.onload  = null;
+            this.img.onerror = null;
+        }
+
         this.img         = null;
+
+        delete this.src;
 
         this.off('img__load__done');
     }

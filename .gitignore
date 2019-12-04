@@ -4,4 +4,5 @@ coverage
 .nyc_output/
 coverage.lcov
 .DS_Store
+.wechatide
 

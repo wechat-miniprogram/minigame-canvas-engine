@@ -151,12 +151,14 @@ class App extends PIXI.Application {
                 y      : ( info.windowHeight - realHeight ) / 2,
             }
         });
+
+        this.sharedTexture = PIXI.Texture.fromCanvas(this.sharedCanvas);
     }
 
     renderFriendRank() {
-        let texture = PIXI.Texture.fromCanvas(this.sharedCanvas);
-        texture.update();
-        let shared = new PIXI.Sprite(texture);
+        this.sharedTexture.update();
+
+        let shared = new PIXI.Sprite(this.sharedTexture);
         shared.name = 'shared';
 
         shared.width = this.renderWidth;

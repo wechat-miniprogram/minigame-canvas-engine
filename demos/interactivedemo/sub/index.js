@@ -2,12 +2,12 @@ import style    from 'render/style.js';
 import tplFn    from 'render/tplfn.js';
 import Layout   from './engine.js'
 
-let selfOpenId = '';
+let selfOpenId    = '';
 let sharedCanvas  = wx.getSharedCanvas();
 let sharedContext = sharedCanvas.getContext('2d');
 
 function draw(data = [], invites) {
-    Layout.clear();
+    Layout.clearAll();
     let template = tplFn({
         title: '可能感兴趣好友',
         data,
@@ -16,6 +16,8 @@ function draw(data = [], invites) {
 
     Layout.init(template, style);
     Layout.layout(sharedContext);
+
+    console.log(Layout);
 }
 
 /**
@@ -59,8 +61,6 @@ function showPotentialFriend(invites) {
 
             console.log('getPotentialFriendList', data);
 
-            //list = [{"openid":"o_XwO0Rv7Eim_2jm1SjCqteI1-l8","nickname":"不叫花花白","avatarUrl":"https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epIOjsibRvXISLpoLRjR3YDVsGsCVOFcoYY0Wxk1vY95cyT9XPYbgz6z4lxK7z39ukGsnibTr82KH8g/132","KVDataList":[]},{"openid":"o_XwO0WmN7cLKb9yI4qk_oQyvzSA","nickname":"你大爷还是你大爷","avatarUrl":"https://wx.qlogo.cn/mmopen/vi_32/krmdRqHOnNBur6vtlfwd75Z89kT1AdLTTYbUgkLFgDrvWatJBGMX5Bjelf5F3jLt0n0Ae5Htiau5ELaOicia81rhg/132","KVDataList":[]},{"openid":"o_XwO0Zu6LnTwoQ1giusKigTfsGs","nickname":"Vvvvvv","avatarUrl":"https://wx.qlogo.cn/mmopen/vi_32/WkN5QXgM8PoicpLFjvtXSB2jJzzue5ZdEmY4Jicb3d90MLQHdOoJUOFdZWeU5x0uFzhNiamDpOTPqZoUZVKfwOWoA/132","KVDataList":[{"key":"invite","value":"{\"beInvitedRecords\":[{\"fromOpenid\":\"o_XwO0Wq2LtdqTzTRwYowCxzSNos\",\"time\":1575356726233}],\"inviteRecords\":[]}"}]},{"openid":"o_XwO0bxAW01W4zWyb6RtK-E677w","nickname":"ailin","avatarUrl":"https://wx.qlogo.cn/mmopen/vi_32/S3Xzia2fI4XROoGnkpEeOiaXCUsAZxQ4K1zXRDAGUdjNwqpTIreHDeBtnhv91EeEGjOCzWdZgcibXRISn08KYb2FA/132","KVDataList":[]},{"openid":"o_XwO0Wq2LtdqTzTRwYowCxzSNos","nickname":"袁梓民","avatarUrl":"https://wx.qlogo.cn/mmopen/vi_32/gUoakOVnV9kCcVOBeJFDThSycWrQ6VqHibzSoUdGBdBLqbbqpxb4gctUm69l6nzTPNhqVVvEQecwt0tr5ibEjD2g/132","KVDataList":[{"key":"invite","value":"{\"beInvitedRecords\":[],\"inviteRecords\":[{\"fromOpenid\":\"o_XwO0Zu6LnTwoQ1giusKigTfsGs\",\"time\":1575356726233}]}"}]}];
-
             let friends = list.map( (item, i) => {
                 return {
                     rank      : i,
@@ -75,7 +75,6 @@ function showPotentialFriend(invites) {
 
             Layout.getElementsByClassName('listButton').forEach( (item, index) => {
                 item.on('click', (e) => {
-                    console.log(friends[index]);
                     wx.shareMessageToFriend({
                         openId  : friends[index].openid,
                         title   : '快来探索浩瀚星空',
