@@ -59,6 +59,17 @@ class App extends PIXI.Application {
             shareMessageToFriendScene: 1
         });
 
+        wx.onShareMessageToFriend && wx.onShareMessageToFriend((res) => {
+            console.log('wx.shareMessageToFriend', res);
+            let tips = res.success ? '分享成功' : '分享失败';
+
+            wx.showToast({
+                title   : tips,
+                icon    : 'none',
+                duration: 2000
+            });
+        });
+
         // 初始化云函数
         wx.cloud.init();
 
