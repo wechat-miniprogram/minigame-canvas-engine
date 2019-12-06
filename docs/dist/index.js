@@ -155,6 +155,17 @@ window.js = codemirror__WEBPACK_IMPORTED_MODULE_3___default()(document.getElemen
     "Ctrl-J": "toMatchingTag"
   }
 });
+window.dot = codemirror__WEBPACK_IMPORTED_MODULE_3___default()(document.getElementById("dot"), {
+  value: '',
+  lineNumbers: true,
+  mode: "text/javascript",
+  matchTags: {
+    bothTags: true
+  },
+  extraKeys: {
+    "Ctrl-J": "toMatchingTag"
+  }
+});
 
 function run() {
   document.getElementById('error').innerHTML = '';
@@ -164,6 +175,7 @@ function run() {
     localStorage.setItem('template', window.xml.getValue());
     localStorage.setItem('css', window.style.getValue());
     localStorage.setItem('js', window.js.getValue());
+    window.dot.setValue(String(dot__WEBPACK_IMPORTED_MODULE_5___default.a.template(window.xml.getValue())));
     console.log(_index__WEBPACK_IMPORTED_MODULE_4___default.a);
   } catch (e) {
     console.log(e);
@@ -185,6 +197,35 @@ document.getElementById('reset').onclick = function () {
     run();
   }, 0);
 };
+
+var items = document.getElementsByClassName('panels__item');
+var panels = [].slice.call(document.getElementsByClassName('code'));
+
+var _loop = function _loop(i) {
+  var item = items[i];
+
+  item.onclick = function () {
+    var showLength = panels.filter(function (item) {
+      return item.style.display !== 'none';
+    }).length;
+    var panel = document.getElementById(item.dataset.panel);
+    var curr = panel.style.display;
+    panel.style.display = curr === '' ? 'none' : '';
+    showLength = panels.filter(function (item) {
+      return item.style.display !== 'none';
+    }).length;
+    item.className = curr === '' ? 'panels__item' : 'panels__item active';
+    panels.forEach(function (item) {
+      item.style.width = 1 / showLength * 100 + '%';
+    });
+  };
+};
+
+for (var i = 0; i < items.length; i++) {
+  _loop(i);
+}
+
+;
 
 /***/ }),
 /* 1 */
@@ -14133,7 +14174,15 @@ function (module, __webpack_exports__, __webpack_require__) {
       key: "destroySelf",
       value: function destroySelf() {
         this.isDestroyed = true;
+
+        if (this.img) {
+          this.img.onloadcbks = [];
+          this.img.onload = null;
+          this.img.onerror = null;
+        }
+
         this.img = null;
+        delete this.src;
         this.off('img__load__done');
       }
     }, {

@@ -46,6 +46,14 @@ window.js = CodeMirror(document.getElementById("js"), {
     extraKeys: {"Ctrl-J": "toMatchingTag"}
 });
 
+window.dot = CodeMirror(document.getElementById("dot"), {
+    value: '',
+    lineNumbers: true,
+    mode: "text/javascript",
+    matchTags: {bothTags: true},
+    extraKeys: {"Ctrl-J": "toMatchingTag"}
+});
+
 function run() {
     document.getElementById('error').innerHTML = '';
     try {
@@ -54,6 +62,8 @@ function run() {
         localStorage.setItem('template', window.xml.getValue());
         localStorage.setItem('css', window.style.getValue());
         localStorage.setItem('js', window.js.getValue());
+
+        window.dot.setValue(String(doT.template(window.xml.getValue())));
 
         console.log(Layout);
     } catch(e) {
@@ -76,5 +86,29 @@ document.getElementById('reset').onclick = function() {
     setTimeout(() => {
         run();
     }, 0);
+};
+
+let items = document.getElementsByClassName('panels__item');
+let panels = [].slice.call(document.getElementsByClassName('code'));
+
+for ( let i = 0; i < items.length; i++ ) {
+    let item = items[i];
+
+    item.onclick = () => {
+        let showLength = panels.filter( item => item.style.display !== 'none').length;
+
+        let panel = document.getElementById(item.dataset.panel);
+
+        let curr = panel.style.display;
+        panel.style.display = curr === '' ? 'none' : '';
+
+        showLength = panels.filter( item => item.style.display !== 'none').length;
+
+        item.className = curr === '' ? 'panels__item' : 'panels__item active';
+
+        panels.forEach( item => {
+            item.style.width = (1 / showLength) * 100 + '%';
+        });
+    }
 };
 

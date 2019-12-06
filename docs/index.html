@@ -4,6 +4,9 @@
 <meta charset="utf-8"/>
 <link rel="stylesheet" type="text/css" href="css/codemirror.css">
 <style>
+* {
+    margin: 0;
+}
 body, html { margin: 0; padding: 0; height: 100%; }
 section, article { display: block; padding: 0; }
 
@@ -352,29 +355,97 @@ strong {
     background-color: #f5f5f5;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.code__box {
+    height: 100%;
+}
+
+#panels {
+    text-align: center;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: 0;
+    border-bottom:1px solid #c7c7c7;
+}
+
+#panels .panels__item{
+    font-size: 14px;
+    display: inline-block;
+    height: 17px;
+    line-height: 19px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid hsl(0, 0%, 80%);
+    padding: 6px 10px;
+    border-right: 1px solid #ccc;
+    cursor: pointer;
+    min-width: 50px;
+}
+
+#panels .panels__item.active {
+     background-color: hsl(215, 100%, 96%);
+}
+
+#panels .panels__item:first-child {
+  border-left: 1px solid #ccc;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+#panels .panels__item:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+#xml {
+    height: 70%;
+    border-bottom:1px solid #c7c7c7;
+}
+
+#dot {
+    position: relative;
+}
 </style>
 
-<div class="code">
-    <div class="code__tag">xml</div>
-    <div id="xml" class="code__content"></div>
-</div>
-<div  class="code">
-    <div class="code__tag">style</div>
-    <div id="style" class="code__content"></div>
+<div id="panels">
+    <div class="panels__item active" data-panel="panel__xml">xml</div>
+    <div class="panels__item active" data-panel="panel__style">style</div>
+    <div class="panels__item active" data-panel="panel__js">js</div>
+    <div class="panels__item active" data-panel="panel__result">result</div>
 </div>
 
-<div class="code">
-    <div class="code__tag">js</div>
-    <div id="js" class="code__content"></div>
-</div>
+<div class="code__box">
+    <div class="code" id="panel__xml">
+        <div class="code__tag">xml</div>
+        <div id="xml" class="code__content"></div>
 
-<div class="code result">
-    <div class="button" id="run">run</div>
-    <div class="button" id="reset">reset</div>
-    <div class="code__tag">result</div>
+        <div id="dot" class="code__content">
+            <div class="code__tag">doT.js</div>
+        </div>
+    </div>
+    <div  class="code" id="panel__style">
+        <div class="code__tag">style</div>
+        <div id="style" class="code__content"></div>
+    </div>
 
-    <div id="error"></div>
-    <canvas id="canvas" width="1100" height="1600"></canvas>
+    <div class="code" id="panel__js">
+        <div class="code__tag">js</div>
+        <div id="js" class="code__content"></div>
+    </div>
+
+    <div class="code result" id="panel__result">
+        <div class="button" id="run">run</div>
+        <div class="button" id="reset">reset</div>
+        <div class="code__tag">result</div>
+
+        <div id="error"></div>
+        <canvas id="canvas" width="1100" height="1600"></canvas>
+    </div>
 </div>
 
 <script type="text/javascript" src="./dist/index.js"></script>
