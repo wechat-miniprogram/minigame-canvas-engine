@@ -111,11 +111,5 @@ window.styleValue = {
       	color: 'rgba(0,0,0,0.5)',
       	backgroundColor: '#ffffff',
         borderRadius: 10,
-        /*borderWidth: 1,
-        borderColor: 'rgba(0, 0, 0, 0.3)',*/
     }
-}
-
-
-`
-
+}`

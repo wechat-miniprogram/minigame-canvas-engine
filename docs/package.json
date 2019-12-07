@@ -12,5 +12,8 @@
     },
     "scripts": {
         "start": "./node_modules/.bin/webpack --watch"
+    },
+    "dependencies": {
+        "js-beautify": "^1.10.2"
     }
 }

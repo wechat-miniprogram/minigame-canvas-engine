@@ -1,6 +1,7 @@
 import template   from './template.js';
 import css        from './style.js';
 import js         from './js.js';
+let beautify      = require('js-beautify').js
 
 let localTemplate = localStorage.getItem('template');
 let localCss      = localStorage.getItem('css');
@@ -63,7 +64,13 @@ function run() {
         localStorage.setItem('css', window.style.getValue());
         localStorage.setItem('js', window.js.getValue());
 
-        window.dot.setValue(String(doT.template(window.xml.getValue())));
+        let comment =
+        `/**\n * xml经过doT.js编译出的模板函数\n * 因为小游戏不支持new Function，模板函数只能外部编译\n * 可直接拷贝本函数到小游戏中使用\n */\n`;
+        let be = beautify(String(doT.template(window.xml.getValue())), { indent_size: 4, space_in_empty_paren: true })
+
+        window.dot.setValue(
+            comment + be
+        );
 
         console.log(Layout);
     } catch(e) {
@@ -109,6 +116,8 @@ for ( let i = 0; i < items.length; i++ ) {
         panels.forEach( item => {
             item.style.width = (1 / showLength) * 100 + '%';
         });
+
+        run();
     }
 };
 

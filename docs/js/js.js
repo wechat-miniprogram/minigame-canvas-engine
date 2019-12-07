@@ -61,7 +61,9 @@ canvas.height = 1410;
 
 function init() {
     let pos = getElementPagePosition(canvas);
+    // 每次初始化之前先执行清理逻辑保证内存不会一直增长
     Layout.clear();
+    // 初始化引擎
     Layout.init(resultText, eval(styleValue));
     Layout.updateViewPort({
         x     : pos.x,
