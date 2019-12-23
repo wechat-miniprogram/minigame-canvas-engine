@@ -3622,7 +3622,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, Helvetica Neue, Helvetica, Arial, Microsoft YaHei, SimSun, sans-serif';
+var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
 var context = null;
 
 var getContext = function getContext() {

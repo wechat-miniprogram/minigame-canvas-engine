@@ -1,7 +1,7 @@
 import Element from './elements.js';
 import { createCanvas } from '../common/util.js';
 
-const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, Helvetica Neue, Helvetica, Arial, Microsoft YaHei, SimSun, sans-serif';
+const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
 let context = null;
 const getContext = () => {
     if (context) {
