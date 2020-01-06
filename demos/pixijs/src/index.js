@@ -128,29 +128,6 @@ export default class App extends PIXI.Application {
         shared.y = GAME_HEIGHT / 2 - shared.height / 2;
 
         this.stage.addChild(shared);
-
-        return;
-        let close = new PIXI.Sprite.fromImage('img/close.png');
-        close.width       = 100;
-        close.height      = 100;
-        close.x           = GAME_WIDTH / 2 - close.width / 2;
-        close.y           = GAME_HEIGHT - 250;
-        close.interactive = true;
-        this.stage.addChild(close);
-
-        close.on('pointerdown', () => {
-            this.friendRankShow = false;
-            this.openDataContext.postMessage({
-                event: postTypeMap.close,
-                gameid    : this.gameid,
-            });
-            this.renderer.stage.removeChild(close);
-
-            close = null;
-
-        });
-
-        close.name = 'friendRankClose';
     }
 
     _update(dt) {
