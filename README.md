@@ -17,6 +17,13 @@
 ## 效果预览
 ![screenshot](docs/imgs/screenshot.gif)
 
+## 更多案例
+小游戏官方示例
+![动物餐厅](docs/imgs/demo.png)
+
+动物餐厅
+![动物餐厅](docs/imgs/canting.png)
+
 ## 更新日志
 详见[CHANGELOG.md](CHANGELOG.md)
 
