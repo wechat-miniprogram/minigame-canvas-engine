@@ -253,23 +253,29 @@ class _Layout extends Element {
         this.hasViewPortSet = true;
     }
 
-    init(template, style) {
+    init(template, style, attrValueProcessor) {
         let start = new Date();
 
         /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
-            var jsonObj = parser.parse(template, {
-                attributeNamePrefix : "",
-                attrNodeName: "attr", //default is 'false'
-                textNodeName : "#text",
-                ignoreAttributes : false,
-                ignoreNameSpace : true,
-                allowBooleanAttributes : true,
-                parseNodeValue : false,
-                parseAttributeValue : false,
-                trimValues: true,
-                parseTrueNumberOnly: false,
-            }, true);
-         /*}*/
+        /*}*/
+        let parseConfig = {
+            attributeNamePrefix : "",
+            attrNodeName: "attr", //default is 'false'
+            textNodeName : "#text",
+            ignoreAttributes : false,
+            ignoreNameSpace : true,
+            allowBooleanAttributes : true,
+            parseNodeValue : false,
+            parseAttributeValue : false,
+            trimValues: true,
+            parseTrueNumberOnly: false,
+        }
+
+        if (attrValueProcessor && typeof attrValueProcessor  === "function") {
+            parseConfig.attrValueProcessor = attrValueProcessor;
+        }
+
+        let jsonObj = parser.parse(template, parseConfig, true);
 
         let xmlTree = jsonObj.children[0];
 
