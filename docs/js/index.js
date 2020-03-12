@@ -95,8 +95,35 @@ document.getElementById('reset').onclick = function() {
     }, 0);
 };
 
-let items = document.getElementsByClassName('panels__item');
+let items = [].slice.call(document.getElementsByClassName('panels__item'))
 let panels = [].slice.call(document.getElementsByClassName('code'));
+
+let status = panels.map( item => 1);
+if (localStorage.getItem('panels')) {
+    status = JSON.parse(localStorage.getItem('panels'))
+
+    panels.forEach((item, index) => {
+        if ( status[index] === 0 ) {
+            item.style.display = 'none';
+        }
+    })
+    resetSize()
+}
+
+function resetSize() {
+    let showLength = panels.filter( item => item.style.display !== 'none').length;
+
+
+    items.forEach( (item, index) => {
+        item.className = status[index] ?  'panels__item active' : 'panels__item';
+    })
+
+
+    panels.forEach( (item) => {
+        item.style.width = (1 / showLength) * 100 + '%';
+    });
+}
+
 
 for ( let i = 0; i < items.length; i++ ) {
     let item = items[i];
@@ -109,13 +136,11 @@ for ( let i = 0; i < items.length; i++ ) {
         let curr = panel.style.display;
         panel.style.display = curr === '' ? 'none' : '';
 
-        showLength = panels.filter( item => item.style.display !== 'none').length;
+        status[i] = curr === '' ? 0 : 1;
 
-        item.className = curr === '' ? 'panels__item' : 'panels__item active';
+        localStorage.setItem('panels', JSON.stringify(status))
 
-        panels.forEach( item => {
-            item.style.width = (1 / showLength) * 100 + '%';
-        });
+        resetSize()
 
         run();
     }

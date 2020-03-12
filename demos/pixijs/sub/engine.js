@@ -136,7 +136,8 @@ var constructorMap = {
   view: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["View"],
   text: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["Text"],
   image: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["Image"],
-  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["ScrollView"]
+  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["ScrollView"],
+  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["BitMapText"]
 };
 
 var create = function create(node, style) {
@@ -201,7 +202,9 @@ var getChildren = function getChildren(element) {
 
 var renderChildren = function renderChildren(dataArray, children, context) {
   dataArray.map(function (data) {
-    var child = children[data.id];
+    var child = children.find(function (item) {
+      return item.id === data.id;
+    });
 
     if (child.type === 'ScrollView') {
       // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
@@ -217,7 +220,9 @@ function layoutChildren(dataArray, children) {
   var _this2 = this;
 
   dataArray.forEach(function (data) {
-    var child = children[data.id];
+    var child = children.find(function (item) {
+      return item.id === data.id;
+    });
     child.layoutBox = child.layoutBox || {};
     ['left', 'top', 'width', 'height'].forEach(function (prop) {
       child.layoutBox[prop] = data.layout[prop];
@@ -243,7 +248,9 @@ function layoutChildren(dataArray, children) {
 
 var updateRealLayout = function updateRealLayout(dataArray, children, scale) {
   dataArray.forEach(function (data) {
-    var child = children[data.id];
+    var child = children.find(function (item) {
+      return item.id === data.id;
+    });
     child.realLayoutBox = child.realLayoutBox || {};
     ['left', 'top', 'width', 'height'].forEach(function (prop) {
       child.realLayoutBox[prop] = data.layout[prop] * scale;
@@ -417,7 +424,7 @@ function (_Element) {
       css_layout__WEBPACK_IMPORTED_MODULE_3___default()(elementTree);
       this.elementTree = elementTree;
       this.debugInfo.renderTree = new Date() - start;
-      var rootEle = this.children[Object.keys(this.children)[0]];
+      var rootEle = this.children[0];
 
       if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
         console.error('Please set width and height property for root element');
@@ -579,7 +586,7 @@ function (_Element) {
 
       this.destroyAll();
       this.elementTree = null;
-      this.children = {};
+      this.children = [];
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].CLEAR;
       Object.keys(canvasPool.pool).forEach(function (key) {
@@ -711,7 +718,7 @@ function () {
 
     _classCallCheck(this, Element);
 
-    this.children = {};
+    this.children = [];
     this.parent = null;
     this.parentId = 0;
     this.id = id;
@@ -798,7 +805,7 @@ function () {
     value: function add(element) {
       element.parent = this;
       element.parentId = this.id;
-      this.children[element.id] = element;
+      this.children.push(element);
     }
   }, {
     key: "emit",
@@ -3247,6 +3254,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
+/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(19);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BitMapText", function() { return _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+
+
 
 
 
@@ -4125,8 +4136,7 @@ function (_View) {
   }, {
     key: "scrollHeight",
     get: function get() {
-      var ids = Object.keys(this.children);
-      var last = this.children[ids[ids.length - 1]];
+      var last = this.children[this.children.length - 1];
       return last.layoutBox.top + last.layoutBox.height;
     }
   }]);
@@ -4325,6 +4335,276 @@ function () {
 }();
 
 
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapText; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_3__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+
+var fntText = "info face=\"fnt_nuber_Star_Proficiency\" size=32 bold=0 italic=0 charset=\"\" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1\ncommon lineHeight=60 base=26 scaleW=66 scaleH=81 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0\npage id=0 file=\"fnt_nuber_Star_Proficiency.png\"\nchars count=12\nchar id=48 x=17 y=28 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"0\"\nchar id=49 x=51 y=0 width=11 height=26 xoffset=0 yoffset=34 xadvance=11 page=0 chnl=0 letter=\"1\"\nchar id=50 x=34 y=54 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"2\"\nchar id=51 x=50 y=27 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"3\"\nchar id=52 x=34 y=0 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"4\"\nchar id=53 x=17 y=0 width=16 height=27 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"5\"\nchar id=54 x=0 y=54 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"6\"\nchar id=55 x=34 y=27 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"7\"\nchar id=56 x=0 y=27 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"8\"\nchar id=57 x=0 y=0 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"9\"\nchar id=32 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=16 page=0 chnl=0 letter=\" \"\nchar id=9 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=128 page=0 chnl=0 letter=\"\t\"\n\nkernings count=0";
+/**
+ * http://www.angelcode.com/products/bmfont/doc/file_format.html
+ */
+
+var BitMapFont =
+/*#__PURE__*/
+function () {
+  function BitMapFont(src) {
+    var _this = this;
+
+    _classCallCheck(this, BitMapFont);
+
+    this.parseConfig(fntText);
+    this.texture = _common_imageManager__WEBPACK_IMPORTED_MODULE_2__["default"].loadImage('https://res.wx.qq.com/wechatgame/product/webpack/userupload/20200312/fnt_nuber_Star_Proficiency.png', function () {
+      console.log(_this.texture);
+    });
+  }
+
+  _createClass(BitMapFont, [{
+    key: "parseConfig",
+    value: function parseConfig(fntText) {
+      fntText = fntText.split("\r\n").join("\n");
+      var lines = fntText.split("\n");
+      var charsCount = this.getConfigByKey(lines[3], "count");
+      var chars = {};
+
+      for (var i = 4; i < 4 + charsCount; i++) {
+        var charText = lines[i];
+        var letter = String.fromCharCode(this.getConfigByKey(charText, "id"));
+        var c = {};
+        chars[letter] = c;
+        c["x"] = this.getConfigByKey(charText, "x");
+        c["y"] = this.getConfigByKey(charText, "y");
+        c["w"] = this.getConfigByKey(charText, "width");
+        c["h"] = this.getConfigByKey(charText, "height");
+        c["offX"] = this.getConfigByKey(charText, "xoffset");
+        c["offY"] = this.getConfigByKey(charText, "yoffset");
+        c["xadvance"] = this.getConfigByKey(charText, "xadvance");
+      }
+
+      console.log(chars);
+      return chars;
+    }
+  }, {
+    key: "getConfigByKey",
+    value: function getConfigByKey(configText, key) {
+      var itemConfigTextList = configText.split(" ");
+
+      for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
+        var itemConfigText = itemConfigTextList[i];
+
+        if (key === itemConfigText.substring(0, key.length)) {
+          var value = itemConfigText.substring(key.length + 1);
+          return parseInt(value);
+        }
+      }
+
+      return 0;
+    }
+  }]);
+
+  return BitMapFont;
+}();
+/*new BitMapFont()*/
+
+
+var BitMapText =
+/*#__PURE__*/
+function (_Element) {
+  _inherits(BitMapText, _Element);
+
+  function BitMapText(opts) {
+    var _this2;
+
+    _classCallCheck(this, BitMapText);
+
+    var _opts$style = opts.style,
+        style = _opts$style === void 0 ? {} : _opts$style,
+        _opts$props = opts.props,
+        props = _opts$props === void 0 ? {} : _opts$props,
+        _opts$idName = opts.idName,
+        idName = _opts$idName === void 0 ? '' : _opts$idName,
+        _opts$className = opts.className,
+        className = _opts$className === void 0 ? '' : _opts$className,
+        _opts$value = opts.value,
+        value = _opts$value === void 0 ? '' : _opts$value;
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(BitMapText).call(this, {
+      props: props,
+      idName: idName,
+      className: className,
+      style: style
+    }));
+    _this2.type = "BitMapText";
+    _this2.ctx = null;
+    _this2.valuesrc = value;
+    _this2.renderBoxes = [];
+    Object.defineProperty(_assertThisInitialized(_this2), "value", {
+      get: function get() {
+        return this.valuesrc;
+      },
+      set: function set(newValue) {
+        if (newValue !== this.valuesrc) {
+          this.valuesrc = newValue;
+          this.emit('repaint');
+        }
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return _this2;
+  }
+
+  _createClass(BitMapText, [{
+    key: "insert",
+    value: function insert(ctx, box) {
+      this.renderBoxes.push({
+        ctx: ctx,
+        box: box
+      });
+      this.render(ctx, box);
+    }
+  }, {
+    key: "repaint",
+    value: function repaint() {
+      var _this3 = this;
+
+      this.renderBoxes.forEach(function (item) {
+        _this3.render(item.ctx, item.box);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render(ctx, layoutBox) {
+      ctx.save();
+      var box = layoutBox || this.layoutBox;
+      var style = this.style;
+      console.log(box, style);
+      this.style.width = 200;
+      var tree = {
+        style: this.parent.style,
+        children: [{
+          style: this.style
+        }]
+      };
+      css_layout__WEBPACK_IMPORTED_MODULE_3___default()(tree);
+      console.log(1, this.parent);
+      console.log(2, this);
+      console.log(3, tree);
+    }
+  }]);
+
+  return BitMapText;
+}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var imgPool = new _pool__WEBPACK_IMPORTED_MODULE_0__["default"]('imgPool');
+
+var ImageManager =
+/*#__PURE__*/
+function () {
+  function ImageManager() {
+    _classCallCheck(this, ImageManager);
+  }
+
+  _createClass(ImageManager, [{
+    key: "getRes",
+    value: function getRes(src) {
+      return imgPool.get(src);
+    }
+  }, {
+    key: "loadImage",
+    value: function loadImage(src) {
+      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _util__WEBPACK_IMPORTED_MODULE_1__["none"];
+      var img = null;
+      var cache = this.getRes(src);
+
+      if (!src) {
+        return img;
+      } // 图片已经被加载过，直接返回图片并且执行回调
+
+
+      if (cache && cache.loadDone) {
+        img = cache;
+        callback();
+      } else if (cache && !cache.loadDone) {
+        // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
+        img = cache;
+        cache.onloadcbks.push(callback);
+      } else {
+        // 创建图片，将回调函数推入回调函数栈
+        img = Object(_util__WEBPACK_IMPORTED_MODULE_1__["createImage"])();
+        img.onloadcbks = [callback];
+        imgPool.set(src, img);
+
+        img.onload = function () {
+          img.onloadcbks.forEach(function (fn) {
+            return fn();
+          });
+          img.onloadcbks = [];
+          img.loadDone = true;
+        };
+
+        img.onerror = function (e) {
+          console.log('img load error', e);
+        };
+
+        img.src = src;
+      }
+
+      return img;
+    }
+  }]);
+
+  return ImageManager;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (new ImageManager());
 
 /***/ })
 /******/ ]);

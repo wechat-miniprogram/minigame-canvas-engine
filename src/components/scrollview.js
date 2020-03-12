@@ -49,8 +49,7 @@ export default class ScrollView extends View {
      * 这里不能简单将所有子元素的高度累加，因为每个元素之间可能是有空隙的
      */
     get scrollHeight() {
-        let ids  = Object.keys(this.children);
-        let last = this.children[ids[ids.length - 1]];
+        let last = this.children[this.children.length - 1];
 
         return last.layoutBox.top + last.layoutBox.height;
     }

@@ -6,13 +6,14 @@ const imgPool = new Pool('imgPool');
 
 export default class Image extends Element {
     constructor(opts) {
-    let {
-        style={},
-        props={},
-        idName='',
-        className='',
-        src=''
-    } = opts;
+        let {
+            style={},
+            props={},
+            idName='',
+            className='',
+            src=''
+        } = opts;
+
         super({
             props,
             idName,

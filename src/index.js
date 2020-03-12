@@ -7,7 +7,7 @@ import parser                          from './libs/fast-xml-parser/parser.js';
 
 // components
 import {
-  View, Text, Image, ScrollView
+  View, Text, Image, ScrollView, BitMapText
 } from './components/index.js'
 
 // 全局事件管道
@@ -20,6 +20,7 @@ const constructorMap = {
     text      : Text,
     image     : Image,
     scrollview: ScrollView,
+    bitmaptext: BitMapText
 }
 
 const create = function (node, style) {
@@ -90,7 +91,7 @@ const getChildren = (element) => Object.keys(element.children)
 
 const renderChildren = (dataArray, children, context) => {
     dataArray.map((data) => {
-        const child = children[data.id];
+        const child = children.find(item => item.id === data.id)
 
         if ( child.type === 'ScrollView' ) {
             // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
@@ -105,7 +106,7 @@ const renderChildren = (dataArray, children, context) => {
 
 function layoutChildren (dataArray, children) {
     dataArray.forEach((data) => {
-        const child = children[data.id];
+        const child = children.find(item => item.id === data.id)
 
         child.layoutBox = child.layoutBox || {};
 
@@ -134,7 +135,7 @@ function layoutChildren (dataArray, children) {
 
 const updateRealLayout = (dataArray, children, scale) => {
     dataArray.forEach((data) => {
-        const child = children[data.id];
+        const child = children.find(item => item.id === data.id)
 
         child.realLayoutBox = child.realLayoutBox || {};
 
@@ -301,7 +302,7 @@ class _Layout extends Element {
         this.elementTree = elementTree;
         this.debugInfo.renderTree = new Date() - start;
 
-        let rootEle = this.children[Object.keys(this.children)[0]];
+        let rootEle = this.children[0];
 
         if ( rootEle.style.width === undefined || rootEle.style.height === undefined ) {
             console.error('Please set width and height property for root element');
@@ -459,7 +460,7 @@ class _Layout extends Element {
     clear() {
         this.destroyAll();
         this.elementTree = null;
-        this.children    = {};
+        this.children    = [];
         this.layoutTree  = {};
         this.state       = STATE.CLEAR;
         Object.keys(canvasPool.pool).forEach(key => {

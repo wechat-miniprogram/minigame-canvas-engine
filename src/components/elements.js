@@ -47,7 +47,7 @@ export default class Element {
         className='',
         id=++uuid,
     }) {
-        this.children   = {};
+        this.children   = [];
         this.parent     = null;
         this.parentId   = 0;
         this.id         = id;
@@ -127,7 +127,7 @@ export default class Element {
         element.parent   = this;
         element.parentId = this.id;
 
-        this.children[element.id] = element;
+        this.children.push(element)
     }
 
     emit(event, ...theArgs) {
