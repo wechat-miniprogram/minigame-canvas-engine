@@ -24324,7 +24324,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         configurable: true
       });
       _this.font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_2__["default"]('fnt_nuber_Star_Proficiency');
-      console.log('font', _this.font);
       return _this;
     }
 
@@ -24349,9 +24348,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "render",
       value: function render(ctx, layoutBox) {
-        ctx.save();
-        var box = layoutBox || this.layoutBox;
-        var style = this.style;
+        var _this3 = this;
         /*this.style.width = 200;
         let tree = {
             style: this.parent.style,
@@ -24364,16 +24361,87 @@ function (module, __webpack_exports__, __webpack_require__) {
          computeLayout(tree)
         console.log(tree)*/
 
-        console.log(this.value, box);
-        var x = box.absoluteX;
-        var y = box.absoluteY;
 
-        for (var i = 0; i < this.value.length; i++) {
+        if (this.font.ready) {
+          this.renderText(ctx, layoutBox);
+        } else {
+          this.font.event.on('text__load__done', function () {
+            _this3.renderText(ctx, layoutBox);
+          });
+        }
+      }
+    }, {
+      key: "getTextBounds",
+      value: function getTextBounds() {
+        var style = this.style;
+        var _style$letterSpacing = style.letterSpacing,
+            letterSpacing = _style$letterSpacing === void 0 ? 0 : _style$letterSpacing;
+        var width = 0;
+        var height = 0;
+        var offsetX = 0;
+        var offsetY = 0;
+
+        for (var i = 0, len = this.value.length; i < len; i++) {
           var _char = this.value[i];
           var cfg = this.font.chars[_char];
-          console.log(cfg);
-          ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x, y, cfg.w * 3, cfg.h * 3);
-          x += cfg.w * 3;
+
+          if (cfg) {
+            width += cfg.w;
+            height = Math.max(cfg.h, height);
+
+            if (i < len - 1) {
+              width += letterSpacing;
+            }
+          }
+        }
+
+        return {
+          width: width,
+          height: height
+        };
+      }
+    }, {
+      key: "renderText",
+      value: function renderText(ctx, layoutBox) {
+        var bounds = this.getTextBounds();
+        ctx.save();
+        this.renderBorder(ctx, layoutBox);
+        var box = layoutBox || this.layoutBox;
+        var style = this.style;
+        var _style$width = style.width,
+            width = _style$width === void 0 ? bounds.width : _style$width,
+            _style$height = style.height,
+            height = _style$height === void 0 ? bounds.height : _style$height,
+            _style$lineHeight = style.lineHeight,
+            lineHeight = _style$lineHeight === void 0 ? bounds.height : _style$lineHeight,
+            textAlign = style.textAlign,
+            textBaseline = style.textBaseline;
+        var x = box.absoluteX;
+        var y = box.absoluteY;
+        var scaleY = height / bounds.height;
+        var realWidth = scaleY * bounds.width; // 行高大于元素的高度，文字溢出容器，但是居中方式仍然按照lineHeight来
+
+        if (lineHeight && lineHeight > height) {
+          y += (lineHeight - height) / 2;
+        } else {
+          // 行高小于等于元素的高度，textBaseline开始起作用
+          if (textBaseline === 'middle') {}
+        }
+
+        if (width > realWidth && textAlign === 'center') {
+          x += (width - realWidth) / 2;
+        }
+
+        console.log(width, height, realWidth);
+
+        for (var i = 0; i < this.value.length; i++) {
+          var _char2 = this.value[i];
+          var cfg = this.font.chars[_char2];
+
+          if (cfg) {
+            ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX, y + cfg.offY, cfg.w * scaleY, cfg.h * scaleY);
+            x += cfg.w * scaleY;
+          }
         }
       }
     }]);
@@ -24433,9 +24501,12 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   var fntText = "info face=\"fnt_nuber_Star_Proficiency\" size=32 bold=0 italic=0 charset=\"\" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1\ncommon lineHeight=60 base=26 scaleW=66 scaleH=81 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0\npage id=0 file=\"fnt_nuber_Star_Proficiency.png\"\nchars count=12\nchar id=48 x=17 y=28 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"0\"\nchar id=49 x=51 y=0 width=11 height=26 xoffset=0 yoffset=34 xadvance=11 page=0 chnl=0 letter=\"1\"\nchar id=50 x=34 y=54 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"2\"\nchar id=51 x=50 y=27 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"3\"\nchar id=52 x=34 y=0 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"4\"\nchar id=53 x=17 y=0 width=16 height=27 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"5\"\nchar id=54 x=0 y=54 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"6\"\nchar id=55 x=34 y=27 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"7\"\nchar id=56 x=0 y=27 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"8\"\nchar id=57 x=0 y=0 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"9\"\nchar id=32 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=16 page=0 chnl=0 letter=\" \"\nchar id=9 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=128 page=0 chnl=0 letter=\"\t\"\n\nkernings count=0";
   var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_2__["default"]('bitMapPool');
+
+  var Emitter = __webpack_require__(3);
   /**
    * http://www.angelcode.com/products/bmfont/doc/file_format.html
    */
+
 
   var BitMapFont =
   /*#__PURE__*/
@@ -24453,8 +24524,12 @@ function (module, __webpack_exports__, __webpack_require__) {
 
       this.config = fntText;
       this.chars = this.parseConfig(fntText);
+      this.ready = false;
+      this.event = new Emitter();
       this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage('https://res.wx.qq.com/wechatgame/product/webpack/userupload/20200312/fnt_nuber_Star_Proficiency.png', function () {
-        console.log(_this.texture);
+        _this.ready = true;
+
+        _this.event.emit('text__load__done');
       });
       bitMapPool.set(src, this);
     }

@@ -22,6 +22,7 @@ char id=9 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=128 page=0 chnl=
 kernings count=0`
 
 const bitMapPool = new Pool('bitMapPool')
+let Emitter = require('tiny-emitter');
 
 /**
  * http://www.angelcode.com/products/bmfont/doc/file_format.html
@@ -36,9 +37,12 @@ export default class BitMapFont {
 
         this.config  = fntText;
         this.chars   = this.parseConfig(fntText)
+        this.ready   = false;
+        this.event = new Emitter();
 
         this.texture = imageManager.loadImage('https://res.wx.qq.com/wechatgame/product/webpack/userupload/20200312/fnt_nuber_Star_Proficiency.png', () => {
-            console.log(this.texture)
+            this.ready = true;
+            this.event.emit('text__load__done');
         })
 
         bitMapPool.set(src, this)
@@ -85,5 +89,4 @@ export default class BitMapFont {
 }
 
 /*new BitMapFont()*/
-
 
