@@ -4,6 +4,7 @@ import Emitter                         from 'tiny-emitter';
 import computeLayout                   from 'css-layout';
 import { isClick, STATE, createImage } from './common/util.js';
 import parser                          from './libs/fast-xml-parser/parser.js';
+import BitMapFont  from './common/bitMapFont';
 
 // components
 import {
@@ -231,6 +232,8 @@ class _Layout extends Element {
         }
 
         this.state = STATE.UNINIT;
+
+        this.bitMapFonts = [];
     }
 
     /**
@@ -507,6 +510,11 @@ class _Layout extends Element {
             img.onloadcbks = [];
             img.src = src;
         });
+    }
+
+    registBitMapFont(name, src, config) {
+        const font = new BitMapFont(name, src, config)
+        this.bitMapFonts.push(font)
     }
 }
 

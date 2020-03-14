@@ -1,6 +1,9 @@
 import Element from './elements.js';
 import computeLayout                   from 'css-layout';
 import BitMapFont  from '../common/bitMapFont';
+import Pool from '../common/pool.js';
+
+const bitMapPool = new Pool('bitMapPool')
 
 export default class BitMapText extends Element {
     constructor(opts) {
@@ -9,7 +12,8 @@ export default class BitMapText extends Element {
             props={},
             idName='',
             className='',
-            value=''
+            value='',
+            font=''
         } = opts
         super({
             props,
@@ -38,7 +42,10 @@ export default class BitMapText extends Element {
             configurable : true
         });
 
-        this.font = new BitMapFont('fnt_nuber_Star_Proficiency')
+        this.font= bitMapPool.get(font)
+        if ( !this.font ) {
+            console.error('Please invoke API `registBitMapFont` before using `BitMapText`')
+        }
     }
 
     insert(ctx, box) {
@@ -67,6 +74,9 @@ export default class BitMapText extends Element {
 
         computeLayout(tree)
         console.log(tree)*/
+        if (!this.font) {
+            return
+        }
 
         if ( this.font.ready ) {
             this.renderText(ctx, layoutBox)
@@ -83,7 +93,6 @@ export default class BitMapText extends Element {
         let { letterSpacing = 0 } = style;
 
         let width = 0;
-        let height = 0;
         let offsetX = 0;
         let offsetY = 0;
 
@@ -92,7 +101,6 @@ export default class BitMapText extends Element {
             let cfg = this.font.chars[char]
             if ( cfg ) {
                 width += cfg.w
-                height = Math.max(cfg.h, height)
 
                 if ( i < len - 1 ) {
                     width += letterSpacing
@@ -100,11 +108,12 @@ export default class BitMapText extends Element {
             }
         }
 
-        return { width, height}
+        return { width, height: this.font.lineHeight}
     }
 
     renderText(ctx, layoutBox) {
         let bounds = this.getTextBounds()
+        let defaultLineHeight = this.font.lineHeight;
 
         ctx.save();
         this.renderBorder(ctx, layoutBox);
@@ -113,41 +122,57 @@ export default class BitMapText extends Element {
         const style = this.style;
 
         let {
-            width = bounds.width, // 没有设置采用计算出来的宽度
-            height = bounds.height, // 没有设置则采用计算出来的宽度
-            lineHeight = bounds.height, // 没有设置则采用计算出来的高度
+            width, // 没有设置采用计算出来的宽度
+            height, // 没有设置则采用计算出来的宽度
+            lineHeight = defaultLineHeight, // 没有设置则采用计算出来的高度
             textAlign, // 文字左右对齐方式
-            textBaseline // 文字垂直对齐方式
+            textBaseline, // 文字垂直对齐方式
+            verticalAlign
         } =  style;
 
+        // 元素包围盒的左上角坐标
         let x = box.absoluteX;
         let y = box.absoluteY;
 
-        let scaleY    = height / bounds.height;
+        let scaleY    = lineHeight / defaultLineHeight;
         let realWidth = scaleY * bounds.width
 
-        // 行高大于元素的高度，文字溢出容器，但是居中方式仍然按照lineHeight来
-        if ( lineHeight && lineHeight > height ) {
-            y += (lineHeight - height) / 2
-        } else {
-            // 行高小于等于元素的高度，textBaseline开始起作用
-            if ( textBaseline === 'middle') {
+        // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
+        if ( lineHeight < height ) {
+            if ( verticalAlign === 'middle' ) {
+                y += (height - lineHeight) / 2
+            } else if ( verticalAlign === 'bottom' ) {
+                y = y + height - lineHeight;
+            } else {
+                y += ( height - lineHeight) / 2
             }
         }
 
-        if ( width > realWidth && textAlign === 'center' ) {
-            x += ( width - realWidth) / 2
+        if ( width > realWidth ) {
+            if ( textAlign === 'center' ) {
+                x += ( width - realWidth) / 2
+            } else if ( textAlign === 'right') {
+                x += ( width - realWidth)
+            }
         }
-
-
-        console.log(width, height, realWidth)
 
         for ( let i = 0; i < this.value.length; i++ ) {
             let char = this.value[i];
             let cfg = this.font.chars[char]
 
             if ( cfg ) {
-                ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX, y + cfg.offY, cfg.w * scaleY, cfg.h * scaleY)
+                ctx.drawImage(
+                    this.font.texture,
+                    cfg.x,
+                    cfg.y,
+                    cfg.w,
+                    cfg.h,
+                    x + cfg.offX * scaleY,
+                    y + cfg.offY * scaleY,
+                    cfg.w * scaleY,
+                    cfg.h * scaleY
+                )
+
                 x += cfg.w * scaleY;
             }
         }

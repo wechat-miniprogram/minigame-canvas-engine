@@ -101,7 +101,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
 /* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
 /* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(13);
+/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(20);
+/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(13);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -125,6 +126,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
  // components
 
  // 全局事件管道
@@ -133,11 +135,11 @@ var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a();
 var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('imgPool');
 var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
 var constructorMap = {
-  view: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["View"],
-  text: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["Text"],
-  image: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["Image"],
-  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["ScrollView"],
-  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_6__["BitMapText"]
+  view: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["View"],
+  text: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["Text"],
+  image: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["Image"],
+  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["ScrollView"],
+  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["BitMapText"]
 };
 
 var create = function create(node, style) {
@@ -354,6 +356,7 @@ function (_Element) {
       realY: 0
     };
     _this3.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].UNINIT;
+    _this3.bitMapFonts = [];
     return _this3;
   }
   /**
@@ -632,6 +635,12 @@ function (_Element) {
         img.onloadcbks = [];
         img.src = src;
       });
+    }
+  }, {
+    key: "registBitMapFont",
+    value: function registBitMapFont(name, src, config) {
+      var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_6__["default"](name, src, config);
+      this.bitMapFonts.push(font);
     }
   }]);
 
@@ -4347,6 +4356,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
+/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4369,6 +4379,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+var bitMapPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_3__["default"]('bitMapPool');
+
 var BitMapText =
 /*#__PURE__*/
 function (_Element) {
@@ -4388,7 +4400,9 @@ function (_Element) {
         _opts$className = opts.className,
         className = _opts$className === void 0 ? '' : _opts$className,
         _opts$value = opts.value,
-        value = _opts$value === void 0 ? '' : _opts$value;
+        value = _opts$value === void 0 ? '' : _opts$value,
+        _opts$font = opts.font,
+        font = _opts$font === void 0 ? '' : _opts$font;
     _this = _possibleConstructorReturn(this, _getPrototypeOf(BitMapText).call(this, {
       props: props,
       idName: idName,
@@ -4412,7 +4426,12 @@ function (_Element) {
       enumerable: true,
       configurable: true
     });
-    _this.font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_2__["default"]('fnt_nuber_Star_Proficiency');
+    _this.font = bitMapPool.get(font);
+
+    if (!_this.font) {
+      console.error('Please invoke API `registBitMapFont` before using `BitMapText`');
+    }
+
     return _this;
   }
 
@@ -4450,6 +4469,10 @@ function (_Element) {
       }
        computeLayout(tree)
       console.log(tree)*/
+      if (!this.font) {
+        return;
+      }
+
       if (this.font.ready) {
         this.renderText(ctx, layoutBox);
       } else {
@@ -4465,7 +4488,6 @@ function (_Element) {
       var _style$letterSpacing = style.letterSpacing,
           letterSpacing = _style$letterSpacing === void 0 ? 0 : _style$letterSpacing;
       var width = 0;
-      var height = 0;
       var offsetX = 0;
       var offsetY = 0;
 
@@ -4475,7 +4497,6 @@ function (_Element) {
 
         if (cfg) {
           width += cfg.w;
-          height = Math.max(cfg.h, height);
 
           if (i < len - 1) {
             width += letterSpacing;
@@ -4485,49 +4506,55 @@ function (_Element) {
 
       return {
         width: width,
-        height: height
+        height: this.font.lineHeight
       };
     }
   }, {
     key: "renderText",
     value: function renderText(ctx, layoutBox) {
       var bounds = this.getTextBounds();
+      var defaultLineHeight = this.font.lineHeight;
       ctx.save();
       this.renderBorder(ctx, layoutBox);
       var box = layoutBox || this.layoutBox;
       var style = this.style;
-      var _style$width = style.width,
-          width = _style$width === void 0 ? bounds.width : _style$width,
-          _style$height = style.height,
-          height = _style$height === void 0 ? bounds.height : _style$height,
+      var width = style.width,
+          height = style.height,
           _style$lineHeight = style.lineHeight,
-          lineHeight = _style$lineHeight === void 0 ? bounds.height : _style$lineHeight,
+          lineHeight = _style$lineHeight === void 0 ? defaultLineHeight : _style$lineHeight,
           textAlign = style.textAlign,
-          textBaseline = style.textBaseline;
+          textBaseline = style.textBaseline,
+          verticalAlign = style.verticalAlign; // 元素包围盒的左上角坐标
+
       var x = box.absoluteX;
       var y = box.absoluteY;
-      var scaleY = height / bounds.height;
-      var realWidth = scaleY * bounds.width; // 行高大于元素的高度，文字溢出容器，但是居中方式仍然按照lineHeight来
+      var scaleY = lineHeight / defaultLineHeight;
+      var realWidth = scaleY * bounds.width; // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
 
-      if (lineHeight && lineHeight > height) {
-        y += (lineHeight - height) / 2;
-      } else {
-        // 行高小于等于元素的高度，textBaseline开始起作用
-        if (textBaseline === 'middle') {}
+      if (lineHeight < height) {
+        if (verticalAlign === 'middle') {
+          y += (height - lineHeight) / 2;
+        } else if (verticalAlign === 'bottom') {
+          y = y + height - lineHeight;
+        } else {
+          y += (height - lineHeight) / 2;
+        }
       }
 
-      if (width > realWidth && textAlign === 'center') {
-        x += (width - realWidth) / 2;
+      if (width > realWidth) {
+        if (textAlign === 'center') {
+          x += (width - realWidth) / 2;
+        } else if (textAlign === 'right') {
+          x += width - realWidth;
+        }
       }
-
-      console.log(width, height, realWidth);
 
       for (var i = 0; i < this.value.length; i++) {
         var _char2 = this.value[i];
         var cfg = this.font.chars[_char2];
 
         if (cfg) {
-          ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX, y + cfg.offY, cfg.w * scaleY, cfg.h * scaleY);
+          ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX * scaleY, y + cfg.offY * scaleY, cfg.w * scaleY, cfg.h * scaleY);
           x += cfg.w * scaleY;
         }
       }
@@ -4558,7 +4585,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-var fntText = "info face=\"fnt_nuber_Star_Proficiency\" size=32 bold=0 italic=0 charset=\"\" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1\ncommon lineHeight=60 base=26 scaleW=66 scaleH=81 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0\npage id=0 file=\"fnt_nuber_Star_Proficiency.png\"\nchars count=12\nchar id=48 x=17 y=28 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"0\"\nchar id=49 x=51 y=0 width=11 height=26 xoffset=0 yoffset=34 xadvance=11 page=0 chnl=0 letter=\"1\"\nchar id=50 x=34 y=54 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"2\"\nchar id=51 x=50 y=27 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"3\"\nchar id=52 x=34 y=0 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"4\"\nchar id=53 x=17 y=0 width=16 height=27 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"5\"\nchar id=54 x=0 y=54 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"6\"\nchar id=55 x=34 y=27 width=15 height=26 xoffset=0 yoffset=34 xadvance=15 page=0 chnl=0 letter=\"7\"\nchar id=56 x=0 y=27 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"8\"\nchar id=57 x=0 y=0 width=16 height=26 xoffset=0 yoffset=34 xadvance=16 page=0 chnl=0 letter=\"9\"\nchar id=32 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=16 page=0 chnl=0 letter=\" \"\nchar id=9 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=128 page=0 chnl=0 letter=\"\t\"\n\nkernings count=0";
 var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_2__["default"]('bitMapPool');
 
 var Emitter = __webpack_require__(3);
@@ -4570,27 +4596,27 @@ var Emitter = __webpack_require__(3);
 var BitMapFont =
 /*#__PURE__*/
 function () {
-  function BitMapFont(src) {
+  function BitMapFont(name, src, config) {
     var _this = this;
 
     _classCallCheck(this, BitMapFont);
 
-    var cache = bitMapPool.get(src);
+    var cache = bitMapPool.get(name);
 
     if (cache) {
       return cache;
     }
 
-    this.config = fntText;
-    this.chars = this.parseConfig(fntText);
+    this.config = config;
+    this.chars = this.parseConfig(config);
     this.ready = false;
     this.event = new Emitter();
-    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage('https://res.wx.qq.com/wechatgame/product/webpack/userupload/20200312/fnt_nuber_Star_Proficiency.png', function () {
+    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(src, function () {
       _this.ready = true;
 
       _this.event.emit('text__load__done');
     });
-    bitMapPool.set(src, this);
+    bitMapPool.set(name, this);
   }
 
   _createClass(BitMapFont, [{
@@ -4599,6 +4625,9 @@ function () {
       fntText = fntText.split("\r\n").join("\n");
       var lines = fntText.split("\n");
       var charsCount = this.getConfigByKey(lines[3], "count");
+      this.lineHeight = this.getConfigByKey(lines[1], 'lineHeight');
+      this.fontSize = this.getConfigByKey(lines[0], 'size');
+      console.log("font config", charsCount, this.lineHeight, this.fontSize);
       var chars = {};
 
       for (var i = 4; i < 4 + charsCount; i++) {
