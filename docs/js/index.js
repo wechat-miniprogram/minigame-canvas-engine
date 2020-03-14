@@ -79,7 +79,9 @@ function run() {
     }
 }
 
-run();
+setTimeout(() => {
+    run();
+}, 0)
 
 document.getElementById('run').onclick = function() {
     run();

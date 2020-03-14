@@ -2,7 +2,7 @@ export default
 `
 <view class="container" id="main">
   <view class="header">
-    <text class="title" value="排行榜"></text>
+    <bitmaptext font="fnt_number-export" class="title" value="等级"></bitmaptext>
   </view>
   <view class="rankList">
         <scrollview class="list">
@@ -13,7 +13,7 @@ export default
                 {{? index % 2 === 0 }}
                 <view class="listItem">
                 {{?}}
-                    <text class="listItemNum" value="{{= index + 1}}"></text>
+                    <bitmaptext font="fnt_number-export" class="listItemNum" value="{{= index + 1}}"></bitmaptext>
                     <image class="listHeadImg" src="{{= item.avatarUrl }}"></image>
                   <text class="listItemName" value="{{= item.nickname}}"></text>
                   <text class="listItemScore" value="{{= item.rankScore}}"></text>
@@ -24,7 +24,7 @@ export default
         <text class="listTips" value="仅展示前50位好友排名"></text>
 
         <view class="listItem selfListItem">
-            <text class="listItemNum" value="{{= it.selfIndex}}"></text>
+            <bitmaptext font="fnt_number-export" class="listItemNum" value="{{= it.selfIndex}}"></bitmaptext>
             <image class="listHeadImg" src="{{= it.self.avatarUrl }}"></image>
             <text class="listItemName" value="{{= it.self.nickname}}"></text>
             <text class="listItemScore" value="{{= item.rankScore}}"></text>
@@ -32,5 +32,4 @@ export default
         </view>
     </view>
 </view>
-
 `

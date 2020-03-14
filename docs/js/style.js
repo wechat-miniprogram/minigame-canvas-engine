@@ -1,6 +1,5 @@
 export default
-`
-window.styleValue = {
+`window.styleValue = {
     container: {
         width: 960,
         height: 1410,
@@ -21,7 +20,7 @@ window.styleValue = {
         width: 144,
         fontSize: 48,
         height: 120,
-        lineHeight: 120,
+        lineHeight: 50,
         textAlign: 'center',
         fontWeight: 'bold',
         borderBottomWidth: 6,
@@ -57,7 +56,7 @@ window.styleValue = {
         fontSize: 32,
         fontWeight: 'bold',
         color: '#452E27',
-        lineHeight: 150,
+        lineHeight: 45,
         height: 150,
         textAlign: 'center',
         width: 120,
@@ -112,4 +111,5 @@ window.styleValue = {
       	backgroundColor: '#ffffff',
         borderRadius: 10,
     }
-}`
+}
+`
