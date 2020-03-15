@@ -4,7 +4,7 @@
 详细原理介绍文章：[https://segmentfault.com/a/1190000021297495?_ea=27021986](https://segmentfault.com/a/1190000021297495?_ea=27021986)
 
 ## web端调试
-为了方便UI调试，可以在线编辑预览效果: [Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/)
+为了方便UI调试，可以在线编辑预览效果: [Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html)
 
 ## 效果预览
 <img :src="$withBase('/imgs/screenshot.gif')" width=300>

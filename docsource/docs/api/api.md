@@ -1,6 +1,6 @@
 # API
 
-## LayoutAPI
+## Layout
 
 ### getElementsById
 #### Layout.getElementsById(String elementId)
@@ -10,16 +10,37 @@
 #### Layout.getElementsByClassName(String className)
 获取包含class为**className**的一组元素
 
-### Layout.clear()
+### updateViewPort
+#### Layout.updateViewPort(Object box)
+更新被绘制canvas的窗口信息，本渲染引擎并不关心是否会和其他游戏引擎共同使用，而本身又需要支持事件处理，因此，如果被渲染内容是绘制到离屏canvas，需要将最终绘制在屏幕上
+的绝对尺寸和位置信息更新到本渲染引擎。
+
+##### box
+|      key |  类型  | 是否必填 |          说明          |
+|----------------|--------|--------|------------------------|
+| width | Number |  是   | canvas的物理像素宽度|
+| heigth | Number |  是   | canvas的物理像素高度|
+| x | Number |  是   | canvas 距离屏幕左上角的物理像素x坐标|
+| y | Number |  是   | canvas 距离屏幕左上角的物理像素y坐标|
+
+
+#### Layout.getElementsByClassName(String className)
+获取包含class为**className**的一组元素
+
+### clear
+#### Layout.clear()
 清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行init和layout方法渲染界面。
 
-### Layout.clearPool()
+### clearPool
+#### Layout.clearPool()
 调用此API可以清理对象池，释放内存
 
-### Layout.clearAll()
+### clearAll
+#### Layout.clearAll()
 等价于按序调用Layout.clear和Layout.clearPool.
 
-### Layout.loadImgs(Array imgarr)
+### loadImgs
+#### Layout.loadImgs(Array imgarr)
 对于图片资源，如果不提前加载，渲染过程中可能出现挨个出现图片效果，影响体验。通过Layout.loadImgs可以预加载图片资源，在调用Layout.layout的时候渲染性能更好，体验更佳。
 ```
 // 注意图片路径不需要加./作为前缀，以小游戏根目录作为根目录
@@ -71,7 +92,7 @@ kernings count=0`
 ```
 
 
-### 事件API
+## 事件API
 通过getElementsById或者getElementsByClassName获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`,示例如下：
 ``` js
 const list = Layout.getElementsByClassName('listItem');
@@ -83,7 +104,7 @@ list.forEach(item => {
 });
 ```
 
-### 属性API
+## 属性API
 通过Layout.getElementsById和Layout.getElementsByClassName获取image和text之后，修改图片的链接或者文本的值会自动重渲染界面。
 ``` js
 let img = Layout.getElementsById('testimgid')[0];

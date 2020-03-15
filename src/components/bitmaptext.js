@@ -143,8 +143,6 @@ export default class BitMapText extends Element {
                 y += (height - lineHeight) / 2
             } else if ( verticalAlign === 'bottom' ) {
                 y = y + height - lineHeight;
-            } else {
-                y += ( height - lineHeight) / 2
             }
         }
 
