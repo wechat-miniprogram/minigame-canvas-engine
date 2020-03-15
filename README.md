@@ -6,6 +6,9 @@
 [![Coverage Status](https://coveralls.io/repos/github/wechat-miniprogram/minigame-canvas-engine/badge.svg?branch=master)](https://coveralls.io/github/wechat-miniprogram/minigame-canvas-engine?branch=master)
 [![](https://img.shields.io/npm/l/wxml-to-canvas)](https://github.com/yuanzm/opendatacontextenginetest)
 
+## 文档
+详见[文档](https://wechat-miniprogram.github.io/minigame-canvas-engine/)
+
 ## 简介
 原生js开发canvas界面困难而可维护性差，而引入一款游戏引擎又显得太过笨重。本项目旨在让开发者通过类Web开发的方式来降低canvas的开发门槛。
 
