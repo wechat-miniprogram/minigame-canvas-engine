@@ -51,7 +51,7 @@ view标签用来页面布局，布局严格遵循[CSS Flex布局](https://develo
 ## scrollview标签
 滚动内容的容器，滚动的前提是正确调用[updateViewPort](/api/api.html#updateviewport)
 
-## biamapfont
+## bitmapfont
 在游戏开发里面，为了更好的视觉效果，经常要将一些常用文字经过设计成图片，然后打包成特殊的字体，称为BitmapFont，基本上所有的游戏引擎都支持了这种技术。
 
 本渲染引擎调研了常见的H5游戏引擎Laya、Cocos、Egret，他们普遍支持[AngelCode.com](https://www.angelcode.com/products/bmfont/)打包后的配置文件规范，因此biamapfont
@@ -62,6 +62,20 @@ view标签用来页面布局，布局严格遵循[CSS Flex布局](https://develo
 
 ``` html
 <bitmaptext font="fnt_number-export" class="title" value="等级"></bitmaptext>
+```
+``` js
+title: {
+        width: 144,
+        fontSize: 48,
+        height: 120,
+        lineHeight: 50,
+        textAlign: 'center',
+      	verticalAlign: 'top',
+        fontWeight: 'bold',
+        borderBottomWidth: 6,
+        borderColor: '#000000',
+}
+
 ```
 
 ### 特殊样式
