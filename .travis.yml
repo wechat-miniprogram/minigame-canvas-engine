@@ -8,7 +8,11 @@ install:
 script:
   - npm run coverage-report
   - npm run docs:build
-  - cp -r playground docs/.vuepress/dist/playground
+  - rm -r docs
+  - mkdir docs
+  - cp  docsource/playground/index.html docs/playground.html
+  - cp  docsource/playground/app.js docs/app.js
+  - cp -r docsource/docs/.vuepress/dist docs
 deploy:
   provider: pages
   skip_cleanup: true

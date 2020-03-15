@@ -7,8 +7,8 @@ module.exports = {
        index    : './js/index',
     },
     output:{
-        path: path.resolve(__dirname, "dist"),
-        filename: "index.js", // string
+        path: path.resolve(__dirname, "."),
+        filename: "app.js", // string
     },
     module: {
         rules: [

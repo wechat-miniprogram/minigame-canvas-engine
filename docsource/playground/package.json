@@ -11,7 +11,8 @@
         "dot": "^1.1.2"
     },
     "scripts": {
-        "start": "./node_modules/.bin/webpack --watch"
+        "start": "./node_modules/.bin/webpack --watch",
+        "build": "./node_modules/.bin/webpack --mode=production"
     },
     "dependencies": {
         "js-beautify": "^1.10.2"
