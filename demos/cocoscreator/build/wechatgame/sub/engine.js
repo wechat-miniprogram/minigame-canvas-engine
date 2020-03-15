@@ -101,8 +101,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
 /* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
 /* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(20);
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(13);
+/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(13);
+/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(15);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3251,19 +3251,204 @@ function validateTagName(tagname, regxTagName) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapFont; });
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
+/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_2__["default"]('bitMapPool');
+
+var Emitter = __webpack_require__(3);
+/**
+ * http://www.angelcode.com/products/bmfont/doc/file_format.html
+ */
+
+
+var BitMapFont =
+/*#__PURE__*/
+function () {
+  function BitMapFont(name, src, config) {
+    var _this = this;
+
+    _classCallCheck(this, BitMapFont);
+
+    var cache = bitMapPool.get(name);
+
+    if (cache) {
+      return cache;
+    }
+
+    this.config = config;
+    this.chars = this.parseConfig(config);
+    this.ready = false;
+    this.event = new Emitter();
+    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(src, function () {
+      _this.ready = true;
+
+      _this.event.emit('text__load__done');
+    });
+    bitMapPool.set(name, this);
+  }
+
+  _createClass(BitMapFont, [{
+    key: "parseConfig",
+    value: function parseConfig(fntText) {
+      fntText = fntText.split("\r\n").join("\n");
+      var lines = fntText.split("\n");
+      var charsCount = this.getConfigByKey(lines[3], "count");
+      this.lineHeight = this.getConfigByKey(lines[1], 'lineHeight');
+      this.fontSize = this.getConfigByKey(lines[0], 'size');
+      console.log("font config", charsCount, this.lineHeight, this.fontSize);
+      var chars = {};
+
+      for (var i = 4; i < 4 + charsCount; i++) {
+        var charText = lines[i];
+        var letter = String.fromCharCode(this.getConfigByKey(charText, "id"));
+        var c = {};
+        chars[letter] = c;
+        c["x"] = this.getConfigByKey(charText, "x");
+        c["y"] = this.getConfigByKey(charText, "y");
+        c["w"] = this.getConfigByKey(charText, "width");
+        c["h"] = this.getConfigByKey(charText, "height");
+        c["offX"] = this.getConfigByKey(charText, "xoffset");
+        c["offY"] = this.getConfigByKey(charText, "yoffset");
+        c["xadvance"] = this.getConfigByKey(charText, "xadvance");
+      }
+
+      console.log(chars);
+      return chars;
+    }
+  }, {
+    key: "getConfigByKey",
+    value: function getConfigByKey(configText, key) {
+      var itemConfigTextList = configText.split(" ");
+
+      for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
+        var itemConfigText = itemConfigTextList[i];
+
+        if (key === itemConfigText.substring(0, key.length)) {
+          var value = itemConfigText.substring(key.length + 1);
+          return parseInt(value);
+        }
+      }
+
+      return 0;
+    }
+  }]);
+
+  return BitMapFont;
+}();
+/*new BitMapFont()*/
+
+
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var imgPool = new _pool__WEBPACK_IMPORTED_MODULE_0__["default"]('imgPool');
+
+var ImageManager =
+/*#__PURE__*/
+function () {
+  function ImageManager() {
+    _classCallCheck(this, ImageManager);
+  }
+
+  _createClass(ImageManager, [{
+    key: "getRes",
+    value: function getRes(src) {
+      return imgPool.get(src);
+    }
+  }, {
+    key: "loadImage",
+    value: function loadImage(src) {
+      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _util__WEBPACK_IMPORTED_MODULE_1__["none"];
+      var img = null;
+      var cache = this.getRes(src);
+
+      if (!src) {
+        return img;
+      } // 图片已经被加载过，直接返回图片并且执行回调
+
+
+      if (cache && cache.loadDone) {
+        img = cache;
+        callback();
+      } else if (cache && !cache.loadDone) {
+        // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
+        img = cache;
+        cache.onloadcbks.push(callback);
+      } else {
+        // 创建图片，将回调函数推入回调函数栈
+        img = Object(_util__WEBPACK_IMPORTED_MODULE_1__["createImage"])();
+        img.onloadcbks = [callback];
+        imgPool.set(src, img);
+
+        img.onload = function () {
+          img.onloadcbks.forEach(function (fn) {
+            return fn();
+          });
+          img.onloadcbks = [];
+          img.loadDone = true;
+        };
+
+        img.onerror = function (e) {
+          console.log('img load error', e);
+        };
+
+        img.src = src;
+      }
+
+      return img;
+    }
+  }]);
+
+  return ImageManager;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (new ImageManager());
+
+/***/ }),
+/* 15 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "View", function() { return _view_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(16);
+/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Text", function() { return _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
+/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(19);
+/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(21);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BitMapText", function() { return _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
 
@@ -3274,7 +3459,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3400,7 +3585,7 @@ function (_Element) {
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3620,7 +3805,7 @@ function (_Element) {
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3825,15 +4010,15 @@ function (_Element) {
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
 /* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
-/* harmony import */ var _common_touch_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
+/* harmony import */ var _common_touch_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -4156,7 +4341,7 @@ function (_View) {
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4346,7 +4531,7 @@ function () {
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4355,7 +4540,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 /* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
+/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 /* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -4565,191 +4750,6 @@ function (_Element) {
 }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
-
-/***/ }),
-/* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapFont; });
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
-/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
-/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-
-
-
-var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_2__["default"]('bitMapPool');
-
-var Emitter = __webpack_require__(3);
-/**
- * http://www.angelcode.com/products/bmfont/doc/file_format.html
- */
-
-
-var BitMapFont =
-/*#__PURE__*/
-function () {
-  function BitMapFont(name, src, config) {
-    var _this = this;
-
-    _classCallCheck(this, BitMapFont);
-
-    var cache = bitMapPool.get(name);
-
-    if (cache) {
-      return cache;
-    }
-
-    this.config = config;
-    this.chars = this.parseConfig(config);
-    this.ready = false;
-    this.event = new Emitter();
-    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(src, function () {
-      _this.ready = true;
-
-      _this.event.emit('text__load__done');
-    });
-    bitMapPool.set(name, this);
-  }
-
-  _createClass(BitMapFont, [{
-    key: "parseConfig",
-    value: function parseConfig(fntText) {
-      fntText = fntText.split("\r\n").join("\n");
-      var lines = fntText.split("\n");
-      var charsCount = this.getConfigByKey(lines[3], "count");
-      this.lineHeight = this.getConfigByKey(lines[1], 'lineHeight');
-      this.fontSize = this.getConfigByKey(lines[0], 'size');
-      console.log("font config", charsCount, this.lineHeight, this.fontSize);
-      var chars = {};
-
-      for (var i = 4; i < 4 + charsCount; i++) {
-        var charText = lines[i];
-        var letter = String.fromCharCode(this.getConfigByKey(charText, "id"));
-        var c = {};
-        chars[letter] = c;
-        c["x"] = this.getConfigByKey(charText, "x");
-        c["y"] = this.getConfigByKey(charText, "y");
-        c["w"] = this.getConfigByKey(charText, "width");
-        c["h"] = this.getConfigByKey(charText, "height");
-        c["offX"] = this.getConfigByKey(charText, "xoffset");
-        c["offY"] = this.getConfigByKey(charText, "yoffset");
-        c["xadvance"] = this.getConfigByKey(charText, "xadvance");
-      }
-
-      console.log(chars);
-      return chars;
-    }
-  }, {
-    key: "getConfigByKey",
-    value: function getConfigByKey(configText, key) {
-      var itemConfigTextList = configText.split(" ");
-
-      for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
-        var itemConfigText = itemConfigTextList[i];
-
-        if (key === itemConfigText.substring(0, key.length)) {
-          var value = itemConfigText.substring(key.length + 1);
-          return parseInt(value);
-        }
-      }
-
-      return 0;
-    }
-  }]);
-
-  return BitMapFont;
-}();
-/*new BitMapFont()*/
-
-
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-
-
-var imgPool = new _pool__WEBPACK_IMPORTED_MODULE_0__["default"]('imgPool');
-
-var ImageManager =
-/*#__PURE__*/
-function () {
-  function ImageManager() {
-    _classCallCheck(this, ImageManager);
-  }
-
-  _createClass(ImageManager, [{
-    key: "getRes",
-    value: function getRes(src) {
-      return imgPool.get(src);
-    }
-  }, {
-    key: "loadImage",
-    value: function loadImage(src) {
-      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _util__WEBPACK_IMPORTED_MODULE_1__["none"];
-      var img = null;
-      var cache = this.getRes(src);
-
-      if (!src) {
-        return img;
-      } // 图片已经被加载过，直接返回图片并且执行回调
-
-
-      if (cache && cache.loadDone) {
-        img = cache;
-        callback();
-      } else if (cache && !cache.loadDone) {
-        // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
-        img = cache;
-        cache.onloadcbks.push(callback);
-      } else {
-        // 创建图片，将回调函数推入回调函数栈
-        img = Object(_util__WEBPACK_IMPORTED_MODULE_1__["createImage"])();
-        img.onloadcbks = [callback];
-        imgPool.set(src, img);
-
-        img.onload = function () {
-          img.onloadcbks.forEach(function (fn) {
-            return fn();
-          });
-          img.onloadcbks = [];
-          img.loadDone = true;
-        };
-
-        img.onerror = function (e) {
-          console.log('img load error', e);
-        };
-
-        img.src = src;
-      }
-
-      return img;
-    }
-  }]);
-
-  return ImageManager;
-}();
-
-/* harmony default export */ __webpack_exports__["default"] = (new ImageManager());
 
 /***/ })
 /******/ ]);
