@@ -8,7 +8,7 @@ let localCss      = localStorage.getItem('css');
 let localJs       = localStorage.getItem('js');
 
 import CodeMirror from 'codemirror';
-import Layout     from '../../index'
+import Layout     from '../../../index'
 import doT        from 'dot';
 
 window.doT        = doT;
@@ -147,4 +147,27 @@ for ( let i = 0; i < items.length; i++ ) {
         run();
     }
 };
+
+// 获取元素的绝对位置坐标（像对于页面左上角）
+window.getElementPagePosition = function(element){
+  //计算x坐标
+  var actualLeft = element.offsetLeft;
+  var current = element.offsetParent;
+  while (current !== null){
+    actualLeft += current.offsetLeft;
+    current = current.offsetParent;
+  }
+  //计算y坐标
+  var actualTop = element.offsetTop;
+  var current = element.offsetParent;
+  while (current !== null){
+    actualTop += (current.offsetTop+current.clientTop);
+    current = current.offsetParent;
+  }
+  //返回结果
+  return {x: actualLeft, y: actualTop}
+}
+
+window.canvas = document.getElementById('canvas');
+window.context = canvas.getContext('2d');
 

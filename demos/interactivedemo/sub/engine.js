@@ -4311,7 +4311,9 @@ function (_View) {
 
       this.renderChildren(this);
       this.insertElements(0);
-      this.clipRepaint(-this.top); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+      requestAnimationFrame(function () {
+        _this7.clipRepaint(-_this7.top);
+      }); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
 
       this.EE.on('image__render__done', function () {
         _this7.throttleRepaint(-_this7.top || 0);

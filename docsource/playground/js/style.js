@@ -25,6 +25,7 @@ export default
         fontWeight: 'bold',
         borderBottomWidth: 6,
         borderColor: '#000000',
+      	verticalAlign: 'middle'
     },
 
     rankList: {
@@ -55,11 +56,11 @@ export default
     listItemNum: {
         fontSize: 32,
         fontWeight: 'bold',
-        color: '#452E27',
         lineHeight: 45,
         height: 150,
         textAlign: 'center',
         width: 120,
+      	verticalAlign: 'middle'
     },
 
     listHeadImg: {
@@ -111,5 +112,4 @@ export default
       	backgroundColor: '#ffffff',
         borderRadius: 10,
     }
-}
-`
+}`

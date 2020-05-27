@@ -28,31 +28,29 @@ kernings count=0`
 }, 0)
 
 export default
-`
-/**
+`/**
   * xml为编辑器实例，挂载到window对象，通过xml.getValue可以拿到模板字符串
   * style为编辑器实例，挂载到window对象，通过style.getValue可以拿到样式对象的字符串值
   * 控制台默认
   */
 let xmlValue   = xml.getValue();
 let styleValue = style.getValue();
+let styleObj = eval(styleValue);
 
 // 创建mock数据
 let item = {
     nickname: "zim",
     rankScore: 1,
     avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
-    starSum: 1,
 };
 let datasource =  {
     data     :[],
-    selfIndex: 0,
+    selfIndex: 1,
     self     : item
 }
 for ( let i = 0; i < 20;i++ ) {
     var cp = JSON.parse(JSON.stringify(item));
     cp.rankScore = Math.floor(Math.random()*1000+1)
-    cp.starSum   = i + 1;
     datasource.data.push(cp);
 }
 
@@ -60,43 +58,21 @@ for ( let i = 0; i < 20;i++ ) {
 let tempFn     = doT.template(xmlValue);
 let resultText = tempFn(datasource);
 
-// 获取元素的绝对位置坐标（像对于页面左上角）
-function getElementPagePosition(element){
-  //计算x坐标
-  var actualLeft = element.offsetLeft;
-  var current = element.offsetParent;
-  while (current !== null){
-    actualLeft += current.offsetLeft;
-    current = current.offsetParent;
-  }
-  //计算y坐标
-  var actualTop = element.offsetTop;
-  var current = element.offsetParent;
-  while (current !== null){
-    actualTop += (current.offsetTop+current.clientTop);
-    current = current.offsetParent;
-  }
-  //返回结果
-  return {x: actualLeft, y: actualTop}
-}
-
-let canvas = document.getElementById('canvas');
-let context = canvas.getContext('2d');
-
-// 设置canvas的尺寸和样式的container比例一致
-canvas.style.width = 300 + 'px';
-canvas.style.height = 1410/ 960* 300 + 'px';
-canvas.width = 960;
-canvas.height = 1410;
-
-
-
 function init() {
-    let pos = getElementPagePosition(canvas);
+  	// getElementPagePosition为IDE内置函数
+    let pos = window.getElementPagePosition(canvas);
     // 每次初始化之前先执行清理逻辑保证内存不会一直增长
     Layout.clear();
     // 初始化引擎
-    Layout.init(resultText, eval(styleValue));
+    Layout.init(resultText, styleObj);
+
+  	console.log(Layout)
+  	// 设置canvas的尺寸和样式的container比例一致
+    canvas.width = Layout.renderport.width;
+    canvas.height = Layout.renderport.height;
+  	canvas.style.width = 300 + 'px';
+    canvas.style.height = canvas.height / canvas.width * 300 + 'px';
+
     Layout.updateViewPort({
         x     : pos.x,
         y     : pos.y,
@@ -105,9 +81,7 @@ function init() {
     });
 
     Layout.layout(context);
-
 }
 
 init();
-window.onresize = init;
-`
+window.onresize = init;`
