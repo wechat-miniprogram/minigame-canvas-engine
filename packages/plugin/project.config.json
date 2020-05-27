@@ -1,0 +1,24 @@
+{
+	"miniprogramRoot": "minigame/",
+	"pluginRoot": "plugin/",
+	"compileType": "gamePlugin",
+	"setting": {
+		"urlCheck": true,
+		"es6": true,
+		"postcss": true,
+		"preloadBackgroundData": false,
+		"minified": true,
+		"newFeature": true,
+		"autoAudits": false,
+		"coverView": true,
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"useCompilerModule": false
+	},
+	"appid": "wx7a727ff7d940bb3f",
+	"projectname": "plugin",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"libVersion": "2.11.1",
+	"condition": {}
+}
