@@ -1,15 +1,28 @@
-# 插件文档标题
+# 轻量级canvas渲染引擎插件
 
-## 二级标题
+## 简介
+本插件将[minigame-canvas-engine](https://wechat-miniprogram.github.io/minigame-canvas-engine/)发布成引擎插件。
 
-### 三级标题
+## 安装使用
+1.在game.json配置插件引用了；
+```
+{
+    "deviceOrientation": "portrait",
+    "openDataContext": "sub",
+    "plugins": {
+      "Layout": {
+        "version": "0.0.1",
+        "provider": "wx7a727ff7d940bb3f",
+        "contexts":[{"type":"openDataContext"}]
+      }
+    }
+}
 
-这个文件用于书写插件文档，引用图片时必须以**相对路径**引用 ***doc*** 目录下的本地图片，不能使用网络图片或非 ***doc*** 目录下的图片。以下是相对路径的引用示例：
+```
 
-![链接](./example.jpeg)
+2.在开放数据域内引用插件；
+```
+const Layout = requirePlugin('Layout').default;
+```
 
-使用编辑器下方的上传按钮可以上传插件文档，上传的内容包括 doc 目录下的 README.md 和图片。
-
-
-
-
+3.正常使用Layout来进行渲染；

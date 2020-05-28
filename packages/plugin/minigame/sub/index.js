@@ -1,7 +1,8 @@
 import style    from 'render/style.js';
 import tplFn    from 'render/tplfn.js';
 // import Layout   from './engine.js'
-const Layout = requirePlugin('plus')
+
+const Layout = requirePlugin('Layout').default;
 
 import {
     getFriendData,
