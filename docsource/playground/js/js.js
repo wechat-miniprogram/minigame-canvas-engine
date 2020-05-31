@@ -33,8 +33,9 @@ export default
   * style为编辑器实例，挂载到window对象，通过style.getValue可以拿到样式对象的字符串值
   * 控制台默认
   */
-let xmlValue   = xml.getValue();
-let styleValue = style.getValue();
+console.log(window.xml)
+let xmlValue   = window.xml.getValue();
+let styleValue = window.style.getValue();
 let styleObj = eval(styleValue);
 
 // 创建mock数据

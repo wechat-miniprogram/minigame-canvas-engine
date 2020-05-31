@@ -1,6 +1,11 @@
 import template   from './template.js';
 import css        from './style.js';
 import js         from './js.js';
+
+import newtemplate   from './newtemplate.js';
+import newcss        from './newstyle.js';
+import newjs         from './newjs.js';
+
 let beautify      = require('js-beautify').js
 
 let localTemplate = localStorage.getItem('template');
@@ -39,6 +44,7 @@ window.style = CodeMirror(document.getElementById("style"), {
     extraKeys: {"Ctrl-J": "toMatchingTag"}
 });
 
+try {
 window.js = CodeMirror(document.getElementById("js"), {
     value: localJs || js,
     lineNumbers: true,
@@ -46,6 +52,9 @@ window.js = CodeMirror(document.getElementById("js"), {
     matchTags: {bothTags: true},
     extraKeys: {"Ctrl-J": "toMatchingTag"}
 });
+} catch(e) {
+    console.log(e)
+}
 
 window.dot = CodeMirror(document.getElementById("dot"), {
     value: '',
@@ -55,18 +64,19 @@ window.dot = CodeMirror(document.getElementById("dot"), {
     extraKeys: {"Ctrl-J": "toMatchingTag"}
 });
 
-function run() {
+function run(xml, style, js) {
+    let jscontent = window.js.getValue()
     document.getElementById('error').innerHTML = '';
     try {
-        eval(window.js.getValue());
+        eval(jscontent);
 
-        localStorage.setItem('template', window.xml.getValue());
-        localStorage.setItem('css', window.style.getValue());
-        localStorage.setItem('js', window.js.getValue());
+        localStorage.setItem('template', xml);
+        localStorage.setItem('css', style);
+        localStorage.setItem('js', js);
 
         let comment =
         `/**\n * xml经过doT.js编译出的模板函数\n * 因为小游戏不支持new Function，模板函数只能外部编译\n * 可直接拷贝本函数到小游戏中使用\n */\n`;
-        let be = beautify(String(doT.template(window.xml.getValue())), { indent_size: 4, space_in_empty_paren: true })
+        let be = beautify(String(doT.template(xml)), { indent_size: 4, space_in_empty_paren: true })
 
         window.dot.setValue(
             comment + be
@@ -134,7 +144,6 @@ for ( let i = 0; i < items.length; i++ ) {
         let showLength = panels.filter( item => item.style.display !== 'none').length;
 
         let panel = document.getElementById(item.dataset.panel);
-
         let curr = panel.style.display;
         panel.style.display = curr === '' ? 'none' : '';
 
@@ -170,4 +179,29 @@ window.getElementPagePosition = function(element){
 
 window.canvas = document.getElementById('canvas');
 window.context = canvas.getContext('2d');
+
+let defaultProjects = [
+    {
+        name: "默认示例",
+        js,
+        style,
+        template
+    }
+]
+let projectIndex = 0;
+let projects = []
+let local = localStorage.getItem('projects');
+try {
+    projects = JSON.parse(local)
+} catch {
+    projects = defaultProjects
+    projectIndex = 0
+}
+
+console.log(projects)
+
+let create = document.getElementById('create')
+create.onclick = () => {
+
+}
 
