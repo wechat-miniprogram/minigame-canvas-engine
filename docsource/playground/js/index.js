@@ -6,6 +6,8 @@ import newtemplate   from './newtemplate.js';
 import newcss        from './newstyle.js';
 import newjs         from './newjs.js';
 
+import Vue from 'vue/dist/vue.js'
+
 let beautify      = require('js-beautify').js
 
 let localTemplate = localStorage.getItem('template');
@@ -29,83 +31,25 @@ require("codemirror/addon/comment/continuecomment.js");
 require("codemirror/addon/comment/comment.js");
 require("codemirror/mode/javascript/javascript.js")
 
-window.xml = CodeMirror(document.getElementById("xml"), {
-    value: localTemplate || template,
-    mode: "text/html",
-    lineNumbers: true,
-});
-
-window.style = CodeMirror(document.getElementById("style"), {
-    value: localCss || css,
-
-    lineNumbers: true,
-    mode: "text/javascript",
-    matchTags: {bothTags: true},
-    extraKeys: {"Ctrl-J": "toMatchingTag"}
-});
-
-try {
-window.js = CodeMirror(document.getElementById("js"), {
-    value: localJs || js,
-    lineNumbers: true,
-    mode: "text/javascript",
-    matchTags: {bothTags: true},
-    extraKeys: {"Ctrl-J": "toMatchingTag"}
-});
-} catch(e) {
-    console.log(e)
-}
-
-window.dot = CodeMirror(document.getElementById("dot"), {
-    value: '',
-    lineNumbers: true,
-    mode: "text/javascript",
-    matchTags: {bothTags: true},
-    extraKeys: {"Ctrl-J": "toMatchingTag"}
-});
-
-function run(xml, style, js) {
-    let jscontent = window.js.getValue()
+function run(xml, css, js) {
     document.getElementById('error').innerHTML = '';
     try {
-        eval(jscontent);
-
-        localStorage.setItem('template', xml);
-        localStorage.setItem('css', style);
-        localStorage.setItem('js', js);
+        eval(js);
 
         let comment =
-        `/**\n * xml经过doT.js编译出的模板函数\n * 因为小游戏不支持new Function，模板函数只能外部编译\n * 可直接拷贝本函数到小游戏中使用\n */\n`;
-        let be = beautify(String(doT.template(xml)), { indent_size: 4, space_in_empty_paren: true })
+            `/**\n * xml经过doT.js编译出的模板函数\n * 因为小游戏不支持new Function，模板函数只能外部编译\n * 可直接拷贝本函数到小游戏中使用\n */\n`;
+        let be = beautify(String(window.doT.template(xml)), { indent_size: 4, space_in_empty_paren: true })
 
         window.dot.setValue(
             comment + be
         );
 
-        console.log(Layout);
     } catch(e) {
         console.log(e);
         document.getElementById('error').innerHTML = e;
     }
 }
 
-setTimeout(() => {
-    run();
-}, 0)
-
-document.getElementById('run').onclick = function() {
-    run();
-};
-
-document.getElementById('reset').onclick = function() {
-    window.xml.setValue(template);
-    window.style.setValue(css);
-    window.js.setValue(js);
-
-    setTimeout(() => {
-        run();
-    }, 0);
-};
 
 let items = [].slice.call(document.getElementsByClassName('panels__item'))
 let panels = [].slice.call(document.getElementsByClassName('code'));
@@ -157,24 +101,63 @@ for ( let i = 0; i < items.length; i++ ) {
     }
 };
 
+function init(proj = {}) {
+    let {xml, css, js} = proj;
+
+    window.xml = CodeMirror(document.getElementById("xml"), {
+        value: xml,
+        mode: "text/html",
+        lineNumbers: true,
+    });
+
+    window.style = CodeMirror(document.getElementById("style"), {
+        value: css,
+
+        lineNumbers: true,
+        mode: "text/javascript",
+        matchTags: {bothTags: true},
+        extraKeys: {"Ctrl-J": "toMatchingTag"}
+    });
+
+    window.js = CodeMirror(document.getElementById("js"), {
+        value: js,
+        lineNumbers: true,
+        mode: "text/javascript",
+        matchTags: {bothTags: true},
+        extraKeys: {"Ctrl-J": "toMatchingTag"}
+    });
+
+    window.dot = CodeMirror(document.getElementById("dot"), {
+        value: '',
+        lineNumbers: true,
+        mode: "text/javascript",
+        matchTags: {bothTags: true},
+        extraKeys: {"Ctrl-J": "toMatchingTag"}
+    });
+
+    setTimeout(() => {
+        run(xml, css, js);
+    }, 0)
+}
+
 // 获取元素的绝对位置坐标（像对于页面左上角）
 window.getElementPagePosition = function(element){
-  //计算x坐标
-  var actualLeft = element.offsetLeft;
-  var current = element.offsetParent;
-  while (current !== null){
-    actualLeft += current.offsetLeft;
-    current = current.offsetParent;
-  }
-  //计算y坐标
-  var actualTop = element.offsetTop;
-  var current = element.offsetParent;
-  while (current !== null){
-    actualTop += (current.offsetTop+current.clientTop);
-    current = current.offsetParent;
-  }
-  //返回结果
-  return {x: actualLeft, y: actualTop}
+    //计算x坐标
+    var actualLeft = element.offsetLeft;
+    var current = element.offsetParent;
+    while (current !== null){
+        actualLeft += current.offsetLeft;
+        current = current.offsetParent;
+    }
+    //计算y坐标
+    var actualTop = element.offsetTop;
+    var current = element.offsetParent;
+    while (current !== null){
+        actualTop += (current.offsetTop+current.clientTop);
+        current = current.offsetParent;
+    }
+    //返回结果
+    return {x: actualLeft, y: actualTop}
 }
 
 window.canvas = document.getElementById('canvas');
@@ -184,24 +167,90 @@ let defaultProjects = [
     {
         name: "默认示例",
         js,
-        style,
-        template
+        css,
+        xml: template
     }
 ]
+
+// init projects
 let projectIndex = 0;
 let projects = []
 let local = localStorage.getItem('projects');
 try {
-    projects = JSON.parse(local)
+    if (local) {
+        projects = JSON.parse(local);
+    } else {
+        projects = defaultProjects;
+        localStorage.setItem('projects', JSON.stringify(projects));
+    }
 } catch {
     projects = defaultProjects
     projectIndex = 0
 }
 
-console.log(projects)
+init(projects[projectIndex]);
 
-let create = document.getElementById('create')
-create.onclick = () => {
+// 绑定运行按钮事件
+document.getElementById('run').onclick = function() {
+    run(window.xml.getValue(), window.style.getValue(), window.js.getValue());
+};
 
-}
+document.getElementById('reset').onclick = function() {
+};
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        projects,
+        projectIndex,
+    },
+
+    computed: {
+        currName() {
+            return this.projects[this.projectIndex].name
+        }
+    },
+
+    mounted() {
+        document.getElementById('app').style.display = 'block';
+    },
+
+    methods: {
+        create() {
+            const name = prompt("项目名称", "新项目");
+
+            if (name === null) {
+                return
+            }
+
+            let newProj = {
+                name,
+                js: newjs,
+                css: newcss,
+                xml: newtemplate
+            }
+
+            projects.push(newProj)
+            projectIndex = projects.length - 1;
+
+            localStorage.setItem('projects', JSON.stringify(projects))
+
+            setTimeout(() => {
+                this.runProj(newProj)
+            }, 0);
+        },
+
+        runProj(proj) {
+            window.xml.setValue(proj.xml)
+            window.style.setValue(proj.css)
+            window.js.setValue(proj.js)
+            run(proj.xml, proj.css, proj.js);
+        },
+
+        setAsCurrent(proj, index) {
+            this.projectIndex = index;
+            this.runProj(proj)
+        }
+    }
+})
 

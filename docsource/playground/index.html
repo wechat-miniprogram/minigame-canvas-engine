@@ -789,7 +789,7 @@ body {
 }
 
 /* 下拉菜单的链接 */
-.dropdown-content a {
+.dropdown-content div {
     color: black;
     padding: 7px 16px;
     text-decoration: none;
@@ -797,7 +797,7 @@ body {
 }
 
 /* 鼠标移上去后修改下拉菜单链接颜色 */
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content div:hover {background-color: #f1f1f1}
 
 /* 在鼠标移上去后显示下拉菜单 */
 .dropdown:hover .dropdown-content {
@@ -815,18 +815,36 @@ display: inline-block;
 margin-left: 5px;
 }
 #create {
-    margin-left: 10px;
+    margin-left: 105px;
+    margin-top: 5px;
     font-size: 14px;
     color: #3582fb;
+    position: fixed;
+}
+.circle {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: #4caf50;
+    margin-bottom:2px;
 }
 </style>
 <body>
-<div class="dropdown">
-    <span class="dropbtn">默认示例<span class="content"></span></span><a id="create">创建</a>
-    <div class="dropdown-content">
-        <a href="javascript:;">默认示例</a>
+<div id="app" style="display:none" >
+    <div class="dropdown">
+        <span class="dropbtn">{{ currName }}<span class="content"></span></span>
+        <div class="dropdown-content">
+            <template v-for="(proj, index) in projects">
+                <div @click="setAsCurrent(proj, index)">
+                    <span class="circle" v-if="index === projectIndex"></span>
+                    {{ proj.name }}</div>
+            </template>
+        </div>
     </div>
+    <a id="create" @click="create">创建</a>
 </div>
+
 <div id="panels">
 
     <div class="panels__item active" data-panel="panel__xml">xml</div>

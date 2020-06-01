@@ -37,8 +37,6 @@ export default class BitMapFont {
         this.lineHeight = this.getConfigByKey(lines[1], 'lineHeight')
         this.fontSize   = this.getConfigByKey(lines[0], 'size')
 
-        console.log("font config", charsCount, this.lineHeight, this.fontSize)
-
         let chars = {};
         for (let i= 4; i < 4 + charsCount; i++) {
             let charText = lines[i];
@@ -53,8 +51,6 @@ export default class BitMapFont {
             c["offY"] = this.getConfigByKey(charText, "yoffset");
             c["xadvance"] = this.getConfigByKey(charText, "xadvance");
         }
-
-        console.log(chars)
 
         return chars;
     }

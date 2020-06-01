@@ -26,7 +26,7 @@ for ( let i = 0; i < 20;i++ ) {
 }
 
 // 将XML模板编译成XML字符串
-let tempFn     = doT.template(xmlValue);
+let tempFn     = window.doT.template(xmlValue);
 let resultText = tempFn(datasource);
 
 function init() {

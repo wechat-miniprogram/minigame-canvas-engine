@@ -33,7 +33,6 @@ export default
   * style为编辑器实例，挂载到window对象，通过style.getValue可以拿到样式对象的字符串值
   * 控制台默认
   */
-console.log(window.xml)
 let xmlValue   = window.xml.getValue();
 let styleValue = window.style.getValue();
 let styleObj = eval(styleValue);
@@ -56,7 +55,7 @@ for ( let i = 0; i < 20;i++ ) {
 }
 
 // 将XML模板编译成XML字符串
-let tempFn     = doT.template(xmlValue);
+let tempFn     = window.doT.template(xmlValue);
 let resultText = tempFn(datasource);
 
 function init() {

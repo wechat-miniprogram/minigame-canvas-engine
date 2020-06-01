@@ -3304,7 +3304,6 @@ var BitMapFont = /*#__PURE__*/function () {
       var charsCount = this.getConfigByKey(lines[3], "count");
       this.lineHeight = this.getConfigByKey(lines[1], 'lineHeight');
       this.fontSize = this.getConfigByKey(lines[0], 'size');
-      console.log("font config", charsCount, this.lineHeight, this.fontSize);
       var chars = {};
 
       for (var i = 4; i < 4 + charsCount; i++) {
@@ -3321,7 +3320,6 @@ var BitMapFont = /*#__PURE__*/function () {
         c["xadvance"] = this.getConfigByKey(charText, "xadvance");
       }
 
-      console.log(chars);
       return chars;
     }
   }, {
