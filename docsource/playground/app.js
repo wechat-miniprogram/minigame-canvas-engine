@@ -151,6 +151,12 @@ function run(xml, css, js) {
       space_in_empty_paren: true
     });
     window.dot.setValue(comment + be);
+    var proj = projects[projectIndex];
+    proj.xml = xml;
+    proj.css = css;
+    proj.js = js;
+    localStorage.setItem('projects', JSON.stringify(projects));
+    localStorage.setItem('projectIndex', projectIndex);
   } catch (e) {
     console.log(e);
     document.getElementById('error').innerHTML = e;
@@ -299,6 +305,7 @@ var local = localStorage.getItem('projects');
 try {
   if (local) {
     projects = JSON.parse(local);
+    projectIndex = localStorage.getItem('projectIndex');
   } else {
     projects = defaultProjects;
     localStorage.setItem('projects', JSON.stringify(projects));
@@ -318,9 +325,11 @@ document.getElementById('reset').onclick = function () {};
 
 var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
   el: '#app',
-  data: {
-    projects: projects,
-    projectIndex: projectIndex
+  data: function data() {
+    return {
+      projects: projects,
+      projectIndex: +projectIndex
+    };
   },
   computed: {
     currName: function currName() {
@@ -331,12 +340,17 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
     document.getElementById('app').style.display = 'block';
   },
   methods: {
-    create: function create() {
+    createProj: function createProj() {
       var _this = this;
 
       var name = prompt("项目名称", "新项目");
 
       if (name === null) {
+        return;
+      }
+
+      if (name.length > 20) {
+        alert('项目名称最长20个字');
         return;
       }
 
@@ -348,7 +362,9 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
       };
       projects.push(newProj);
       projectIndex = projects.length - 1;
+      this.projectIndex = projectIndex;
       localStorage.setItem('projects', JSON.stringify(projects));
+      localStorage.setItem('projectIndex', projectIndex);
       setTimeout(function () {
         _this.runProj(newProj);
       }, 0);
@@ -361,6 +377,7 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
     },
     setAsCurrent: function setAsCurrent(proj, index) {
       this.projectIndex = index;
+      projectIndex = index;
       this.runProj(proj);
     }
   }

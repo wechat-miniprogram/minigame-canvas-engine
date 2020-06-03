@@ -761,6 +761,10 @@ body {
     height: 30%;
 }
 
+#app {
+    z-index: 1000;
+}
+
 .dropdown {
     z-index: 999;
     position: fixed;
@@ -814,12 +818,10 @@ margin-bottom: 4px;
 display: inline-block;
 margin-left: 5px;
 }
-#create {
-    margin-left: 105px;
-    margin-top: 5px;
+.create {
     font-size: 14px;
     color: #3582fb;
-    position: fixed;
+    cursor: pointer;
 }
 .circle {
     display: inline-block;
@@ -828,6 +830,7 @@ margin-left: 5px;
     border-radius: 3px;
     background-color: #4caf50;
     margin-bottom:2px;
+    margin-right: 3px;
 }
 </style>
 <body>
@@ -837,12 +840,11 @@ margin-left: 5px;
         <div class="dropdown-content">
             <template v-for="(proj, index) in projects">
                 <div @click="setAsCurrent(proj, index)">
-                    <span class="circle" v-if="index === projectIndex"></span>
-                    {{ proj.name }}</div>
+                    <span class="circle" v-if="index === projectIndex"></span>{{ proj.name }}</div>
             </template>
         </div>
+        <a class="create" @click="createProj">创建</a>
     </div>
-    <a id="create" @click="create">创建</a>
 </div>
 
 <div id="panels">

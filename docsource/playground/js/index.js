@@ -44,6 +44,13 @@ function run(xml, css, js) {
             comment + be
         );
 
+        const proj = projects[projectIndex];
+        proj.xml = xml;
+        proj.css = css;
+        proj.js = js;
+
+        localStorage.setItem('projects', JSON.stringify(projects))
+        localStorage.setItem('projectIndex', projectIndex)
     } catch(e) {
         console.log(e);
         document.getElementById('error').innerHTML = e;
@@ -179,6 +186,7 @@ let local = localStorage.getItem('projects');
 try {
     if (local) {
         projects = JSON.parse(local);
+        projectIndex = localStorage.getItem('projectIndex');
     } else {
         projects = defaultProjects;
         localStorage.setItem('projects', JSON.stringify(projects));
@@ -200,9 +208,11 @@ document.getElementById('reset').onclick = function() {
 
 var app = new Vue({
     el: '#app',
-    data: {
-        projects,
-        projectIndex,
+    data() {
+        return {
+            projects,
+            projectIndex: +projectIndex,
+        }
     },
 
     computed: {
@@ -216,11 +226,16 @@ var app = new Vue({
     },
 
     methods: {
-        create() {
+        createProj() {
             const name = prompt("项目名称", "新项目");
 
             if (name === null) {
                 return
+            }
+
+            if ( name.length > 20 ) {
+                alert('项目名称最长20个字')
+                return;
             }
 
             let newProj = {
@@ -232,8 +247,10 @@ var app = new Vue({
 
             projects.push(newProj)
             projectIndex = projects.length - 1;
+            this.projectIndex = projectIndex;
 
             localStorage.setItem('projects', JSON.stringify(projects))
+            localStorage.setItem('projectIndex', projectIndex)
 
             setTimeout(() => {
                 this.runProj(newProj)
@@ -244,11 +261,13 @@ var app = new Vue({
             window.xml.setValue(proj.xml)
             window.style.setValue(proj.css)
             window.js.setValue(proj.js)
+
             run(proj.xml, proj.css, proj.js);
         },
 
         setAsCurrent(proj, index) {
             this.projectIndex = index;
+            projectIndex = index;
             this.runProj(proj)
         }
     }
