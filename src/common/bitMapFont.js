@@ -21,7 +21,10 @@ export default class BitMapFont {
         this.ready   = false;
         this.event = new Emitter();
 
-        this.texture = imageManager.loadImage(src, () => {
+        this.texture = imageManager.loadImage(src, (texture, fromCache) => {
+            if (fromCache) {
+                this.texture = texture;
+            }
             this.ready = true;
             this.event.emit('text__load__done');
         })
