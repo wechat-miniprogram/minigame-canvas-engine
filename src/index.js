@@ -334,7 +334,6 @@ class _Layout extends Element {
 
         this.debugInfo.layoutChildren = new Date() - start;
 
-
         // 计算真实的物理像素位置，用于事件处理
         updateRealLayout(this.elementTree.children, this.children, this.viewport.width / this.renderport.width);
 
@@ -466,8 +465,8 @@ class _Layout extends Element {
         this.children    = [];
         this.layoutTree  = {};
         this.state       = STATE.CLEAR;
-        Object.keys(canvasPool.pool).forEach(key => {
-            let item = canvasPool.get(key);
+
+        canvasPool.getList().forEach(item => {
             item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
             item.elements = [];
 
@@ -484,6 +483,7 @@ class _Layout extends Element {
         });
 
         this.EE.off('image__render__done');
+
     }
 
     clearPool() {

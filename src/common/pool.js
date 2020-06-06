@@ -25,4 +25,8 @@ export default class Pool {
     clear() {
         this.pool = {};
     }
+
+    getList() {
+        return Object.values(this.pool);
+    }
 }

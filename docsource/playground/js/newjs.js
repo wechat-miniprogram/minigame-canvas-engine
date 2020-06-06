@@ -8,21 +8,7 @@ let xmlValue   = window.xml.getValue();
 let styleValue = window.style.getValue();
 let styleObj = eval(styleValue);
 
-// 创建mock数据
-let item = {
-    nickname: "zim",
-    rankScore: 1,
-    avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
-};
 let datasource =  {
-    data     :[],
-    selfIndex: 1,
-    self     : item
-}
-for ( let i = 0; i < 20;i++ ) {
-    var cp = JSON.parse(JSON.stringify(item));
-    cp.rankScore = Math.floor(Math.random()*1000+1)
-    datasource.data.push(cp);
 }
 
 // 将XML模板编译成XML字符串

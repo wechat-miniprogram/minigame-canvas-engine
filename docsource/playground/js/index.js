@@ -217,7 +217,8 @@ var app = new Vue({
 
     computed: {
         currName() {
-            return this.projects[this.projectIndex].name
+            const proj = this.projects[this.projectIndex];
+            return proj && proj.name
         }
     },
 
@@ -265,10 +266,39 @@ var app = new Vue({
             run(proj.xml, proj.css, proj.js);
         },
 
+        deleteProj(proj, index) {
+            const r = confirm("是否删除该项目")
+
+            if (r) {
+                this.projects.splice(index, 1)
+                this.projectIndex = 0;
+                projectIndex = 0;
+            }
+
+            if (this.projects[this.projectIndex]) {
+                this.runProj(this.projects[this.projectIndex])
+            }
+
+        },
+
         setAsCurrent(proj, index) {
             this.projectIndex = index;
             projectIndex = index;
             this.runProj(proj)
+        },
+
+        modProj(proj) {
+            const newName = prompt("项目名称", proj.name);
+
+            if ( newName && newName.length > 20 ) {
+                alert('项目名称最长20个字')
+                return;
+            }
+
+            if (newName) {
+                proj.name = newName;
+                localStorage.setItem('projects', JSON.stringify(projects))
+            }
         }
     }
 })

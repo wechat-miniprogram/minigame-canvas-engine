@@ -62,18 +62,6 @@ export default class BitMapText extends Element {
 
 
     render(ctx, layoutBox) {
-        /*this.style.width = 200;
-        let tree = {
-            style: this.parent.style,
-            children: [
-                {
-                    style: this.style
-                }
-            ]
-        }
-
-        computeLayout(tree)
-        console.log(tree)*/
         if (!this.font) {
             return
         }

@@ -22,7 +22,7 @@ class ImageManager {
         // 图片已经被加载过，直接返回图片并且执行回调
         if ( cache && cache.loadDone ) {
             img = cache;
-            callback();
+            callback(img, true);
         } else if ( cache && !cache.loadDone ) {
             // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
             img = cache;
@@ -35,7 +35,7 @@ class ImageManager {
             imgPool.set(src, img);
 
             img.onload = () => {
-                img.onloadcbks.forEach(fn => fn());
+                img.onloadcbks.forEach(fn => fn(img, false));
                 img.onloadcbks = [];
                 img.loadDone   = true;
             }

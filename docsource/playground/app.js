@@ -333,7 +333,8 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
   },
   computed: {
     currName: function currName() {
-      return this.projects[this.projectIndex].name;
+      var proj = this.projects[this.projectIndex];
+      return proj && proj.name;
     }
   },
   mounted: function mounted() {
@@ -375,10 +376,36 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
       window.js.setValue(proj.js);
       run(proj.xml, proj.css, proj.js);
     },
+    deleteProj: function deleteProj(proj, index) {
+      var r = confirm("是否删除该项目");
+
+      if (r) {
+        this.projects.splice(index, 1);
+        this.projectIndex = 0;
+        projectIndex = 0;
+      }
+
+      if (this.projects[this.projectIndex]) {
+        this.runProj(this.projects[this.projectIndex]);
+      }
+    },
     setAsCurrent: function setAsCurrent(proj, index) {
       this.projectIndex = index;
       projectIndex = index;
       this.runProj(proj);
+    },
+    modProj: function modProj(proj) {
+      var newName = prompt("项目名称", proj.name);
+
+      if (newName && newName.length > 20) {
+        alert('项目名称最长20个字');
+        return;
+      }
+
+      if (newName) {
+        proj.name = newName;
+        localStorage.setItem('projects', JSON.stringify(projects));
+      }
     }
   }
 });
@@ -432,7 +459,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("/**\n  * xml\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7xml.getValue\u53EF\u4EE5\u62FF\u5230\u6A21\u677F\u5B57\u7B26\u4E32\n  * style\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7style.getValue\u53EF\u4EE5\u62FF\u5230\u6837\u5F0F\u5BF9\u8C61\u7684\u5B57\u7B26\u4E32\u503C\n  * \u63A7\u5236\u53F0\u9ED8\u8BA4\n  */\nlet xmlValue   = window.xml.getValue();\nlet styleValue = window.style.getValue();\nlet styleObj = eval(styleValue);\n\n// \u521B\u5EFAmock\u6570\u636E\nlet item = {\n    nickname: \"zim\",\n    rankScore: 1,\n    avatarUrl: 'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',\n};\nlet datasource =  {\n    data     :[],\n    selfIndex: 1,\n    self     : item\n}\nfor ( let i = 0; i < 20;i++ ) {\n    var cp = JSON.parse(JSON.stringify(item));\n    cp.rankScore = Math.floor(Math.random()*1000+1)\n    datasource.data.push(cp);\n}\n\n// \u5C06XML\u6A21\u677F\u7F16\u8BD1\u6210XML\u5B57\u7B26\u4E32\nlet tempFn     = window.doT.template(xmlValue);\nlet resultText = tempFn(datasource);\n\nfunction init() {\n  \t// getElementPagePosition\u4E3AIDE\u5185\u7F6E\u51FD\u6570\n    let pos = window.getElementPagePosition(canvas);\n    // \u6BCF\u6B21\u521D\u59CB\u5316\u4E4B\u524D\u5148\u6267\u884C\u6E05\u7406\u903B\u8F91\u4FDD\u8BC1\u5185\u5B58\u4E0D\u4F1A\u4E00\u76F4\u589E\u957F\n    Layout.clear();\n    // \u521D\u59CB\u5316\u5F15\u64CE\n    Layout.init(resultText, styleObj);\n\n  \tconsole.log(Layout)\n  \t// \u8BBE\u7F6Ecanvas\u7684\u5C3A\u5BF8\u548C\u6837\u5F0F\u7684container\u6BD4\u4F8B\u4E00\u81F4\n    canvas.width = Layout.renderport.width;\n    canvas.height = Layout.renderport.height;\n  \tcanvas.style.width = 300 + 'px';\n    canvas.style.height = canvas.height / canvas.width * 300 + 'px';\n\n    Layout.updateViewPort({\n        x     : pos.x,\n        y     : pos.y,\n        width : canvas.offsetWidth,\n        height: canvas.offsetHeight,\n    });\n\n    Layout.layout(context);\n}\n\ninit();\nwindow.onresize = init;");
+/* harmony default export */ __webpack_exports__["default"] = ("/**\n  * xml\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7xml.getValue\u53EF\u4EE5\u62FF\u5230\u6A21\u677F\u5B57\u7B26\u4E32\n  * style\u4E3A\u7F16\u8F91\u5668\u5B9E\u4F8B\uFF0C\u6302\u8F7D\u5230window\u5BF9\u8C61\uFF0C\u901A\u8FC7style.getValue\u53EF\u4EE5\u62FF\u5230\u6837\u5F0F\u5BF9\u8C61\u7684\u5B57\u7B26\u4E32\u503C\n  * \u63A7\u5236\u53F0\u9ED8\u8BA4\n  */\nlet xmlValue   = window.xml.getValue();\nlet styleValue = window.style.getValue();\nlet styleObj = eval(styleValue);\n\nlet datasource =  {\n}\n\n// \u5C06XML\u6A21\u677F\u7F16\u8BD1\u6210XML\u5B57\u7B26\u4E32\nlet tempFn     = window.doT.template(xmlValue);\nlet resultText = tempFn(datasource);\n\nfunction init() {\n  \t// getElementPagePosition\u4E3AIDE\u5185\u7F6E\u51FD\u6570\n    let pos = window.getElementPagePosition(canvas);\n    // \u6BCF\u6B21\u521D\u59CB\u5316\u4E4B\u524D\u5148\u6267\u884C\u6E05\u7406\u903B\u8F91\u4FDD\u8BC1\u5185\u5B58\u4E0D\u4F1A\u4E00\u76F4\u589E\u957F\n    Layout.clear();\n    // \u521D\u59CB\u5316\u5F15\u64CE\n    Layout.init(resultText, styleObj);\n\n  \tconsole.log(Layout)\n  \t// \u8BBE\u7F6Ecanvas\u7684\u5C3A\u5BF8\u548C\u6837\u5F0F\u7684container\u6BD4\u4F8B\u4E00\u81F4\n    canvas.width = Layout.renderport.width;\n    canvas.height = Layout.renderport.height;\n  \tcanvas.style.width = 300 + 'px';\n    canvas.style.height = canvas.height / canvas.width * 300 + 'px';\n\n    Layout.updateViewPort({\n        x     : pos.x,\n        y     : pos.y,\n        width : canvas.offsetWidth,\n        height: canvas.offsetHeight,\n    });\n\n    Layout.layout(context);\n}\n\ninit();\nwindow.onresize = init;");
 
 /***/ }),
 /* 7 */
@@ -32492,8 +32519,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.children = [];
         this.layoutTree = {};
         this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].CLEAR;
-        Object.keys(canvasPool.pool).forEach(function (key) {
-          var item = canvasPool.get(key);
+        canvasPool.getList().forEach(function (item) {
           item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
           item.elements = [];
           item.canvas = null;
@@ -33015,6 +33041,11 @@ function (module, __webpack_exports__, __webpack_require__) {
       key: "clear",
       value: function clear() {
         this.pool = {};
+      }
+    }, {
+      key: "getList",
+      value: function getList() {
+        return Object.values(this.pool);
       }
     }]);
 
@@ -35424,7 +35455,11 @@ function (module, __webpack_exports__, __webpack_require__) {
       this.chars = this.parseConfig(config);
       this.ready = false;
       this.event = new Emitter();
-      this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(src, function () {
+      this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(src, function (texture, fromCache) {
+        if (fromCache) {
+          _this.texture = texture;
+        }
+
         _this.ready = true;
 
         _this.event.emit('text__load__done');
@@ -35547,7 +35582,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
         if (cache && cache.loadDone) {
           img = cache;
-          callback();
+          callback(img, true);
         } else if (cache && !cache.loadDone) {
           // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
           img = cache;
@@ -35560,7 +35595,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
           img.onload = function () {
             img.onloadcbks.forEach(function (fn) {
-              return fn();
+              return fn(img, false);
             });
             img.onloadcbks = [];
             img.loadDone = true;
@@ -35903,6 +35938,10 @@ function (module, __webpack_exports__, __webpack_require__) {
 
 
   var _common_pool_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+  /* harmony import */
+
+
+  var _common_imageManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(14);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -36059,7 +36098,11 @@ function (module, __webpack_exports__, __webpack_require__) {
 
           if (newValue !== this.imgsrc) {
             this.imgsrc = newValue;
-            this.initImg(function () {
+
+            _common_imageManager__WEBPACK_IMPORTED_MODULE_3__["default"].loadImage(this.src, function (img, fromCache) {
+              _this2.img = img;
+              /*this.repaint();*/
+
               _this2.emit('repaint');
             });
           }
@@ -36086,81 +36129,9 @@ function (module, __webpack_exports__, __webpack_require__) {
       key: "destroySelf",
       value: function destroySelf() {
         this.isDestroyed = true;
-
-        if (this.img) {
-          this.img.onloadcbks = [];
-          this.img.onload = null;
-          this.img.onerror = null;
-        }
-
         this.img = null;
         delete this.src;
         this.off('img__load__done');
-      }
-    }, {
-      key: "initImg",
-      value: function initImg() {
-        var _this4 = this;
-
-        var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _common_util_js__WEBPACK_IMPORTED_MODULE_1__["none"];
-        this.img = null;
-        this.imgLoadDone = false;
-        var cache = imgPool.get(this.src);
-
-        if (!this.src) {
-          this.imgLoadDone = true;
-          callback();
-          return;
-        }
-
-        if (cache && cache.loadDone) {
-          this.img = cache;
-          this.imgLoadDone = true;
-          callback();
-        } else if (cache && !cache.loadDone) {
-          this.img = cache;
-          cache.onloadcbks.push(function () {
-            if (!_this4.img) {
-              return;
-            }
-
-            _this4.imgLoadDone = true;
-
-            _this4.emit('img__load__done');
-
-            callback();
-          });
-        } else {
-          this.img = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["createImage"])();
-          this.img.onloadcbks = [];
-          imgPool.set(this.src, this.img);
-
-          this.img.onload = function () {
-            if (!_this4.img) {
-              return;
-            }
-
-            if (_this4.img) {
-              _this4.img.onloadcbks.forEach(function (fn) {
-                return fn();
-              });
-
-              _this4.img.onloadcbks = [];
-              _this4.img.loadDone = true;
-              _this4.imgLoadDone = true;
-            }
-
-            _this4.emit('img__load__done');
-
-            callback();
-          };
-
-          this.img.onerror = function (e) {
-            console.log('img load error', e);
-          };
-
-          this.img.src = this.src;
-        }
       }
     }, {
       key: "renderImg",
@@ -36193,14 +36164,26 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "insert",
       value: function insert(ctx, box) {
-        var _this5 = this;
+        var _this4 = this;
 
         this.renderBoxes.push({
           ctx: ctx,
           box: box
         });
-        this.initImg(function () {
-          _this5.renderImg(ctx, box);
+        this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_3__["default"].loadImage(this.src, function (img, fromCache) {
+          // 来自缓存的，还没返回img就会执行回调函数
+          if (fromCache) {
+            _this4.img = img;
+
+            _this4.renderImg(ctx, box);
+          } else {
+            // 当图片加载完成，实例可能已经被销毁了
+            if (_this4.img) {
+              _this4.emit('img__load__done');
+
+              _this4.renderImg(ctx, box);
+            }
+          }
         });
       }
     }]);
@@ -36710,6 +36693,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
       _this.throttleRepaint = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.clipRepaint, 16, _assertThisInitialized(_this));
       _this.renderTimers = [];
+      _this.requestID = null;
       return _this;
     }
     /**
@@ -36814,6 +36798,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.canvasMap = {};
         this.ctx = null;
         this.children = null;
+        this.requestID && cancelAnimationFrame(this.requestID);
       }
       /**
        * 滚动列表重绘逻辑
@@ -36823,56 +36808,62 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "clipRepaint",
       value: function clipRepaint(top) {
+        var _this5 = this;
+
         if (this.isDestroyed) {
           return;
         }
 
-        top = -top;
-        this.top = top;
-        var box = this.layoutBox;
-        var abY = box.absoluteY;
+        this.requestID = requestAnimationFrame(function () {
+          top = -top;
+          _this5.top = top;
+          var box = _this5.layoutBox;
+          var abY = box.absoluteY;
 
-        if (this.isDestroyed || this.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
-          return;
-        } // 在主canvas上面将滚动列表区域擦除
+          if (_this5.isDestroyed || _this5.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
+            return;
+          } // 在主canvas上面将滚动列表区域擦除
 
 
-        this.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
+          _this5.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
 
-        this.ctx.fillStyle = this.parent.style.backgroundColor || '#ffffff';
-        this.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
 
-        for (var i = 0; i < this.pageCount; i++) {
-          var canvas = this.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
+          _this5.ctx.fillStyle = _this5.parent.style.backgroundColor || '#ffffff';
 
-          var startY = abY + top;
-          var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
+          _this5.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
 
-          if (startY < this.pageHeight * (i + 1) && endY > this.pageHeight * i) {
-            /**
-             * 这里不能按照box.width * box.height的区域去裁剪
-             * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
-             */
-            var clipY = abY + top - this.pageHeight * i;
-            var clipH = box.height;
-            var renderY = abY;
+          for (var i = 0; i < _this5.pageCount; i++) {
+            var canvas = _this5.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
 
-            if (clipY > 0 && this.pageHeight - clipY < box.height) {
-              clipH = this.pageHeight - clipY;
-            } else if (clipY < 0) {
-              clipH = clipY + box.height;
-              renderY = renderY - clipY;
-              clipY = 0;
+            var startY = abY + top;
+            var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
+
+            if (startY < _this5.pageHeight * (i + 1) && endY > _this5.pageHeight * i) {
+              /**
+              * 这里不能按照box.width * box.height的区域去裁剪
+              * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
+              */
+              var clipY = abY + top - _this5.pageHeight * i;
+              var clipH = box.height;
+              var renderY = abY;
+
+              if (clipY > 0 && _this5.pageHeight - clipY < box.height) {
+                clipH = _this5.pageHeight - clipY;
+              } else if (clipY < 0) {
+                clipH = clipY + box.height;
+                renderY = renderY - clipY;
+                clipY = 0;
+              }
+
+              _this5.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
             }
-
-            this.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
           }
-        }
+        });
       }
     }, {
       key: "renderChildren",
       value: function renderChildren(tree) {
-        var _this5 = this;
+        var _this6 = this;
 
         var children = tree.children;
         var height = this.pageHeight;
@@ -36881,10 +36872,10 @@ function (module, __webpack_exports__, __webpack_require__) {
           var originY = child.layoutBox.originalAbsoluteY;
           var pageIndex = Math.floor(originY / height);
           var nextPage = pageIndex + 1;
-          child.layoutBox.absoluteY -= _this5.pageHeight * pageIndex;
+          child.layoutBox.absoluteY -= _this6.pageHeight * pageIndex;
 
           if (child.checkNeedRender()) {
-            _this5.canvasMap[pageIndex].elements.push({
+            _this6.canvasMap[pageIndex].elements.push({
               element: child,
               box: child.layoutBox
             });
@@ -36893,23 +36884,23 @@ function (module, __webpack_exports__, __webpack_require__) {
 
           if (originY + child.layoutBox.height > height * nextPage) {
             var tmpBox = Object.assign({}, child.layoutBox);
-            tmpBox.absoluteY = originY - _this5.pageHeight * nextPage;
+            tmpBox.absoluteY = originY - _this6.pageHeight * nextPage;
 
             if (child.checkNeedRender()) {
-              _this5.canvasMap[nextPage].elements.push({
+              _this6.canvasMap[nextPage].elements.push({
                 element: child,
                 box: tmpBox
               });
             }
           }
 
-          _this5.renderChildren(child);
+          _this6.renderChildren(child);
         });
       }
     }, {
       key: "insertElements",
       value: function insertElements(pageIndex) {
-        var _this6 = this;
+        var _this7 = this;
 
         var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
         var ctx = can.getContext('2d');
@@ -36924,7 +36915,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
         if (pageIndex < this.pageCount - 1) {
           var timer = setTimeout(function () {
-            _this6.insertElements(++pageIndex);
+            _this7.insertElements(++pageIndex);
           }, 250);
           this.renderTimers.push(timer);
         }
@@ -36932,7 +36923,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "insertScrollView",
       value: function insertScrollView(context) {
-        var _this7 = this; // 绘制容器
+        var _this8 = this; // 绘制容器
 
 
         this.insert(context); // 计算列表应该分割成几页
@@ -36941,12 +36932,10 @@ function (module, __webpack_exports__, __webpack_require__) {
 
         this.renderChildren(this);
         this.insertElements(0);
-        requestAnimationFrame(function () {
-          _this7.clipRepaint(-_this7.top);
-        }); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+        this.clipRepaint(-this.top); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
 
         this.EE.on('image__render__done', function () {
-          _this7.throttleRepaint(-_this7.top || 0);
+          _this8.throttleRepaint(-_this8.top || 0);
         });
 
         if (this.scrollHeight > this.layoutBox.height) {
@@ -37414,18 +37403,6 @@ function (module, __webpack_exports__, __webpack_require__) {
       key: "render",
       value: function render(ctx, layoutBox) {
         var _this3 = this;
-        /*this.style.width = 200;
-        let tree = {
-            style: this.parent.style,
-            children: [
-                {
-                    style: this.style
-                }
-            ]
-        }
-         computeLayout(tree)
-        console.log(tree)*/
-
 
         if (!this.font) {
           return;

@@ -1,6 +1,7 @@
 import Element  from './elements.js';
 import { none, createImage } from '../common/util.js';
 import Pool     from '../common/pool.js';
+import imageManager from '../common/imageManager';
 
 const imgPool = new Pool('imgPool');
 
@@ -30,8 +31,9 @@ export default class Image extends Element {
             set : function(newValue){
                 if ( newValue !== this.imgsrc ) {
                     this.imgsrc = newValue;
-
-                    this.initImg(() => {
+                    imageManager.loadImage(this.src, (img, fromCache) => {
+                        this.img = img;
+                        /*this.repaint();*/
                         this.emit('repaint');
                     });
                 }
@@ -53,74 +55,11 @@ export default class Image extends Element {
      // 子类填充实现
     destroySelf() {
         this.isDestroyed = true;
-        if ( this.img ) {
-            this.img.onloadcbks = [];
-            this.img.onload  = null;
-            this.img.onerror = null;
-        }
-
-        this.img         = null;
+        this.img = null;
 
         delete this.src;
 
         this.off('img__load__done');
-    }
-
-    initImg(callback = none) {
-        this.img         = null;
-        this.imgLoadDone = false;
-        const cache      = imgPool.get(this.src);
-
-        if ( !this.src ) {
-            this.imgLoadDone = true;
-            callback();
-            return;
-        }
-
-        if ( cache && cache.loadDone ) {
-            this.img         = cache;
-            this.imgLoadDone = true;
-            callback();
-        } else if ( cache && !cache.loadDone ) {
-            this.img = cache;
-
-            cache.onloadcbks.push(() => {
-                if ( !this.img ) {
-                    return;
-                }
-
-                this.imgLoadDone = true;
-                this.emit('img__load__done');
-                callback();
-            });
-        } else {
-            this.img = createImage();
-            this.img.onloadcbks = [];
-            imgPool.set(this.src, this.img);
-
-            this.img.onload = () => {
-                if ( !this.img ) {
-                    return;
-                }
-
-                if ( this.img ) {
-                    this.img.onloadcbks.forEach(fn => fn());
-                    this.img.onloadcbks = [];
-                    this.img.loadDone   = true;
-                    this.imgLoadDone    = true;
-                }
-
-                this.emit('img__load__done');
-
-                callback();
-            }
-
-            this.img.onerror = (e) => {
-                console.log('img load error', e);
-            }
-
-            this.img.src = this.src;
-        }
     }
 
     renderImg(ctx, layoutBox, needEmitEvent = true) {
@@ -155,8 +94,19 @@ export default class Image extends Element {
 
     insert(ctx, box) {
         this.renderBoxes.push({ ctx, box });
-        this.initImg(() => {
-            this.renderImg(ctx, box);
+
+        this.img = imageManager.loadImage(this.src, (img, fromCache) => {
+            // 来自缓存的，还没返回img就会执行回调函数
+            if (fromCache) {
+                this.img = img;
+                this.renderImg(ctx, box);
+            } else {
+                // 当图片加载完成，实例可能已经被销毁了
+                if (this.img) {
+                    this.emit('img__load__done')
+                    this.renderImg(ctx, box);
+                }
+            }
         });
     }
 }

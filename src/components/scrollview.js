@@ -42,6 +42,8 @@ export default class ScrollView extends View {
         this.throttleRepaint = throttle(this.clipRepaint, 16, this);
 
         this.renderTimers = [];
+
+        this.requestID = null;
     }
 
     /**
@@ -137,6 +139,8 @@ export default class ScrollView extends View {
         this.canvasMap    = {};
         this.ctx          = null;
         this.children     = null;
+
+        this.requestID && cancelAnimationFrame(this.requestID);
     }
 
     /**
@@ -147,55 +151,58 @@ export default class ScrollView extends View {
         if ( this.isDestroyed ) {
             return;
         }
-        top         = -top;
-        this.top    = top;
-        const box   = this.layoutBox;
-        const abY   = box.absoluteY;
 
-        if ( this.isDestroyed || this.root.state === STATE.CLEAR ) {
-            return;
-        }
+        this.requestID = requestAnimationFrame(() => {
+            top         = -top;
+            this.top    = top;
+            const box   = this.layoutBox;
+            const abY   = box.absoluteY;
 
-        // 在主canvas上面将滚动列表区域擦除
-        this.ctx.clearRect(box.absoluteX, abY, box.width, box.height);
-
-        // 背景填充
-        this.ctx.fillStyle = this.parent.style.backgroundColor || '#ffffff';
-        this.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
-
-        for ( let i = 0; i < this.pageCount; i++ ) {
-            const canvas = this.canvasMap[i].canvas;
-            // 根据滚动值获取裁剪区域
-            const startY = abY + top;
-            const endY   = abY + top + box.height;
-
-            // 计算在裁剪区域内的canvas
-            if (   startY < this.pageHeight * ( i + 1 )
-                && endY > this.pageHeight * i  ) {
-
-                /**
-                 * 这里不能按照box.width * box.height的区域去裁剪
-                 * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
-                 */
-                let clipY   = (abY + top) - this.pageHeight * i;
-                let clipH   = box.height;
-                let renderY = abY;
-
-                if ( clipY > 0 && this.pageHeight - clipY < box.height ) {
-                    clipH   = this.pageHeight - clipY;
-                } else if ( clipY < 0 ) {
-                    clipH   = clipY + box.height;
-                    renderY = renderY - clipY;
-                    clipY   =  0;
-                }
-
-                this.ctx.drawImage(
-                    canvas,
-                    box.absoluteX, clipY, box.width, clipH,
-                    box.absoluteX, renderY, box.width, clipH,
-                );
+            if ( this.isDestroyed || this.root.state === STATE.CLEAR ) {
+                return;
             }
-        }
+
+            // 在主canvas上面将滚动列表区域擦除
+            this.ctx.clearRect(box.absoluteX, abY, box.width, box.height);
+
+            // 背景填充
+            this.ctx.fillStyle = this.parent.style.backgroundColor || '#ffffff';
+            this.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
+
+            for ( let i = 0; i < this.pageCount; i++ ) {
+                const canvas = this.canvasMap[i].canvas;
+                // 根据滚动值获取裁剪区域
+                const startY = abY + top;
+                const endY   = abY + top + box.height;
+
+                // 计算在裁剪区域内的canvas
+                if (   startY < this.pageHeight * ( i + 1 )
+                    && endY > this.pageHeight * i  ) {
+
+                    /**
+                    * 这里不能按照box.width * box.height的区域去裁剪
+                    * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
+                    */
+                    let clipY   = (abY + top) - this.pageHeight * i;
+                    let clipH   = box.height;
+                    let renderY = abY;
+
+                    if ( clipY > 0 && this.pageHeight - clipY < box.height ) {
+                        clipH   = this.pageHeight - clipY;
+                    } else if ( clipY < 0 ) {
+                        clipH   = clipY + box.height;
+                        renderY = renderY - clipY;
+                        clipY   =  0;
+                    }
+
+                    this.ctx.drawImage(
+                        canvas,
+                        box.absoluteX, clipY, box.width, clipH,
+                        box.absoluteX, renderY, box.width, clipH,
+                    );
+                }
+            }
+        })
     }
 
     renderChildren(tree) {
@@ -269,9 +276,7 @@ export default class ScrollView extends View {
 
         this.insertElements(0);
 
-        requestAnimationFrame(() => {
-            this.clipRepaint(-this.top);
-        })
+        this.clipRepaint(-this.top);
 
         // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
         this.EE.on('image__render__done', () => {

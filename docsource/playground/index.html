@@ -766,6 +766,7 @@ body {
 }
 
 .dropdown {
+    width: 300px;
     z-index: 999;
     position: fixed;
     left: 20px;
@@ -788,7 +789,7 @@ body {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 100px;
+    min-width: 140px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
@@ -832,6 +833,18 @@ margin-left: 5px;
     margin-bottom:2px;
     margin-right: 3px;
 }
+.mod{
+    display: inline-block;
+    margin-left: 3px;
+    color: #3582fb;
+    font-size:12px;
+}
+.delete {
+    font-size:12px;
+    display: inline-block;
+    margin-left: 3px;
+    color: #e91e63;
+}
 </style>
 <body>
 <div id="app" style="display:none" >
@@ -840,7 +853,10 @@ margin-left: 5px;
         <div class="dropdown-content">
             <template v-for="(proj, index) in projects">
                 <div @click="setAsCurrent(proj, index)">
-                    <span class="circle" v-if="index === projectIndex"></span>{{ proj.name }}</div>
+                    <span class="circle" v-if="index === projectIndex"></span><span>{{ proj.name }}</span>
+                    <span class="mod" @click.stop.prevent="modProj(proj, index)">修改</span>
+                    <span class="delete" @click.stop.prevent="deleteProj(proj, index)" v-if="index > 0">删除</span>
+                </div>
             </template>
         </div>
         <a class="create" @click="createProj">创建</a>
