@@ -6,9 +6,9 @@ import ScrollView from './scrollview.js';
 import BitMapText from './bitmaptext.js';
 
 export {
-    View,
-    Image,
-    Text,
-    ScrollView,
-    BitMapText
+  View,
+  Image,
+  Text,
+  ScrollView,
+  BitMapText
 }

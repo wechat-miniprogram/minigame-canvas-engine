@@ -1,32 +1,32 @@
 const pools = [];
 
 export default class Pool {
-    constructor(name = 'pool') {
-        let curr = pools.find( item => item.name === name );
+  constructor(name = 'pool') {
+    let curr = pools.find( item => item.name === name );
 
-        if ( curr ) {
-            return curr;
-        }
-
-        this.name = name;
-        this.pool = {};
-
-        pools.push(this);
+    if ( curr ) {
+      return curr;
     }
 
-    get(key) {
-        return this.pool[key];
-    }
+    this.name = name;
+    this.pool = {};
 
-    set(key, value) {
-        this.pool[key] = value;
-    }
+    pools.push(this);
+  }
 
-    clear() {
-        this.pool = {};
-    }
+  get(key) {
+    return this.pool[key];
+  }
 
-    getList() {
-        return Object.values(this.pool);
-    }
+  set(key, value) {
+    this.pool[key] = value;
+  }
+
+  clear() {
+    this.pool = {};
+  }
+
+  getList() {
+    return Object.values(this.pool);
+  }
 }

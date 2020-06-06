@@ -4,170 +4,170 @@ import { createCanvas } from '../common/util.js';
 const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
 let context = null;
 const getContext = () => {
-    if (context) {
-        return context;
-    }
-
-    const canvas = createCanvas();
-    canvas.width = 1
-    canvas.height = 1
-    context = canvas.getContext('2d');
-
+  if (context) {
     return context;
+  }
+
+  const canvas = createCanvas();
+  canvas.width = 1
+  canvas.height = 1
+  context = canvas.getContext('2d');
+
+  return context;
 }
 
 
 function getTextWidth(style, value) {
-    const context = getContext();
+  const context = getContext();
 
-    context.font = `${style.fontWeight || 'normal'} ${style.fontSize || 12}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
+  context.font = `${style.fontWeight || 'normal'} ${style.fontSize || 12}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
 
-    return context.measureText(value).width || 0;
+  return context.measureText(value).width || 0;
 }
 
 function getTextWidthWithoutSetFont(value) {
-    return getContext().measureText(value).width || 0;
+  return getContext().measureText(value).width || 0;
 }
 
 function parseText(style, value) {
-    value = String(value);
+  value = String(value);
 
-    let maxWidth  = style.width;
-    let wordWidth = getTextWidth(style, value);
+  let maxWidth  = style.width;
+  let wordWidth = getTextWidth(style, value);
 
-    // 对文字溢出的处理，默认用...
-    let textOverflow = style.textOverflow || 'ellipsis';
+  // 对文字溢出的处理，默认用...
+  let textOverflow = style.textOverflow || 'ellipsis';
 
-    // 文字最大长度不超限制
-    if ( wordWidth <= maxWidth ) {
-        return value;
-    }
+  // 文字最大长度不超限制
+  if ( wordWidth <= maxWidth ) {
+    return value;
+  }
 
-    // 对于用点点点处理的情况，先将最大宽度减去...的宽度
-    if ( textOverflow === 'ellipsis' ) {
-        maxWidth -= getTextWidthWithoutSetFont('...');
-    }
+  // 对于用点点点处理的情况，先将最大宽度减去...的宽度
+  if ( textOverflow === 'ellipsis' ) {
+    maxWidth -= getTextWidthWithoutSetFont('...');
+  }
 
-    let length = value.length - 1;
-    let str    = value.substring(0, length);
+  let length = value.length - 1;
+  let str    = value.substring(0, length);
 
-    while ( getTextWidthWithoutSetFont(str) > maxWidth && length > 0 ) {
-        length--;
-        str = value.substring(0, length);
-    }
+  while ( getTextWidthWithoutSetFont(str) > maxWidth && length > 0 ) {
+    length--;
+    str = value.substring(0, length);
+  }
 
-    return (  length && textOverflow === 'ellipsis'
-            ? str  + '...'
-            : str  );
+  return (  length && textOverflow === 'ellipsis'
+    ? str  + '...'
+    : str  );
 }
 
 
 export default class Text extends Element {
-    constructor({
-        style={},
-        props={},
-        idName='',
-        className='',
-        value=''
-    }) {
-        // 没有设置宽度的时候通过canvas计算出文字宽度
-        if ( style.width === undefined ) {
-            style.width = getTextWidth(style, value);
-        } else if ( style.textOverflow === 'ellipsis' ) {
-            value = parseText(style, value);
+  constructor({
+    style={},
+    props={},
+    idName='',
+    className='',
+    value=''
+  }) {
+    // 没有设置宽度的时候通过canvas计算出文字宽度
+    if ( style.width === undefined ) {
+      style.width = getTextWidth(style, value);
+    } else if ( style.textOverflow === 'ellipsis' ) {
+      value = parseText(style, value);
+    }
+
+    super({
+      props,
+      idName,
+      className,
+      style,
+    });
+
+    this.type        = 'Text';
+    this.ctx         = null;
+    this.valuesrc    = value;
+
+    this.renderBoxes = [];
+
+    Object.defineProperty(this, "value", {
+      get : function() {
+        return this.valuesrc;
+      },
+      set : function(newValue){
+        if ( newValue !== this.valuesrc) {
+          this.valuesrc = newValue;
+
+          this.emit('repaint');
         }
+      },
+      enumerable   : true,
+      configurable : true
+    });
+  }
 
-        super({
-            props,
-            idName,
-            className,
-            style,
-        });
+  toCanvasData() {
+    let style = this.style || {};
 
-        this.type        = 'Text';
-        this.ctx         = null;
-        this.valuesrc    = value;
+    this.fontSize = style.fontSize || 12;
+    this.textBaseline = 'top';
+    this.font = `${style.fontWeight  || ''} ${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY}`;
+    this.textAlign = style.textAlign || 'left';
+    this.fillStyle = style.color     || '#000';
+  }
 
-        this.renderBoxes = [];
+  insert(ctx, box) {
+    this.renderBoxes.push({ ctx, box });
 
-        Object.defineProperty(this, "value", {
-            get : function() {
-                return this.valuesrc;
-            },
-            set : function(newValue){
-                if ( newValue !== this.valuesrc) {
-                    this.valuesrc = newValue;
+    this.render(ctx, box)
+  }
 
-                    this.emit('repaint');
-                }
-            },
-            enumerable   : true,
-            configurable : true
-        });
+  repaint() {
+    this.renderBoxes.forEach( item => {
+      this.render(item.ctx, item.box);
+    });
+  }
+
+  render(ctx, layoutBox) {
+    this.toCanvasData();
+    ctx.save();
+
+    const box = layoutBox || this.layoutBox;
+    const style = this.style;
+
+    ctx.textBaseline = this.textBaseline;
+    ctx.font         = this.font;
+    ctx.textAlign    = this.textAlign;
+
+    let drawX = box.absoluteX;
+    let drawY = box.absoluteY;
+
+    this.renderBorder(ctx, layoutBox);
+
+    if ( style.backgroundColor ) {
+      ctx.fillStyle = style.backgroundColor;
+      ctx.fillRect(drawX, drawY, box.width, box.height)
     }
 
-    toCanvasData() {
-        let style = this.style || {};
+    ctx.fillStyle = this.fillStyle;
 
-        this.fontSize = style.fontSize || 12;
-        this.textBaseline = 'top';
-        this.font = `${style.fontWeight  || ''} ${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY}`;
-        this.textAlign = style.textAlign || 'left';
-        this.fillStyle = style.color     || '#000';
+    if ( this.textAlign === 'center' ) {
+      drawX += box.width / 2;
+    } else if ( this.textAlign === 'right' ) {
+      drawX += box.width;
     }
 
-    insert(ctx, box) {
-        this.renderBoxes.push({ ctx, box });
-
-        this.render(ctx, box)
+    if ( style.lineHeight ) {
+      ctx.textBaseline = 'middle';
+      drawY += style.lineHeight / 2;
     }
 
-    repaint() {
-        this.renderBoxes.forEach( item => {
-            this.render(item.ctx, item.box);
-        });
-    }
+    ctx.fillText(
+      this.value,
+      drawX,
+      drawY
+    );
 
-    render(ctx, layoutBox) {
-        this.toCanvasData();
-        ctx.save();
-
-        const box = layoutBox || this.layoutBox;
-        const style = this.style;
-
-        ctx.textBaseline = this.textBaseline;
-        ctx.font         = this.font;
-        ctx.textAlign    = this.textAlign;
-
-        let drawX = box.absoluteX;
-        let drawY = box.absoluteY;
-
-        this.renderBorder(ctx, layoutBox);
-
-        if ( style.backgroundColor ) {
-            ctx.fillStyle = style.backgroundColor;
-            ctx.fillRect(drawX, drawY, box.width, box.height)
-        }
-
-        ctx.fillStyle = this.fillStyle;
-
-        if ( this.textAlign === 'center' ) {
-            drawX += box.width / 2;
-        } else if ( this.textAlign === 'right' ) {
-            drawX += box.width;
-        }
-
-        if ( style.lineHeight ) {
-            ctx.textBaseline = 'middle';
-            drawY += style.lineHeight / 2;
-        }
-
-        ctx.fillText(
-          this.value,
-          drawX,
-          drawY
-        );
-
-        ctx.restore();
-    }
+    ctx.restore();
+  }
 }

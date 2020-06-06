@@ -6,7 +6,7 @@ const scalableStyles = ['left', 'top', 'right', 'bottom', 'width', 'height',
   'fontSize', 'lineHeight',
   'borderRadius',
   'minWidth', 'maxWidth', 'minHeight', 'maxHeight'
-  ]
+]
 
 const layoutAffectedStyles = [
   'margin', 'marginTop', 'marginBottom', 'marginLeft', 'marginRight',
