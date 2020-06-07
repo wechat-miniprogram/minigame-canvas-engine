@@ -595,8 +595,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       }
 
       var children = tree.children;
-      Object.keys(children).forEach(function (id) {
-        var child = children[id];
+      children.forEach(function (child) {
         child.destroy();
 
         _this5.destroyAll(child);
@@ -816,7 +815,8 @@ var Element = /*#__PURE__*/function () {
       this.EE.off('image__render__done');
       this.isDestroyed = true;
       this.EE = null;
-      this.root = null;
+      /*this.root          = null;*/
+
       this.parent = null;
       this.ctx = null;
       this.realLayoutBox = null;
@@ -3542,6 +3542,7 @@ var View = /*#__PURE__*/function (_Element) {
     value: function destroySelf() {
       this.isDestroyed = true;
       this.children = null;
+      this.root = null;
     } // 有些节点仅仅作为容器，实际上不需要任何渲染逻辑，这里加个判断可以提高性能
 
   }, {
@@ -3707,6 +3708,7 @@ var Image = /*#__PURE__*/function (_Element) {
       this.img = null;
       delete this.src;
       this.off('img__load__done');
+      this.root = null;
     }
   }, {
     key: "renderImg",
@@ -3936,6 +3938,11 @@ var Text = /*#__PURE__*/function (_Element) {
       });
     }
   }, {
+    key: "destroySelf",
+    value: function destroySelf() {
+      this.root = null;
+    }
+  }, {
     key: "render",
     value: function render(ctx, layoutBox) {
       this.toCanvasData();
@@ -4144,11 +4151,13 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.renderTimers.forEach(function (timer) {
         clearTimeout(timer);
       });
+      this.root.off('repaint__done');
       this.renderTimers = [];
       this.canvasMap = {};
       this.ctx = null;
       this.children = null;
       this.requestID && cancelAnimationFrame(this.requestID);
+      this.root = null;
     }
     /**
      * 滚动列表重绘逻辑
@@ -4606,6 +4615,11 @@ var BitMapText = /*#__PURE__*/function (_Element) {
       this.renderBoxes.forEach(function (item) {
         _this2.render(item.ctx, item.box);
       });
+    }
+  }, {
+    key: "destroySelf",
+    value: function destroySelf() {
+      this.root = null;
     }
   }, {
     key: "render",

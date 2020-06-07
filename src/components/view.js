@@ -22,6 +22,7 @@ export default class View extends Element {
   destroySelf() {
     this.isDestroyed  = true;
     this.children     = null;
+    this.root          = null;
   }
 
   // 有些节点仅仅作为容器，实际上不需要任何渲染逻辑，这里加个判断可以提高性能

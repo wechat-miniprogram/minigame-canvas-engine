@@ -111,7 +111,7 @@ export default class Element {
 
     this.isDestroyed   = true;
     this.EE            = null;
-    this.root          = null;
+    /*this.root          = null;*/
     this.parent        = null;
     this.ctx           = null;
     this.realLayoutBox = null;

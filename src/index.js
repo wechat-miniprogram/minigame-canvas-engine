@@ -465,13 +465,9 @@ class _Layout extends Element {
 
     const children = tree.children;
 
-    Object.keys(children).forEach( id => {
-      const child = children[id];
-
+    children.forEach(child => {
       child.destroy();
-
       this.destroyAll(child);
-
       child.destroySelf && child.destroySelf();
     });
   }

@@ -56,6 +56,7 @@ export default class Image extends Element {
     delete this.src;
 
     this.off('img__load__done');
+    this.root          = null;
   }
 
   renderImg(ctx, layoutBox, needEmitEvent = true) {

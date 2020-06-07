@@ -58,6 +58,9 @@ export default class BitMapText extends Element {
     });
   }
 
+  destroySelf() {
+    this.root          = null;
+  }
 
   render(ctx, layoutBox) {
     if (!this.font) {

@@ -128,6 +128,10 @@ export default class Text extends Element {
     });
   }
 
+  destroySelf() {
+    this.root          = null;
+  }
+
   render(ctx, layoutBox) {
     this.toCanvasData();
     ctx.save();

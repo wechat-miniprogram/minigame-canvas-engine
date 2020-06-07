@@ -133,12 +133,15 @@ export default class ScrollView extends View {
       clearTimeout(timer);
     });
 
+    this.root.off('repaint__done');
+
     this.renderTimers = [];
     this.canvasMap    = {};
     this.ctx          = null;
     this.children     = null;
 
     this.requestID && cancelAnimationFrame(this.requestID);
+    this.root          = null;
   }
 
   /**
