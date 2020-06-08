@@ -5,6 +5,7 @@ import {
   throttle,
   STATE,
   createCanvas,
+  repaintTree,
 } from '../common/util.js';
 
 let id = 0;
@@ -284,7 +285,27 @@ export default class ScrollView extends View {
     this.clipRepaint(-this.top);
 
     // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-    this.EE.on('image__render__done', () => {
+    this.EE.on('image__render__done', (img) => {
+      const list = Object.values(this.canvasMap);
+      let pageIndex = -1;
+      for ( let i = 0; i < list.length; i++ ) {
+        if (list[i].elements.find(item => item.element === img)) {
+          pageIndex = i;
+          break;
+        }
+      }
+
+      if ( pageIndex > -1) {
+        const start = new Date();
+        const canItem = this.canvasMap[pageIndex];
+        const canvas = canItem.canvas;
+        const ctx = canItem.context;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.canvasMap[pageIndex].elements.forEach( ele => {
+          repaintTree(ele.element);
+        });
+      }
+
       this.throttleRepaint(-this.top || 0);
     });
 

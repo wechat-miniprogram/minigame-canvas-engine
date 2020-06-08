@@ -218,13 +218,6 @@ var renderChildren = function renderChildren(children, context) {
   });
 };
 
-var repaintChildren = function repaintChildren(children) {
-  children.forEach(function (child) {
-    child.repaint();
-    repaintChildren(child.children);
-  });
-};
-
 function layoutChildren(dataArray, children) {
   var _this2 = this;
 
@@ -481,7 +474,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "repaint",
     value: function repaint() {
-      repaintChildren(this.children);
+      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["repaintChildren"])(this.children);
       this.emit('repaint__done');
     }
   }, {
@@ -2320,6 +2313,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createImage", function() { return createImage; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDpr", function() { return getDpr; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "STATE", function() { return STATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintChildren", function() { return repaintChildren; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
 function throttle(fn, threshhold, scope) {
   threshhold || (threshhold = 250);
   var last, deferTimer;
@@ -2392,6 +2387,19 @@ var STATE = {
   "INITED": "INITED",
   "RENDERED": "RENDERED",
   "CLEAR": "CLEAR"
+};
+var repaintChildren = function repaintChildren(children) {
+  children.forEach(function (child) {
+    child.repaint();
+    repaintChildren(child.children);
+  });
+};
+var repaintTree = function repaintTree(tree) {
+  tree.repaint();
+  tree.children.forEach(function (child) {
+    child.repaint();
+    repaintTree(child);
+  });
 };
 
 /***/ }),
@@ -3735,7 +3743,7 @@ var Image = /*#__PURE__*/function (_Element) {
       ctx.restore();
 
       if (needEmitEvent) {
-        this.EE.emit('image__render__done');
+        this.EE.emit('image__render__done', this);
       }
     }
   }, {
@@ -3752,7 +3760,7 @@ var Image = /*#__PURE__*/function (_Element) {
         if (fromCache) {
           _this4.img = img;
 
-          _this4.renderImg(ctx, box);
+          _this4.renderImg(ctx, box, false);
         } else {
           // 当图片加载完成，实例可能已经被销毁了
           if (_this4.img) {
@@ -4296,7 +4304,31 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.insertElements(0);
       this.clipRepaint(-this.top); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
 
-      this.EE.on('image__render__done', function () {
+      this.EE.on('image__render__done', function (img) {
+        var list = Object.values(_this7.canvasMap);
+        var pageIndex = -1;
+
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].elements.find(function (item) {
+            return item.element === img;
+          })) {
+            pageIndex = i;
+            break;
+          }
+        }
+
+        if (pageIndex > -1) {
+          var start = new Date();
+          var canItem = _this7.canvasMap[pageIndex];
+          var canvas = canItem.canvas;
+          var ctx = canItem.context;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          _this7.canvasMap[pageIndex].elements.forEach(function (ele) {
+            Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["repaintTree"])(ele.element);
+          });
+        }
+
         _this7.throttleRepaint(-_this7.top || 0);
       });
 

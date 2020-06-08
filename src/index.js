@@ -2,7 +2,7 @@ import Element                         from './components/elements.js';
 import Pool                            from './common/pool.js';
 import Emitter                         from 'tiny-emitter';
 import computeLayout                   from 'css-layout';
-import { isClick, STATE, createImage } from './common/util.js';
+import { isClick, STATE, createImage, repaintChildren } from './common/util.js';
 import parser                          from './libs/fast-xml-parser/parser.js';
 import BitMapFont  from './common/bitMapFont';
 
@@ -103,13 +103,6 @@ const renderChildren = (children, context) => {
   });
 }
 
-const repaintChildren = (children) => {
-  children.forEach(child => {
-    child.repaint();
-
-    repaintChildren(child.children);
-  })
-}
 
 function layoutChildren (dataArray, children) {
   dataArray.forEach((data) => {
