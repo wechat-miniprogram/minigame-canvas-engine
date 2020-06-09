@@ -123,7 +123,7 @@ export default class Text extends Element {
   }
 
   repaint() {
-    this.renderBoxes.forEach( item => {
+    this.renderBoxes.forEach(item => {
       this.render(item.ctx, item.box);
     });
   }

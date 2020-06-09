@@ -42,6 +42,8 @@ export default class ScrollView extends View {
     // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
     this.throttleRepaint = throttle(this.clipRepaint, 16, this);
 
+    this.throttleImageLoadDone = throttle(this.childImageLoadDoneCbk, 32, this);
+
     this.renderTimers = [];
 
     this.requestID = null;
@@ -52,6 +54,11 @@ export default class ScrollView extends View {
    * 这里不能简单将所有子元素的高度累加，因为每个元素之间可能是有空隙的
    */
   get scrollHeight() {
+    // scrollview为空的情况
+    if (!this.children.length) {
+      return 0;
+    }
+
     let last = this.children[this.children.length - 1];
 
     return last.layoutBox.top + last.layoutBox.height;
@@ -73,27 +80,6 @@ export default class ScrollView extends View {
       item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
     });
   }
-
-  /**
-   * 递归将整颗树的节点repaint一次
-   * 由于renderChildren阶段已经计算过每个元素会在哪一个canvas绘制，并且子元素会保留这些绘制信息
-   * 因为仅仅需要repaint而不需要重新renderChildren，以提升性能
-   */
-  /*repaint(tree) {
-    if ( !tree ) {
-      tree = this;
-    }
-
-    const children = tree.children;
-
-    Object.keys(children).forEach( id => {
-      const child = children[id];
-
-      child.repaint();
-
-      this.repaint(child);
-    });
-  }*/
 
   // 与主canvas的尺寸保持一致
   updateRenderPort(renderport) {
@@ -266,6 +252,34 @@ export default class ScrollView extends View {
     }
   }
 
+  childImageLoadDoneCbk(img) {
+      const start = new Date();
+      const list = Object.values(this.canvasMap);
+      let pageIndex = -1;
+      for ( let i = 0; i < list.length; i++ ) {
+        if (list[i].elements.find(item => item.element === img)) {
+          pageIndex = i;
+          break;
+        }
+      }
+
+      if ( pageIndex > -1) {
+        const start = new Date();
+        const canItem = this.canvasMap[pageIndex];
+        const canvas = canItem.canvas;
+        const ctx = canItem.context;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        this.canvasMap[pageIndex].elements.forEach( ele => {
+          repaintTree(ele.element);
+        });
+      }
+
+      /*this.throttleRepaint(-this.top || 0);*/
+      this.clipRepaint(-this.top);
+      console.log('image__render__done cost', new Date() - start)
+  }
+
   insertScrollView(context) {
     // 绘制容器
     this.insert(context);
@@ -286,27 +300,7 @@ export default class ScrollView extends View {
 
     // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
     this.EE.on('image__render__done', (img) => {
-      const list = Object.values(this.canvasMap);
-      let pageIndex = -1;
-      for ( let i = 0; i < list.length; i++ ) {
-        if (list[i].elements.find(item => item.element === img)) {
-          pageIndex = i;
-          break;
-        }
-      }
-
-      if ( pageIndex > -1) {
-        const start = new Date();
-        const canItem = this.canvasMap[pageIndex];
-        const canvas = canItem.canvas;
-        const ctx = canItem.context;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.canvasMap[pageIndex].elements.forEach( ele => {
-          repaintTree(ele.element);
-        });
-      }
-
-      this.throttleRepaint(-this.top || 0);
+      this.throttleImageLoadDone(img)
     });
 
     if ( this.scrollHeight > this.layoutBox.height ) {

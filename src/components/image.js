@@ -40,6 +40,21 @@ export default class Image extends Element {
 
     this.type        = 'Image';
     this.renderBoxes = [];
+
+  }
+
+  get isScrollViewChild() {
+    let flag = false;
+    let parent = this.parent;
+    while(parent && !flag) {
+      if (parent.type === 'ScrollView') {
+        flag = true;
+      } else {
+        parent = parent.parent;
+      }
+    }
+
+    return flag;
   }
 
   repaint() {
@@ -55,7 +70,6 @@ export default class Image extends Element {
 
     delete this.src;
 
-    this.off('img__load__done');
     this.root          = null;
   }
 
@@ -83,10 +97,6 @@ export default class Image extends Element {
     ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
 
     ctx.restore();
-
-    if ( needEmitEvent ) {
-      this.EE.emit('image__render__done', this);
-    }
   }
 
   insert(ctx, box) {
@@ -100,8 +110,10 @@ export default class Image extends Element {
       } else {
         // 当图片加载完成，实例可能已经被销毁了
         if (this.img) {
-          this.emit('img__load__done')
-          this.renderImg(ctx, box);
+          const eventName = (  this.isScrollViewChild
+                             ? 'image__render__done'
+                             : 'one__image__render__done' );
+          this.EE.emit(eventName, this);
         }
       }
     });
