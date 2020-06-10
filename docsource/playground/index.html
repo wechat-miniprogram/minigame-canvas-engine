@@ -767,8 +767,9 @@ body {
 
 .dropdown {
     width: 300px;
+    text-align: left;
     z-index: 999;
-    position: fixed;
+    position: absolute;
     left: 20px;
     top: 5px;
     cursor: pointer;
@@ -847,25 +848,25 @@ margin-left: 5px;
 }
 </style>
 <body>
-<div id="app" style="display:none" >
-    <div class="dropdown">
-        <span class="dropbtn">{{ currName }}<span class="content"></span></span>
-        <div class="dropdown-content">
-            <template v-for="(proj, index) in projects">
-                <div @click="setAsCurrent(proj, index)">
-                    <span class="circle" v-if="index === projectIndex"></span><span>{{ proj.name }}</span>
-                    <span class="mod" @click.stop.prevent="modProj(proj, index)">修改</span>
-                    <span class="delete" @click.stop.prevent="deleteProj(proj, index)" v-if="index > 0">删除</span>
-                </div>
-            </template>
-        </div>
-        <a class="create" @click="createProj">创建</a>
-    </div>
-</div>
 
 <div id="panels">
+  <div id="app" style="display:none" >
+      <div class="dropdown">
+          <span class="dropbtn">{{ currName }}<span class="content"></span></span>
+          <div class="dropdown-content">
+              <template v-for="(proj, index) in projects">
+                  <div @click="setAsCurrent(proj, index)">
+                      <span class="circle" v-if="index === projectIndex"></span><span>{{ proj.name }}</span>
+                      <span class="mod" @click.stop.prevent="modProj(proj, index)">修改</span>
+                      <span class="delete" @click.stop.prevent="deleteProj(proj, index)" v-if="index > 0">删除</span>
+                  </div>
+              </template>
+          </div>
+          <a class="create" @click="createProj">创建</a>
+      </div>
+  </div>
 
-    <div class="panels__item active" data-panel="panel__xml">xml</div>
+    <div class="panels__item active" data-panel="panel__xml" style="  border-left: 1px solid #ccc;border-top-left-radius: 5px;border-bottom-left-radius: 5px;">xml</div>
     <div class="panels__item active" data-panel="panel__style">style</div>
     <div class="panels__item active" data-panel="panel__js">js</div>
     <div class="panels__item active" data-panel="panel__result">result</div>

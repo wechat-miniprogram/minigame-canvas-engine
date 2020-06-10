@@ -71,7 +71,9 @@ export default class BitMapText extends Element {
       this.renderText(ctx, layoutBox)
     } else {
       this.font.event.on('text__load__done', () => {
-        this.renderText(ctx, layoutBox)
+        if (!this.isDestroyed) {
+          this.renderText(ctx, layoutBox)
+        }
       })
     }
   }

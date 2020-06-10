@@ -10,9 +10,6 @@ import Vue from 'vue/dist/vue.js'
 
 let beautify      = require('js-beautify').js
 
-let localTemplate = localStorage.getItem('template');
-let localCss      = localStorage.getItem('css');
-let localJs       = localStorage.getItem('js');
 
 import CodeMirror from 'codemirror';
 import Layout     from '../../../index'
@@ -67,14 +64,18 @@ if (localStorage.getItem('panels')) {
 
     panels.forEach((item, index) => {
         if ( status[index] === 0 ) {
-            item.style.display = 'none';
+            setTimeout(() => {
+              item.style.display = 'none';
+            }, 30);
         }
     })
-    resetSize()
+    resetSize(status)
 }
 
-function resetSize() {
-    let showLength = panels.filter( item => item.style.display !== 'none').length;
+
+function resetSize(status) {
+    /*let showLength = panels.filter( item => item.style.display !== 'none').length;*/
+    let showLength = status.filter( item => item === 1).length;
 
 
     items.forEach( (item, index) => {
@@ -102,9 +103,14 @@ for ( let i = 0; i < items.length; i++ ) {
 
         localStorage.setItem('panels', JSON.stringify(status))
 
-        resetSize()
+        resetSize(status)
 
-        run();
+        const proj = projects[projectIndex]
+        window.xml.setValue(proj.xml)
+        window.style.setValue(proj.css)
+        window.js.setValue(proj.js)
+
+        run(proj.xml, proj.css, proj.js);
     }
 };
 
@@ -224,11 +230,15 @@ var app = new Vue({
 
     mounted() {
         document.getElementById('app').style.display = 'block';
+
+        this.upgrade();
     },
 
     methods: {
-        createProj() {
-            const name = prompt("项目名称", "新项目");
+        createProj(name, xml, css, js) {
+            if (!name) {
+              name = prompt("项目名称", "新项目");
+            }
 
             if (name === null) {
                 return
@@ -239,11 +249,15 @@ var app = new Vue({
                 return;
             }
 
+            this.saveProject(name, xml || newtemplate, css || newcss, js || newjs)
+        },
+
+        saveProject(name, xml, css, js) {
             let newProj = {
                 name,
-                js: newjs,
-                css: newcss,
-                xml: newtemplate
+                js,
+                css,
+                xml,
             }
 
             projects.push(newProj)
@@ -299,7 +313,24 @@ var app = new Vue({
                 proj.name = newName;
                 localStorage.setItem('projects', JSON.stringify(projects))
             }
+        },
+
+        upgrade() {
+          let localTemplate = localStorage.getItem('template');
+          let localCss      = localStorage.getItem('css');
+          let localJs       = localStorage.getItem('js');
+
+          if (localTemplate && localCss && localJs) {
+            this.saveProject("迁移项目", localTemplate, localCss, localJs)
+
+            alert('IDE已升级，老的项目已经保留到项目：迁移项目')
+
+            localStorage.removeItem('template')
+            localStorage.removeItem('css')
+            localStorage.removeItem('js')
+          }
         }
     }
 })
+
 
