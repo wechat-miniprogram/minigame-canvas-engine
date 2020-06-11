@@ -277,7 +277,6 @@ export default class ScrollView extends View {
 
       /*this.throttleRepaint(-this.top || 0);*/
       this.clipRepaint(-this.top);
-      console.log('image__render__done cost', new Date() - start)
   }
 
   insertScrollView(context) {

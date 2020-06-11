@@ -27,6 +27,10 @@
 #### Layout.getElementsByClassName(String className)
 获取包含class为**className**的一组元素
 
+### repaint
+#### Layout.repaint()
+在某些场景下执行重渲染逻辑，比如通过getElementsById获取一个元素并且改变他的背景颜色，因为不涉及布局变更，执行Layout.reapint()即可。
+
 ### clear
 #### Layout.clear()
 清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行init和layout方法渲染界面。

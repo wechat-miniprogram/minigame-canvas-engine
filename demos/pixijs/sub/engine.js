@@ -471,8 +471,6 @@ var _Layout = /*#__PURE__*/function (_Element) {
         _this4.repaint();
       });
       this.EE.on('one__image__render__done', function (img) {
-        console.log('one__image__render__done', img);
-
         _this4.repaint();
       });
     }
@@ -482,7 +480,6 @@ var _Layout = /*#__PURE__*/function (_Element) {
       var start = new Date();
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["repaintChildren"])(this.children);
       this.emit('repaint__done');
-      console.log('root repaint cost', new Date() - start);
     }
   }, {
     key: "getChildByPos",
@@ -4319,7 +4316,6 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
 
       this.clipRepaint(-this.top);
-      console.log('image__render__done cost', new Date() - start);
     }
   }, {
     key: "insertScrollView",

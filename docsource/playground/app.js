@@ -32417,8 +32417,6 @@ function (module, __webpack_exports__, __webpack_require__) {
           _this4.repaint();
         });
         this.EE.on('one__image__render__done', function (img) {
-          console.log('one__image__render__done', img);
-
           _this4.repaint();
         });
       }
@@ -32428,7 +32426,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         var start = new Date();
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["repaintChildren"])(this.children);
         this.emit('repaint__done');
-        console.log('root repaint cost', new Date() - start);
       }
     }, {
       key: "getChildByPos",
@@ -36998,7 +36995,6 @@ function (module, __webpack_exports__, __webpack_require__) {
 
 
         this.clipRepaint(-this.top);
-        console.log('image__render__done cost', new Date() - start);
       }
     }, {
       key: "insertScrollView",

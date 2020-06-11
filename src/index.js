@@ -353,7 +353,6 @@ class _Layout extends Element {
     });
 
     this.EE.on('one__image__render__done', (img)=> {
-      console.log('one__image__render__done', img)
       this.repaint();
     })
   }
@@ -362,7 +361,6 @@ class _Layout extends Element {
     const start = new Date();
     repaintChildren(this.children);
     this.emit('repaint__done');
-    console.log('root repaint cost', new Date() - start)
   }
 
   getChildByPos(tree, x, y) {
