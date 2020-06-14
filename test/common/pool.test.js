@@ -50,6 +50,15 @@ describe('common', function() {
 
             test.pool.should.be.empty();
         });
+
+        it('should clear pool successfully' , function() {
+            let test = new Pool('test');
+
+            test.set('foo', 'bar');
+            const list = test.getList();
+
+            list.should.containEql('bar');
+        });
     });
 });
 
