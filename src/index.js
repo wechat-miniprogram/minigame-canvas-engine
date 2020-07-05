@@ -352,13 +352,12 @@ class _Layout extends Element {
       this.repaint();
     });
 
-    this.EE.on('one__image__render__done', (img)=> {
+    this.EE.on('one__image__render__done', ()=> {
       this.repaint();
     })
   }
 
   repaint() {
-    const start = new Date();
     repaintChildren(this.children);
     this.emit('repaint__done');
   }

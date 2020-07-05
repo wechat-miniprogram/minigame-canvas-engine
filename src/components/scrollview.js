@@ -40,13 +40,15 @@ export default class ScrollView extends View {
     this.canvasMap       = {};
 
     // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
-    this.throttleRepaint = throttle(this.clipRepaint, 16, this);
-
     this.throttleImageLoadDone = throttle(this.childImageLoadDoneCbk, 32, this);
 
     this.renderTimers = [];
 
     this.requestID = null;
+
+    this.highPerformance = false;
+    this.scrollCanvas = null;
+    this.scrollCtx = null;
   }
 
   /**
@@ -59,7 +61,7 @@ export default class ScrollView extends View {
       return 0;
     }
 
-    let last = this.children[this.children.length - 1];
+    const last = this.children[this.children.length - 1];
 
     return last.layoutBox.top + last.layoutBox.height;
   }
@@ -69,6 +71,10 @@ export default class ScrollView extends View {
     this.renderBoxes.forEach( item => {
       this.render(item.ctx, item.box);
     });
+
+    if (!this.highPerformance) {
+      this.scrollRender(this.top)
+    }
   }
 
   /**
@@ -81,9 +87,22 @@ export default class ScrollView extends View {
     });
   }
 
-  // 与主canvas的尺寸保持一致
+  /**
+   * 与主canvas的尺寸保持一致
+   */
   updateRenderPort(renderport) {
     this.renderport = renderport;
+
+    if (!this.highPerformance) {
+      let can    = createCanvas();
+      let ctx    = can.getContext('2d');
+
+      can.width  = this.renderport.width;
+      can.height = this.renderport.height;
+
+      this.scrollCanvas = can;
+      this.scrollCtx    = ctx;
+    }
   }
 
   /**
@@ -114,7 +133,6 @@ export default class ScrollView extends View {
   destroySelf() {
     this.touch           = null;
     this.isDestroyed     = true;
-    this.throttleRepaint = null;
 
     this.renderTimers.forEach( timer => {
       clearTimeout(timer);
@@ -129,6 +147,56 @@ export default class ScrollView extends View {
 
     this.requestID && cancelAnimationFrame(this.requestID);
     this.root          = null;
+
+    this.scrollCanvas = null;
+    this.scrollCtx = null;
+  }
+
+  renderTreeWithTop(tree, top) {
+    const layoutBox = tree.layoutBox;
+    const box = {...layoutBox}
+    box.absoluteY -= top;
+    tree.render(this.scrollCtx, box);
+
+    tree.children.forEach( child => {
+      this.renderTreeWithTop(child, top);
+    });
+  }
+
+  scrollRender(top) {
+    const start = new Date();
+    const box   = this.layoutBox;
+    this.top = -top;
+    // scrollview在全局节点中的Y轴位置
+    const abY   = box.absoluteY;
+
+    // 根据滚动值获取裁剪区域
+    const startY = abY + this.top;
+    const endY   = abY + this.top + box.height;
+
+    // 清理滚动画布和主屏画布
+    this.ctx.clearRect(box.absoluteX, abY, box.width, box.height);
+    this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height)
+
+    this.children.forEach(child => {
+      const layoutBox = child.layoutBox;
+      const height = layoutBox.height;
+      let originY   = layoutBox.originalAbsoluteY;
+
+      if (originY + height >= startY && originY <= endY) {
+        this.renderTreeWithTop(child, this.top);
+      }
+    })
+
+    this.ctx.drawImage(
+      this.scrollCanvas,
+      box.absoluteX, box.absoluteY,
+      box.width, box.height,
+      box.absoluteX, box.absoluteY,
+      box.width, box.height,
+    );
+
+    /*console.log('scrollRender cost ', new Date() - start)*/
   }
 
   /**
@@ -144,6 +212,7 @@ export default class ScrollView extends View {
       top         = -top;
       this.top    = top;
       const box   = this.layoutBox;
+      // scrollview在全局节点中的Y轴位置
       const abY   = box.absoluteY;
 
       if ( this.isDestroyed || this.root.state === STATE.CLEAR ) {
@@ -193,6 +262,10 @@ export default class ScrollView extends View {
     })
   }
 
+  /**
+   * 前面已经计算了列表总共会分几页
+   * 这里计算每一个子元素分别会属于那一页
+   */
   renderChildren(tree) {
     const children = tree.children;
     const height   = this.pageHeight;
@@ -225,7 +298,6 @@ export default class ScrollView extends View {
 
       this.renderChildren(child);
     });
-
   }
 
   insertElements(pageIndex) {
@@ -243,6 +315,10 @@ export default class ScrollView extends View {
       ele.element.insert(ctx, ele.box);
     });
 
+    /**
+     * 这里属于不太优雅的写法，小游戏里面扛不住一次性这么多的绘制
+     * 简单加个定时器缓解渲染压力
+     */
     if ( pageIndex < this.pageCount - 1 ) {
       let timer = setTimeout(() => {
         this.insertElements(++pageIndex);
@@ -253,60 +329,74 @@ export default class ScrollView extends View {
   }
 
   childImageLoadDoneCbk(img) {
-      const start = new Date();
-      const list = Object.values(this.canvasMap);
-      let pageIndex = -1;
-      for ( let i = 0; i < list.length; i++ ) {
-        if (list[i].elements.find(item => item.element === img)) {
-          pageIndex = i;
-          break;
-        }
+    const list = Object.values(this.canvasMap);
+    let pageIndex = -1;
+    for ( let i = 0; i < list.length; i++ ) {
+      if (list[i].elements.find(item => item.element === img)) {
+        pageIndex = i;
+        break;
       }
+    }
 
-      if ( pageIndex > -1) {
-        const start = new Date();
-        const canItem = this.canvasMap[pageIndex];
-        const canvas = canItem.canvas;
-        const ctx = canItem.context;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if ( pageIndex > -1) {
+      const canItem = this.canvasMap[pageIndex];
+      const canvas = canItem.canvas;
+      const ctx = canItem.context;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        this.canvasMap[pageIndex].elements.forEach( ele => {
-          repaintTree(ele.element);
-        });
-      }
+      this.canvasMap[pageIndex].elements.forEach( ele => {
+        repaintTree(ele.element);
+      });
+    }
 
-      /*this.throttleRepaint(-this.top || 0);*/
-      this.clipRepaint(-this.top);
+    this.clipRepaint(-this.top);
   }
 
   insertScrollView(context) {
     // 绘制容器
     this.insert(context);
 
+    // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
     this.root.on('repaint__done', () => {
-      this.clipRepaint(-this.top);
+      if(this.highPerformance) {
+        this.clipRepaint(-this.top);
+      }
     });
 
-    // 计算列表应该分割成几页
-    this.calPageData();
+    /**
+     * 高性能方案：用空间换时间，分页数据创建对应的canvas并绘制
+     * 滚动过程中，只需要截取分页canvas绘制即可，不需要重新绘制每一个节点
+     */
+    if (this.highPerformance) {
+      // 计算列表应该分割成几页
+      this.calPageData();
 
-    // 计算分页数据：每个元素应该坐落在哪个canvas
-    this.renderChildren(this);
+      // 计算分页数据：每个元素应该坐落在哪个canvas
+      this.renderChildren(this);
 
-    this.insertElements(0);
+      // 渲染第一页数据
+      this.insertElements(0);
 
-    this.clipRepaint(-this.top);
+      // 根据当前的滚动位置执行渲染
+      this.clipRepaint(-this.top);
+    } else {
+      this.scrollRender(0);
+    }
 
     // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
     this.EE.on('image__render__done', (img) => {
-      this.throttleImageLoadDone(img)
+      /*this.throttleImageLoadDone(img)*/
     });
 
+    /**
+     * scrollview子元素总高度大于盒子高度，绑定滚动事件
+     */
     if ( this.scrollHeight > this.layoutBox.height ) {
+      const handler = this.highPerformance ? this.clipRepaint.bind(this) : this.scrollRender.bind(this);
       this.touch.setTouchRange(
         -(this.scrollHeight - this.layoutBox.height),
         0,
-        this.clipRepaint.bind(this),
+        handler
       );
 
       // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
@@ -316,3 +406,4 @@ export default class ScrollView extends View {
     }
   }
 }
+

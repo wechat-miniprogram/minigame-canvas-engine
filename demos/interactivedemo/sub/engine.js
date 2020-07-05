@@ -470,14 +470,13 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.on('repaint', function () {
         _this4.repaint();
       });
-      this.EE.on('one__image__render__done', function (img) {
+      this.EE.on('one__image__render__done', function () {
         _this4.repaint();
       });
     }
   }, {
     key: "repaint",
     value: function repaint() {
-      var start = new Date();
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["repaintChildren"])(this.children);
       this.emit('repaint__done');
     }
@@ -3700,6 +3699,9 @@ var Image = /*#__PURE__*/function (_Element) {
     });
     _this.type = 'Image';
     _this.renderBoxes = [];
+    _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img) {
+      _this.img = img;
+    });
     return _this;
   }
 
@@ -3709,7 +3711,7 @@ var Image = /*#__PURE__*/function (_Element) {
       var _this3 = this;
 
       this.renderBoxes.forEach(function (item) {
-        _this3.renderImg(item.ctx, item.box, false);
+        _this3.render(item.ctx, item.box, false);
       });
     } // 子类填充实现
 
@@ -3722,10 +3724,8 @@ var Image = /*#__PURE__*/function (_Element) {
       this.root = null;
     }
   }, {
-    key: "renderImg",
-    value: function renderImg(ctx, layoutBox) {
-      var needEmitEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
+    key: "render",
+    value: function render(ctx, layoutBox) {
       if (!this.img) {
         return;
       }
@@ -3759,7 +3759,7 @@ var Image = /*#__PURE__*/function (_Element) {
         if (fromCache) {
           _this4.img = img;
 
-          _this4.renderImg(ctx, box, false);
+          _this4.render(ctx, box, false);
         } else {
           // 当图片加载完成，实例可能已经被销毁了
           if (_this4.img) {
@@ -4020,6 +4020,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -4080,10 +4086,12 @@ var ScrollView = /*#__PURE__*/function (_View) {
     _this.pageCount = 1;
     _this.canvasMap = {}; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
 
-    _this.throttleRepaint = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.clipRepaint, 16, _assertThisInitialized(_this));
     _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.childImageLoadDoneCbk, 32, _assertThisInitialized(_this));
     _this.renderTimers = [];
     _this.requestID = null;
+    _this.highPerformance = false;
+    _this.scrollCanvas = null;
+    _this.scrollCtx = null;
     return _this;
   }
   /**
@@ -4101,6 +4109,10 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.renderBoxes.forEach(function (item) {
         _this2.render(item.ctx, item.box);
       });
+
+      if (!this.highPerformance) {
+        this.scrollRender(this.top);
+      }
     }
     /**
      * 列表子元素重绘之前先将所有的canvas擦除
@@ -4115,12 +4127,24 @@ var ScrollView = /*#__PURE__*/function (_View) {
         var item = _this3.canvasMap[key];
         item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
       });
-    } // 与主canvas的尺寸保持一致
+    }
+    /**
+     * 与主canvas的尺寸保持一致
+     */
 
   }, {
     key: "updateRenderPort",
     value: function updateRenderPort(renderport) {
       this.renderport = renderport;
+
+      if (!this.highPerformance) {
+        var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
+        var ctx = can.getContext('2d');
+        can.width = this.renderport.width;
+        can.height = this.renderport.height;
+        this.scrollCanvas = can;
+        this.scrollCtx = ctx;
+      }
     }
     /**
      * 计算分页数据
@@ -4153,7 +4177,6 @@ var ScrollView = /*#__PURE__*/function (_View) {
     value: function destroySelf() {
       this.touch = null;
       this.isDestroyed = true;
-      this.throttleRepaint = null;
       this.renderTimers.forEach(function (timer) {
         clearTimeout(timer);
       });
@@ -4164,6 +4187,51 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.children = null;
       this.requestID && cancelAnimationFrame(this.requestID);
       this.root = null;
+      this.scrollCanvas = null;
+      this.scrollCtx = null;
+    }
+  }, {
+    key: "renderTreeWithTop",
+    value: function renderTreeWithTop(tree, top) {
+      var _this4 = this;
+
+      var layoutBox = tree.layoutBox;
+
+      var box = _objectSpread({}, layoutBox);
+
+      box.absoluteY -= top;
+      tree.render(this.scrollCtx, box);
+      tree.children.forEach(function (child) {
+        _this4.renderTreeWithTop(child, top);
+      });
+    }
+  }, {
+    key: "scrollRender",
+    value: function scrollRender(top) {
+      var _this5 = this;
+
+      var start = new Date();
+      var box = this.layoutBox;
+      this.top = -top; // scrollview在全局节点中的Y轴位置
+
+      var abY = box.absoluteY; // 根据滚动值获取裁剪区域
+
+      var startY = abY + this.top;
+      var endY = abY + this.top + box.height; // 清理滚动画布和主屏画布
+
+      this.ctx.clearRect(box.absoluteX, abY, box.width, box.height);
+      this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
+      this.children.forEach(function (child) {
+        var layoutBox = child.layoutBox;
+        var height = layoutBox.height;
+        var originY = layoutBox.originalAbsoluteY;
+
+        if (originY + height >= startY && originY <= endY) {
+          _this5.renderTreeWithTop(child, _this5.top);
+        }
+      });
+      this.ctx.drawImage(this.scrollCanvas, box.absoluteX, box.absoluteY, box.width, box.height, box.absoluteX, box.absoluteY, box.width, box.height);
+      /*console.log('scrollRender cost ', new Date() - start)*/
     }
     /**
      * 滚动列表重绘逻辑
@@ -4173,7 +4241,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "clipRepaint",
     value: function clipRepaint(top) {
-      var _this4 = this;
+      var _this6 = this;
 
       if (this.isDestroyed) {
         return;
@@ -4181,54 +4249,60 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
       this.requestID = requestAnimationFrame(function () {
         top = -top;
-        _this4.top = top;
-        var box = _this4.layoutBox;
+        _this6.top = top;
+        var box = _this6.layoutBox; // scrollview在全局节点中的Y轴位置
+
         var abY = box.absoluteY;
 
-        if (_this4.isDestroyed || _this4.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
+        if (_this6.isDestroyed || _this6.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
           return;
         } // 在主canvas上面将滚动列表区域擦除
 
 
-        _this4.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
+        _this6.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
 
 
-        _this4.ctx.fillStyle = _this4.parent.style.backgroundColor || '#ffffff';
+        _this6.ctx.fillStyle = _this6.parent.style.backgroundColor || '#ffffff';
 
-        _this4.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
+        _this6.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
 
-        for (var i = 0; i < _this4.pageCount; i++) {
-          var canvas = _this4.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
+        for (var i = 0; i < _this6.pageCount; i++) {
+          var canvas = _this6.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
 
           var startY = abY + top;
           var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
 
-          if (startY < _this4.pageHeight * (i + 1) && endY > _this4.pageHeight * i) {
+          if (startY < _this6.pageHeight * (i + 1) && endY > _this6.pageHeight * i) {
             /**
              * 这里不能按照box.width * box.height的区域去裁剪
              * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
              */
-            var clipY = abY + top - _this4.pageHeight * i;
+            var clipY = abY + top - _this6.pageHeight * i;
             var clipH = box.height;
             var renderY = abY;
 
-            if (clipY > 0 && _this4.pageHeight - clipY < box.height) {
-              clipH = _this4.pageHeight - clipY;
+            if (clipY > 0 && _this6.pageHeight - clipY < box.height) {
+              clipH = _this6.pageHeight - clipY;
             } else if (clipY < 0) {
               clipH = clipY + box.height;
               renderY = renderY - clipY;
               clipY = 0;
             }
 
-            _this4.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
+            _this6.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
           }
         }
       });
     }
+    /**
+     * 前面已经计算了列表总共会分几页
+     * 这里计算每一个子元素分别会属于那一页
+     */
+
   }, {
     key: "renderChildren",
     value: function renderChildren(tree) {
-      var _this5 = this;
+      var _this7 = this;
 
       var children = tree.children;
       var height = this.pageHeight;
@@ -4237,10 +4311,10 @@ var ScrollView = /*#__PURE__*/function (_View) {
         var originY = child.layoutBox.originalAbsoluteY;
         var pageIndex = Math.floor(originY / height);
         var nextPage = pageIndex + 1;
-        child.layoutBox.absoluteY -= _this5.pageHeight * pageIndex;
+        child.layoutBox.absoluteY -= _this7.pageHeight * pageIndex;
 
         if (child.checkNeedRender()) {
-          _this5.canvasMap[pageIndex].elements.push({
+          _this7.canvasMap[pageIndex].elements.push({
             element: child,
             box: child.layoutBox
           });
@@ -4249,23 +4323,23 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
         if (originY + child.layoutBox.height > height * nextPage) {
           var tmpBox = Object.assign({}, child.layoutBox);
-          tmpBox.absoluteY = originY - _this5.pageHeight * nextPage;
+          tmpBox.absoluteY = originY - _this7.pageHeight * nextPage;
 
           if (child.checkNeedRender()) {
-            _this5.canvasMap[nextPage].elements.push({
+            _this7.canvasMap[nextPage].elements.push({
               element: child,
               box: tmpBox
             });
           }
         }
 
-        _this5.renderChildren(child);
+        _this7.renderChildren(child);
       });
     }
   }, {
     key: "insertElements",
     value: function insertElements(pageIndex) {
-      var _this6 = this;
+      var _this8 = this;
 
       var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
       var ctx = can.getContext('2d');
@@ -4277,10 +4351,14 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.canvasMap[pageIndex].elements.forEach(function (ele) {
         ele.element.insert(ctx, ele.box);
       });
+      /**
+       * 这里属于不太优雅的写法，小游戏里面扛不住一次性这么多的绘制
+       * 简单加个定时器缓解渲染压力
+       */
 
       if (pageIndex < this.pageCount - 1) {
         var timer = setTimeout(function () {
-          _this6.insertElements(++pageIndex);
+          _this8.insertElements(++pageIndex);
         }, 250);
         this.renderTimers.push(timer);
       }
@@ -4288,7 +4366,6 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "childImageLoadDoneCbk",
     value: function childImageLoadDoneCbk(img) {
-      var start = new Date();
       var list = Object.values(this.canvasMap);
       var pageIndex = -1;
 
@@ -4302,8 +4379,6 @@ var ScrollView = /*#__PURE__*/function (_View) {
       }
 
       if (pageIndex > -1) {
-        var _start = new Date();
-
         var canItem = this.canvasMap[pageIndex];
         var canvas = canItem.canvas;
         var ctx = canItem.context;
@@ -4312,34 +4387,51 @@ var ScrollView = /*#__PURE__*/function (_View) {
           Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["repaintTree"])(ele.element);
         });
       }
-      /*this.throttleRepaint(-this.top || 0);*/
-
 
       this.clipRepaint(-this.top);
     }
   }, {
     key: "insertScrollView",
     value: function insertScrollView(context) {
-      var _this7 = this;
+      var _this9 = this;
 
       // 绘制容器
-      this.insert(context);
+      this.insert(context); // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
+
       this.root.on('repaint__done', function () {
-        _this7.clipRepaint(-_this7.top);
-      }); // 计算列表应该分割成几页
+        if (_this9.highPerformance) {
+          _this9.clipRepaint(-_this9.top);
+        }
+      });
+      /**
+       * 高性能方案：用空间换时间，分页数据创建对应的canvas并绘制
+       * 滚动过程中，只需要截取分页canvas绘制即可，不需要重新绘制每一个节点
+       */
 
-      this.calPageData(); // 计算分页数据：每个元素应该坐落在哪个canvas
+      if (this.highPerformance) {
+        // 计算列表应该分割成几页
+        this.calPageData(); // 计算分页数据：每个元素应该坐落在哪个canvas
 
-      this.renderChildren(this);
-      this.insertElements(0);
-      this.clipRepaint(-this.top); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+        this.renderChildren(this); // 渲染第一页数据
+
+        this.insertElements(0); // 根据当前的滚动位置执行渲染
+
+        this.clipRepaint(-this.top);
+      } else {
+        this.scrollRender(0);
+      } // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+
 
       this.EE.on('image__render__done', function (img) {
-        _this7.throttleImageLoadDone(img);
+        /*this.throttleImageLoadDone(img)*/
       });
+      /**
+       * scrollview子元素总高度大于盒子高度，绑定滚动事件
+       */
 
       if (this.scrollHeight > this.layoutBox.height) {
-        this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, this.clipRepaint.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
+        var handler = this.highPerformance ? this.clipRepaint.bind(this) : this.scrollRender.bind(this);
+        this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, handler); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
 
         this.on('touchstart', this.touch.startFunc);
         this.on('touchmove', this.touch.moveFunc);
