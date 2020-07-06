@@ -4050,8 +4050,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var id = 0;
-var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
 
 var ScrollView = /*#__PURE__*/function (_View) {
   _inherits(ScrollView, _View);
@@ -4079,17 +4077,9 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
     _this.top = 0; // 滚动处理器
 
-    _this.touch = new _common_touch_js__WEBPACK_IMPORTED_MODULE_2__["default"](); // canvas高度不能过高，在小游戏里面，对canvas尺寸是有限制的
-
-    _this.pageHeight = 2000; // 根据列表总高度和单页高度计算的分页数量
-
-    _this.pageCount = 1;
-    _this.canvasMap = {}; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
+    _this.touch = new _common_touch_js__WEBPACK_IMPORTED_MODULE_2__["default"](); // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
 
     _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.childImageLoadDoneCbk, 32, _assertThisInitialized(_this));
-    _this.renderTimers = [];
-    _this.requestID = null;
-    _this.highPerformance = false;
     _this.scrollCanvas = null;
     _this.scrollCtx = null;
     return _this;
@@ -4109,24 +4099,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.renderBoxes.forEach(function (item) {
         _this2.render(item.ctx, item.box);
       });
-
-      if (!this.highPerformance) {
-        this.scrollRender(this.top);
-      }
-    }
-    /**
-     * 列表子元素重绘之前先将所有的canvas擦除
-     */
-
-  }, {
-    key: "clear",
-    value: function clear() {
-      var _this3 = this;
-
-      Object.keys(this.canvasMap).forEach(function (key) {
-        var item = _this3.canvasMap[key];
-        item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
-      });
+      this.scrollRender(this.top);
     }
     /**
      * 与主canvas的尺寸保持一致
@@ -4136,56 +4109,19 @@ var ScrollView = /*#__PURE__*/function (_View) {
     key: "updateRenderPort",
     value: function updateRenderPort(renderport) {
       this.renderport = renderport;
-
-      if (!this.highPerformance) {
-        var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
-        var ctx = can.getContext('2d');
-        can.width = this.renderport.width;
-        can.height = this.renderport.height;
-        this.scrollCanvas = can;
-        this.scrollCtx = ctx;
-      }
-    }
-    /**
-     * 计算分页数据
-     * 小游戏的canvas对尺寸有要求，如果如果高度过高，可能出现渲染不出来的情况
-     * 因此需要手动分页，列表过长的时候将数据绘制到几个canvas上面，这里预创建几个canvas
-     */
-
-  }, {
-    key: "calPageData",
-    value: function calPageData() {
-      this.pageCount = Math.ceil((this.scrollHeight + this.layoutBox.absoluteY) / this.pageHeight);
-
-      for (var i = 0; i < this.pageCount; i++) {
-        var cache = canvasPool.get(i);
-
-        if (cache) {
-          cache.context && cache.context.clearRect(0, 0, cache.canvas.width, cache.canvas.height);
-          cache.elements = [];
-          this.canvasMap[i] = cache;
-        } else {
-          this.canvasMap[i] = {
-            elements: []
-          };
-          canvasPool.set(i, this.canvasMap[i]);
-        }
-      }
+      this.scrollCanvas = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
+      this.scrollCtx = this.scrollCanvas.getContext('2d');
+      this.scrollCanvas.width = this.renderport.width;
+      this.scrollCanvas.height = this.renderport.height;
     }
   }, {
     key: "destroySelf",
     value: function destroySelf() {
       this.touch = null;
       this.isDestroyed = true;
-      this.renderTimers.forEach(function (timer) {
-        clearTimeout(timer);
-      });
       this.root.off('repaint__done');
-      this.renderTimers = [];
-      this.canvasMap = {};
       this.ctx = null;
       this.children = null;
-      this.requestID && cancelAnimationFrame(this.requestID);
       this.root = null;
       this.scrollCanvas = null;
       this.scrollCtx = null;
@@ -4193,7 +4129,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "renderTreeWithTop",
     value: function renderTreeWithTop(tree, top) {
-      var _this4 = this;
+      var _this3 = this;
 
       var layoutBox = tree.layoutBox;
 
@@ -4202,13 +4138,20 @@ var ScrollView = /*#__PURE__*/function (_View) {
       box.absoluteY -= top;
       tree.render(this.scrollCtx, box);
       tree.children.forEach(function (child) {
-        _this4.renderTreeWithTop(child, top);
+        _this3.renderTreeWithTop(child, top);
       });
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      var box = this.layoutBox;
+      this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
+      this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
     }
   }, {
     key: "scrollRender",
     value: function scrollRender(top) {
-      var _this5 = this;
+      var _this4 = this;
 
       var start = new Date();
       var box = this.layoutBox;
@@ -4219,219 +4162,45 @@ var ScrollView = /*#__PURE__*/function (_View) {
       var startY = abY + this.top;
       var endY = abY + this.top + box.height; // 清理滚动画布和主屏画布
 
-      this.ctx.clearRect(box.absoluteX, abY, box.width, box.height);
-      this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
+      this.clear();
       this.children.forEach(function (child) {
         var layoutBox = child.layoutBox;
         var height = layoutBox.height;
-        var originY = layoutBox.originalAbsoluteY;
+        var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
 
         if (originY + height >= startY && originY <= endY) {
-          _this5.renderTreeWithTop(child, _this5.top);
+          _this4.renderTreeWithTop(child, _this4.top);
         }
       });
       this.ctx.drawImage(this.scrollCanvas, box.absoluteX, box.absoluteY, box.width, box.height, box.absoluteX, box.absoluteY, box.width, box.height);
-      /*console.log('scrollRender cost ', new Date() - start)*/
-    }
-    /**
-     * 滚动列表重绘逻辑
-     * 将分页canvas按照滚动裁剪绘制到主canvas上面
-     */
-
-  }, {
-    key: "clipRepaint",
-    value: function clipRepaint(top) {
-      var _this6 = this;
-
-      if (this.isDestroyed) {
-        return;
-      }
-
-      this.requestID = requestAnimationFrame(function () {
-        top = -top;
-        _this6.top = top;
-        var box = _this6.layoutBox; // scrollview在全局节点中的Y轴位置
-
-        var abY = box.absoluteY;
-
-        if (_this6.isDestroyed || _this6.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
-          return;
-        } // 在主canvas上面将滚动列表区域擦除
-
-
-        _this6.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
-
-
-        _this6.ctx.fillStyle = _this6.parent.style.backgroundColor || '#ffffff';
-
-        _this6.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
-
-        for (var i = 0; i < _this6.pageCount; i++) {
-          var canvas = _this6.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
-
-          var startY = abY + top;
-          var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
-
-          if (startY < _this6.pageHeight * (i + 1) && endY > _this6.pageHeight * i) {
-            /**
-             * 这里不能按照box.width * box.height的区域去裁剪
-             * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
-             */
-            var clipY = abY + top - _this6.pageHeight * i;
-            var clipH = box.height;
-            var renderY = abY;
-
-            if (clipY > 0 && _this6.pageHeight - clipY < box.height) {
-              clipH = _this6.pageHeight - clipY;
-            } else if (clipY < 0) {
-              clipH = clipY + box.height;
-              renderY = renderY - clipY;
-              clipY = 0;
-            }
-
-            _this6.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
-          }
-        }
-      });
-    }
-    /**
-     * 前面已经计算了列表总共会分几页
-     * 这里计算每一个子元素分别会属于那一页
-     */
-
-  }, {
-    key: "renderChildren",
-    value: function renderChildren(tree) {
-      var _this7 = this;
-
-      var children = tree.children;
-      var height = this.pageHeight;
-      Object.keys(children).forEach(function (id) {
-        var child = children[id];
-        var originY = child.layoutBox.originalAbsoluteY;
-        var pageIndex = Math.floor(originY / height);
-        var nextPage = pageIndex + 1;
-        child.layoutBox.absoluteY -= _this7.pageHeight * pageIndex;
-
-        if (child.checkNeedRender()) {
-          _this7.canvasMap[pageIndex].elements.push({
-            element: child,
-            box: child.layoutBox
-          });
-        } // 对于跨界的元素，两边都绘制下
-
-
-        if (originY + child.layoutBox.height > height * nextPage) {
-          var tmpBox = Object.assign({}, child.layoutBox);
-          tmpBox.absoluteY = originY - _this7.pageHeight * nextPage;
-
-          if (child.checkNeedRender()) {
-            _this7.canvasMap[nextPage].elements.push({
-              element: child,
-              box: tmpBox
-            });
-          }
-        }
-
-        _this7.renderChildren(child);
-      });
-    }
-  }, {
-    key: "insertElements",
-    value: function insertElements(pageIndex) {
-      var _this8 = this;
-
-      var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
-      var ctx = can.getContext('2d');
-      can.width = this.renderport.width;
-      can.height = this.pageHeight;
-      ctx.id = ++id;
-      this.canvasMap[pageIndex].canvas = can;
-      this.canvasMap[pageIndex].context = ctx;
-      this.canvasMap[pageIndex].elements.forEach(function (ele) {
-        ele.element.insert(ctx, ele.box);
-      });
-      /**
-       * 这里属于不太优雅的写法，小游戏里面扛不住一次性这么多的绘制
-       * 简单加个定时器缓解渲染压力
-       */
-
-      if (pageIndex < this.pageCount - 1) {
-        var timer = setTimeout(function () {
-          _this8.insertElements(++pageIndex);
-        }, 250);
-        this.renderTimers.push(timer);
-      }
     }
   }, {
     key: "childImageLoadDoneCbk",
-    value: function childImageLoadDoneCbk(img) {
-      var list = Object.values(this.canvasMap);
-      var pageIndex = -1;
-
-      for (var i = 0; i < list.length; i++) {
-        if (list[i].elements.find(function (item) {
-          return item.element === img;
-        })) {
-          pageIndex = i;
-          break;
-        }
-      }
-
-      if (pageIndex > -1) {
-        var canItem = this.canvasMap[pageIndex];
-        var canvas = canItem.canvas;
-        var ctx = canItem.context;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.canvasMap[pageIndex].elements.forEach(function (ele) {
-          Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["repaintTree"])(ele.element);
-        });
-      }
-
-      this.clipRepaint(-this.top);
-    }
+    value: function childImageLoadDoneCbk(img) {}
   }, {
     key: "insertScrollView",
     value: function insertScrollView(context) {
-      var _this9 = this;
+      var _this5 = this;
 
       // 绘制容器
       this.insert(context); // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
 
       this.root.on('repaint__done', function () {
-        if (_this9.highPerformance) {
-          _this9.clipRepaint(-_this9.top);
-        }
+        _this5.scrollRender(_this5.top);
       });
-      /**
-       * 高性能方案：用空间换时间，分页数据创建对应的canvas并绘制
-       * 滚动过程中，只需要截取分页canvas绘制即可，不需要重新绘制每一个节点
-       */
-
-      if (this.highPerformance) {
-        // 计算列表应该分割成几页
-        this.calPageData(); // 计算分页数据：每个元素应该坐落在哪个canvas
-
-        this.renderChildren(this); // 渲染第一页数据
-
-        this.insertElements(0); // 根据当前的滚动位置执行渲染
-
-        this.clipRepaint(-this.top);
-      } else {
-        this.scrollRender(0);
-      } // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-
+      this.scrollRender(0); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
 
       this.EE.on('image__render__done', function (img) {
-        /*this.throttleImageLoadDone(img)*/
+        console.log('image__render__done');
+
+        _this5.throttleImageLoadDone(img);
       });
       /**
        * scrollview子元素总高度大于盒子高度，绑定滚动事件
        */
 
       if (this.scrollHeight > this.layoutBox.height) {
-        var handler = this.highPerformance ? this.clipRepaint.bind(this) : this.scrollRender.bind(this);
-        this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, handler); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
+        this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, this.scrollRender.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
 
         this.on('touchstart', this.touch.startFunc);
         this.on('touchmove', this.touch.moveFunc);
