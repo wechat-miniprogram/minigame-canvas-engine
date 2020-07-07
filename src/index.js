@@ -488,10 +488,6 @@ class _Layout extends Element {
       this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
     }
 
-    /*['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(eventName => {
-      this.off(eventName);
-    });*/
-
     this.EE.off('image__render__done');
 
   }

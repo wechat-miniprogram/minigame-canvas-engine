@@ -73,9 +73,9 @@ export default class ScrollView extends View {
     this.isDestroyed     = true;
 
     this.root.off('repaint__done');
-    this.ctx          = null;
-    this.children     = null;
-    this.root          = null;
+    this.ctx             = null;
+    this.children        = null;
+    this.root            = null;
 
     this.scrollCanvas = null;
     this.scrollCtx = null;
@@ -83,9 +83,9 @@ export default class ScrollView extends View {
 
   renderTreeWithTop(tree, top) {
     const layoutBox = tree.layoutBox;
-    const box = {...layoutBox}
-    box.absoluteY -= top;
-    tree.render(this.scrollCtx, box);
+    // 计算实际渲染的Y轴位置
+    layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+    tree.render(this.scrollCtx, layoutBox);
 
     tree.children.forEach( child => {
       this.renderTreeWithTop(child, top);
@@ -99,7 +99,7 @@ export default class ScrollView extends View {
   }
 
   scrollRender(top) {
-    const start = new Date();
+    let start = new Date();
     const box   = this.layoutBox;
     this.top = -top;
     // scrollview在全局节点中的Y轴位置
@@ -133,7 +133,21 @@ export default class ScrollView extends View {
   }
 
   childImageLoadDoneCbk(img) {
+    const box   = this.layoutBox;
 
+    // 根据滚动值获取裁剪区域
+    const startY = box.absoluteY + this.top;
+    const endY   = box.absoluteY + this.top + box.height;
+
+    const layoutBox = img.layoutBox;
+    const height = layoutBox.height;
+    let originY   = layoutBox.originalAbsoluteY;
+
+    // 判断处于可视窗口内的子节点，渲染该子节点
+    if (originY + height >= startY && originY <= endY) {
+      console.log('图片在视口内')
+      this.scrollRender(-this.top);
+    }
   }
 
   insertScrollView(context) {
@@ -149,8 +163,7 @@ export default class ScrollView extends View {
 
     // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
     this.EE.on('image__render__done', (img) => {
-      console.log('image__render__done')
-      this.throttleImageLoadDone(img)
+      this.throttleImageLoadDone(img);
     });
 
     /**

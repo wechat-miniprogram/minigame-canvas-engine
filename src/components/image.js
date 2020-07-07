@@ -29,7 +29,6 @@ export default class Image extends Element {
           this.imgsrc = newValue;
           imageManager.loadImage(this.src, (img) => {
             this.img = img;
-            /*this.repaint();*/
             this.emit('repaint');
           });
         }
@@ -41,8 +40,15 @@ export default class Image extends Element {
     this.type        = 'Image';
     this.renderBoxes = [];
 
-    imageManager.loadImage(this.src, (img) => {
-      this.img = img;
+    this.img = imageManager.loadImage(this.src, (img, fromCache) => {
+      if (fromCache) {
+        this.img = img;
+      } else {
+        // 当图片加载完成，实例可能已经被销毁了
+        if (this.img && this.isScrollViewChild) {
+          this.EE.emit('image__render__done', this);
+        }
+      }
     });
   }
 

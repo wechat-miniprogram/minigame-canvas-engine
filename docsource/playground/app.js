@@ -15642,7 +15642,7 @@ var dot_pattern = /[^\d\.]/;
 
 var positionable_operators = (
   ">>> === !== " +
-  "<< && >= ** != == <= >> || |> " +
+  "<< && >= ** != == <= >> || " +
   "< / - + > : & % ? ^ | *").split(' ');
 
 // IMPORTANT: this must be sorted longest to shortest or tokenizing many not work.
@@ -15650,12 +15650,10 @@ var positionable_operators = (
 var punct =
   ">>>= " +
   "... >>= <<= === >>> !== **= " +
-  "=> ^= :: /= << <= == && -= >= >> != -- += ** || ++ %= &= *= |= |> " +
+  "=> ^= :: /= << <= == && -= >= >> != -- += ** || ++ %= &= *= |= " +
   "= ! ? > < : / ^ - + * & % ~ |";
 
 punct = punct.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&");
-// ?. but not if followed by a number 
-punct = '\\?\\.(?!\\d) ' + punct;
 punct = punct.replace(/ /g, '|');
 
 var punct_pattern = new RegExp(punct);
@@ -15797,8 +15795,6 @@ Tokenizer.prototype._read_punctuation = function() {
   if (resulting_string !== '') {
     if (resulting_string === '=') {
       return this._create_token(TOKEN.EQUALS, resulting_string);
-    } else if (resulting_string === '?.') {
-      return this._create_token(TOKEN.DOT, resulting_string);
     } else {
       return this._create_token(TOKEN.OPERATOR, resulting_string);
     }
@@ -20708,7 +20704,7 @@ var get_custom_beautifier_name = function(tag_check, raw_token) {
   // For those without a type attribute use default;
   if (typeAttribute.search('text/css') > -1) {
     result = 'css';
-  } else if (typeAttribute.search(/module|((text|application|dojo)\/(x-)?(javascript|ecmascript|jscript|livescript|(ld\+)?json|method|aspect))/) > -1) {
+  } else if (typeAttribute.search(/(text|application|dojo)\/(x-)?(javascript|ecmascript|jscript|livescript|(ld\+)?json|method|aspect)/) > -1) {
     result = 'javascript';
   } else if (typeAttribute.search(/(text|application|dojo)\/(x-)?(html)/) > -1) {
     result = 'html';
@@ -21099,7 +21095,6 @@ Beautifier.prototype._handle_tag_open = function(printer, raw_token, last_tag_to
     // End element tags for unformatted or content_unformatted elements
     // are printed raw to keep any newlines inside them exactly the same.
     printer.add_raw_token(raw_token);
-    parser_token.start_tag_token = this._tag_stack.try_pop(parser_token.tag_name);
   } else {
     printer.traverse_whitespace(raw_token);
     this._set_tag_position(printer, raw_token, parser_token, last_tag_token, last_token);
@@ -21155,13 +21150,8 @@ var TagOpenParserToken = function(parent, raw_token) {
       tag_check_match = raw_token.text.match(/^<([^\s>]*)/);
       this.tag_check = tag_check_match ? tag_check_match[1] : '';
     } else {
-      tag_check_match = raw_token.text.match(/^{{(?:[\^]|#\*?)?([^\s}]+)/);
+      tag_check_match = raw_token.text.match(/^{{[#\^]?([^\s}]+)/);
       this.tag_check = tag_check_match ? tag_check_match[1] : '';
-
-      // handle "{{#> myPartial}}
-      if (raw_token.text === '{{#>' && this.tag_check === '>' && raw_token.next !== null) {
-        this.tag_check = raw_token.next.text;
-      }
     }
     this.tag_check = this.tag_check.toLowerCase();
 
@@ -21290,8 +21280,7 @@ Beautifier.prototype._set_tag_position = function(printer, raw_token, parser_tok
 };
 
 //To be used for <p> tag special case:
-var p_closers = ['address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'main', 'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul'];
-var p_parent_excludes = ['a', 'audio', 'del', 'ins', 'map', 'noscript', 'video'];
+//var p_closers = ['address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'main', 'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul'];
 
 Beautifier.prototype._do_optional_end_element = function(parser_token) {
   var result = null;
@@ -21302,9 +21291,7 @@ Beautifier.prototype._do_optional_end_element = function(parser_token) {
   if (parser_token.is_empty_element || !parser_token.is_start_tag || !parser_token.parent) {
     return;
 
-  }
-
-  if (parser_token.tag_name === 'body') {
+  } else if (parser_token.tag_name === 'body') {
     // A head element’s end tag may be omitted if the head element is not immediately followed by a space character or a comment.
     result = result || this._tag_stack.try_pop('head');
 
@@ -21321,16 +21308,11 @@ Beautifier.prototype._do_optional_end_element = function(parser_token) {
     result = result || this._tag_stack.try_pop('dt', ['dl']);
     result = result || this._tag_stack.try_pop('dd', ['dl']);
 
+    //} else if (p_closers.indexOf(parser_token.tag_name) !== -1) {
+    //TODO: THIS IS A BUG FARM. We are not putting this into 1.8.0 as it is likely to blow up.
+    //A p element’s end tag may be omitted if the p element is immediately followed by an address, article, aside, blockquote, details, div, dl, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hr, main, nav, ol, p, pre, section, table, or ul element, or if there is no more content in the parent element and the parent element is an HTML element that is not an a, audio, del, ins, map, noscript, or video element, or an autonomous custom element.
+    //result = result || this._tag_stack.try_pop('p', ['body']);
 
-  } else if (parser_token.parent.tag_name === 'p' && p_closers.indexOf(parser_token.tag_name) !== -1) {
-    // IMPORTANT: this else-if works because p_closers has no overlap with any other element we look for in this method
-    // check for the parent element is an HTML element that is not an <a>, <audio>, <del>, <ins>, <map>, <noscript>, or <video> element,  or an autonomous custom element.
-    // To do this right, this needs to be coded as an inclusion of the inverse of the exclusion above.
-    // But to start with (if we ignore "autonomous custom elements") the exclusion would be fine.
-    var p_parent = parser_token.parent.parent;
-    if (!p_parent || p_parent_excludes.indexOf(p_parent.tag_name) === -1) {
-      result = result || this._tag_stack.try_pop('p');
-    }
   } else if (parser_token.tag_name === 'rp' || parser_token.tag_name === 'rt') {
     // An rt element’s end tag may be omitted if the rt element is immediately followed by an rt or rp element, or if there is no more content in the parent element.
     // An rp element’s end tag may be omitted if the rp element is immediately followed by an rt or rp element, or if there is no more content in the parent element.
@@ -22068,7 +22050,7 @@ if (true) {
   }
 
   // Number of pixels added to scroller and sizer to hide scrollbar
-  var scrollerGap = 50;
+  var scrollerGap = 30;
 
   // Returned or thrown by various protocols to signal 'I'm not
   // handling this'.
@@ -23065,7 +23047,7 @@ if (true) {
       var prop = lineClass[1] ? "bgClass" : "textClass";
       if (output[prop] == null)
         { output[prop] = lineClass[2]; }
-      else if (!(new RegExp("(?:^|\\s)" + lineClass[2] + "(?:$|\\s)")).test(output[prop]))
+      else if (!(new RegExp("(?:^|\s)" + lineClass[2] + "(?:$|\s)")).test(output[prop]))
         { output[prop] += " " + lineClass[2]; }
     } }
     return type
@@ -25914,8 +25896,7 @@ if (true) {
   function restoreSelection(snapshot) {
     if (!snapshot || !snapshot.activeElt || snapshot.activeElt == activeElt()) { return }
     snapshot.activeElt.focus();
-    if (!/^(INPUT|TEXTAREA)$/.test(snapshot.activeElt.nodeName) &&
-        snapshot.anchorNode && contains(document.body, snapshot.anchorNode) && contains(document.body, snapshot.focusNode)) {
+    if (snapshot.anchorNode && contains(document.body, snapshot.anchorNode) && contains(document.body, snapshot.focusNode)) {
       var sel = window.getSelection(), range = document.createRange();
       range.setEnd(snapshot.anchorNode, snapshot.anchorOffset);
       range.collapse(false);
@@ -26013,8 +25994,6 @@ if (true) {
         update.visible = visibleLines(cm.display, cm.doc, viewport);
         if (update.visible.from >= cm.display.viewFrom && update.visible.to <= cm.display.viewTo)
           { break }
-      } else if (first) {
-        update.visible = visibleLines(cm.display, cm.doc, viewport);
       }
       if (!updateDisplayIfNeeded(cm, update)) { break }
       updateHeightsInViewport(cm);
@@ -29055,7 +29034,6 @@ if (true) {
   var lastStoppedKey = null;
   function onKeyDown(e) {
     var cm = this;
-    if (e.target && e.target != cm.display.input.getField()) { return }
     cm.curOp.focus = activeElt();
     if (signalDOMEvent(cm, e)) { return }
     // IE does strange things with escape.
@@ -29099,7 +29077,6 @@ if (true) {
 
   function onKeyPress(e) {
     var cm = this;
-    if (e.target && e.target != cm.display.input.getField()) { return }
     if (eventInWidget(cm.display, e) || signalDOMEvent(cm, e) || e.ctrlKey && !e.altKey || mac && e.metaKey) { return }
     var keyCode = e.keyCode, charCode = e.charCode;
     if (presto && keyCode == lastStoppedKey) {lastStoppedKey = null; e_preventDefault(e); return}
@@ -29248,8 +29225,8 @@ if (true) {
         if (!behavior.addNew)
           { extendSelection(cm.doc, pos, null, null, behavior.extend); }
         // Work around unexplainable focus problem in IE9 (#2127) and Chrome (#3081)
-        if ((webkit && !safari) || ie && ie_version == 9)
-          { setTimeout(function () {display.wrapper.ownerDocument.body.focus({preventScroll: true}); display.input.focus();}, 20); }
+        if (webkit || ie && ie_version == 9)
+          { setTimeout(function () {display.wrapper.ownerDocument.body.focus(); display.input.focus();}, 20); }
         else
           { display.input.focus(); }
       }
@@ -29625,12 +29602,6 @@ if (true) {
       }
       cm.display.input.readOnlyChanged(val);
     });
-
-    option("screenReaderLabel", null, function (cm, val) {
-      val = (val === '') ? null : val;
-      cm.display.input.screenReaderLabelChanged(val);
-    });
-
     option("disableInput", false, function (cm, val) {if (!val) { cm.display.input.reset(); }}, true);
     option("dragDrop", true, dragDropChanged);
     option("allowDropFileTypes", null);
@@ -30462,7 +30433,7 @@ if (true) {
         clearCaches(this);
         scrollToCoords(this, this.doc.scrollLeft, this.doc.scrollTop);
         updateGutterSpace(this.display);
-        if (oldHeight == null || Math.abs(oldHeight - textHeight(this.display)) > .5 || this.options.lineWrapping)
+        if (oldHeight == null || Math.abs(oldHeight - textHeight(this.display)) > .5)
           { estimateLineHeights(this); }
         signal(this, "refresh", this);
       }),
@@ -30611,16 +30582,8 @@ if (true) {
     var div = input.div = display.lineDiv;
     disableBrowserMagic(div, cm.options.spellcheck, cm.options.autocorrect, cm.options.autocapitalize);
 
-    function belongsToInput(e) {
-      for (var t = e.target; t; t = t.parentNode) {
-        if (t == div) { return true }
-        if (/\bCodeMirror-(?:line)?widget\b/.test(t.className)) { break }
-      }
-      return false
-    }
-
     on(div, "paste", function (e) {
-      if (!belongsToInput(e) || signalDOMEvent(cm, e) || handlePaste(e, cm)) { return }
+      if (signalDOMEvent(cm, e) || handlePaste(e, cm)) { return }
       // IE doesn't fire input events, so we schedule a read for the pasted content in this way
       if (ie_version <= 11) { setTimeout(operation(cm, function () { return this$1.updateFromDOM(); }), 20); }
     });
@@ -30645,7 +30608,7 @@ if (true) {
     });
 
     function onCopyCut(e) {
-      if (!belongsToInput(e) || signalDOMEvent(cm, e)) { return }
+      if (signalDOMEvent(cm, e)) { return }
       if (cm.somethingSelected()) {
         setLastCopied({lineWise: false, text: cm.getSelections()});
         if (e.type == "cut") { cm.replaceSelection("", null, "cut"); }
@@ -30687,18 +30650,9 @@ if (true) {
     on(div, "cut", onCopyCut);
   };
 
-  ContentEditableInput.prototype.screenReaderLabelChanged = function (label) {
-    // Label for screenreaders, accessibility
-    if(label) {
-      this.div.setAttribute('aria-label', label);
-    } else {
-      this.div.removeAttribute('aria-label');
-    }
-  };
-
   ContentEditableInput.prototype.prepareSelection = function () {
     var result = prepareSelection(this.cm, false);
-    result.focus = document.activeElement == this.div;
+    result.focus = this.cm.state.focused;
     return result
   };
 
@@ -30794,7 +30748,7 @@ if (true) {
 
   ContentEditableInput.prototype.focus = function () {
     if (this.cm.options.readOnly != "nocursor") {
-      if (!this.selectionInEditor() || document.activeElement != this.div)
+      if (!this.selectionInEditor())
         { this.showSelection(this.prepareSelection(), true); }
       this.div.focus();
     }
@@ -31236,15 +31190,6 @@ if (true) {
     this.textarea = this.wrapper.firstChild;
   };
 
-  TextareaInput.prototype.screenReaderLabelChanged = function (label) {
-    // Label for screenreaders, accessibility
-    if(label) {
-      this.textarea.setAttribute('aria-label', label);
-    } else {
-      this.textarea.removeAttribute('aria-label');
-    }
-  };
-
   TextareaInput.prototype.prepareSelection = function () {
     // Redraw the selection and/or cursor
     var cm = this.cm, display = cm.display, doc = cm.doc;
@@ -31635,7 +31580,7 @@ if (true) {
 
   addLegacyProps(CodeMirror);
 
-  CodeMirror.version = "5.54.0";
+  CodeMirror.version = "5.52.0";
 
   return CodeMirror;
 
@@ -31962,15 +31907,13 @@ function (module, __webpack_exports__, __webpack_require__) {
   var _components_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(15);
 
   function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
       _typeof = function _typeof(obj) {
-        return typeof obj;
+        return _typeof2(obj);
       };
     } else {
       _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
       };
     }
 
@@ -31999,6 +31942,29 @@ function (module, __webpack_exports__, __webpack_require__) {
     return Constructor;
   }
 
+  function _possibleConstructorReturn(self, call) {
+    if (call && (_typeof(call) === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function");
@@ -32021,61 +31987,6 @@ function (module, __webpack_exports__, __webpack_require__) {
     };
 
     return _setPrototypeOf(o, p);
-  }
-
-  function _createSuper(Derived) {
-    var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-    return function _createSuperInternal() {
-      var Super = _getPrototypeOf(Derived),
-          result;
-
-      if (hasNativeReflectConstruct) {
-        var NewTarget = _getPrototypeOf(this).constructor;
-
-        result = Reflect.construct(Super, arguments, NewTarget);
-      } else {
-        result = Super.apply(this, arguments);
-      }
-
-      return _possibleConstructorReturn(this, result);
-    };
-  }
-
-  function _possibleConstructorReturn(self, call) {
-    if (call && (_typeof(call) === "object" || typeof call === "function")) {
-      return call;
-    }
-
-    return _assertThisInitialized(self);
-  }
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return self;
-  }
-
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-      return o.__proto__ || Object.getPrototypeOf(o);
-    };
-    return _getPrototypeOf(o);
   } // components
   // 全局事件管道
 
@@ -32267,8 +32178,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   var _Layout = /*#__PURE__*/function (_Element) {
     _inherits(_Layout, _Element);
 
-    var _super = _createSuper(_Layout);
-
     function _Layout() {
       var _this3;
 
@@ -32278,11 +32187,11 @@ function (module, __webpack_exports__, __webpack_require__) {
 
       _classCallCheck(this, _Layout);
 
-      _this3 = _super.call(this, {
+      _this3 = _possibleConstructorReturn(this, _getPrototypeOf(_Layout).call(this, {
         style: style,
         id: 0,
         name: name
-      });
+      }));
       _this3.hasEventHandler = false;
       _this3.elementTree = null;
       _this3.renderContext = null;
@@ -32563,10 +32472,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         if (this.renderContext) {
           this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
         }
-        /*['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(eventName => {
-          this.off(eventName);
-        });*/
-
 
         this.EE.off('image__render__done');
       }
@@ -35758,15 +35663,13 @@ function (module, __webpack_exports__, __webpack_require__) {
   var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
   function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
       _typeof = function _typeof(obj) {
-        return typeof obj;
+        return _typeof2(obj);
       };
     } else {
       _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
       };
     }
 
@@ -35795,6 +35698,29 @@ function (module, __webpack_exports__, __webpack_require__) {
     return Constructor;
   }
 
+  function _possibleConstructorReturn(self, call) {
+    if (call && (_typeof(call) === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function");
@@ -35819,65 +35745,8 @@ function (module, __webpack_exports__, __webpack_require__) {
     return _setPrototypeOf(o, p);
   }
 
-  function _createSuper(Derived) {
-    var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-    return function _createSuperInternal() {
-      var Super = _getPrototypeOf(Derived),
-          result;
-
-      if (hasNativeReflectConstruct) {
-        var NewTarget = _getPrototypeOf(this).constructor;
-
-        result = Reflect.construct(Super, arguments, NewTarget);
-      } else {
-        result = Super.apply(this, arguments);
-      }
-
-      return _possibleConstructorReturn(this, result);
-    };
-  }
-
-  function _possibleConstructorReturn(self, call) {
-    if (call && (_typeof(call) === "object" || typeof call === "function")) {
-      return call;
-    }
-
-    return _assertThisInitialized(self);
-  }
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return self;
-  }
-
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-      return o.__proto__ || Object.getPrototypeOf(o);
-    };
-    return _getPrototypeOf(o);
-  }
-
   var View = /*#__PURE__*/function (_Element) {
     _inherits(View, _Element);
-
-    var _super = _createSuper(View);
 
     function View(_ref) {
       var _this;
@@ -35893,12 +35762,12 @@ function (module, __webpack_exports__, __webpack_require__) {
 
       _classCallCheck(this, View);
 
-      _this = _super.call(this, {
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(View).call(this, {
         props: props,
         idName: idName,
         className: className,
         style: style
-      });
+      }));
       _this.type = 'View';
       _this.ctx = null;
       _this.renderBoxes = [];
@@ -35996,15 +35865,13 @@ function (module, __webpack_exports__, __webpack_require__) {
   var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
 
   function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
       _typeof = function _typeof(obj) {
-        return typeof obj;
+        return _typeof2(obj);
       };
     } else {
       _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
       };
     }
 
@@ -36033,6 +35900,29 @@ function (module, __webpack_exports__, __webpack_require__) {
     return Constructor;
   }
 
+  function _possibleConstructorReturn(self, call) {
+    if (call && (_typeof(call) === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function");
@@ -36057,65 +35947,8 @@ function (module, __webpack_exports__, __webpack_require__) {
     return _setPrototypeOf(o, p);
   }
 
-  function _createSuper(Derived) {
-    var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-    return function _createSuperInternal() {
-      var Super = _getPrototypeOf(Derived),
-          result;
-
-      if (hasNativeReflectConstruct) {
-        var NewTarget = _getPrototypeOf(this).constructor;
-
-        result = Reflect.construct(Super, arguments, NewTarget);
-      } else {
-        result = Super.apply(this, arguments);
-      }
-
-      return _possibleConstructorReturn(this, result);
-    };
-  }
-
-  function _possibleConstructorReturn(self, call) {
-    if (call && (_typeof(call) === "object" || typeof call === "function")) {
-      return call;
-    }
-
-    return _assertThisInitialized(self);
-  }
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return self;
-  }
-
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-      return o.__proto__ || Object.getPrototypeOf(o);
-    };
-    return _getPrototypeOf(o);
-  }
-
   var Image = /*#__PURE__*/function (_Element) {
     _inherits(Image, _Element);
-
-    var _super = _createSuper(Image);
 
     function Image(opts) {
       var _this;
@@ -36132,12 +35965,12 @@ function (module, __webpack_exports__, __webpack_require__) {
           className = _opts$className === void 0 ? '' : _opts$className,
           _opts$src = opts.src,
           src = _opts$src === void 0 ? '' : _opts$src;
-      _this = _super.call(this, {
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(Image).call(this, {
         props: props,
         idName: idName,
         className: className,
         style: style
-      });
+      }));
       _this.imgsrc = src;
       Object.defineProperty(_assertThisInitialized(_this), "src", {
         get: function get() {
@@ -36151,7 +35984,6 @@ function (module, __webpack_exports__, __webpack_require__) {
 
             _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
               _this2.img = img;
-              /*this.repaint();*/
 
               _this2.emit('repaint');
             });
@@ -36162,11 +35994,16 @@ function (module, __webpack_exports__, __webpack_require__) {
       });
       _this.type = 'Image';
       _this.renderBoxes = [];
-
-      _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img) {
-        _this.img = img;
+      _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
+        if (fromCache) {
+          _this.img = img;
+        } else {
+          // 当图片加载完成，实例可能已经被销毁了
+          if (_this.img && _this.isScrollViewChild) {
+            _this.EE.emit('image__render__done', _assertThisInitialized(_this));
+          }
+        }
       });
-
       return _this;
     }
 
@@ -36281,15 +36118,13 @@ function (module, __webpack_exports__, __webpack_require__) {
   var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
 
   function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
       _typeof = function _typeof(obj) {
-        return typeof obj;
+        return _typeof2(obj);
       };
     } else {
       _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
       };
     }
 
@@ -36318,6 +36153,29 @@ function (module, __webpack_exports__, __webpack_require__) {
     return Constructor;
   }
 
+  function _possibleConstructorReturn(self, call) {
+    if (call && (_typeof(call) === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function");
@@ -36340,61 +36198,6 @@ function (module, __webpack_exports__, __webpack_require__) {
     };
 
     return _setPrototypeOf(o, p);
-  }
-
-  function _createSuper(Derived) {
-    var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-    return function _createSuperInternal() {
-      var Super = _getPrototypeOf(Derived),
-          result;
-
-      if (hasNativeReflectConstruct) {
-        var NewTarget = _getPrototypeOf(this).constructor;
-
-        result = Reflect.construct(Super, arguments, NewTarget);
-      } else {
-        result = Super.apply(this, arguments);
-      }
-
-      return _possibleConstructorReturn(this, result);
-    };
-  }
-
-  function _possibleConstructorReturn(self, call) {
-    if (call && (_typeof(call) === "object" || typeof call === "function")) {
-      return call;
-    }
-
-    return _assertThisInitialized(self);
-  }
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return self;
-  }
-
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-      return o.__proto__ || Object.getPrototypeOf(o);
-    };
-    return _getPrototypeOf(o);
   }
 
   var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
@@ -36452,8 +36255,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   var Text = /*#__PURE__*/function (_Element) {
     _inherits(Text, _Element);
 
-    var _super = _createSuper(Text);
-
     function Text(_ref) {
       var _this;
 
@@ -36477,12 +36278,12 @@ function (module, __webpack_exports__, __webpack_require__) {
         value = parseText(style, value);
       }
 
-      _this = _super.call(this, {
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(Text).call(this, {
         props: props,
         idName: idName,
         className: className,
         style: style
-      });
+      }));
       _this.type = 'Text';
       _this.ctx = null;
       _this.valuesrc = value;
@@ -36609,68 +36410,17 @@ function (module, __webpack_exports__, __webpack_require__) {
   var _common_util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
 
   function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
       _typeof = function _typeof(obj) {
-        return typeof obj;
+        return _typeof2(obj);
       };
     } else {
       _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
       };
     }
 
     return _typeof(obj);
-  }
-
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      if (enumerableOnly) symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-      keys.push.apply(keys, symbols);
-    }
-
-    return keys;
-  }
-
-  function _objectSpread(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-
-      if (i % 2) {
-        ownKeys(Object(source), true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
-        });
-      } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-      } else {
-        ownKeys(Object(source)).forEach(function (key) {
-          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
-      }
-    }
-
-    return target;
-  }
-
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -36693,6 +36443,29 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
     return Constructor;
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (call && (_typeof(call) === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
   }
 
   function _inherits(subClass, superClass) {
@@ -36719,65 +36492,8 @@ function (module, __webpack_exports__, __webpack_require__) {
     return _setPrototypeOf(o, p);
   }
 
-  function _createSuper(Derived) {
-    var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-    return function _createSuperInternal() {
-      var Super = _getPrototypeOf(Derived),
-          result;
-
-      if (hasNativeReflectConstruct) {
-        var NewTarget = _getPrototypeOf(this).constructor;
-
-        result = Reflect.construct(Super, arguments, NewTarget);
-      } else {
-        result = Super.apply(this, arguments);
-      }
-
-      return _possibleConstructorReturn(this, result);
-    };
-  }
-
-  function _possibleConstructorReturn(self, call) {
-    if (call && (_typeof(call) === "object" || typeof call === "function")) {
-      return call;
-    }
-
-    return _assertThisInitialized(self);
-  }
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return self;
-  }
-
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-      return o.__proto__ || Object.getPrototypeOf(o);
-    };
-    return _getPrototypeOf(o);
-  }
-
   var ScrollView = /*#__PURE__*/function (_View) {
     _inherits(ScrollView, _View);
-
-    var _super = _createSuper(ScrollView);
 
     function ScrollView(_ref) {
       var _this;
@@ -36791,11 +36507,11 @@ function (module, __webpack_exports__, __webpack_require__) {
 
       _classCallCheck(this, ScrollView);
 
-      _this = _super.call(this, {
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(ScrollView).call(this, {
         props: props,
         name: name,
         style: style
-      });
+      }));
       _this.type = 'ScrollView'; // 当前列表滚动的值
 
       _this.top = 0; // 滚动处理器
@@ -36854,12 +36570,10 @@ function (module, __webpack_exports__, __webpack_require__) {
       value: function renderTreeWithTop(tree, top) {
         var _this3 = this;
 
-        var layoutBox = tree.layoutBox;
+        var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
 
-        var box = _objectSpread({}, layoutBox);
-
-        box.absoluteY -= top;
-        tree.render(this.scrollCtx, box);
+        layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+        tree.render(this.scrollCtx, layoutBox);
         tree.children.forEach(function (child) {
           _this3.renderTreeWithTop(child, top);
         });
@@ -36899,7 +36613,20 @@ function (module, __webpack_exports__, __webpack_require__) {
       }
     }, {
       key: "childImageLoadDoneCbk",
-      value: function childImageLoadDoneCbk(img) {}
+      value: function childImageLoadDoneCbk(img) {
+        var box = this.layoutBox; // 根据滚动值获取裁剪区域
+
+        var startY = box.absoluteY + this.top;
+        var endY = box.absoluteY + this.top + box.height;
+        var layoutBox = img.layoutBox;
+        var height = layoutBox.height;
+        var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
+
+        if (originY + height >= startY && originY <= endY) {
+          console.log('图片在视口内');
+          this.scrollRender(-this.top);
+        }
+      }
     }, {
       key: "insertScrollView",
       value: function insertScrollView(context) {
@@ -36914,8 +36641,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.scrollRender(0); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
 
         this.EE.on('image__render__done', function (img) {
-          console.log('image__render__done');
-
           _this5.throttleImageLoadDone(img);
         });
         /**
@@ -37184,15 +36909,13 @@ function (module, __webpack_exports__, __webpack_require__) {
   var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 
   function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
       _typeof = function _typeof(obj) {
-        return typeof obj;
+        return _typeof2(obj);
       };
     } else {
       _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
       };
     }
 
@@ -37221,6 +36944,29 @@ function (module, __webpack_exports__, __webpack_require__) {
     return Constructor;
   }
 
+  function _possibleConstructorReturn(self, call) {
+    if (call && (_typeof(call) === "object" || typeof call === "function")) {
+      return call;
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function");
@@ -37245,67 +36991,10 @@ function (module, __webpack_exports__, __webpack_require__) {
     return _setPrototypeOf(o, p);
   }
 
-  function _createSuper(Derived) {
-    var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-    return function _createSuperInternal() {
-      var Super = _getPrototypeOf(Derived),
-          result;
-
-      if (hasNativeReflectConstruct) {
-        var NewTarget = _getPrototypeOf(this).constructor;
-
-        result = Reflect.construct(Super, arguments, NewTarget);
-      } else {
-        result = Super.apply(this, arguments);
-      }
-
-      return _possibleConstructorReturn(this, result);
-    };
-  }
-
-  function _possibleConstructorReturn(self, call) {
-    if (call && (_typeof(call) === "object" || typeof call === "function")) {
-      return call;
-    }
-
-    return _assertThisInitialized(self);
-  }
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return self;
-  }
-
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-      return o.__proto__ || Object.getPrototypeOf(o);
-    };
-    return _getPrototypeOf(o);
-  }
-
   var bitMapPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
 
   var BitMapText = /*#__PURE__*/function (_Element) {
     _inherits(BitMapText, _Element);
-
-    var _super = _createSuper(BitMapText);
 
     function BitMapText(opts) {
       var _this;
@@ -37324,12 +37013,12 @@ function (module, __webpack_exports__, __webpack_require__) {
           value = _opts$value === void 0 ? '' : _opts$value,
           _opts$font = opts.font,
           font = _opts$font === void 0 ? '' : _opts$font;
-      _this = _super.call(this, {
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(BitMapText).call(this, {
         props: props,
         idName: idName,
         className: className,
         style: style
-      });
+      }));
       _this.type = "BitMapText";
       _this.ctx = null;
       _this.valuesrc = value;
@@ -37718,16 +37407,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     },
 
     pick: function(data, i) {
-      var completion = data.list[i], self = this;
-      this.cm.operation(function() {
-        if (completion.hint)
-          completion.hint(self.cm, data, completion);
-        else
-          self.cm.replaceRange(getText(completion), completion.from || data.from,
-                               completion.to || data.to, "complete");
-        CodeMirror.signal(data, "pick", completion);
-        self.cm.scrollIntoView();
-      })
+      var completion = data.list[i];
+      if (completion.hint) completion.hint(this.cm, data, completion);
+      else this.cm.replaceRange(getText(completion), completion.from || data.from,
+                                completion.to || data.to, "complete");
+      CodeMirror.signal(data, "pick", completion);
       this.close();
     },
 
@@ -37737,14 +37421,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
         this.debounce = 0;
       }
 
-      var identStart = this.startPos;
-      if(this.data) {
-        identStart = this.data.from;
-      }
-
       var pos = this.cm.getCursor(), line = this.cm.getLine(pos.line);
       if (pos.line != this.startPos.line || line.length - pos.ch != this.startLen - this.startPos.ch ||
-          pos.ch < identStart.ch || this.cm.somethingSelected() ||
+          pos.ch < this.startPos.ch || this.cm.somethingSelected() ||
           (!pos.ch || this.options.closeCharacters.test(line.charAt(pos.ch - 1)))) {
         this.close();
       } else {
@@ -38013,11 +37692,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
 
     scrollToActive: function() {
       var node = this.hints.childNodes[this.selectedHint]
-      var firstNode = this.hints.firstChild;
       if (node.offsetTop < this.hints.scrollTop)
-        this.hints.scrollTop = node.offsetTop - firstNode.offsetTop;
+        this.hints.scrollTop = node.offsetTop - 3;
       else if (node.offsetTop + node.offsetHeight > this.hints.scrollTop + this.hints.clientHeight)
-        this.hints.scrollTop = node.offsetTop + node.offsetHeight - this.hints.clientHeight + firstNode.offsetTop;
+        this.hints.scrollTop = node.offsetTop + node.offsetHeight - this.hints.clientHeight + 3;
     },
 
     screenAmount: function() {
@@ -38903,24 +38581,16 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
   }
 
   CodeMirror.defineOption("matchBrackets", false, function(cm, val, old) {
-    function clear(cm) {
+    if (old && old != CodeMirror.Init) {
+      cm.off("cursorActivity", doMatchBrackets);
       if (cm.state.matchBrackets && cm.state.matchBrackets.currentlyHighlighted) {
         cm.state.matchBrackets.currentlyHighlighted();
         cm.state.matchBrackets.currentlyHighlighted = null;
       }
     }
-
-    if (old && old != CodeMirror.Init) {
-      cm.off("cursorActivity", doMatchBrackets);
-      cm.off("focus", doMatchBrackets)
-      cm.off("blur", clear)
-      clear(cm);
-    }
     if (val) {
       cm.state.matchBrackets = typeof val == "object" ? val : {};
       cm.on("cursorActivity", doMatchBrackets);
-      cm.on("focus", doMatchBrackets)
-      cm.on("blur", clear)
     }
   });
 
@@ -39373,11 +39043,9 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     } else if (ch == "`") {
       state.tokenize = tokenQuasi;
       return tokenQuasi(stream, state);
-    } else if (ch == "#" && stream.peek() == "!") {
+    } else if (ch == "#") {
       stream.skipToEnd();
-      return ret("meta", "meta");
-    } else if (ch == "#" && stream.eatWhile(wordRE)) {
-      return ret("variable", "property")
+      return ret("error", "error");
     } else if (ch == "<" && stream.match("!--") || ch == "-" && stream.match("->")) {
       stream.skipToEnd()
       return ret("comment", "comment")
@@ -39390,7 +39058,6 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
           if (ch == ">") stream.eat(ch)
         }
       }
-      if (ch == "?" && stream.eat(".")) return ret(".")
       return ret("operator", "operator", stream.current());
     } else if (wordRE.test(ch)) {
       stream.eatWhile(wordRE);
@@ -39695,7 +39362,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   }
   function parenExpr(type) {
     if (type != "(") return pass()
-    return cont(pushlex(")"), maybeexpression, expect(")"), poplex)
+    return cont(pushlex(")"), expression, expect(")"), poplex)
   }
   function expressionInner(type, value, noComma) {
     if (cx.state.fatArrowAt == cx.stream.start) {
@@ -39733,7 +39400,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     if (type == "=>") return cont(pushcontext, noComma ? arrowBodyNoComma : arrowBody, popcontext);
     if (type == "operator") {
       if (/\+\+|--/.test(value) || isTS && value == "!") return cont(me);
-      if (isTS && value == "<" && cx.stream.match(/^([^<>]|<[^<>]*>)*>\s*\(/, false))
+      if (isTS && value == "<" && cx.stream.match(/^([^>]|<.*?>)*>\s*\(/, false))
         return cont(pushlex(">"), commasep(typeexpr, ">"), poplex, me);
       if (value == "?") return cont(expression, expect(":"), expr);
       return cont(expr);
@@ -40035,11 +39702,11 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     }
     if (type == "variable" || cx.style == "keyword") {
       cx.marked = "property";
-      return cont(classfield, classBody);
+      return cont(isTS ? classfield : functiondef, classBody);
     }
-    if (type == "number" || type == "string") return cont(classfield, classBody);
+    if (type == "number" || type == "string") return cont(isTS ? classfield : functiondef, classBody);
     if (type == "[")
-      return cont(expression, maybetype, expect("]"), classfield, classBody)
+      return cont(expression, maybetype, expect("]"), isTS ? classfield : functiondef, classBody)
     if (value == "*") {
       cx.marked = "keyword";
       return cont(classBody);
