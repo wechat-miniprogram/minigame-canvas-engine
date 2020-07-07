@@ -1,5 +1,4 @@
 import View                from './view.js';
-import Pool                from '../common/pool.js';
 import Touch               from '../common/touch.js';
 import {throttle, createCanvas} from '../common/util.js';
 
@@ -28,6 +27,8 @@ export default class ScrollView extends View {
 
     this.scrollCanvas = null;
     this.scrollCtx = null;
+
+    this.requestID = null;
   }
 
   /**
@@ -79,6 +80,8 @@ export default class ScrollView extends View {
 
     this.scrollCanvas = null;
     this.scrollCtx = null;
+
+    this.requestID && cancelAnimationFrame(this.requestID)
   }
 
   renderTreeWithTop(tree, top) {
@@ -99,30 +102,29 @@ export default class ScrollView extends View {
   }
 
   scrollRender(top) {
-    let start = new Date();
-    const box   = this.layoutBox;
-    this.top = -top;
-    // scrollview在全局节点中的Y轴位置
-    const abY   = box.absoluteY;
+    this.requestID = requestAnimationFrame(() => {
+      const box   = this.layoutBox;
+      this.top = -top;
+      // scrollview在全局节点中的Y轴位置
+      const abY   = box.absoluteY;
 
-    // 根据滚动值获取裁剪区域
-    const startY = abY + this.top;
-    const endY   = abY + this.top + box.height;
+      // 根据滚动值获取裁剪区域
+      const startY = abY + this.top;
+      const endY   = abY + this.top + box.height;
 
-    // 清理滚动画布和主屏画布
-    this.clear();
+      // 清理滚动画布和主屏画布
+      this.clear();
 
-    this.children.forEach(child => {
-      const layoutBox = child.layoutBox;
-      const height = layoutBox.height;
-      let originY   = layoutBox.originalAbsoluteY;
+      this.children.forEach(child => {
+        const layoutBox = child.layoutBox;
+        const height = layoutBox.height;
+        let originY   = layoutBox.originalAbsoluteY;
 
-      // 判断处于可视窗口内的子节点，渲染该子节点
-      if (originY + height >= startY && originY <= endY) {
-        this.renderTreeWithTop(child, this.top);
-      }
-    });
-
+        // 判断处于可视窗口内的子节点，渲染该子节点
+        if (originY + height >= startY && originY <= endY) {
+          this.renderTreeWithTop(child, this.top);
+        }
+      });
     this.ctx.drawImage(
       this.scrollCanvas,
       box.absoluteX, box.absoluteY,
@@ -130,6 +132,8 @@ export default class ScrollView extends View {
       box.absoluteX, box.absoluteY,
       box.width, box.height,
     );
+    });
+
   }
 
   childImageLoadDoneCbk(img) {
@@ -145,7 +149,6 @@ export default class ScrollView extends View {
 
     // 判断处于可视窗口内的子节点，渲染该子节点
     if (originY + height >= startY && originY <= endY) {
-      console.log('图片在视口内')
       this.scrollRender(-this.top);
     }
   }
