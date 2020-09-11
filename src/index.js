@@ -11,6 +11,8 @@ import {
   View, Text, Image, ScrollView, BitMapText
 } from './components/index.js'
 
+GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
+
 // 全局事件管道
 export const EE  = new Emitter();
 const imgPool    = new Pool('imgPool');
@@ -419,11 +421,11 @@ class _Layout extends Element {
 
     this.hasEventHandler = true;
 
-    if ( typeof wx !== 'undefined' ) {
-      wx.onTouchStart(this.touchStart);
-      wx.onTouchMove(this.touchMove);
-      wx.onTouchEnd(this.touchEnd);
-      wx.onTouchCancel(this.touchCancel);
+    if ( typeof __env !== 'undefined' ) {
+      __env.onTouchStart(this.touchStart);
+      __env.onTouchMove(this.touchMove);
+      __env.onTouchEnd(this.touchEnd);
+      __env.onTouchCancel(this.touchCancel);
     } else {
       document.onmousedown  = this.touchStart;
       document.onmousemove  = this.touchMove;

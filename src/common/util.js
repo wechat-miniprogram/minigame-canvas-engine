@@ -58,8 +58,8 @@ export function isClick(touchMsg) {
 
 export function createCanvas() {
   /* istanbul ignore if*/
-  if ( typeof wx !== "undefined" ) {
-    return wx.createCanvas();
+  if ( typeof __env !== "undefined" ) {
+    return __env.createCanvas();
   } else {
     return document.createElement('canvas');
   }
@@ -67,20 +67,21 @@ export function createCanvas() {
 
 export function createImage() {
   /* istanbul ignore if*/
-  if ( typeof wx !== "undefined" ) {
-    return wx.createImage();
+  if ( typeof __env !== "undefined" ) {
+    return __env.createImage();
   } else {
     return document.createElement('img');
   }
 }
 
 export function getDpr() {
-  /* istanbul ignore if*/
-  if ( typeof wx !== "undefined" ) {
-    return wx.getSystemInfoSync().devicePixelRatio;
-  } else {
-    return window.devicePixelRatio;
-  }
+  // totally not consider dpr
+  return 1;
+  // if (typeof __env !== "undefined") {
+  //   return __env.getSystemInfoSync().devicePixelRatio;
+  // } else {
+  //   return window.devicePixelRatio;
+  // }
 }
 
 export const STATE = {

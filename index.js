@@ -133,7 +133,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
  // components
 
- // 全局事件管道
+
+GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan; // 全局事件管道
 
 var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a();
 var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('imgPool');
@@ -540,11 +541,14 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
       this.hasEventHandler = true;
 
-      if (typeof wx !== 'undefined') {
-        wx.onTouchStart(this.touchStart);
-        wx.onTouchMove(this.touchMove);
-        wx.onTouchEnd(this.touchEnd);
-        wx.onTouchCancel(this.touchCancel);
+      if (typeof __env !== 'undefined') {
+        __env.onTouchStart(this.touchStart);
+
+        __env.onTouchMove(this.touchMove);
+
+        __env.onTouchEnd(this.touchEnd);
+
+        __env.onTouchCancel(this.touchCancel);
       } else {
         document.onmousedown = this.touchStart;
         document.onmousemove = this.touchMove;
@@ -2364,27 +2368,27 @@ function isClick(touchMsg) {
 }
 function createCanvas() {
   /* istanbul ignore if*/
-  if (typeof wx !== "undefined") {
-    return wx.createCanvas();
+  if (typeof __env !== "undefined") {
+    return __env.createCanvas();
   } else {
     return document.createElement('canvas');
   }
 }
 function createImage() {
   /* istanbul ignore if*/
-  if (typeof wx !== "undefined") {
-    return wx.createImage();
+  if (typeof __env !== "undefined") {
+    return __env.createImage();
   } else {
     return document.createElement('img');
   }
 }
 function getDpr() {
-  /* istanbul ignore if*/
-  if (typeof wx !== "undefined") {
-    return wx.getSystemInfoSync().devicePixelRatio;
-  } else {
-    return window.devicePixelRatio;
-  }
+  // totally not consider dpr
+  return 1; // if (typeof __env !== "undefined") {
+  //   return __env.getSystemInfoSync().devicePixelRatio;
+  // } else {
+  //   return window.devicePixelRatio;
+  // }
 }
 var STATE = {
   "UNINIT": "UNINIT",
