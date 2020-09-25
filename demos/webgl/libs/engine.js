@@ -147,7 +147,23 @@ var constructorMap = {
   bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["BitMapText"]
 };
 
-var create = function create(node, style) {
+function isPercent(data) {
+  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
+}
+
+function convertPercent(data, parentData) {
+  if (typeof data === 'number') {
+    return data;
+  }
+
+  var matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
+
+  if (matchData) {
+    return parentData * matchData * 0.01;
+  }
+}
+
+var create = function create(node, style, parent) {
   var _this = this;
 
   var _constructor = constructorMap[node.name];
@@ -185,10 +201,24 @@ var create = function create(node, style) {
 
   args.idName = id;
   args.className = attr["class"] || '';
+  var thisStyle = args.style;
+
+  if (thisStyle) {
+    var parentStyle = parent && parent.style || sharedCanvas;
+
+    if (isPercent(thisStyle.width)) {
+      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
+    }
+
+    if (isPercent(thisStyle.height)) {
+      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
+    }
+  }
+
   var element = new _constructor(args);
   element.root = this;
   children.forEach(function (childNode) {
-    var childElement = create.call(_this, childNode, style);
+    var childElement = create.call(_this, childNode, style, args);
     element.add(childElement);
   });
   return element;

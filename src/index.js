@@ -26,7 +26,21 @@ const constructorMap = {
   bitmaptext: BitMapText
 }
 
-const create = function (node, style) {
+function isPercent (data) {
+  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
+}
+
+function convertPercent (data, parentData) {
+  if (typeof data === 'number') {
+    return data;
+  }
+  let matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
+  if (matchData) {
+    return parentData * matchData * 0.01;
+  }
+}
+
+const create = function (node, style, parent) {
   const _constructor = constructorMap[node.name];
 
   let children = node.children || [];
@@ -71,11 +85,21 @@ const create = function (node, style) {
   args.idName    = id;
   args.className = attr.class || '';
 
+  let thisStyle = args.style;
+  if (thisStyle) {
+    let parentStyle = (parent && parent.style) || sharedCanvas;
+    if (isPercent(thisStyle.width)) {
+      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
+    }
+    if (isPercent(thisStyle.height)) {
+      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
+    }
+  }
   const element  = new _constructor(args)
   element.root = this;
 
   children.forEach(childNode => {
-    const childElement = create.call(this, childNode, style);
+    const childElement = create.call(this, childNode, style, args);
 
     element.add(childElement);
   });
