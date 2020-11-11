@@ -204,7 +204,15 @@ var create = function create(node, style, parent) {
   var thisStyle = args.style;
 
   if (thisStyle) {
-    var parentStyle = parent && parent.style || sharedCanvas;
+    var parentStyle;
+
+    if (parent) {
+      parentStyle = parent.style;
+    } else if (typeof sharedCanvas !== 'undefined') {
+      parentStyle = sharedCanvas;
+    } else {
+      parentStyle = __env.getSharedCanvas();
+    }
 
     if (isPercent(thisStyle.width)) {
       thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
