@@ -29,6 +29,8 @@ export default class ScrollView extends View {
     this.scrollCtx = null;
 
     this.requestID = null;
+
+    this.sharedTexture = false;
   }
 
   /**
@@ -101,30 +103,34 @@ export default class ScrollView extends View {
     this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height)
   }
 
-  scrollRender(top) {
-    this.requestID = requestAnimationFrame(() => {
-      const box   = this.layoutBox;
-      this.top = -top;
-      // scrollview在全局节点中的Y轴位置
-      const abY   = box.absoluteY;
+  scrollRenderHandler(top) {
+    const box   = this.layoutBox;
+    this.top = -top;
+    // scrollview在全局节点中的Y轴位置
+    const abY   = box.absoluteY;
 
-      // 根据滚动值获取裁剪区域
-      const startY = abY + this.top;
-      const endY   = abY + this.top + box.height;
+    // 根据滚动值获取裁剪区域
+    const startY = abY + this.top;
+    const endY   = abY + this.top + box.height;
 
-      // 清理滚动画布和主屏画布
-      this.clear();
+    // 清理滚动画布和主屏画布
+    this.clear();
 
-      this.children.forEach(child => {
-        const layoutBox = child.layoutBox;
-        const height = layoutBox.height;
-        let originY   = layoutBox.originalAbsoluteY;
+    this.renderBoxes.forEach( item => {
+      this.render(item.ctx, item.box);
+    });
 
-        // 判断处于可视窗口内的子节点，渲染该子节点
-        if (originY + height >= startY && originY <= endY) {
-          this.renderTreeWithTop(child, this.top);
-        }
-      });
+    this.children.forEach(child => {
+      const layoutBox = child.layoutBox;
+      const height = layoutBox.height;
+      let originY   = layoutBox.originalAbsoluteY;
+
+      // 判断处于可视窗口内的子节点，渲染该子节点
+      if (originY + height >= startY && originY <= endY) {
+        this.renderTreeWithTop(child, this.top);
+      }
+    });
+
     this.ctx.drawImage(
       this.scrollCanvas,
       box.absoluteX, box.absoluteY,
@@ -132,8 +138,16 @@ export default class ScrollView extends View {
       box.absoluteX, box.absoluteY,
       box.width, box.height,
     );
-    });
+  }
 
+  scrollRender(top) {
+    if (this.sharedTexture) {
+      this.requestID = requestAnimationFrame(() => {
+        this.scrollRenderHandler(top);
+      });
+    } else {
+      this.scrollRenderHandler(top);
+    }
   }
 
   childImageLoadDoneCbk(img) {
