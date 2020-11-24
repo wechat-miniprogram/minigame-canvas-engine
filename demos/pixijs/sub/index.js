@@ -26,7 +26,7 @@ function draw(data = []) {
         self     : data[0],
         selfIndex: 1,
     });
-
+    Layout.clear();
     Layout.init(template, style);
     Layout.layout(sharedContext);
 }
@@ -54,7 +54,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
         cacheRankData = data;
 
         // mock
-         for ( let i = 0; i < 20; i++ ) {
+         for ( let i = 0; i < 50; i++ ) {
              data[i] = JSON.parse(JSON.stringify(data[0]));
              data[i].rank = i;
              data[i].rankScore = Math.floor(Math.random()*1000+1)

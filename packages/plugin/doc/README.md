@@ -11,7 +11,7 @@
     "openDataContext": "sub",
     "plugins": {
       "Layout": {
-        "version": "0.0.1",
+        "version": "0.0.6",
         "provider": "wx7a727ff7d940bb3f",
         "contexts":[{"type":"openDataContext"}]
       }

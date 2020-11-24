@@ -79,7 +79,7 @@ describe('common', function() {
 
         describe('createImage', () => {
             it('should create image element successfully', () => {
-                Util.createImage().nodeName.should.be.eql('IMG');
+                Util.createImage().should.not.be.undefined();
             });
         });
 
