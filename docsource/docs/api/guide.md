@@ -2,12 +2,9 @@
 
 ## 安装
 
-克隆本项目到合适的文件夹或者通过Bower安装。
 ``` shell
-// git安装方式
-git clone https://github.com/wechat-miniprogram/minigame-canvas-engine
 // npm安装方式
-bower install minigame-canvas-engine
+npm install minigame-canvas-engine --save
 ```
 
 ## 极简示例
@@ -22,7 +19,7 @@ import Layout from 'minigame-canvas-engine'
 ``` js
 let template = `
     <view id="container">
-    <text id="testText" class="redText" value="hello canvas">
+        <text id="testText" class="redText" value="hello canvas"></text>
     </view>
 `
 ```
@@ -35,18 +32,18 @@ let template = `
 ``` js
 let style = {
     container: {
-        width: 200,
-        height: 100,
+        width: 400,
+        height: 200,
         backgroundColor: '#ffffff',
         justContent: 'center',
         alignItems: 'center',
     },
     testText: {
         color: '#ffffff',
-        width: 200,
-        height: 50,
-        lineHeight: 50,
-        fontSize: 20,
+        width: 400,
+        height: 200,
+        lineHeight: 200,
+        fontSize: 40,
         textAlign: 'center',
     },
     // 文字的最终颜色为#ff0000
@@ -63,14 +60,24 @@ Layout.init(template, style);
 
 5. 执行渲染：指定被渲染的context，绘制UI
 ``` js
+// 首先在HTML里面创建canvas
+// <canvas id="canvas"></canvas>
+
 let canvas = document.getElementById('canvas');
 let context = canvas.getContext('2d');
 
 // 设置canvas的尺寸和样式的container比例一致
-canvas.style.width = 200 + 'px';
-canvas.style.height = 100 + 'px';
+canvas.style.width = 400 + 'px';
+canvas.style.height = 200 + 'px';
 canvas.width = 400;
 canvas.height = 200;
+
+Layout.updateViewPort({
+    x     : 0,
+    y     : 0,
+    width : 400,
+    height: 200,
+});
 
 Layout.layout(context);
 ```
@@ -78,3 +85,14 @@ Layout.layout(context);
 6. 渲染结果
 
 <img :src="$withBase('/imgs/hello.jpg')" width=300>
+
+7. 事件绑定
+``` js
+let text = Layout.getElementsById('testText')[0];
+
+text.on('click', (e) => {
+  alert('hello canvas');
+});
+```
+
+上述示例代码可见：https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/helloworld
