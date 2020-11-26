@@ -18,6 +18,7 @@ export default class ScrollView extends View {
 
     // 当前列表滚动的值
     this.top             = 0;
+    this.left            = 0;
 
     // 滚动处理器
     this.touch           = new Touch();
@@ -31,6 +32,9 @@ export default class ScrollView extends View {
     this.requestID = null;
 
     this.sharedTexture = false;
+
+    this.overflowY = false;
+    this.overflowX = true;
   }
 
   /**
@@ -46,6 +50,17 @@ export default class ScrollView extends View {
     const last = this.children[this.children.length - 1];
 
     return last.layoutBox.top + last.layoutBox.height;
+  }
+
+  get scrollWidth() {
+    // scrollview为空的情况
+    if (!this.children.length) {
+      return 0;
+    }
+
+    const last = this.children[this.children.length - 1];
+
+    return last.layoutBox.left + last.layoutBox.width;
   }
 
   repaint() {
@@ -87,14 +102,25 @@ export default class ScrollView extends View {
   }
 
   renderTreeWithTop(tree, top) {
-    const layoutBox = tree.layoutBox;
-    // 计算实际渲染的Y轴位置
-    layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
-    tree.render(this.scrollCtx, layoutBox);
+    if (this.overflowY) {
+      const layoutBox = tree.layoutBox;
+      // 计算实际渲染的Y轴位置
+      layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+      tree.render(this.scrollCtx, layoutBox);
 
-    tree.children.forEach( child => {
-      this.renderTreeWithTop(child, top);
-    });
+      tree.children.forEach( child => {
+        this.renderTreeWithTop(child, top);
+      });
+    } else if (this.overflowX)  {
+      const layoutBox = tree.layoutBox;
+      // 计算实际渲染的Y轴位置
+      layoutBox.absoluteX = layoutBox.originalAbsoluteX - top;
+      tree.render(this.scrollCtx, layoutBox);
+
+      tree.children.forEach( child => {
+        this.renderTreeWithTop(child, top);
+      });
+    }
   }
 
   clear() {
@@ -104,32 +130,63 @@ export default class ScrollView extends View {
   }
 
   scrollRenderHandler(top) {
+    let left = top;
+
     const box   = this.layoutBox;
-    this.top = -top;
-    // scrollview在全局节点中的Y轴位置
-    const abY   = box.absoluteY;
 
-    // 根据滚动值获取裁剪区域
-    const startY = abY + this.top;
-    const endY   = abY + this.top + box.height;
+    if (this.overflowX) {
+      this.left = -left;
+      // scrollview在全局节点中的Y轴位置
+      const abX   = box.absoluteX;
 
-    // 清理滚动画布和主屏画布
-    this.clear();
+      // 根据滚动值获取裁剪区域
+      const startX = abX + this.left;
+      const endX   = abX + this.left + box.width;
 
-    this.renderBoxes.forEach( item => {
-      this.render(item.ctx, item.box);
-    });
+      // 清理滚动画布和主屏画布
+      this.clear();
 
-    this.children.forEach(child => {
-      const layoutBox = child.layoutBox;
-      const height = layoutBox.height;
-      let originY   = layoutBox.originalAbsoluteY;
+      this.renderBoxes.forEach( item => {
+        this.render(item.ctx, item.box);
+      });
 
-      // 判断处于可视窗口内的子节点，渲染该子节点
-      if (originY + height >= startY && originY <= endY) {
-        this.renderTreeWithTop(child, this.top);
-      }
-    });
+      this.children.forEach(child => {
+        const layoutBox = child.layoutBox;
+        const width = layoutBox.width;
+        let originX   = layoutBox.originalAbsoluteX;
+
+        // 判断处于可视窗口内的子节点，渲染该子节点
+        if (originX + width >= startX && originX <= endX) {
+          this.renderTreeWithTop(child, this.left);
+        }
+      });
+    } else {
+      this.top = -top;
+      // scrollview在全局节点中的Y轴位置
+      const abY   = box.absoluteY;
+
+      // 根据滚动值获取裁剪区域
+      const startY = abY + this.top;
+      const endY   = abY + this.top + box.height;
+
+      // 清理滚动画布和主屏画布
+      this.clear();
+
+      this.renderBoxes.forEach( item => {
+        this.render(item.ctx, item.box);
+      });
+
+      this.children.forEach(child => {
+        const layoutBox = child.layoutBox;
+        const height = layoutBox.height;
+        let originY   = layoutBox.originalAbsoluteY;
+
+        // 判断处于可视窗口内的子节点，渲染该子节点
+        if (originY + height >= startY && originY <= endY) {
+          this.renderTreeWithTop(child, this.top);
+        }
+      });
+    }
 
     this.ctx.drawImage(
       this.scrollCanvas,
@@ -186,9 +243,22 @@ export default class ScrollView extends View {
     /**
      * scrollview子元素总高度大于盒子高度，绑定滚动事件
      */
+
+    console.log('scrollWidth', this.scrollWidth);
     if ( this.scrollHeight > this.layoutBox.height ) {
       this.touch.setTouchRange(
         -(this.scrollHeight - this.layoutBox.height),
+        0,
+        this.scrollRender.bind(this)
+      );
+
+      // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
+      this.on('touchstart', this.touch.startFunc);
+      this.on('touchmove',  this.touch.moveFunc);
+      this.on('touchend',   this.touch.endFunc);
+    } else if (this.scrollWidth > this.layoutBox.width) {
+      this.touch.setTouchRange(
+        -(this.scrollWidth - this.layoutBox.width),
         0,
         this.scrollRender.bind(this)
       );

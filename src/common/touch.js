@@ -8,6 +8,8 @@ export default class Touch {
     this.startFunc = this.touchStartHandler.bind(this);
     this.endFunc   = this.touchEndHandler.bind(this);
     this.moveFunc  = this.touchMoveHandler.bind(this);
+
+    this.touchDirection = "X";
   }
 
   reset() {
@@ -56,8 +58,6 @@ export default class Touch {
     }
 
     this.scroll = scroll;
-
-    // this.animate = requestAnimationFrame(this.loop.bind(this));
   }
 
   // 保证滚动目标位置在滚动区间内
@@ -98,13 +98,25 @@ export default class Touch {
 
     let currY = touch.clientY * dpr;
 
-    if (   this.touchStartY - currY > 2
-      || this.touchStartY - currY < -2 ) {
-      this.target -= (this.touchStartY - currY);
-    }
+    let currX = touch.clientX * dpr;
 
-    this.target      = this.limitTarget(this.target);
-    this.touchStartY = currY;
+    if (this.touchDirection === "Y") {
+      if (   this.touchStartY - currY > 2
+        || this.touchStartY - currY < -2 ) {
+        this.target -= (this.touchStartY - currY);
+      }
+
+      this.target      = this.limitTarget(this.target);
+      this.touchStartY = currY;
+    } else {
+      if (   this.touchStartX - currX > 2
+        || this.touchStartX - currX < -2 ) {
+        this.target -= (this.touchStartX - currX);
+      }
+
+      this.target      = this.limitTarget(this.target);
+      this.touchStartX = currX;
+    }
   }
 
   touchEndHandler() {

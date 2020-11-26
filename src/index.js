@@ -123,6 +123,7 @@ function layoutChildren (dataArray, children) {
     }
 
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
 
     // 滚动列表的画板尺寸和主画板保持一致
     if ( child.type === 'ScrollView' ) {

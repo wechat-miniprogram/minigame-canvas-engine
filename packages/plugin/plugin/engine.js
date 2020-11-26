@@ -234,7 +234,8 @@ function layoutChildren(dataArray, children) {
       child.layoutBox.absoluteY = child.layoutBox.top;
     }
 
-    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY; // 滚动列表的画板尺寸和主画板保持一致
+    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX; // 滚动列表的画板尺寸和主画板保持一致
 
     if (child.type === 'ScrollView') {
       child.updateRenderPort(_this2.renderport);
@@ -4057,7 +4058,8 @@ function (_View) {
     }));
     _this.type = 'ScrollView'; // 当前列表滚动的值
 
-    _this.top = 0; // 滚动处理器
+    _this.top = 0;
+    _this.left = 0; // 滚动处理器
 
     _this.touch = new _common_touch_js__WEBPACK_IMPORTED_MODULE_1__["default"](); // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
 
@@ -4066,6 +4068,8 @@ function (_View) {
     _this.scrollCtx = null;
     _this.requestID = null;
     _this.sharedTexture = false;
+    _this.overflowY = false;
+    _this.overflowX = true;
     return _this;
   }
   /**
@@ -4116,13 +4120,23 @@ function (_View) {
     value: function renderTreeWithTop(tree, top) {
       var _this3 = this;
 
-      var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
+      if (this.overflowY) {
+        var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
 
-      layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
-      tree.render(this.scrollCtx, layoutBox);
-      tree.children.forEach(function (child) {
-        _this3.renderTreeWithTop(child, top);
-      });
+        layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+        tree.render(this.scrollCtx, layoutBox);
+        tree.children.forEach(function (child) {
+          _this3.renderTreeWithTop(child, top);
+        });
+      } else if (this.overflowX) {
+        var _layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
+
+        _layoutBox.absoluteX = _layoutBox.originalAbsoluteX - top;
+        tree.render(this.scrollCtx, _layoutBox);
+        tree.children.forEach(function (child) {
+          _this3.renderTreeWithTop(child, top);
+        });
+      }
     }
   }, {
     key: "clear",
@@ -4136,27 +4150,53 @@ function (_View) {
     value: function scrollRenderHandler(top) {
       var _this4 = this;
 
+      var left = top;
       var box = this.layoutBox;
-      this.top = -top; // scrollview在全局节点中的Y轴位置
 
-      var abY = box.absoluteY; // 根据滚动值获取裁剪区域
+      if (this.overflowX) {
+        this.left = -left; // scrollview在全局节点中的Y轴位置
 
-      var startY = abY + this.top;
-      var endY = abY + this.top + box.height; // 清理滚动画布和主屏画布
+        var abX = box.absoluteX; // 根据滚动值获取裁剪区域
 
-      this.clear();
-      this.renderBoxes.forEach(function (item) {
-        _this4.render(item.ctx, item.box);
-      });
-      this.children.forEach(function (child) {
-        var layoutBox = child.layoutBox;
-        var height = layoutBox.height;
-        var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
+        var startX = abX + this.left;
+        var endX = abX + this.left + box.width; // 清理滚动画布和主屏画布
 
-        if (originY + height >= startY && originY <= endY) {
-          _this4.renderTreeWithTop(child, _this4.top);
-        }
-      });
+        this.clear();
+        this.renderBoxes.forEach(function (item) {
+          _this4.render(item.ctx, item.box);
+        });
+        this.children.forEach(function (child) {
+          var layoutBox = child.layoutBox;
+          var width = layoutBox.width;
+          var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
+
+          if (originX + width >= startX && originX <= endX) {
+            _this4.renderTreeWithTop(child, _this4.left);
+          }
+        });
+      } else {
+        this.top = -top; // scrollview在全局节点中的Y轴位置
+
+        var abY = box.absoluteY; // 根据滚动值获取裁剪区域
+
+        var startY = abY + this.top;
+        var endY = abY + this.top + box.height; // 清理滚动画布和主屏画布
+
+        this.clear();
+        this.renderBoxes.forEach(function (item) {
+          _this4.render(item.ctx, item.box);
+        });
+        this.children.forEach(function (child) {
+          var layoutBox = child.layoutBox;
+          var height = layoutBox.height;
+          var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
+
+          if (originY + height >= startY && originY <= endY) {
+            _this4.renderTreeWithTop(child, _this4.top);
+          }
+        });
+      }
+
       this.ctx.drawImage(this.scrollCanvas, box.absoluteX, box.absoluteY, box.width, box.height, box.absoluteX, box.absoluteY, box.width, box.height);
     }
   }, {
@@ -4207,8 +4247,16 @@ function (_View) {
        * scrollview子元素总高度大于盒子高度，绑定滚动事件
        */
 
+      console.log('scrollWidth', this.scrollWidth);
+
       if (this.scrollHeight > this.layoutBox.height) {
         this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, this.scrollRender.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
+
+        this.on('touchstart', this.touch.startFunc);
+        this.on('touchmove', this.touch.moveFunc);
+        this.on('touchend', this.touch.endFunc);
+      } else if (this.scrollWidth > this.layoutBox.width) {
+        this.touch.setTouchRange(-(this.scrollWidth - this.layoutBox.width), 0, this.scrollRender.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
 
         this.on('touchstart', this.touch.startFunc);
         this.on('touchmove', this.touch.moveFunc);
@@ -4225,6 +4273,17 @@ function (_View) {
 
       var last = this.children[this.children.length - 1];
       return last.layoutBox.top + last.layoutBox.height;
+    }
+  }, {
+    key: "scrollWidth",
+    get: function get() {
+      // scrollview为空的情况
+      if (!this.children.length) {
+        return 0;
+      }
+
+      var last = this.children[this.children.length - 1];
+      return last.layoutBox.left + last.layoutBox.width;
     }
   }]);
 
@@ -4260,6 +4319,7 @@ function () {
     this.startFunc = this.touchStartHandler.bind(this);
     this.endFunc = this.touchEndHandler.bind(this);
     this.moveFunc = this.touchMoveHandler.bind(this);
+    this.touchDirection = "X";
   }
 
   _createClass(Touch, [{
@@ -4308,7 +4368,7 @@ function () {
         return;
       }
 
-      this.scroll = scroll; // this.animate = requestAnimationFrame(this.loop.bind(this));
+      this.scroll = scroll;
     } // 保证滚动目标位置在滚动区间内
 
   }, {
@@ -4354,13 +4414,23 @@ function () {
       }
 
       var currY = touch.clientY * dpr;
+      var currX = touch.clientX * dpr;
 
-      if (this.touchStartY - currY > 2 || this.touchStartY - currY < -2) {
-        this.target -= this.touchStartY - currY;
+      if (this.touchDirection === "Y") {
+        if (this.touchStartY - currY > 2 || this.touchStartY - currY < -2) {
+          this.target -= this.touchStartY - currY;
+        }
+
+        this.target = this.limitTarget(this.target);
+        this.touchStartY = currY;
+      } else {
+        if (this.touchStartX - currX > 2 || this.touchStartX - currX < -2) {
+          this.target -= this.touchStartX - currX;
+        }
+
+        this.target = this.limitTarget(this.target);
+        this.touchStartX = currX;
       }
-
-      this.target = this.limitTarget(this.target);
-      this.touchStartY = currY;
     }
   }, {
     key: "touchEndHandler",
