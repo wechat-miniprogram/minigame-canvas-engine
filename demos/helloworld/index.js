@@ -60,3 +60,10 @@ text.on('click', (e) => {
   alert('hello canvas');
 });
 
+import { Allocator, Node } from 'stretch-layout';
+
+const allocator = new Allocator();
+const node = new Node(allocator, {width: 100, height: 100});
+const layout = node.computeLayout();
+
+console.log(layout.width, layout.height);

@@ -7,6 +7,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var stretch_layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 // 引用渲染引擎
  // 编写模板字符串
 
@@ -55,6 +56,14 @@ var text = minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0___default().getElem
 text.on('click', function (e) {
   alert('hello canvas');
 });
+
+var allocator = new stretch_layout__WEBPACK_IMPORTED_MODULE_1__.Allocator();
+var node = new stretch_layout__WEBPACK_IMPORTED_MODULE_1__.Node(allocator, {
+  width: 100,
+  height: 100
+});
+var layout = node.computeLayout();
+console.log(layout.width, layout.height);
 
 /***/ }),
 /* 1 */
@@ -4827,6 +4836,445 @@ var BitMapText = /*#__PURE__*/function (_Element) {
 
 /***/ })
 /******/ ]);
+
+/***/ }),
+/* 2 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "AlignItems": () => /* binding */ AlignItems,
+/* harmony export */   "AlignSelf": () => /* binding */ AlignSelf,
+/* harmony export */   "AlignContent": () => /* binding */ AlignContent,
+/* harmony export */   "Direction": () => /* binding */ Direction,
+/* harmony export */   "Display": () => /* binding */ Display,
+/* harmony export */   "FlexDirection": () => /* binding */ FlexDirection,
+/* harmony export */   "JustifyContent": () => /* binding */ JustifyContent,
+/* harmony export */   "Overflow": () => /* binding */ Overflow,
+/* harmony export */   "PositionType": () => /* binding */ PositionType,
+/* harmony export */   "FlexWrap": () => /* binding */ FlexWrap,
+/* harmony export */   "__wbg_call_66820afa503a9862": () => /* binding */ __wbg_call_66820afa503a9862,
+/* harmony export */   "__wbg_get_fac6c85ce055c626": () => /* binding */ __wbg_get_fac6c85ce055c626,
+/* harmony export */   "__wbg_has_3ce42443cb8e93ec": () => /* binding */ __wbg_has_3ce42443cb8e93ec,
+/* harmony export */   "__wbindgen_string_new": () => /* binding */ __wbindgen_string_new,
+/* harmony export */   "__wbindgen_number_new": () => /* binding */ __wbindgen_number_new,
+/* harmony export */   "__wbindgen_number_get": () => /* binding */ __wbindgen_number_get,
+/* harmony export */   "__wbindgen_string_get": () => /* binding */ __wbindgen_string_get,
+/* harmony export */   "__wbindgen_throw": () => /* binding */ __wbindgen_throw,
+/* harmony export */   "Allocator": () => /* binding */ Allocator,
+/* harmony export */   "Layout": () => /* binding */ Layout,
+/* harmony export */   "Node": () => /* binding */ Node,
+/* harmony export */   "__wbindgen_object_clone_ref": () => /* binding */ __wbindgen_object_clone_ref,
+/* harmony export */   "__wbindgen_object_drop_ref": () => /* binding */ __wbindgen_object_drop_ref
+/* harmony export */ });
+/* harmony import */ var _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/**
+*/
+const AlignItems = Object.freeze({ FlexStart:0,FlexEnd:1,Center:2,Baseline:3,Stretch:4, });
+/**
+*/
+const AlignSelf = Object.freeze({ Auto:0,FlexStart:1,FlexEnd:2,Center:3,Baseline:4,Stretch:5, });
+/**
+*/
+const AlignContent = Object.freeze({ FlexStart:0,FlexEnd:1,Center:2,Stretch:3,SpaceBetween:4,SpaceAround:5, });
+/**
+*/
+const Direction = Object.freeze({ Inherit:0,LTR:1,RTL:2, });
+/**
+*/
+const Display = Object.freeze({ Flex:0,None:1, });
+/**
+*/
+const FlexDirection = Object.freeze({ Row:0,Column:1,RowReverse:2,ColumnReverse:3, });
+/**
+*/
+const JustifyContent = Object.freeze({ FlexStart:0,FlexEnd:1,Center:2,SpaceBetween:3,SpaceAround:4,SpaceEvenly:5, });
+/**
+*/
+const Overflow = Object.freeze({ Visible:0,Hidden:1,Scroll:2, });
+/**
+*/
+const PositionType = Object.freeze({ Relative:0,Absolute:1, });
+/**
+*/
+const FlexWrap = Object.freeze({ NoWrap:0,Wrap:1,WrapReverse:2, });
+
+const heap = new Array(32);
+
+heap.fill(undefined);
+
+heap.push(undefined, null, true, false);
+
+let stack_pointer = 32;
+
+function addBorrowedObject(obj) {
+    if (stack_pointer == 1) throw new Error('out of js stack');
+    heap[--stack_pointer] = obj;
+    return stack_pointer;
+}
+
+function getObject(idx) { return heap[idx]; }
+
+let heap_next = heap.length;
+
+function dropObject(idx) {
+    if (idx < 36) return;
+    heap[idx] = heap_next;
+    heap_next = idx;
+}
+
+function takeObject(idx) {
+    const ret = getObject(idx);
+    dropObject(idx);
+    return ret;
+}
+
+function addHeapObject(obj) {
+    if (heap_next === heap.length) heap.push(heap.length + 1);
+    const idx = heap_next;
+    heap_next = heap[idx];
+
+    heap[idx] = obj;
+    return idx;
+}
+
+let cachegetUint32Memory = null;
+function getUint32Memory() {
+    if (cachegetUint32Memory === null || cachegetUint32Memory.buffer !== _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.memory.buffer) {
+        cachegetUint32Memory = new Uint32Array(_stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.memory.buffer);
+    }
+    return cachegetUint32Memory;
+}
+
+function handleError(exnptr, e) {
+    const view = getUint32Memory();
+    view[exnptr / 4] = 1;
+    view[exnptr / 4 + 1] = addHeapObject(e);
+}
+
+function __wbg_call_66820afa503a9862(arg0, arg1, arg2, arg3, exnptr) {
+    try {
+        return addHeapObject(getObject(arg0).call(getObject(arg1), getObject(arg2), getObject(arg3)));
+    } catch (e) {
+        handleError(exnptr, e);
+    }
+}
+
+function __wbg_get_fac6c85ce055c626(arg0, arg1, exnptr) {
+    try {
+        return addHeapObject(Reflect.get(getObject(arg0), getObject(arg1)));
+    } catch (e) {
+        handleError(exnptr, e);
+    }
+}
+
+function __wbg_has_3ce42443cb8e93ec(arg0, arg1, exnptr) {
+    try {
+        return Reflect.has(getObject(arg0), getObject(arg1));
+    } catch (e) {
+        handleError(exnptr, e);
+    }
+}
+
+let cachedTextDecoder = new TextDecoder('utf-8');
+
+let cachegetUint8Memory = null;
+function getUint8Memory() {
+    if (cachegetUint8Memory === null || cachegetUint8Memory.buffer !== _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.memory.buffer) {
+        cachegetUint8Memory = new Uint8Array(_stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.memory.buffer);
+    }
+    return cachegetUint8Memory;
+}
+
+function getStringFromWasm(ptr, len) {
+    return cachedTextDecoder.decode(getUint8Memory().subarray(ptr, ptr + len));
+}
+
+function __wbindgen_string_new(p, l) { return addHeapObject(getStringFromWasm(p, l)); }
+
+function __wbindgen_number_new(i) { return addHeapObject(i); }
+
+function __wbindgen_number_get(n, invalid) {
+    let obj = getObject(n);
+    if (typeof(obj) === 'number') return obj;
+    getUint8Memory()[invalid] = 1;
+    return 0;
+}
+
+let WASM_VECTOR_LEN = 0;
+
+let cachedTextEncoder = new TextEncoder('utf-8');
+
+let passStringToWasm;
+if (typeof cachedTextEncoder.encodeInto === 'function') {
+    passStringToWasm = function(arg) {
+
+        let size = arg.length;
+        let ptr = _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbindgen_malloc(size);
+        let writeOffset = 0;
+        while (true) {
+            const view = getUint8Memory().subarray(ptr + writeOffset, ptr + size);
+            const { read, written } = cachedTextEncoder.encodeInto(arg, view);
+            writeOffset += written;
+            if (read === arg.length) {
+                break;
+            }
+            arg = arg.substring(read);
+            ptr = _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbindgen_realloc(ptr, size, size += arg.length * 3);
+        }
+        WASM_VECTOR_LEN = writeOffset;
+        return ptr;
+    };
+} else {
+    passStringToWasm = function(arg) {
+
+        const buf = cachedTextEncoder.encode(arg);
+        const ptr = _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbindgen_malloc(buf.length);
+        getUint8Memory().set(buf, ptr);
+        WASM_VECTOR_LEN = buf.length;
+        return ptr;
+    };
+}
+
+function __wbindgen_string_get(i, len_ptr) {
+    let obj = getObject(i);
+    if (typeof(obj) !== 'string') return 0;
+    const ptr = passStringToWasm(obj);
+    getUint32Memory()[len_ptr / 4] = WASM_VECTOR_LEN;
+    return ptr;
+}
+
+function __wbindgen_throw(ptr, len) {
+    throw new Error(getStringFromWasm(ptr, len));
+}
+
+function freeAllocator(ptr) {
+
+    _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_allocator_free(ptr);
+}
+/**
+*/
+class Allocator {
+
+    free() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+        freeAllocator(ptr);
+    }
+
+    /**
+    * @returns {}
+    */
+    constructor() {
+        this.ptr = _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.allocator_new();
+    }
+}
+
+function freeLayout(ptr) {
+
+    _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_layout_free(ptr);
+}
+/**
+*/
+class Layout {
+
+    static __wrap(ptr) {
+        const obj = Object.create(Layout.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    free() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+        freeLayout(ptr);
+    }
+
+    /**
+    * @returns {number}
+    */
+    get width() {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_get_layout_width(this.ptr);
+    }
+    /**
+    * @returns {number}
+    */
+    get height() {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_get_layout_height(this.ptr);
+    }
+    /**
+    * @returns {number}
+    */
+    get x() {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_get_layout_x(this.ptr);
+    }
+    /**
+    * @returns {number}
+    */
+    get y() {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_get_layout_y(this.ptr);
+    }
+    /**
+    * @returns {number}
+    */
+    get childCount() {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_get_layout_childCount(this.ptr) >>> 0;
+    }
+
+    /**
+    * @param {number} at
+    * @returns {Layout}
+    */
+    child(at) {
+        return Layout.__wrap(_stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.layout_child(this.ptr, at));
+    }
+}
+
+function freeNode(ptr) {
+
+    _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_node_free(ptr);
+}
+/**
+*/
+class Node {
+
+    free() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+        freeNode(ptr);
+    }
+
+    /**
+    * @returns {number}
+    */
+    get childCount() {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.__wbg_get_node_childCount(this.ptr) >>> 0;
+    }
+
+    /**
+    * @param {Allocator} allocator
+    * @param {any} style
+    * @returns {}
+    */
+    constructor(allocator, style) {
+        try {
+            this.ptr = _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_new(allocator.ptr, addBorrowedObject(style));
+
+        } finally {
+            heap[stack_pointer++] = undefined;
+
+        }
+
+    }
+    /**
+    * @param {any} measure
+    * @returns {void}
+    */
+    setMeasure(measure) {
+        try {
+            return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_setMeasure(this.ptr, addBorrowedObject(measure));
+
+        } finally {
+            heap[stack_pointer++] = undefined;
+
+        }
+
+    }
+    /**
+    * @param {Node} child
+    * @returns {void}
+    */
+    addChild(child) {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_addChild(this.ptr, child.ptr);
+    }
+    /**
+    * @param {Node} child
+    * @returns {void}
+    */
+    removeChild(child) {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_removeChild(this.ptr, child.ptr);
+    }
+    /**
+    * @param {number} index
+    * @param {Node} child
+    * @returns {void}
+    */
+    replaceChildAtIndex(index, child) {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_replaceChildAtIndex(this.ptr, index, child.ptr);
+    }
+    /**
+    * @param {number} index
+    * @returns {void}
+    */
+    removeChildAtIndex(index) {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_removeChildAtIndex(this.ptr, index);
+    }
+    /**
+    * @returns {any}
+    */
+    getStyle() {
+        return takeObject(_stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_getStyle(this.ptr));
+    }
+    /**
+    * @param {any} style
+    * @returns {void}
+    */
+    setStyle(style) {
+        try {
+            return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_setStyle(this.ptr, addBorrowedObject(style));
+
+        } finally {
+            heap[stack_pointer++] = undefined;
+
+        }
+
+    }
+    /**
+    * @returns {void}
+    */
+    markDirty() {
+        return _stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_markDirty(this.ptr);
+    }
+    /**
+    * @returns {boolean}
+    */
+    isDirty() {
+        return (_stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_isDirty(this.ptr)) !== 0;
+    }
+    /**
+    * @param {any} size
+    * @returns {Layout}
+    */
+    computeLayout(size) {
+        try {
+            return Layout.__wrap(_stretch_layout_bg__WEBPACK_IMPORTED_MODULE_0__.node_computeLayout(this.ptr, addBorrowedObject(size)));
+
+        } finally {
+            heap[stack_pointer++] = undefined;
+
+        }
+
+    }
+}
+
+function __wbindgen_object_clone_ref(idx) {
+    return addHeapObject(getObject(idx));
+}
+
+function __wbindgen_object_drop_ref(i) { dropObject(i); }
+
+
+
+/***/ }),
+/* 3 */
+/***/ (() => {
+
+throw new Error("Module parse failed: Unexpected character '\u0000' (1:0)\nThe module seem to be a WebAssembly module, but module is not flagged as WebAssembly module for webpack.\nBREAKING CHANGE: Since webpack 5 WebAssembly is not enabled by default and flagged as experimental feature.\nYou need to enable one of the WebAssembly experiments via 'experiments.asyncWebAssembly: true' (based on async modules) or 'experiments.syncWebAssembly: true' (like webpack 4, deprecated).\nFor files that transpile to WebAssembly, make sure to set the module type in the 'module.rules' section of the config (e. g. 'type: \"webassembly/async\"').\n(Source code omitted for this binary file)");
 
 /***/ })
 /******/ 	]);
