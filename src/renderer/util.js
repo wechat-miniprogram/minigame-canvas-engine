@@ -19,7 +19,9 @@ export function createImageLoader(createImage) {
         IMAGE_POOL[src].onloads = [];
       };
       img.onerror = () => {};
-      img.setSrc(src);
+      // img.setSrc(src);
+
+      img.src = src;
     }
   };
 }

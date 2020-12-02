@@ -43,6 +43,7 @@ let calculateDirtyNode;
 adaptor = yogaWasm.adaptor;
 updateLayout = yogaWasm.updateLayout;
 calculateDirtyNode = yogaWasm.calculateDirtyNode;
+const initYoga = yogaWasm.initYoga;
 // } else {
 //     adaptor = yogaJS.adaptor;
 //     updateLayout = yogaJS.updateLayout;
@@ -573,91 +574,93 @@ class _Layout extends Element {
   initRepaint() { }
 
   init(template, style, styleDark = {}) {
-    const start = new Date();
+    return initYoga().then(() => {
+      const start = new Date();
 
-    this.cssRules = {}; // 保存下css规则
-    this.cssDarkRules = {}; // 保存下css darkmode的规则
-
-    // 处理所有class里面的尺寸
-    for (const k in style) {
-      this.cssRules[k] = {};
-      for (const key in style[k]) {
-        this.cssRules[k][key] = style[k][key];
-      }
-    }
-    for (const k in styleDark) {
-      this.cssDarkRules[k] = {};
-      for (const key in styleDark[k]) {
-        this.cssDarkRules[k][key] = styleDark[k][key];
-      }
-    }
-
-    /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
-    const jsonObj = parser.parse(template, { // todo 需要一个预解析操作
-      attributeNamePrefix: "",
-      attrNodeName: "attr", //default is 'false'
-      textNodeName: "#text",
-      ignoreAttributes: false,
-      ignoreNameSpace: true,
-      allowBooleanAttributes: true,
-      parseNodeValue: false,
-      parseAttributeValue: false,
-      trimValues: true,
-      parseTrueNumberOnly: false,
-    }, true);
-    /*}*/
-
-    const xmlTree = jsonObj.children[0];
-
-    this.debugInfo.xmlTree = new Date() - start;
-    console.log(`init getXmlTree time ${new Date() - start}`);
-    /*pReportor.saveSpeeds({
-      sid: 21,
-      time: (new Date() - start)
-    });*/
-
-    // XML树生成渲染树
-    this.layoutTree = create.call(
-      this,
-      xmlTree,
-      style,
-      styleDark,
-      this.isDarkMode(),
-      this.getFontSize()
-    );
-    console.log(`create time ${new Date() - start}`);
-    this.debugInfo.layoutTree = new Date() - start;
-    this.add(this.layoutTree);
-
-    this.debugInfo.renderTree = new Date() - start;
-
-    this.state = STATE.INITED;
-
-    this.reflowRequest = 0;
-    this.repaintRequest = 0;
-
-    // 收到reflow事件后，知道下一个loop没有reflow才执行computeLayout
-    this.on('reflow', () => {
-      this.reflowRequest++;
-      Promise.resolve(this.reflowRequest).then((val) => {
-        if (this.reflowRequest === val) {
-          console.log('layout reflow');
-          this.reflowRequest = 0;
-          this.textManager.hasUpdate = false;
-
-          this.computeLayout();
-          this.drawLayout();
+      this.cssRules = {}; // 保存下css规则
+      this.cssDarkRules = {}; // 保存下css darkmode的规则
+  
+      // 处理所有class里面的尺寸
+      for (const k in style) {
+        this.cssRules[k] = {};
+        for (const key in style[k]) {
+          this.cssRules[k][key] = style[k][key];
         }
+      }
+      for (const k in styleDark) {
+        this.cssDarkRules[k] = {};
+        for (const key in styleDark[k]) {
+          this.cssDarkRules[k][key] = styleDark[k][key];
+        }
+      }
+  
+      /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
+      const jsonObj = parser.parse(template, { // todo 需要一个预解析操作
+        attributeNamePrefix: "",
+        attrNodeName: "attr", //default is 'false'
+        textNodeName: "#text",
+        ignoreAttributes: false,
+        ignoreNameSpace: true,
+        allowBooleanAttributes: true,
+        parseNodeValue: false,
+        parseAttributeValue: false,
+        trimValues: true,
+        parseTrueNumberOnly: false,
+      }, true);
+      /*}*/
+  
+      const xmlTree = jsonObj.children[0];
+  
+      this.debugInfo.xmlTree = new Date() - start;
+      console.log(`init getXmlTree time ${new Date() - start}`);
+      /*pReportor.saveSpeeds({
+        sid: 21,
+        time: (new Date() - start)
+      });*/
+  
+      // XML树生成渲染树
+      this.layoutTree = create.call(
+        this,
+        xmlTree,
+        style,
+        styleDark,
+        this.isDarkMode(),
+        this.getFontSize()
+      );
+      console.log(`create time ${new Date() - start}`);
+      this.debugInfo.layoutTree = new Date() - start;
+      this.add(this.layoutTree);
+  
+      this.debugInfo.renderTree = new Date() - start;
+  
+      this.state = STATE.INITED;
+  
+      this.reflowRequest = 0;
+      this.repaintRequest = 0;
+  
+      // 收到reflow事件后，知道下一个loop没有reflow才执行computeLayout
+      this.on('reflow', () => {
+        this.reflowRequest++;
+        Promise.resolve(this.reflowRequest).then((val) => {
+          if (this.reflowRequest === val) {
+            console.log('layout reflow');
+            this.reflowRequest = 0;
+            this.textManager.hasUpdate = false;
+  
+            this.computeLayout();
+            this.drawLayout();
+          }
+        });
       });
-    });
-
-    // this.EE.on('rerender', (elm) => {
-    //     // console.log('reLayout');
-    //     this.reLayout(elm); // 图片加载完后，触发整个的视图的重新渲染
-    // });
-
-    console.log(`init time ${new Date() - start}`);
-    this.computeLayout();
+  
+      // this.EE.on('rerender', (elm) => {
+      //     // console.log('reLayout');
+      //     this.reLayout(elm); // 图片加载完后，触发整个的视图的重新渲染
+      // });
+  
+      console.log(`init time ${new Date() - start}`);
+      this.computeLayout();
+    })
   }
 
   forceUpdate() {

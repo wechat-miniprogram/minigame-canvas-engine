@@ -10,6 +10,14 @@ let yoga;
 let Node;
 let defaultNode;
 
+export function initYoga() {
+  return Yoga.init({ sync: true }).then(res => {
+    yoga = res;
+    Node = yoga.Node;
+    defaultNode = new Node();
+  })
+}
+
 // if (WeixinCore.getPlatform() === 'android') {
   yoga = Yoga.init({ sync: true });
 //   Node = yoga.Node;

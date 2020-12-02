@@ -70,7 +70,7 @@ export default class RenderContextManager {
         width: this.width,
         height: this.height,
         glRects: this.glRects
-    })
+    }, this.canvasContext.canvas)
   }
 
   testRun(data, canvas) {
