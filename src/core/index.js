@@ -15,6 +15,13 @@ import {
   View, Text, Image, Video
 } from './components/index.js'
 
+
+// const node = yoga.Node.create();
+
+// node.setMaxWidth(100);
+
+// node.calculateLayout(100, 100, yoga.DIRECTION_LTR);
+
 /*const pReportor = WeixinCore.performanceReport;
 pReportor.setOpt({
   uin: 123456,

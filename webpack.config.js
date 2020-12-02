@@ -9,8 +9,7 @@ module.exports = {
        'demos/interactivedemo/sub/engine': './src/index',
        'demos/cocoscreator/build/wechatgame/sub/engine': './src/index',
        './index': './src/index',*/
-    '../minigame/src/minigame_profile/libs/engine': './src/core/index',
-    '../minigame/src/minigame_profile/libs/polyfill': './src/jsCore/polyfill.minigame.js',
+    '../minigame_plugins/minigame_profile/plugin/libs/engine': './src/core/index',
   },
   output:{
     path: path.resolve(__dirname, ''),

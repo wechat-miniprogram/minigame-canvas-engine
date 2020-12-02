@@ -1,6 +1,8 @@
 import { setupGl } from '../../renderer/gl_rect.js';
 import { createRender, VIDEOS, renderDetection } from '../../renderer/util.js';
 
+const {WXWebAssembly, wx} = pluginEnv.customEnv;
+
 /**
  * @description 逻辑线程渲染管理器，用于搜集每个节点需要的渲染数据
  */

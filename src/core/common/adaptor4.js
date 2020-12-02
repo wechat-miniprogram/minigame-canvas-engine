@@ -1,31 +1,20 @@
-/*import { Yoga } from './yoga_wasm.js';*/
-
-import { Allocator, Node } from 'stretch-layout/index.js';
-
-function initStretch() {
-  const allocator = new Allocator();
-  const node = new Node(allocator, {width: 100, height: 100});
-  const layout = node.computeLayout();
-
-  console.log(layout.width, layout.height);
-}
-
-initStretch();
-
-
-/*import { Yoga } from 'yoga-layout/dist/entry-common.js';*/
+import { Yoga } from './yoga_wasm.js';
 
 // import { Module } from './yoga.js';
+// import * as Yoga from "../libs/yoga/index.cjs.js";
+// import * as Yoga from "../libs/yoga-layout/dist/entry-browser";
 
-/*let yoga;
+console.log(2222222255)
+
+let yoga;
 let Node;
 let defaultNode;
 
-if (true) {
+// if (WeixinCore.getPlatform() === 'android') {
   yoga = Yoga.init({ sync: true });
-  Node = yoga.Node;
-  defaultNode = new Node();
-}*/
+//   Node = yoga.Node;
+//   defaultNode = new Node();
+// // }
 // let yoga = Yoga.init({ sync: true });
 // let Node = yoga.Node;
 // let defaultNode = new Node();
@@ -367,3 +356,4 @@ export function calculateDirtyNode(node) {
     node.yogaNode.calculateLayout();
   }
 }
+
