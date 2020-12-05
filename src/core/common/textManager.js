@@ -1,48 +1,3 @@
-/**
- * 文本处理器
- * 文本一开始是不知道宽高的，需要在第一次布局后，查找下父节点的宽度，这样才能确认文本在哪里换行，换行后是否需要变成...
- */
-
-// const ctx = getContext();
-
-// function getSubText(text, width, { fontWeight, fontSize, fontFamily }, fontSizeRate) {
-//   const measure = measureText({ fontWeight, fontSize, fontFamily }, fontSizeRate);
-
-//   const textArray = [];
-//   let m = 0;
-//   let _text = text;
-
-//   const finder = function (t, w, arr) {
-//     let start = 0;
-//     let end = t.length - 1;
-//     let mid = Math.floor((start + end + 1) / 2);
-//     if (measure(t).width < w) {
-//       arr.push(t)
-//       return -1;
-//     }
-//     if (measure(t[0]).width > w) {
-//       return -1;
-//     }
-//     while (start < end) {
-//       const str = t.substring(0, mid)
-//       if (measure(str).width < w) {
-//         start = mid;
-//       } else {
-//         end = mid - 1;
-//       }
-//       mid = Math.floor((start + end + 1) / 2);
-//     }
-
-//     arr.push(_text.substring(0, mid));
-//     return mid;
-//   }
-
-//   while ((m = finder(_text, width, textArray)) > -1) {
-//     _text = _text.substring(m, _text.length)
-//   }
-//   return textArray;
-// }
-
 const finder = function (t, w, arr, measure) {
   let start = 0;
   let end = t.length - 1;
@@ -86,30 +41,37 @@ class TextManager {
    */
   updateTextNodeLayoutBox() {
     const isDarkMode = this.layout.isDarkMode();
+
     for (let i = 0; i < this.textNodes.length; i++) {
       const node = this.textNodes[i];
       const style = isDarkMode
         ? Object.assign({}, node.styleInit, node.styleDarkInit, node.styleProp)
         : Object.assign({}, node.styleInit, node.styleProp);
+
       node.valueBreak = [];
+
       const measure = this.layout._measureText({
         fontWeight: style.fontWeight || null,
         fontSize: style.fontSize || null,
         fontFamily: style.fontFamily || null,
       }, node.root.getFontSize());
+
+      const maxWidth = style.width || node.parent.layoutBox.width;
+
       // if (node.noWrapWidth > node.parent.layoutBox.width) { // 文本的宽度大于父节点的宽度，需要给文本换行
-      if (measure(node.valueInit).width > node.parent.layoutBox.width) { // 文本的宽度大于父节点的宽度，需要给文本换行
+      if (measure(node.valueInit).width > maxWidth) { // 文本的宽度大于父节点的宽度，需要给文本换行
         const dotWidth = measure('...').width;
-        const nodeTextArray = this.getSubText(node.valueInit, node.parent.layoutBox.width, {
+        const nodeTextArray = this.getSubText(node.valueInit, maxWidth, {
           fontWeight: style.fontWeight || null,
           fontSize: style.fontSize || null,
           fontFamily: style.fontFamily || null,
         }, node.root.getFontSize());
+
         if (style.textOverflow === 'ellipsis' && style.whiteSpace === 'nowrap') { // 单行溢出...
           const t = nodeTextArray[0] || ''; // 取截断后的第一个文本片段
           let { length } = t;
           let str = t.substring(0, length);
-          while (measure(str).width > (node.parent.layoutBox.width - dotWidth) && length > 0) {
+          while (measure(str).width > (maxWidth - dotWidth) && length > 0) {
             length-=1;
             str = t.substring(0, length);
           }
@@ -121,7 +83,7 @@ class TextManager {
             const t = node.valueBreak[node.valueBreak.length - 1];
             let { length } = t;
             let str = t.substring(0, length);
-            while (measure(str).width > (node.parent.layoutBox.width - dotWidth) && length > 0) {
+            while (measure(str).width > (maxWidth - dotWidth) && length > 0) {
               length-=1;
               str = t.substring(0, length);
             }
@@ -132,22 +94,25 @@ class TextManager {
         } else { // 默认不做处理，默认显示多行
           node.valueBreak = nodeTextArray;
         }
-        node.computedStyle.width = node.parent.layoutBox.width;
-        node.yogaNode.setWidth(node.parent.layoutBox.width);
+
+        node.computedStyle.width = maxWidth;
+        node.yogaNode.setWidth(maxWidth);
+
         if (style.whiteSpace !== 'nowrap') {
           node.computedStyle.height = (style.lineHeight || style.fontSize) * node.valueBreak.length;
           node.yogaNode.setHeight((style.lineHeight || style.fontSize) * node.valueBreak.length);
         }
       }
-
-      // console.log(node);
     }
   }
+
   clear() {
     this.textNodes = [];
     this.hasUpdate = false;
   }
+
   getSubText(text, width, { fontWeight, fontSize, fontFamily }, fontSizeRate) {
+    console.log('getSubText', width);
     const measure = this.layout._measureText({ fontWeight, fontSize, fontFamily }, fontSizeRate);
     const textArray = [];
     let m = 0;

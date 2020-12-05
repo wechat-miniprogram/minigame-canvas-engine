@@ -3,7 +3,7 @@ import Pool from './common/pool.js';
 import Emitter from 'tiny-emitter';
 import { isClick, STATE, setCharMap, nextTick } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
-import * as yogaWasm from './common/adaptor4.js';
+import { adaptor, updateLayout, calculateDirtyNode, initYoga } from './common/adaptor';
 import PseudoClassManager from './common/pseudoClassManager.js';
 import TextManager from './common/textManager.js';
 import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY } from './common/util.js';
@@ -15,40 +15,12 @@ import {
   View, Text, Image, Video
 } from './components/index.js'
 
-
-// const node = yoga.Node.create();
-
-// node.setMaxWidth(100);
-
-// node.calculateLayout(100, 100, yoga.DIRECTION_LTR);
-
-/*const pReportor = WeixinCore.performanceReport;
-pReportor.setOpt({
-  uin: 123456,
-  pid: 2177,
-});*/
-
 const constructorMap = {
   view: View,
   text: Text,
   image: Image,
   video: Video
 }
-
-// todo 由于iOS上wasm有bug，针对android和iOS两个平台使用不同的布局方式
-let adaptor;
-let updateLayout;
-let calculateDirtyNode;
-// if (WeixinCore.getPlatform() === 'android') {
-adaptor = yogaWasm.adaptor;
-updateLayout = yogaWasm.updateLayout;
-calculateDirtyNode = yogaWasm.calculateDirtyNode;
-const initYoga = yogaWasm.initYoga;
-// } else {
-//     adaptor = yogaJS.adaptor;
-//     updateLayout = yogaJS.updateLayout;
-//     calculateDirtyNode = yogaJS.calculateDirtyNode;
-// }
 
 /**
  * 节点初始化
@@ -579,7 +551,7 @@ class _Layout extends Element {
 
       this.cssRules = {}; // 保存下css规则
       this.cssDarkRules = {}; // 保存下css darkmode的规则
-  
+
       // 处理所有class里面的尺寸
       for (const k in style) {
         this.cssRules[k] = {};
@@ -593,7 +565,7 @@ class _Layout extends Element {
           this.cssDarkRules[k][key] = styleDark[k][key];
         }
       }
-  
+
       /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
       const jsonObj = parser.parse(template, { // todo 需要一个预解析操作
         attributeNamePrefix: "",
@@ -608,16 +580,16 @@ class _Layout extends Element {
         parseTrueNumberOnly: false,
       }, true);
       /*}*/
-  
+
       const xmlTree = jsonObj.children[0];
-  
+
       this.debugInfo.xmlTree = new Date() - start;
       console.log(`init getXmlTree time ${new Date() - start}`);
       /*pReportor.saveSpeeds({
         sid: 21,
         time: (new Date() - start)
       });*/
-  
+
       // XML树生成渲染树
       this.layoutTree = create.call(
         this,
@@ -630,14 +602,14 @@ class _Layout extends Element {
       console.log(`create time ${new Date() - start}`);
       this.debugInfo.layoutTree = new Date() - start;
       this.add(this.layoutTree);
-  
+
       this.debugInfo.renderTree = new Date() - start;
-  
+
       this.state = STATE.INITED;
-  
+
       this.reflowRequest = 0;
       this.repaintRequest = 0;
-  
+
       // 收到reflow事件后，知道下一个loop没有reflow才执行computeLayout
       this.on('reflow', () => {
         this.reflowRequest++;
@@ -646,18 +618,18 @@ class _Layout extends Element {
             console.log('layout reflow');
             this.reflowRequest = 0;
             this.textManager.hasUpdate = false;
-  
+
             this.computeLayout();
             this.drawLayout();
           }
         });
       });
-  
+
       // this.EE.on('rerender', (elm) => {
       //     // console.log('reLayout');
       //     this.reLayout(elm); // 图片加载完后，触发整个的视图的重新渲染
       // });
-  
+
       console.log(`init time ${new Date() - start}`);
       this.computeLayout();
     })

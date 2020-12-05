@@ -136,54 +136,22 @@ export default class Element {
       set: (obj, key, value) => {
         obj[key] = value;
         this._innerStyle[key] = value;
-        // console.log('set123123', value);
         return true;
       },
       get: (obj, key) => {
-        // console.log('123123get', obj[key], this.styleProp[key]);
         let isDarkMode = false;
         if (this.root) {
           isDarkMode = this.root.isDarkMode();
         } else {
           isDarkMode = this.isDarkMode();
         }
-        // if (this.className == 'ad_text_container' && key == 'backgroundColor') {
-        //     console.log('isDarkMode', isDarkMode);
-        //     console.log('obj[key]', obj[key]);
-        //     console.log('this.styleProp[key]', this.styleProp[key]);
-        //     console.log('this.styleInit[key]', this.styleInit[key]);
-        // }
+       
         if (isDarkMode) {
           return obj[key] || this.styleProp[key] || this.styleDarkInit[key] || this.styleInit[key];
         }
         return obj[key] || this.styleProp[key] || this.styleInit[key];
       },
     });
-    // if (
-    //     style.opacity !== undefined
-    //     && style.color
-    //     && style.color.indexOf('#') > -1
-    // ) {
-    //     style.color = getRgba(style.color, style.opacity);
-    // }
-
-    // if (
-    //     style.opacity !== undefined
-    //     && style.backgroundColor
-    //     && style.backgroundColor.indexOf('#') > -1
-    // ) {
-    //     style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
-    // }
-
-    // for (let key in this.style) {
-    //     if (
-    //         scalableStyles.indexOf(key) > -1
-    //         && typeof this.style[key] === 'number'
-    //     ) {
-    //         // console.log(key);
-    //         this.style[key] *= dpr;
-    //     }
-    // }
 
     nextTick(() => {
       // 事件冒泡逻辑
@@ -436,18 +404,6 @@ export default class Element {
         // drawY + borderTopWidth / 2
         drawY,
       );
-
-      // if (radius && borderWidth && borderColor) {
-      //     console.log('右上角圆角')
-
-      //     ctx.arcTo(
-      //         drawX + box.width,
-      //         drawY + borderTopWidth / 2,
-      //         drawX + box.width,
-      //         drawY + borderTopWidth / 2 + radius,
-      //         radius
-      //     );
-      // }
     }
 
     if (borderRightWidth && (borderColor || style.borderRightColor)) {
@@ -476,18 +432,6 @@ export default class Element {
         drawX + box.width,
         radius ? drawY + box.height - radius : drawY + box.height,
       );
-
-      // if (radius && borderWidth && borderColor) {
-      //     console.log('右下角圆角')
-
-      //     ctx.arcTo(
-      //         drawX + box.width - borderRightWidth / 2,
-      //         drawY + box.height,
-      //         drawX + box.width - radius,
-      //         drawY + box.height,
-      //         radius
-      //     );
-      // }
     }
 
     if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
@@ -560,18 +504,7 @@ export default class Element {
 
   getDimension() {
     const box = this.layoutBox;
-    // const borderWidth = this.styleProp.borderWidth || this.styleInit.borderWidth || 0;
-    // const borderLeftWidth = this.styleProp.borderLeftWidth || this.styleInit.borderLeftWidth || borderWidth;
-    // const borderRightWidth = this.styleProp.borderRightWidth || this.styleInit.borderRightWidth ||borderWidth;
-    // const borderTopWidth = this.styleProp.borderTopWidth || this.styleInit.borderTopWidth || borderWidth;
-    // const borderBottomWidth = this.styleProp.borderBottomWidth || this.styleInit.borderBottomWidth || borderWidth;
 
-    // const baseX = box.absoluteX + borderLeftWidth;
-    // const baseY = box.absoluteY + borderTopWidth;
-    // const boxWidth = box.width - (borderLeftWidth + borderRightWidth);
-    // const boxHeight = box.height - (borderTopWidth + borderBottomWidth);
-
-    // return [baseX, baseY, boxWidth, boxHeight];
     return [box.absoluteX, box.absoluteY, box.width, box.height];
   }
 
@@ -644,10 +577,6 @@ export default class Element {
 
   getBoundingClientRect() { // 得到元素的box
     return {
-      // top: this.layoutBox.absoluteY / dpr,
-      // left: this.layoutBox.absoluteX / dpr,
-      // width: this.layoutBox.width / dpr,
-      // height: this.layoutBox.height / dpr,
       top: this.layoutBox.absoluteY,
       left: this.layoutBox.absoluteX,
       width: this.layoutBox.width,
@@ -656,12 +585,9 @@ export default class Element {
   }
 
   addClass(name) { // 给节点加一个class，会导致整个布局重绘
-    // console.log('addClass', this);
     const className = this.className.split(' ');
     if (className.indexOf(name) === -1) { // 是一个新的class
       const { root } = this; // 拿到layout
-      // const isDarkMode = root.isDarkMode();
-      // const css = isDarkMode ? root.cssDarkRules : root.cssRules; // 拿到当前的css规则
       className.push(name);
       this.className = className.join(' '); // 更新下className
 
@@ -685,19 +611,11 @@ export default class Element {
         return res;
       }, this.styleDarkActive || {});
 
-      // this.styleInit = Object.assign({}, this.style);
-      // this.styleDarkInit = Object.assign({}, this.styleDark);
       Object.keys(this.styleProp).forEach((prop) => {
         this.styleInit[prop] = this.styleProp[prop];
         this.styleDarkInit[prop] = this.styleProp[prop];
       });
 
-      // if (this.root.isDarkMode()) {
-      //     this.computedStyle = Object.assign({}, this.styleInit, this.styleDarkInit);
-      // } else {
-      //     this.computedStyle = Object.assign({}, this.styleInit);
-      // }
-      // this.root.reLayout();
       this.root.beforeReflow();
       this.root.emit('reflow');
     }
@@ -739,19 +657,6 @@ export default class Element {
         this.styleDarkInit[prop] = this.styleProp[prop];
       });
 
-      // if (this.root.isDarkMode()) {
-      //     this.computedStyle = Object.assign({}, this.styleInit, this.styleDarkInit);
-      // } else {
-      //     this.computedStyle = Object.assign({}, this.styleInit);
-      // }
-
-      // this.styleInit = Object.assign({}, this.style);
-      // this.styleDarkInit = Object.assign({}, this.styleDark);
-
-      // this.element.className = this.className;
-      // this.element.style = this.style;
-      // this.root.reLayout();
-      // this.root.layout(this.root.canvas);
       this.root.beforeReflow();
       this.root.emit('reflow');
     }

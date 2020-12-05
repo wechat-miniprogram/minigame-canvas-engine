@@ -113,78 +113,9 @@ export const getContext = () => {
 
 export let charWidthMap = {}; // 搞一个字符长度map表，用来存下不同字段的长度
 
-// export function measureText({ fontStyle, fontWeight, fontSize, fontFamily }, fontSizeRate = 1) {
-// 	return (str) => {
-// 		let width = 0;
-// 		const key = `${fontWeight || 'normal'}_${(fontSize || 12) * fontSizeRate}_${fontFamily 
-//      || DEFAULT_FONT_FAMILY}_${str}`;
-// 		if (charWidthMap[key]) {
-// 			width = charWidthMap[key];
-// 		} else {
-// 			console.log('new text', key);
-// 			// console.log(charWidthMap);
-// 			width = WeixinCore.getFontManager().measureText(str,
-// 				fontWeight || 'normal',
-// 				fontStyle || 'normal',
-// 				(fontSize || 12) * fontSizeRate,
-// 				fontFamily || DEFAULT_FONT_FAMILY) || 0;
-
-// 			charWidthMap[key] = width;
-// 		}
-// 		return {
-// 			width: width
-// 		}
-// 	}
-// }
-
 export function setCharMap(map) {
   charWidthMap = Object.assign(charWidthMap, map);
 }
-
-// export function getTextWidth(style, value, fontSizeRate) {
-// 	return measureText({
-// 		fontWeight: style.fontWeight,
-// 		fontSize: style.fontSize,
-// 		fontFamily: style.fontFamily
-// 	}, fontSizeRate)(value).width;
-// }
-
-// export function getTextWidthWithoutSetFont(value) {
-// 	console.log('getTextWidthWithoutSetFont:' + getContext().measureText(value).width);
-// 	return getContext().measureText(value).width || 0;
-// }
-
-// export function parseText(style, value) {
-// 	value = String(value);
-
-// 	let maxWidth = style.width;
-// 	let wordWidth = getTextWidth(style, value);
-
-// 	// 对文字溢出的处理，默认用...
-// 	let textOverflow = style.textOverflow || 'ellipsis';
-
-// 	// 文字最大长度不超限制
-// 	if (wordWidth <= maxWidth) {
-// 		return value;
-// 	}
-
-// 	// 对于用点点点处理的情况，先将最大宽度减去...的宽度
-// 	if (textOverflow === 'ellipsis') {
-// 		maxWidth -= getTextWidthWithoutSetFont('...');
-// 	}
-
-// 	let length = value.length - 1;
-// 	let str = value.substring(0, length);
-
-// 	while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
-// 		length--;
-// 		str = value.substring(0, length);
-// 	}
-
-// 	return (length && textOverflow === 'ellipsis'
-// 		? str + '...'
-// 		: str);
-// }
 
 export function dash2camel(input) {
   return input.toLowerCase().replace(/-(.)/g, (match, group1) => group1.toUpperCase());

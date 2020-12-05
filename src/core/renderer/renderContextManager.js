@@ -50,21 +50,7 @@ export default class RenderContextManager {
   /**
    * @description 传递数据给渲染线程
    */
-  draw() {
-    console.log('draw in RenderContextManager');
-    // console.log(this.glRects, JSON.stringify(this.glRects));
-    // const elementId = this.canvasContext.elementId;
-    /*this.canvasContext.postMessage({
-      type: 'render',
-      data: {
-        noRepaint: !!this.noRepaint,
-        width: this.width,
-        height: this.height,
-        glRects: this.glRects
-      },
-      start: Date.now(), // 传递时间，看看线程间通信的耗时
-    });
-*/
+  draw() {    
     this.testRun({
         noRepaint: !!this.noRepaint,
         width: this.width,
@@ -85,6 +71,5 @@ export default class RenderContextManager {
     renderer.repaint(gl, data.glRects);
     const result = renderDetection(gl, 30);
     console.log(`render detection ${result}`);
-    // repaint(gl, data.glRects, dpr);
   }
 }

@@ -15,23 +15,6 @@ export default class Text extends Element {
   }) {
     const valueInit = value; // 先存下初始化时的value
 
-    // 没有设置宽度的时候通过canvas计算出文字宽度
-    // if (style.width === undefined) {
-    //     style.width = getTextWidth(style, value, this.root.createOffscreenCanvas());
-    // } else if (style.textOverflow === 'ellipsis') { // 文本本身设置了宽度，超出文本的部分要变成省略号
-    //     value = parseText(style, value, this.root.createOffscreenCanvas());
-    // }
-
-    // 默认文本节点的高度是字体大小，后面有换行需要更新下高度
-    // if (typeof style.height === 'undefined') {
-    //     style.height = style.lineHeight || style.fontSize;
-    // }
-    // if (typeof style.width === 'undefined') {
-    //     style.width = getTextWidth(style, valueInit);
-    // } else if (style.textOverflow === 'ellipsis') {
-
-    // }
-
     super({
       props,
       idName,
@@ -46,39 +29,21 @@ export default class Text extends Element {
     this.type = 'Text';
     this.valueShow = value; // 显示的时候的value
     this.valueInit = valueInit;
-    // this.noWrapWidth = style.width;
-    // this.noWrapHeight = style.height;
 
     this.renderBoxes = [];
 
     Object.defineProperty(this, 'value', {
       get() {
-        // return this.valuesrc;
         return this.valueInit; // 初始化是的value
       },
       set(newValue) {
-        // if ( newValue !== this.valuesrc) {
-        //     this.valuesrc = newValue;
-
-        //     this.emit('repaint');
-        // }
         console.log('set text value 1 ', newValue, this.valueInit);
         if (newValue !== this.valueInit) {
           console.log('set text value 2 ', newValue, this.valueInit);
           this.valueInit = newValue;
           this.valueShow = newValue;
-          // this.style.width = getTextWidth(this.style, newValue);
-          // this.styleInit.width = this.style.width;
-          // this.noWrapWidth = this.style.width;
           this.computedStyle.width = this.root._getTextWidth(this.style, newValue, this.root.getFontSize());
           this.noWrapWidth = this.computedStyle.width;
-          // this.element.style.width = this.style.width;
-          // this.emit('repaint');
-          // if (typeof this.parent.style.width !== undefined ) { // 如果父元素定宽度或者文本设置了...，不用再计算一遍了，自己修改下重新画一遍
-
-          // } else { // 触发layout的回流，重新计算一边布局
-          //     this.root.emit('reflow');
-          // }
           if (this.layoutBox.width > 0 && this.layoutBox.height > 0) { // 不显示的节点，改了wording也不reflow
             this.root.emit('reflow');
           }
@@ -138,7 +103,7 @@ export default class Text extends Element {
 
     const styleNoWrap = style.whiteSpace === 'nowrap' && style.textOverflow !== 'ellipsis';
     if (!styleNoWrap && this.valueBreak && this.valueBreak.length) {
-      boxWidth = this.parent.layoutBox.width - (this.parent.style.paddingLeft || 0) 
+      boxWidth = this.parent.layoutBox.width - (this.parent.style.paddingLeft || 0)
         - (this.parent.style.paddingRight || 0);
       boxHeight = box.height;
     }
@@ -236,10 +201,6 @@ export default class Text extends Element {
         );
       }
     }
-
-    // this.glRect.setTexture({
-    //     image: canvas
-    // })
   }
 
   updateRenderData(computedStyle) {

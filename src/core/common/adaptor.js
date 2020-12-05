@@ -1,27 +1,33 @@
-// import yoga, { Node } from 'yoga-layout';
-import yoga, { Node } from '../../../3rd/entry-browser.js';
+import { Yoga } from './yoga_wasm.js';
 
-const defaultNode = Node.create();
+let yoga;
+let Node;
+let defaultNode;
+
+/**
+ * 小游戏wasm初始化只能是异步的，这里暴露wasm初始化函数给外部
+ */
+export function initYoga() {
+  return Yoga.init({ sync: true }).then(res => {
+    yoga = res;
+    Node = yoga.Node;
+    defaultNode = new Node();
+  })
+}
+
+yoga = Yoga.init({ sync: true });
 
 export function adaptor(tree) {
+  console.log('adaptor call');
+
   const s = Date.now();
   const yogaTree = getYogaTree(tree); // 获得一棵yoga虚拟树
-  // yogaTree.calculateLayout(undefined, undefined);
+  // yogaTree.getChild(0).calculateLayout();
   console.log(`calculateLayout ${Date.now() - s}`);
   updateLayout(tree);
 }
 
-// export function compare(tree1, tree2) {
-//   console.log('xxxx ' + tree1.className, tree1.layout);
-//   console.log('yoga ' + tree2.className, tree2.layout);
-
-//   for (let i = 0; i < tree1.children.length; i++) {
-//     compare(tree1.children[i], tree2.children[i]);
-//   }
-// }
-
 function getYogaTree(node) {
-  // const yogaNode = Node.create();
   let yogaNode = null;
 
   if (node.yogaNode) {
@@ -32,8 +38,6 @@ function getYogaTree(node) {
     node.yogaNode = yogaNode;
   }
 
-  // const style = node.style;
-  // const style = node.computedStyle;
   let isDarkMode = false;
   if (node.root) {
     isDarkMode = node.root.isDarkMode();
@@ -246,13 +250,6 @@ function getYogaTree(node) {
     yogaNode.setJustifyContent(yoga[`JUSTIFY_${style.justifyContent.toUpperCase().replace('-', '_')}`]);
   }
 
-  // yogaNode.setAspectRatio(aspectRatio: number): void,
-  // yogaNode.setMeasureFunc(measureFunc: ?Function): void,
-  // console.log('yogaNode', yogaNode);
-
-  // for (let i = 0; i < node.children.length; i++) {
-  //   yogaNode.insertChild(getYogaTree(node.children[i]), i);
-  // }
   const childCount = yogaNode.getChildCount();
   for (let i = 0; i < node.childNodes.length; i++) {
     const childYogaNode = getYogaTree(node.childNodes[i]);
@@ -263,22 +260,6 @@ function getYogaTree(node) {
 
   yogaNode.calculateLayout();
 
-  // if (node.className === 'item_content_title') {
-  //   console.log('item_content_title', yogaNode.getComputedLayout());
-  // }
-
-  // const layout = yogaNode.getComputedLayout();
-  // console.log(layout);
-  // node.layout = {
-  //   width: layout.width,
-  //   height: layout.height,
-  //   top: layout.top,
-  //   left: layout.left,
-  //   right: layout.right,
-  //   bottom: layout.bottom,
-  // };
-  // node.yogaNode = yogaNode;
-  // node.layout = layout;
   return yogaNode;
 }
 
@@ -287,18 +268,9 @@ export function updateLayout(node) {
   if (node.type === 'Text' && isNaN(node.yogaNode.getComputedWidth())) { // todo 临时fix文本节点
     node.yogaNode.calculateLayout();
   }
+
   const layout = node.yogaNode.getComputedLayout();
-  // node.layout = {
-  //   width: layout.width,
-  //   height: layout.height,
-  //   top: layout.top,
-  //   left: layout.left,
-  //   right: layout.right,
-  //   bottom: layout.bottom,
-  // };
-  // for (let i = 0; i < node.children.length; i++) {
-  //   updateLayout(node.children[i]);
-  // }
+
   node.layoutBox = {
     width: layout.width,
     height: layout.height,
@@ -307,10 +279,7 @@ export function updateLayout(node) {
     right: layout.right,
     bottom: layout.bottom,
   }
-  // console.log(node.layoutBox);
-  // console.log(node.className, node.style, node.className);
-  // if (node.id > 0)
-  //   node.layout = node.layoutBox;
+
   for (let i = 0; i < node.childNodes.length; i++) {
     updateLayout(node.childNodes[i]);
   }
@@ -324,3 +293,4 @@ export function calculateDirtyNode(node) {
     node.yogaNode.calculateLayout();
   }
 }
+
