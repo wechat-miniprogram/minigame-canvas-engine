@@ -62,7 +62,6 @@ export default class RenderContextManager {
   testRun(data, canvas) {
     console.log('data', data);
     const gl = setupGl(canvas);
-    // const gl = setup2d(canvas);
     gl.canvas.height = data.height * dpr;
     gl.canvas.width = data.width * dpr;
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

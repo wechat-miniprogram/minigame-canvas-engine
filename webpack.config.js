@@ -7,8 +7,8 @@ module.exports = {
        'packages/plugin/plugin/engine': './src/index',
        'demos/webgl/libs/engine': './src/index',
        'demos/interactivedemo/sub/engine': './src/index',
-       'demos/cocoscreator/build/wechatgame/sub/engine': './src/index',
-       './index': './src/index',*/
+       'demos/cocoscreator/build/wechatgame/sub/engine': './src/index',*/
+       './index': './src/core/index',
     '../minigame_plugins/minigame_profile/plugin/libs/engine': './src/core/index',
   },
   output:{
@@ -17,9 +17,9 @@ module.exports = {
     libraryTarget: 'commonjs2'
   },
   resolve: {
-        // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json", ".wasm"]
-    },
+    // Add '.ts' and '.tsx' as resolvable extensions.
+    extensions: [".ts", ".tsx", ".js", ".json", ".wasm"]
+  },
   module: {
     rules: [
       {
@@ -44,4 +44,9 @@ module.exports = {
   plugins: [
   ],
   mode: 'none',
+  /*mode: 'production',*/
+  /*mode: 'development',*/
+  /*optimization: {
+    usedExports: true,
+  }*/
 };

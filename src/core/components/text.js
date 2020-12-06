@@ -122,13 +122,6 @@ export default class Text extends Element {
       textAlign: style.textAlign || 'left',
       fillStyle: style.color || '#000',
     });
-    // if (!this.offCanvas) {
-    // this.offCanvas = this.root.canvasContext.getOffscreenCanvas(`text-${this.id}`);
-    // this.offCtx = this.offCanvas.getContext('2d');
-    // }
-    // const canvas = this.offCanvas;
-    // canvas.width = boxWidth;
-    // canvas.height = boxHeight;
   }
 
   render(isDarkMode) {
@@ -137,13 +130,11 @@ export default class Text extends Element {
       return;
     }
 
-    // const isDarkMode = this.root.isDarkMode();
     const style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle)
       : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
 
     this.toCanvasData(isDarkMode);
 
-    // const canvas = this.offCanvas;
     const ctx = this.offCtx;
 
     ctx.textBaseline = this.textBaseline;

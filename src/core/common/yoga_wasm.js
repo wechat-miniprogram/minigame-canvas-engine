@@ -501,41 +501,41 @@ var Yoga = (function () {
         //   return "[Emscripten Module object]";
         // };
       } else if (ENVIRONMENT_IS_SHELL) {
-        if (typeof read != "undefined") {
-          read_ = function shell_read(f) {
-            return read(f);
-          };
-        }
+        // if (typeof read != "undefined") {
+        //   read_ = function shell_read(f) {
+        //     return read(f);
+        //   };
+        // }
 
-        readBinary = function readBinary(f) {
-          var data;
+        // readBinary = function readBinary(f) {
+        //   var data;
 
-          if (typeof readbuffer === "function") {
-            return new Uint8Array(readbuffer(f));
-          }
+        //   if (typeof readbuffer === "function") {
+        //     return new Uint8Array(readbuffer(f));
+        //   }
 
-          data = read(f, "binary");
-          assert(_typeof(data) === "object");
-          return data;
-        };
+        //   data = read(f, "binary");
+        //   assert(_typeof(data) === "object");
+        //   return data;
+        // };
 
-        if (typeof scriptArgs != "undefined") {
-          arguments_ = scriptArgs;
-        } else if (typeof arguments != "undefined") {
-          arguments_ = arguments;
-        }
+        // if (typeof scriptArgs != "undefined") {
+        //   arguments_ = scriptArgs;
+        // } else if (typeof arguments != "undefined") {
+        //   arguments_ = arguments;
+        // }
 
-        if (typeof quit === "function") {
-          quit_ = function quit_(status) {
-            quit(status);
-          };
-        }
+        // if (typeof quit === "function") {
+        //   quit_ = function quit_(status) {
+        //     quit(status);
+        //   };
+        // }
 
-        if (typeof print !== "undefined") {
-          if (typeof console === "undefined") console = {};
-          console.log = print;
-          console.warn = console.error = typeof printErr !== "undefined" ? printErr : print;
-        }
+        // if (typeof print !== "undefined") {
+        //   if (typeof console === "undefined") console = {};
+        //   console.log = print;
+        //   console.warn = console.error = typeof printErr !== "undefined" ? printErr : print;
+        // }
       } else if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
         if (ENVIRONMENT_IS_WORKER) {
           scriptDirectory = self.location.href;
@@ -3520,10 +3520,8 @@ var Yoga = (function () {
       var syncMod = Module({
         sync: true,
       });
-      console.log('syncMod', syncMod);
-
+      
       return syncMod.then(res => {
-        console.log(111, res)
         return Object.assign(mod, entryCommon(bind, res));
       })
       

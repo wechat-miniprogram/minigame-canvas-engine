@@ -15,24 +15,12 @@ function getAlpha(rgba) {
 }
 
 function changeStateTrans(item, activeStyle) {
-  // const id = item.id;
-  // const allNode = activeNodeMap[id];
-  // if (allNode) {
-  //   for (let i = 0; i < allNode.length; i++) {
-  //     const n = allNode[i];
-  //     n.style.backgroundColor = color;
-  //     n.repaint();
-  //   }
-  // }
-  // console.log('changeState', Date.now());
-  // console.log(color);
+ 
   console.log('changeStateTrans', item);
 
   // 先保存_innerStyle中的状态，方便clear的时候恢复
   innerStyleMap[item.id] = Object.assign({}, item._innerStyle);
-  // console.log('test123', item.className);
-  // console.log('test123', item.styleActive);
-  // console.log('test123', item.styleDarkActive);
+
   if (activeStyle.backgroundColor) {
     item.computedStyle.backgroundColor = activeStyle.backgroundColor;
     // 改了backgroundColor后，需要更新下glRect的内容
@@ -66,20 +54,6 @@ function clearActiveStateTrans(item, isDarkMode) {
   ? Object.assign({}, item.styleInit, item.styleDarkInit, item.styleProp, item._innerStyle)
   : Object.assign({}, item.styleInit, item.styleProp, item._innerStyle);
   item.updateRenderData && item.updateRenderData(computedStyle);
-  // let backgroundColor = item.styleInit.backgroundColor;
-  // let color = item.styleInit.color;
-  // if (item.root.isDarkMode()) {
-  //   backgroundColor = item.styleDarkInit.backgroundColor || item.styleInit.backgroundColor;
-  //   color = item.styleDarkInit.color || item.styleInit.color
-  // }
-  // item.computedStyle.backgroundColor = backgroundColor;
-  // item.computedStyle.color = color;
-  // item.repaint();
-  // if (item.children) {
-  //   for (let key in item.children) {
-  //     clearActiveStateTrans(item.children[key]);
-  //   }
-  // }
 }
 
 function getNodeAll(node) {
@@ -99,7 +73,6 @@ function getNodeFromRoot(node) {
     res.push(n);
     n = n.parent;
   }
-  // console.log(res);
   return res.reverse();
 }
 
@@ -113,22 +86,6 @@ class PseudoClassManager {
     // this.activeNodeMap = {};
   }
   addActiveState(node) {
-    // const allNodes = getNodeFromRoot(node); // touchstart的时候得到从root到点击元素的所有节点
-    // let activeBackgroundColor = null;
-    // let needActive = false;
-    // for (let i = 0; i < allNodes.length; i++) {
-    //   const node = allNodes[i];
-    //   if (node.hasActiveStyle) {
-    //     activeBackgroundColor = node.styleActive.backgroundColor;
-    //     needActive = true;
-    //   }
-    //   if (needActive) {
-    //     // node.style.backgroundColor = activeBackgroundColor;
-    //     // node.repaint();
-    //     changeStateTrans(node, activeBackgroundColor);
-    //   }
-    // }
-    // console.log('addActiveState');
     if (node === null) {
       return;
     }
@@ -167,13 +124,9 @@ class PseudoClassManager {
     let needForceUpdate = false;
     // console.log('nodes.length ' + nodes.length);
     for (let i = 0; i < nodes.length; i++) {
-      // console.log(`nodes_${i}`, nodes[i].isActive);
-      // console.log('clearActiveState');
-      // changeStateTrans(nodes[i], nodes[i].styleInit.backgroundColor);
       if (nodes[i].isActive) {
         console.log('node is active', nodes[i].className);
         clearActiveStateTrans(nodes[i], isDarkMode);
-        // console.log('======================isActive false');
         nodes[i].isActive = false;
         needForceUpdate = true;
       }
@@ -185,7 +138,6 @@ class PseudoClassManager {
   addActiveNode(node) {
     this.activeNode.push(node);
     activeNodeMap[node.id] = getNodeAll(node);
-    // console.log(activeNodeMap[node.id]);
   }
 }
 

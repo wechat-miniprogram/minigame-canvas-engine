@@ -38,9 +38,6 @@ export default class Image extends Block {
         if (newValue !== this.imgsrc) {
           this.imgsrc = newValue;
 
-          // this.initImg(() => {
-          //     this.render();
-          // });
           this.glRect.setImage(newValue);
         }
       },
@@ -90,12 +87,10 @@ export default class Image extends Block {
     }
 
     if (cache && cache.loadDone) {
-      // console.log('cache done', this.className);
       this.img = cache;
       this.imgLoadDone = true;
       callback();
     } else if (cache && !cache.loadDone) {
-      // console.log('cache not done', this.className);
       this.img = cache;
 
       cache.onloadcbks.push(() => {
@@ -104,11 +99,9 @@ export default class Image extends Block {
         }
 
         this.imgLoadDone = true;
-        // this.emit('img__load__done');
         callback();
       });
     } else { // 第一次没有图片的时候，会走到这里
-      // console.log('no cache', this.className);
       this.img = this.root.canvasContext.createImage();
       this.img.onloadcbks = [];
       this.root.imgPool.set(`${this.id}_${this.src}`, this.img);
@@ -141,8 +134,6 @@ export default class Image extends Block {
     if (!this.img) {
       return;
     }
-
-    // this.glRect.setTexture({ image: this.img })
   }
 
   insert(isDarkMode) {

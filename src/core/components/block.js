@@ -31,13 +31,13 @@ export default class Block extends Element {
 
   updateContours() {
     const renderer = this.root.renderContext;
-    // this.renderer = renderer;
     const { width, height, absoluteX, absoluteY } = this.layoutBox;
     if (!this.glRect) {
       this.glRect = renderer.createRoundRect(this.id);
     }
     this.glRect.updateContours([absoluteX, absoluteY, width, height]);
   }
+  
   updateRenderData() { // 子组件自己实现
   }
 
