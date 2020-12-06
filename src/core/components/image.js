@@ -76,58 +76,6 @@ export default class Image extends Block {
 
   // 废弃
   initImg(callback = none) {
-    this.img = null;
-    this.imgLoadDone = false;
-    const cache = this.root.imgPool.get(`${this.id}_${this.src}`);
-
-    if (!this.src) {
-      this.imgLoadDone = true;
-      callback();
-      return;
-    }
-
-    if (cache && cache.loadDone) {
-      this.img = cache;
-      this.imgLoadDone = true;
-      callback();
-    } else if (cache && !cache.loadDone) {
-      this.img = cache;
-
-      cache.onloadcbks.push(() => {
-        if (!this.img) {
-          return;
-        }
-
-        this.imgLoadDone = true;
-        callback();
-      });
-    } else { // 第一次没有图片的时候，会走到这里
-      this.img = this.root.canvasContext.createImage();
-      this.img.onloadcbks = [];
-      this.root.imgPool.set(`${this.id}_${this.src}`, this.img);
-
-      this.img.onload = () => {
-        if (!this.img) {
-          return;
-        }
-
-        if (this.img) { // 清空所有的load回调
-          // this.img.onloadcbks.forEach(fn => fn());
-          callback = this.img.onloadcbks.pop() || callback;
-          this.img.onloadcbks = [];
-          this.img.loadDone = true;
-          this.imgLoadDone = true;
-        }
-
-        callback();
-        this.repaint();
-      }
-
-      this.img.onerror = (e) => {
-        // console.log('img load error', e);
-      }
-      this.img.setSrc(this.src);
-    }
   }
 
   render(needEmitEvent = true) {

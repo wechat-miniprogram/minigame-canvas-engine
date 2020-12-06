@@ -54,16 +54,6 @@ export default class Text extends Element {
     });
   }
 
-  toCanvasData(isDarkMode) {
-    const style = getElementStyle.call(this, isDarkMode);
-
-    this.fontSize = style.fontSize || 12;
-    this.textBaseline = 'top';
-    this.font = `${style.fontWeight || ''} ${(style.fontSize || 12) * this.root.getFontSize()}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
-    this.textAlign = style.textAlign || 'left';
-    this.fillStyle = style.color || '#000';
-  }
-
   beforeReflow() {
     this.computedStyle.width = this.noWrapWidth;
     this.computedStyle.height = this.noWrapHeight;
@@ -120,72 +110,6 @@ export default class Text extends Element {
   }
 
   render(isDarkMode) {
-    const box = this.layoutBox;
-    if (box.width * 1 === 0 || box.height * 1 === 0) { // 宽度或者高度等于0，直接不画
-      return;
-    }
-
-    const style = getElementStyle.call(this, isDarkMode);
-
-    this.toCanvasData(isDarkMode);
-
-    const ctx = this.offCtx;
-
-    ctx.textBaseline = this.textBaseline;
-    ctx.font = this.font;
-    ctx.textAlign = this.textAlign;
-
-    let drawX = 0;
-    let drawY = 0;
-
-    if (style.backgroundColor) {
-      mesh.setFill({ // eslint-disable-line
-        color: style.backgroundColor,
-      });
-    }
-
-    ctx.fillStyle = this.fillStyle;
-
-    if (this.textAlign === 'center') {
-      drawX += box.width / 2;
-    } else if (this.textAlign === 'right') {
-      drawX += box.width;
-    }
-
-    if (style.lineHeight) {
-      ctx.textBaseline = 'middle';
-      drawY += style.lineHeight / 2;
-    }
-
-    if (style.textShadow) {
-      const [offsetX, offsetY, shadowBlur, shadowColor] = style.textShadow.split(' ');
-      ctx.shadowOffsetX = +offsetX;
-      ctx.shadowOffsetY = +offsetY;
-      ctx.shadowBlur = +shadowBlur;
-      ctx.shadowColor = shadowColor;
-    }
-
-    if (style.whiteSpace === 'nowrap' && style.textOverflow !== 'ellipsis') { // 不换行的时候，直接溢出处理
-      ctx.fillText(
-        this.valueShow,
-        drawX,
-        drawY,
-      );
-    } else {
-      if (this.valueBreak && this.valueBreak.length) {
-        for (let i = 0; i < this.valueBreak.length; i++) {
-          const str = this.valueBreak[i];
-          ctx.fillText(str, drawX, drawY);
-          drawY += style.lineHeight || style.fontSize;
-        }
-      } else {
-        ctx.fillText(
-          this.valueShow,
-          drawX,
-          drawY,
-        );
-      }
-    }
   }
 
   updateRenderData(computedStyle) {

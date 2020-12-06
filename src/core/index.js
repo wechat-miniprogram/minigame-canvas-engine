@@ -12,14 +12,14 @@ import RenderContextManager from './renderer/renderContextManager';
 
 // components
 import {
-  View, Text, Image, Video
+  View, Text, Image
 } from './components/index.js'
 
 const constructorMap = {
   view: View,
   text: Text,
   image: Image,
-  video: Video
+  // video: Video
 }
 
 /**
@@ -152,60 +152,60 @@ const create = function (node, style, styleDark = {}, isDarkMode, fontSize) {
     this.textManager.addTextNode(element);
   }
 
-  if (element.type === 'Video') {
-    this._videos.push(element);
-    if (attr.poster) {
-      const poster = create.call(this, {
-        name: 'image',
-        attr: {
-          src: attr.poster,
-          styleInit: element.styleInit
-        }
-      }, {}, {}, isDarkMode, fontSize);
-      element.add(poster);
-      element._poster_ = poster;
-    }
-    const play = create.call(this, {
-      name: 'view',
-      attr: {
-        styleInit: {
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0)'
-        }
-      }
-    })
-    const icon = create.call(this, {
-      name: 'image',
-      attr: {
-        src: 'common/assets/play.png',
-        styleInit: {
-          width: 38,
-          height: 38,
-        },
-        styleActive: {
-          width: 38,
-          height: 38,
-        }
-      }
-    })
+  // if (element.type === 'Video') {
+  //   this._videos.push(element);
+  //   if (attr.poster) {
+  //     const poster = create.call(this, {
+  //       name: 'image',
+  //       attr: {
+  //         src: attr.poster,
+  //         styleInit: element.styleInit
+  //       }
+  //     }, {}, {}, isDarkMode, fontSize);
+  //     element.add(poster);
+  //     element._poster_ = poster;
+  //   }
+  //   const play = create.call(this, {
+  //     name: 'view',
+  //     attr: {
+  //       styleInit: {
+  //         position: 'absolute',
+  //         top: 0,
+  //         left: 0,
+  //         right: 0,
+  //         bottom: 0,
+  //         display: 'flex',
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //         backgroundColor: 'rgba(0,0,0,0)'
+  //       }
+  //     }
+  //   })
+  //   const icon = create.call(this, {
+  //     name: 'image',
+  //     attr: {
+  //       src: 'common/assets/play.png',
+  //       styleInit: {
+  //         width: 38,
+  //         height: 38,
+  //       },
+  //       styleActive: {
+  //         width: 38,
+  //         height: 38,
+  //       }
+  //     }
+  //   })
 
-    icon.on('touchstart', () => { });
-    icon.on('click', () => { });
-    icon.on('touchend', function (e) {
-      element.play();
-      e.stopPropagation();
-    });
-    play.add(icon);
-    element.add(play);
-    element._play_ = play;
-  }
+  //   icon.on('touchstart', () => { });
+  //   icon.on('click', () => { });
+  //   icon.on('touchend', function (e) {
+  //     element.play();
+  //     e.stopPropagation();
+  //   });
+  //   play.add(icon);
+  //   element.add(play);
+  //   element._play_ = play;
+  // }
 
   const keys = [];
   const keysDark = [];
@@ -457,7 +457,6 @@ class _Layout extends Element {
 
     this.state = STATE.UNINIT;
     this.imgPool = new Pool('imgPool');
-    // this.canvasPool = new Pool('canvasPool');
     this._emitter = new Emitter();
     this._EE = new Emitter();
 
