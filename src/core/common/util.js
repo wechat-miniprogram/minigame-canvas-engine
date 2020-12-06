@@ -56,38 +56,17 @@ export function isClick(touchMsg) {
 		&& touchTimes < 300);
 }
 
-// export function createCanvas() {
-// 	/* istanbul ignore if*/
-// 	if (typeof wx !== "undefined") { // 小程序环境
-// 		return wx.createCanvas();
-// 	} else if (typeof document !== 'undefined') { // web环境
-// 		return document.createElement('canvas');
-// 	}
-// 	else { // jscore环境
-// 		// return new NativeGlobal.OffscreenCanvas();
-// 	}
-// }
-
-// let dpr = null;
-// export function getDpr() {
-//   if (dpr != null) {
-//     /* istanbul ignore if*/
-//     if ( typeof wx !== "undefined" ) { // 小程序环境
-//         dpr = wx.getSystemInfoSync().devicePixelRatio;
-//     } else if (typeof window !== 'undefined') { // web环境
-//         dpr = window.devicePixelRatio;
-//     } else { // jscore环境
-//         // return canvas.density;
-//         dpr = NativeGlobal.getSystemInfo().pixelRatio;
-//     }
-//   }
-//   return dpr;
-// }
-
-// export function getDpr() {
-// return WeixinCore.getSystemInfo().pixelRatio;
-// return 1;
-// }
+export function createCanvas() {
+	/* istanbul ignore if*/
+	if (typeof wx !== "undefined") { // 小程序环境
+		return wx.createCanvas();
+	} else if (typeof document !== 'undefined') { // web环境
+		return document.createElement('canvas');
+	}
+	else { // jscore环境
+		// return new NativeGlobal.OffscreenCanvas();
+	}
+}
 
 export const STATE = {
   UNINIT: 0,
@@ -140,4 +119,36 @@ export function checkIntersect(RectA, RectB) {
 
 export function pointInRect([x, y], [rX, rY, w, h]) {
   return rX <= x && x <= rX + w && rY <= y && y <= rY + h;
+}
+
+export function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+  } : null;
+}
+
+export function getRgba(hex, opacity) {
+  const rgbObj = hexToRgb(hex);
+  let o = opacity;
+
+  if (opacity === undefined) {
+    o = 1;
+  }
+
+  return `rgba(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b}, ${o})`;
+}
+
+export function getElementStyle(isDarkMode, needInnerStyle = true) {
+  const style = isDarkMode ?
+      Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp) :
+      Object.assign({}, this.styleInit, this.styleProp);
+
+  if (needInnerStyle) {
+    Object.assign(style, this._innerStyle);
+  }
+
+  return style;
 }

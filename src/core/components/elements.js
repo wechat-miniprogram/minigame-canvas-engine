@@ -1,32 +1,8 @@
-import {
-  scalableStyles,
-  reflowStyles
-} from './style.js';
-import {
-  nextTick
-} from '../common/util.js';
+import { scalableStyles, reflowStyles } from './style.js';
+import { nextTick } from '../common/util.js';
+import { getRgba, getElementStyle } from '../common/util';
 
 let uuid = 0;
-
-function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16),
-  } : null;
-}
-
-function getRgba(hex, opacity) {
-  const rgbObj = hexToRgb(hex);
-  let o = opacity;
-
-  if (opacity === undefined) {
-    o = 1;
-  }
-
-  return `rgba(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b}, ${o})`;
-}
 
 const toEventName = (event, id) => {
   const elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
@@ -196,11 +172,9 @@ export default class Element {
   }
 
   get hasBorderRadius() {
-    const isDarkMode = this.root.isDarkMode();
-    const style = isDarkMode ?
-      Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) :
-      Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
-
+    const isDarkMode = this.root.isDarkMode();   
+    const style = getElementStyle.call(this, isDarkMode);
+    
     return style.borderRadius ||
       style.borderLeftBottomRadius ||
       style.borderLeftTopRadius ||
@@ -313,144 +287,6 @@ export default class Element {
     this.EE && this.EE.off(toEventName(event, this.id), callback);
   }
 
-  renderBorder(ctx, layoutBox) {
-    const isDarkMode = this.root.isDarkMode();
-    const style = isDarkMode ?
-      Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) :
-      Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
-
-    if (
-      this.hasBorderRadius
-    ) {
-    }
-
-    const box = layoutBox || this.layoutBox;
-    const borderWidth = style.borderWidth || 0;
-    
-    const borderLeftWidth = style.borderLeftWidth || borderWidth;
-    const borderRightWidth = style.borderRightWidth || borderWidth;
-    const borderTopWidth = style.borderTopWidth || borderWidth;
-    const borderBottomWidth = style.borderBottomWidth || borderWidth;
-
-    const radius = style.borderRadius || 0;
-    const {
-      borderColor
-    } = style;
-    const drawX = box.absoluteX;
-    const drawY = box.absoluteY;
-
-    ctx.save();
-    ctx.beginPath();
-
-    if (borderTopWidth && (borderColor || style.borderTopColor)) {
-      ctx.lineWidth = borderTopWidth;
-      ctx.strokeStyle = style.borderTopColor || borderColor;
-
-      if (radius && borderWidth && borderColor) {
-        ctx.arc(
-          drawX + radius,
-          drawY + radius,
-          radius,
-          Math.PI,
-          1.5 * Math.PI,
-        );
-      }
-
-      ctx.moveTo(
-        radius ? drawX + radius : drawX,
-        drawY,
-      );
-
-      ctx.lineTo(
-        radius ? drawX + box.width - radius : drawX + box.width,
-        // drawY + borderTopWidth / 2
-        drawY,
-      );
-    }
-
-    if (borderRightWidth && (borderColor || style.borderRightColor)) {
-      ctx.lineWidth = borderRightWidth;
-      ctx.strokeStyle = style.borderRightColor || borderColor;
-
-      if (radius && borderWidth && borderColor) {
-        // console.log('右上角圆角')
-        ctx.arc(
-          drawX + box.width - radius,
-          drawY + radius,
-          radius,
-          1.5 * Math.PI,
-          0,
-        );
-      }
-
-      ctx.moveTo(
-        drawX + box.width,
-        radius ? drawY + radius : drawY,
-      );
-
-      ctx.lineTo(
-        drawX + box.width,
-        radius ? drawY + box.height - radius : drawY + box.height,
-      );
-    }
-
-    if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
-      ctx.lineWidth = borderBottomWidth;
-      ctx.strokeStyle = style.borderBottomColor || borderColor;
-
-      if (radius && borderWidth && borderColor) {
-        // console.log('右下角圆角')
-        ctx.arc(
-          drawX + box.width - radius,
-          drawY + box.height - radius,
-          radius,
-          0,
-          0.5 * Math.PI,
-        );
-      }
-
-      ctx.moveTo(
-        radius ? drawX + radius : drawX,
-        drawY + box.height,
-      );
-
-      ctx.lineTo(
-        radius ? drawX + box.width - radius : drawX + box.width,
-        drawY + box.height,
-      );
-    }
-
-    if (borderLeftWidth && (borderColor || style.borderLeftColor)) {
-      ctx.lineWidth = borderLeftWidth;
-      ctx.strokeStyle = style.borderLeftColor || borderColor;
-
-      if (radius && borderWidth && borderColor) {
-        // console.log('左下角圆角')
-        ctx.arc(
-          drawX + radius,
-          drawY + box.height - radius,
-          radius,
-          0.5 * Math.PI,
-          Math.PI,
-        );
-      }
-
-      ctx.moveTo(
-        drawX,
-        radius ? drawY + radius : drawY,
-      );
-
-      ctx.lineTo(
-        drawX,
-        radius ? drawY + box.height - radius : drawY + box.height,
-      );
-    }
-
-    ctx.closePath();
-    ctx.stroke();
-    ctx.restore();
-  }
-
   clip(dimension) {
     const [baseX, baseY, boxWidth, boxHeight] = dimension || this.getDimension(); // eslint-disable-line
     this.getRoundRectMask(boxWidth, boxHeight);
@@ -473,12 +309,8 @@ export default class Element {
     const ctx = this.root.maskCtx;
 
     const isDarkMode = this.root.isDarkMode();
-    const style = isDarkMode ?
-      Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) :
-      Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
-    const {
-      borderRadius
-    } = style;
+    const style = getElementStyle.call(this, isDarkMode);
+    const { borderRadius } = style;
     let {
       borderLeftTopRadius,
       borderRightTopRadius,
@@ -542,14 +374,8 @@ export default class Element {
     };
   }
 
-  addClass(name) { // 给节点加一个class，会导致整个布局重绘
-    const className = this.className.split(' ');
-    if (className.indexOf(name) === -1) { // 是一个新的class
-      const {
-        root
-      } = this; // 拿到layout
-      className.push(name);
-      this.className = className.join(' '); // 更新下className
+  _refreshStyleAfterClassSet(className) {
+    this.className = className.join(' ');
 
       this.styleInit = {};
       this.styleActive = {};
@@ -578,7 +404,6 @@ export default class Element {
 
       this.root.beforeReflow();
       this.root.emit('reflow');
-    }
   }
 
   removeClass(name) { // 去除节点的一个class，会导致整个布局重绘
@@ -586,43 +411,24 @@ export default class Element {
     const className = this.className.split(' ');
     const classNameIdx = className.indexOf(name);
     if (classNameIdx > -1) {
-      const {
-        root
-      } = this;
-      // const isDarkMode = root.isDarkMode();
-      // const css = isDarkMode ? root.cssDarkRules : root.cssRules;
+      const { root } = this;
       className.splice(classNameIdx, 1);
-      this.className = className.join(' ');
-
-      this.styleInit = {};
-      this.styleActive = {};
-      this.styleDarkInit = {};
-      this.styleDarkActive = {};
-
-      className.reduce((res, oneClass) => Object.assign(res, root.cssRules[oneClass]), this.styleInit || {});
-      className.reduce((res, oneClass) => {
-        if (root.cssRules[`${oneClass}:active`]) {
-          return Object.assign(res, root.cssRules[`${oneClass}:active`]);
-        }
-        return res;
-      }, this.styleActive || {});
-      className.reduce((res, oneClass) => Object.assign(res, root.cssDarkRules[oneClass]), this.styleDarkInit || {});
-      className.reduce((res, oneClass) => {
-        if (root.cssDarkRules[`${oneClass}:active`]) {
-          return Object.assign(res, root.cssDarkRules[`${oneClass}:active`]);
-        }
-        return res;
-      }, this.styleDarkActive || {});
-
-      Object.keys(this.styleProp).forEach((prop) => {
-        this.styleInit[prop] = this.styleProp[prop];
-        this.styleDarkInit[prop] = this.styleProp[prop];
-      });
-
-      this.root.beforeReflow();
-      this.root.emit('reflow');
+      
+      this._refreshStyleAfterClassSet(className)
     }
   }
+
+  addClass(name) { // 给节点加一个class，会导致整个布局重绘
+    const className = this.className.split(' ');
+    if (className.indexOf(name) === -1) { // 是一个新的class
+      const { root } = this;
+      className.push(name);
+      this.className = className.join(' '); // 更新下className
+
+      this._refreshStyleAfterClassSet(className);
+    }
+  }
+
 
   getAttribute(attr) {
     return this[attr] || null;

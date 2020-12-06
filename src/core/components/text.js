@@ -1,5 +1,5 @@
 import Element from './elements.js';
-import { DEFAULT_FONT_FAMILY } from '../common/util.js';
+import { DEFAULT_FONT_FAMILY, getElementStyle } from '../common/util.js';
 
 export default class Text extends Element {
   constructor({
@@ -55,11 +55,7 @@ export default class Text extends Element {
   }
 
   toCanvasData(isDarkMode) {
-    // const isDarkMode = this.root.isDarkMode();
-    const style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle)
-      : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
-
-    // let style = this.computedStyle;
+    const style = getElementStyle.call(this, isDarkMode);
 
     this.fontSize = style.fontSize || 12;
     this.textBaseline = 'top';
@@ -83,8 +79,7 @@ export default class Text extends Element {
     }
     const box = this.layoutBox;
     const isDarkMode = this.root.isDarkMode();
-    const style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle)
-      : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
+    const style = getElementStyle.call(this, isDarkMode);
 
     if (box.width * 1 === 0 || box.height * 1 === 0) { // 宽度或者高度等于0，直接不画
       return;
@@ -130,8 +125,7 @@ export default class Text extends Element {
       return;
     }
 
-    const style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle)
-      : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
+    const style = getElementStyle.call(this, isDarkMode);
 
     this.toCanvasData(isDarkMode);
 

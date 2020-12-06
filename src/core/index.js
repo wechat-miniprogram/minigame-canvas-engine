@@ -6,7 +6,7 @@ import parser from './libs/fast-xml-parser/parser.js';
 import { adaptor, updateLayout, calculateDirtyNode, initYoga } from './common/adaptor';
 import PseudoClassManager from './common/pseudoClassManager.js';
 import TextManager from './common/textManager.js';
-import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY } from './common/util.js';
+import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle } from './common/util.js';
 import { dash2camel } from './common/util.js';
 import RenderContextManager from './renderer/renderContextManager';
 
@@ -31,7 +31,6 @@ const constructorMap = {
  * @param {*} fontSize 字体大小
  */
 const create = function (node, style, styleDark = {}, isDarkMode, fontSize) {
-  // console.log('create', node);
   const _constructor = constructorMap[node.name];
 
   const children = node.children || [];
@@ -78,30 +77,11 @@ const create = function (node, style, styleDark = {}, isDarkMode, fontSize) {
         return obj;
       }
 
-      // if (key === 'style') {
-      //     const inlineStyles = value.split(';')
-      //     inlineStyles.forEach(style => {
-      //         try {
-      //             const index = style.indexOf(':');
-      //             const k = style.substring(0, index);
-      //             const v = style.substring(index + 1);
-      //             const key = dash2camel(k.trim())
-      //             obj.style[key] = v.trim()
-      //         } catch (e) {
-      //             // parse error
-      //         }
-      //     })
-      //     return obj;
-      // }
-
       if (/^data-/.test(key)) {
         const datakey = dash2camel(key.substring(5))
         !obj.dataset ? obj.dataset = { [datakey]: value } : obj.dataset[datakey] = value
       }
 
-      // if (/\{\{.+\}\}/.test(value)) {
-
-      // }
       if (value === 'true') {
         obj[attribute] = true
       } else if (value === 'false') {
@@ -141,8 +121,6 @@ const create = function (node, style, styleDark = {}, isDarkMode, fontSize) {
   })
   element.root = this;
 
-  // let isDarkMode = this.isDarkMode();
-
   const s = isDarkMode
     ? Object.assign({}, element.styleInit, element.styleDarkInit, element.styleProp)
     : Object.assign({}, element.styleInit, element.styleProp);
@@ -155,9 +133,7 @@ const create = function (node, style, styleDark = {}, isDarkMode, fontSize) {
       element.computedStyle.height = s.height;
       element.noWrapHeight = s.height;
     }
-    // element.noWrapHeight = element.computedStyle.height;
     if (typeof s.width === 'undefined') {
-      // element.computedStyle.width = getTextWidth(s, element.valueInit, element.root.getFontSize());
       element.computedStyle.width = this._getTextWidth(s, element.valueInit, fontSize);
     }
     const computedStyle = isDarkMode
@@ -231,13 +207,6 @@ const create = function (node, style, styleDark = {}, isDarkMode, fontSize) {
     element._play_ = play;
   }
 
-  /**
-   * 创建新节点的时候，保存下有:active的节点，便于在touchend和touchcancel的时候，清除active状态
-   * init里的数值是从一开始的样式表里面取出来的，后面就不用再去样式表里面找了
-   */
-  // element.styleInit = Object.assign({}, element.style);
-  // element.styleDarkInit = Object.assign({}, element.styleDark);
-
   const keys = [];
   const keysDark = [];
   for (const key in args.styleActive) {
@@ -270,17 +239,13 @@ const create = function (node, style, styleDark = {}, isDarkMode, fontSize) {
 function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
-    const style = isDarkMode
-      ? Object.assign({}, child.styleInit, child.styleDarkInit, child.styleProp)
-      : Object.assign({}, child.styleInit, child.styleProp);
-    const computedStyle = isDarkMode
-      ? Object.assign({}, child.styleInit, child.styleDarkInit, child.styleProp, child._innerStyle)
-      : Object.assign({}, child.styleInit, child.styleProp, child._innerStyle);
 
+    const style = getElementStyle.call(child, isDarkMode);
+    const computedStyle = getElementStyle.call(child, isDarkMode);
+   
     child.realLayoutBox = child.realLayoutBox || {};
 
     ['left', 'top', 'width', 'height'].forEach((prop) => {
-      // child.realLayoutBox[prop] = child.layoutBox[prop] * scale;
       child.realLayoutBox[prop] = child.layoutBox[prop];
     });
 
@@ -323,8 +288,6 @@ function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
       }
     }
 
-    // child.updateContours && child.updateContours();
-
     if (child.glRect) {
       child.glRect = null;
     }
@@ -333,21 +296,6 @@ function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
     }
     // 子节点的updateRenderData会收集渲染相关的数据
     child.updateRenderData && child.updateRenderData(computedStyle);
-    // const data = {
-    //     type: child.type, // 渲染节点的类型，节点类型不同数据也会不一样
-    //     x: child.layoutBox.absoluteX,
-    //     y: child.layoutBox.absoluteY,
-    //     width: child.layoutBox.width,
-    //     height: child.layoutBox.height,
-    // };
-    // if (child.type === 'Text') {
-    // } else {
-    //     data.radius = child.getRadius(style);
-    //     data.borderWidth = computedStyle.borderWidth;
-    //     data.borderColor = computedStyle.borderColor;
-    //     data.backgroundColor = computedStyle.backgroundColor;
-    // }
-    // webGLRenderData.push(data); // 渲染所需要的各种数据，后面会把它丢给渲染进程，由渲染进程处理
     layoutChildren.call(this, child.childNodes, isDarkMode, fontSize, webGLRenderData);
   }
 }
@@ -363,7 +311,6 @@ function getNodeData(childNodes) {
     layoutData[i] = {
       layoutBox: child.layoutBox, // 布局信息
       type: child.type, // 节点信息
-      // style: child.style, // 样式信息
       id: child.id, // 每个节点都有个id
       styleInit: child.styleInit,
       styleProp: child.styleProp,
@@ -391,7 +338,6 @@ function restoreLayoutTree(childNodes, layoutNodes) {
     const node = layoutNodes[i];
     if (
       child.type === node.type
-      // && JSON.stringify(child.style) === JSON.stringify(node.style)
       && JSON.stringify(child.styleInit) === JSON.stringify(node.styleInit)
       && JSON.stringify(child.styleProp) === JSON.stringify(node.styleProp)
       && JSON.stringify(child.styleDarkInit) === JSON.stringify(node.styleDarkInit)
@@ -459,22 +405,13 @@ function _getChildsByPos(tree, x, y, list = []) {
       }
     }
   }
-  // console.log('lllll', ret);
+
   if (ret.length === 0 && tree.computedStyle.display !== 'none') { // 子节点都没有，就是点击了tree
     list.push(tree);
     ret.push(tree);
   }
   return list;
 }
-
-// const getBox = function (node) {
-//     return {
-//         left: node.layoutBox.absoluteX,
-//         top: node.layoutBox.absoluteY,
-//         right: node.layoutBox.absoluteX + node.layoutBox.width,
-//         bottom: node.layoutBox.absoluteY + node.layoutBox.height
-//     }
-// }
 
 class _Layout extends Element {
   constructor({ style, name, isDarkMode, getWidth, getFontSize, getFps, canvasId, canvasContext, fontManager } = {}) {
@@ -585,11 +522,6 @@ class _Layout extends Element {
 
       this.debugInfo.xmlTree = new Date() - start;
       console.log(`init getXmlTree time ${new Date() - start}`);
-      /*pReportor.saveSpeeds({
-        sid: 21,
-        time: (new Date() - start)
-      });*/
-
       // XML树生成渲染树
       this.layoutTree = create.call(
         this,
@@ -625,11 +557,6 @@ class _Layout extends Element {
         });
       });
 
-      // this.EE.on('rerender', (elm) => {
-      //     // console.log('reLayout');
-      //     this.reLayout(elm); // 图片加载完后，触发整个的视图的重新渲染
-      // });
-
       console.log(`init time ${new Date() - start}`);
       this.computeLayout();
     })
@@ -643,13 +570,7 @@ class _Layout extends Element {
     this.flushing = true
     nextTick(() => {
       console.log('nextTick forceUpdate--------');
-      // const renderer = this.renderContext;
-      // renderer.clear();
-      // this.renderMeshes = [];
-      // try {
-      // renderChildren.call(this, this.childNodes, this.renderMeshes, this.isDarkMode());
-      // }catch(e){console.error(e.message)}
-      // console.log('repaint nextTick');
+     
       this.repaint();
       this.flushing = false;
     })
@@ -668,18 +589,10 @@ class _Layout extends Element {
   // 把数据丢给渲染线程
   repaint() {
     console.log('repaint call');
-    // this.renderer.draw();
     const renderer = this.renderContext;
-    // renderer.clear();
     console.log(renderer.glRects.length);
     renderer.draw();
-    // const gl = this.renderer;
-    // //为了防止命令列表无限增长，必须同时清楚这些颜色、深度和模板buffer。
-    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-    // this.renderMeshes.forEach(m => {
-    //     m.updateViewPort();
-    //     m.draw();
-    // })
+   
   }
 
   getLayoutData() { // 缓存layout相关的数据，方便冷启动时恢复
@@ -709,30 +622,19 @@ class _Layout extends Element {
     this.renderport.height = 0;
     this.viewport.width = this.getWidth();
 
-    // this.renderContext.clear();
-
     const isDarkMode = this.isDarkMode();
     const fontSize = this.getFontSize();
 
     // 第一层根节点，宽度如果是设置了百分比，把宽度改成屏幕的宽度
     for (let i = 0; i < this.childNodes.length; i++) {
       const child = this.childNodes[i];
-      // child.isFirstNode = true; //第一层根节点需要特殊处理，支持宽度百分比，后面update的时候这里需要特殊处理
-      // let style = child.style;
-      const style = isDarkMode
-        ? Object.assign({}, child.styleInit, child.styleDarkInit, child.styleProp)
-        : Object.assign({}, child.styleInit, child.styleProp);
-
-      const computedStyle = isDarkMode
-        ? Object.assign({}, child.styleInit, child.styleDarkInit, child.styleProp, child._innerStyle)
-        : Object.assign({}, child.styleInit, child.styleProp, child._innerStyle);
+     
+      const style = getElementStyle.call(child, isDarkMode);
+      const computedStyle = getElementStyle.call(child, isDarkMode);
 
       if (style.width && style.width.indexOf && style.width.indexOf('%') > -1) {
-        // console.log('computeLayout width ' + this.viewport.width);
-        // let w = Number.parseInt(style.width) / 100 * this.viewport.width * dpr;
         const w = (Number.parseInt(style.width) / 100) * this.viewport.width;
         child.computedStyle.width = w;
-        // console.log('computeLayout child width ' + child.style.width);
         this.renderport.width = w;
       } else if (style.width && typeof style.width === 'number') {
         this.renderport.width = computedStyle.width;
@@ -754,12 +656,10 @@ class _Layout extends Element {
       } else {
         console.log('restoreLayoutTree fail');
         this.layoutData = null;
-        // console.log('adaptor');
         adaptor(this);
       }
     } else {
       console.log('without layoutData');
-      // console.log('adaptor');
       adaptor(this);
       this._useLayoutData = false;
     }
@@ -774,8 +674,6 @@ class _Layout extends Element {
       this.textManager.hasUpdate = true;
       this.textManager.updateTextNodeLayoutBox();
       console.log('updateTextNodeLayoutBox');
-      // this.computeLayout();
-      // this.yogaNode.calculateLayout();
       calculateDirtyNode(this);
       updateLayout(this);
     }
@@ -787,7 +685,6 @@ class _Layout extends Element {
     layoutChildren.call(
       this,
       this.childNodes,
-      // this.viewport.width / this.renderport.width,
       isDarkMode,
       fontSize,
       webGLRenderData
@@ -796,47 +693,20 @@ class _Layout extends Element {
     for (let i = 0; i < this.childNodes.length; i++) {
       this.renderport.height += this.childNodes[i].layoutBox.height;
     }
-    // this.viewport.height = this.renderport.height / dpr;
     this.viewport.height = this.renderport.height;
     console.log('viewport.height', this.viewport.height);
 
-    // this.renderContext.width = this.renderport.width;
-    // this.renderContext.height = this.renderport.height;
     this.renderContext.width = this.viewport.width;
     this.renderContext.height = this.viewport.height;
 
     this.debugInfo.layoutChildren = new Date() - start;
 
-    // const canvas = this.canvasContext.canvas;
-    // const width = parseInt(this.viewport.width * this.canvasContext.devicePixelRatio);
-    // const height = parseInt(this.viewport.height * this.canvasContext.devicePixelRatio);
-    // if (canvas.width != width || canvas.height != height) {
-    //     canvas.width != width && (canvas.width = width);
-    //     canvas.height != height && (canvas.height = height);
-    //     this.renderContext.viewport(0, 0, canvas.width, canvas.height);
-    // }
-
     console.log(`computeLayout time ${this.debugInfo.computeLayout}`);
-    /*pReportor.saveSpeeds({ // 这里统计计算布局的整体耗时
-      sid: 22,
-      time: this.debugInfo.computeLayout
-    });*/
+   
     if (this._firstComputeLayout && !this._useLayoutData) { // 这里统计首次计算布局并且没有序列化数据的耗时
-      /*pReportor.saveSpeeds({
-        sid: 24,
-        time: this.debugInfo.computeLayout,
-      });*/
       this._firstComputeLayout = false;
     } else if (!this._useLayoutData) {
-      /*pReportor.saveSpeeds({
-        sid: 25,
-        time: this.debugInfo.computeLayout,
-      });*/
     } else if (this._useLayoutData) {
-      /*pReportor.saveSpeeds({
-        sid: 26,
-        time: this.debugInfo.computeLayout,
-      });*/
     }
   }
 
@@ -858,14 +728,6 @@ class _Layout extends Element {
 
     this.state = STATE.RENDERED;
     this.forceUpdate();
-
-    // console.log('drawLayout time ' + (new Date() - start));
-    /*pReportor.saveSpeeds({
-      sid: 23,
-      time: (new Date() - start)
-    });*/
-    // pReportor.send();
-    // this.getLayoutData();
   }
 
   // 根据x和y找到相应的子节点
@@ -877,16 +739,7 @@ class _Layout extends Element {
 
   eventHandler(eventName) {
     return function touchEventHandler(e) {
-      // if (!this.elementTree) {
-      //     return;
-      // }
-
       const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
-
-      // if ( !touch || !touch.pageX || !touch.pageY ) {
-      //     return;
-      // }
-
       if (!touch.timeStamp) {
         touch.timeStamp = e.timeStamp || Date.now();
       }
@@ -905,8 +758,6 @@ class _Layout extends Element {
         event[k] = e[k];
       }
 
-      // const item  = touch && this.getChildByPos(this, touch.pageX, touch.pageY);
-      // console.log(eventName);
       const item = touch && this.getChildByPos(this, touch.clientX - offsetLeft, touch.clientY - offsetTop);
       console.log(eventName, 'item', item.className);
       event.item = item;
@@ -921,14 +772,11 @@ class _Layout extends Element {
       if (eventName === 'touchend' && isClick(this.touchMsg)) {
         console.log('emit click event!')
         item && item.emit('click', event);
-        // clearTimeout(this.activeTimer);
       }
 
       if (eventName === 'touchstart') {
         this.startPos = [touch.clientX - offsetLeft, touch.clientY - offsetTop];
-        // this.activeTimer = setTimeout(() => {
         this.pseudoClassManager.addActiveState(item);
-        // }, 80)
       }
 
       if (eventName === 'touchmove') {
@@ -936,17 +784,14 @@ class _Layout extends Element {
           [touch.clientX - offsetLeft, touch.clientY - offsetTop],
           [...item.pos, ...item.size]
         )) {
-          // clearTimeout(this.activeTimer);
           return
         }
         const offsetX = touch.clientX - this.startPos[0] - offsetLeft;
         const offsetY = touch.clientY - this.startPos[1] - offsetTop;
         const offsetLength = Math.hypot(offsetX, offsetY)
         if (offsetLength > 5) {
-          // clearTimeout(this.activeTimer)
         }
       }
-      // console.log('eventHandler done');
     }
   }
 
@@ -1154,8 +999,7 @@ class _Layout extends Element {
       if (charWidthMap[key]) {
         width = charWidthMap[key];
       } else {
-        console.log('new text', key);
-        // console.log(charWidthMap);
+        // console.log('new text', key);
         width = this.fontManager.measureText(str,
           fontWeight || 'normal',
           fontStyle || 'normal',
@@ -1189,4 +1033,3 @@ const newInstance = function (opt) {
 }
 
 export default { newInstance };
-

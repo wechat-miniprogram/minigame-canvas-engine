@@ -1,4 +1,5 @@
 import Element from './elements.js';
+import { getElementStyle } from '../common/util';
 
 export default class Block extends Element {
   get radius() {
@@ -43,9 +44,8 @@ export default class Block extends Element {
 
   insert(isDarkMode) {
     const rect = this.glRect;
-    const style = isDarkMode 
-      ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) 
-      : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
+   
+    const style = getElementStyle.call(this, isDarkMode);
 
     if (style.backgroundColor) {
       rect.setBackgroundColor(style.backgroundColor);

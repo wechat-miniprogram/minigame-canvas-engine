@@ -1,3 +1,5 @@
+import { getElementStyle } from "./util";
+
 const finder = function (t, w, arr, measure) {
   let start = 0;
   let end = t.length - 1;
@@ -44,9 +46,7 @@ class TextManager {
 
     for (let i = 0; i < this.textNodes.length; i++) {
       const node = this.textNodes[i];
-      const style = isDarkMode
-        ? Object.assign({}, node.styleInit, node.styleDarkInit, node.styleProp)
-        : Object.assign({}, node.styleInit, node.styleProp);
+      const style = getElementStyle.call(node, isDarkMode, false);
 
       node.valueBreak = [];
 
@@ -112,7 +112,6 @@ class TextManager {
   }
 
   getSubText(text, width, { fontWeight, fontSize, fontFamily }, fontSizeRate) {
-    console.log('getSubText', width);
     const measure = this.layout._measureText({ fontWeight, fontSize, fontFamily }, fontSizeRate);
     const textArray = [];
     let m = 0;

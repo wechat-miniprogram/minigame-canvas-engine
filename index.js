@@ -173,7 +173,6 @@ var create = function create(node, style) {
   var styleDark = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var isDarkMode = arguments.length > 3 ? arguments[3] : undefined;
   var fontSize = arguments.length > 4 ? arguments[4] : undefined;
-  // console.log('create', node);
   var _constructor = constructorMap[node.name];
   var children = node.children || [];
   var attr = node.attr || {};
@@ -226,29 +225,12 @@ var create = function create(node, style) {
 
     if (key === 'style') {
       return obj;
-    } // if (key === 'style') {
-    //     const inlineStyles = value.split(';')
-    //     inlineStyles.forEach(style => {
-    //         try {
-    //             const index = style.indexOf(':');
-    //             const k = style.substring(0, index);
-    //             const v = style.substring(index + 1);
-    //             const key = dash2camel(k.trim())
-    //             obj.style[key] = v.trim()
-    //         } catch (e) {
-    //             // parse error
-    //         }
-    //     })
-    //     return obj;
-    // }
-
+    }
 
     if (/^data-/.test(key)) {
       var datakey = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["dash2camel"])(key.substring(5));
       !obj.dataset ? obj.dataset = _defineProperty({}, datakey, value) : obj.dataset[datakey] = value;
-    } // if (/\{\{.+\}\}/.test(value)) {
-    // }
-
+    }
 
     if (value === 'true') {
       obj[attribute] = true;
@@ -287,8 +269,7 @@ var create = function create(node, style) {
       }
     }
   });
-  element.root = this; // let isDarkMode = this.isDarkMode();
-
+  element.root = this;
   var s = isDarkMode ? Object.assign({}, element.styleInit, element.styleDarkInit, element.styleProp) : Object.assign({}, element.styleInit, element.styleProp);
 
   if (element.type === 'Text') {
@@ -298,11 +279,9 @@ var create = function create(node, style) {
     } else {
       element.computedStyle.height = s.height;
       element.noWrapHeight = s.height;
-    } // element.noWrapHeight = element.computedStyle.height;
-
+    }
 
     if (typeof s.width === 'undefined') {
-      // element.computedStyle.width = getTextWidth(s, element.valueInit, element.root.getFontSize());
       element.computedStyle.width = this._getTextWidth(s, element.valueInit, fontSize);
     }
 
@@ -374,13 +353,6 @@ var create = function create(node, style) {
     element.add(play);
     element._play_ = play;
   }
-  /**
-   * 创建新节点的时候，保存下有:active的节点，便于在touchend和touchcancel的时候，清除active状态
-   * init里的数值是从一开始的样式表里面取出来的，后面就不用再去样式表里面找了
-   */
-  // element.styleInit = Object.assign({}, element.style);
-  // element.styleDarkInit = Object.assign({}, element.styleDark);
-
 
   var keys = [];
   var keysDark = [];
@@ -423,11 +395,10 @@ function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
 
   var _loop = function _loop(i) {
     var child = children[i];
-    var style = isDarkMode ? Object.assign({}, child.styleInit, child.styleDarkInit, child.styleProp) : Object.assign({}, child.styleInit, child.styleProp);
-    var computedStyle = isDarkMode ? Object.assign({}, child.styleInit, child.styleDarkInit, child.styleProp, child._innerStyle) : Object.assign({}, child.styleInit, child.styleProp, child._innerStyle);
+    var style = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["getElementStyle"].call(child, isDarkMode);
+    var computedStyle = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["getElementStyle"].call(child, isDarkMode);
     child.realLayoutBox = child.realLayoutBox || {};
     ['left', 'top', 'width', 'height'].forEach(function (prop) {
-      // child.realLayoutBox[prop] = child.layoutBox[prop] * scale;
       child.realLayoutBox[prop] = child.layoutBox[prop];
     });
 
@@ -461,8 +432,7 @@ function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
         } else if (style.textOverflow === 'ellipsis' && style.whiteSpace === 'nowrap' && width + 0.5 >= textWidth && child.valueShow !== child.valueInit) {
         child.valueShow = child.valueInit;
       }
-    } // child.updateContours && child.updateContours();
-
+    }
 
     if (child.glRect) {
       child.glRect = null;
@@ -473,22 +443,7 @@ function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
     } // 子节点的updateRenderData会收集渲染相关的数据
 
 
-    child.updateRenderData && child.updateRenderData(computedStyle); // const data = {
-    //     type: child.type, // 渲染节点的类型，节点类型不同数据也会不一样
-    //     x: child.layoutBox.absoluteX,
-    //     y: child.layoutBox.absoluteY,
-    //     width: child.layoutBox.width,
-    //     height: child.layoutBox.height,
-    // };
-    // if (child.type === 'Text') {
-    // } else {
-    //     data.radius = child.getRadius(style);
-    //     data.borderWidth = computedStyle.borderWidth;
-    //     data.borderColor = computedStyle.borderColor;
-    //     data.backgroundColor = computedStyle.backgroundColor;
-    // }
-    // webGLRenderData.push(data); // 渲染所需要的各种数据，后面会把它丢给渲染进程，由渲染进程处理
-
+    child.updateRenderData && child.updateRenderData(computedStyle);
     layoutChildren.call(_this2, child.childNodes, isDarkMode, fontSize, webGLRenderData);
   };
 
@@ -514,7 +469,6 @@ function getNodeData(childNodes) {
       // 布局信息
       type: child.type,
       // 节点信息
-      // style: child.style, // 样式信息
       id: child.id,
       // 每个节点都有个id
       styleInit: child.styleInit,
@@ -547,8 +501,7 @@ function restoreLayoutTree(childNodes, layoutNodes) {
     var child = childNodes[i];
     var node = layoutNodes[i];
 
-    if (child.type === node.type // && JSON.stringify(child.style) === JSON.stringify(node.style)
-    && JSON.stringify(child.styleInit) === JSON.stringify(node.styleInit) && JSON.stringify(child.styleProp) === JSON.stringify(node.styleProp) && JSON.stringify(child.styleDarkInit) === JSON.stringify(node.styleDarkInit)) {
+    if (child.type === node.type && JSON.stringify(child.styleInit) === JSON.stringify(node.styleInit) && JSON.stringify(child.styleProp) === JSON.stringify(node.styleProp) && JSON.stringify(child.styleDarkInit) === JSON.stringify(node.styleDarkInit)) {
       child.layoutBox = node.layoutBox;
 
       if (child.type === 'text') {
@@ -624,8 +577,7 @@ function _getChildsByPos(tree, x, y) {
         ret.push(child);
       }
     }
-  } // console.log('lllll', ret);
-
+  }
 
   if (ret.length === 0 && tree.computedStyle.display !== 'none') {
     // 子节点都没有，就是点击了tree
@@ -634,15 +586,7 @@ function _getChildsByPos(tree, x, y) {
   }
 
   return list;
-} // const getBox = function (node) {
-//     return {
-//         left: node.layoutBox.absoluteX,
-//         top: node.layoutBox.absoluteY,
-//         right: node.layoutBox.absoluteX + node.layoutBox.width,
-//         bottom: node.layoutBox.absoluteY + node.layoutBox.height
-//     }
-// }
-
+}
 
 var _Layout = /*#__PURE__*/function (_Element) {
   _inherits(_Layout, _Element);
@@ -796,12 +740,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
         var xmlTree = jsonObj.children[0];
         _this4.debugInfo.xmlTree = new Date() - start;
-        console.log("init getXmlTree time ".concat(new Date() - start));
-        /*pReportor.saveSpeeds({
-          sid: 21,
-          time: (new Date() - start)
-        });*/
-        // XML树生成渲染树
+        console.log("init getXmlTree time ".concat(new Date() - start)); // XML树生成渲染树
 
         _this4.layoutTree = create.call(_this4, xmlTree, style, styleDark, _this4.isDarkMode(), _this4.getFontSize());
         console.log("create time ".concat(new Date() - start));
@@ -827,11 +766,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
               _this4.drawLayout();
             }
           });
-        }); // this.EE.on('rerender', (elm) => {
-        //     // console.log('reLayout');
-        //     this.reLayout(elm); // 图片加载完后，触发整个的视图的重新渲染
-        // });
-
+        });
 
         console.log("init time ".concat(new Date() - start));
 
@@ -851,13 +786,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
       this.flushing = true;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["nextTick"])(function () {
-        console.log('nextTick forceUpdate--------'); // const renderer = this.renderContext;
-        // renderer.clear();
-        // this.renderMeshes = [];
-        // try {
-        // renderChildren.call(this, this.childNodes, this.renderMeshes, this.isDarkMode());
-        // }catch(e){console.error(e.message)}
-        // console.log('repaint nextTick');
+        console.log('nextTick forceUpdate--------');
 
         _this5.repaint();
 
@@ -881,18 +810,10 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "repaint",
     value: function repaint() {
-      console.log('repaint call'); // this.renderer.draw();
-
-      var renderer = this.renderContext; // renderer.clear();
-
+      console.log('repaint call');
+      var renderer = this.renderContext;
       console.log(renderer.glRects.length);
-      renderer.draw(); // const gl = this.renderer;
-      // //为了防止命令列表无限增长，必须同时清楚这些颜色、深度和模板buffer。
-      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-      // this.renderMeshes.forEach(m => {
-      //     m.updateViewPort();
-      //     m.draw();
-      // })
+      renderer.draw();
     }
   }, {
     key: "getLayoutData",
@@ -926,24 +847,18 @@ var _Layout = /*#__PURE__*/function (_Element) {
       console.log('start computeLayout');
       var start = new Date();
       this.renderport.height = 0;
-      this.viewport.width = this.getWidth(); // this.renderContext.clear();
-
+      this.viewport.width = this.getWidth();
       var isDarkMode = this.isDarkMode();
       var fontSize = this.getFontSize(); // 第一层根节点，宽度如果是设置了百分比，把宽度改成屏幕的宽度
 
       for (var i = 0; i < this.childNodes.length; i++) {
-        var child = this.childNodes[i]; // child.isFirstNode = true; //第一层根节点需要特殊处理，支持宽度百分比，后面update的时候这里需要特殊处理
-        // let style = child.style;
-
-        var style = isDarkMode ? Object.assign({}, child.styleInit, child.styleDarkInit, child.styleProp) : Object.assign({}, child.styleInit, child.styleProp);
-        var computedStyle = isDarkMode ? Object.assign({}, child.styleInit, child.styleDarkInit, child.styleProp, child._innerStyle) : Object.assign({}, child.styleInit, child.styleProp, child._innerStyle);
+        var child = this.childNodes[i];
+        var style = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["getElementStyle"].call(child, isDarkMode);
+        var computedStyle = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["getElementStyle"].call(child, isDarkMode);
 
         if (style.width && style.width.indexOf && style.width.indexOf('%') > -1) {
-          // console.log('computeLayout width ' + this.viewport.width);
-          // let w = Number.parseInt(style.width) / 100 * this.viewport.width * dpr;
           var w = Number.parseInt(style.width) / 100 * this.viewport.width;
-          child.computedStyle.width = w; // console.log('computeLayout child width ' + child.style.width);
-
+          child.computedStyle.width = w;
           this.renderport.width = w;
         } else if (style.width && typeof style.width === 'number') {
           this.renderport.width = computedStyle.width;
@@ -962,13 +877,11 @@ var _Layout = /*#__PURE__*/function (_Element) {
           this._useLayoutData = true;
         } else {
           console.log('restoreLayoutTree fail');
-          this.layoutData = null; // console.log('adaptor');
-
+          this.layoutData = null;
           Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["adaptor"])(this);
         }
       } else {
-        console.log('without layoutData'); // console.log('adaptor');
-
+        console.log('without layoutData');
         Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["adaptor"])(this);
         this._useLayoutData = false;
       }
@@ -980,9 +893,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       if (!this.textManager.hasUpdate) {
         this.textManager.hasUpdate = true;
         this.textManager.updateTextNodeLayoutBox();
-        console.log('updateTextNodeLayoutBox'); // this.computeLayout();
-        // this.yogaNode.calculateLayout();
-
+        console.log('updateTextNodeLayoutBox');
         Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["calculateDirtyNode"])(this);
         Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["updateLayout"])(this);
       }
@@ -990,54 +901,23 @@ var _Layout = /*#__PURE__*/function (_Element) {
       var webGLRenderData = [];
       console.log('before renderContext clear');
       this.renderContext.clear();
-      layoutChildren.call(this, this.childNodes, // this.viewport.width / this.renderport.width,
-      isDarkMode, fontSize, webGLRenderData);
+      layoutChildren.call(this, this.childNodes, isDarkMode, fontSize, webGLRenderData);
 
       for (var _i = 0; _i < this.childNodes.length; _i++) {
         this.renderport.height += this.childNodes[_i].layoutBox.height;
-      } // this.viewport.height = this.renderport.height / dpr;
-
+      }
 
       this.viewport.height = this.renderport.height;
-      console.log('viewport.height', this.viewport.height); // this.renderContext.width = this.renderport.width;
-      // this.renderContext.height = this.renderport.height;
-
+      console.log('viewport.height', this.viewport.height);
       this.renderContext.width = this.viewport.width;
       this.renderContext.height = this.viewport.height;
-      this.debugInfo.layoutChildren = new Date() - start; // const canvas = this.canvasContext.canvas;
-      // const width = parseInt(this.viewport.width * this.canvasContext.devicePixelRatio);
-      // const height = parseInt(this.viewport.height * this.canvasContext.devicePixelRatio);
-      // if (canvas.width != width || canvas.height != height) {
-      //     canvas.width != width && (canvas.width = width);
-      //     canvas.height != height && (canvas.height = height);
-      //     this.renderContext.viewport(0, 0, canvas.width, canvas.height);
-      // }
-
+      this.debugInfo.layoutChildren = new Date() - start;
       console.log("computeLayout time ".concat(this.debugInfo.computeLayout));
-      /*pReportor.saveSpeeds({ // 这里统计计算布局的整体耗时
-        sid: 22,
-        time: this.debugInfo.computeLayout
-      });*/
 
       if (this._firstComputeLayout && !this._useLayoutData) {
         // 这里统计首次计算布局并且没有序列化数据的耗时
-
-        /*pReportor.saveSpeeds({
-          sid: 24,
-          time: this.debugInfo.computeLayout,
-        });*/
         this._firstComputeLayout = false;
-      } else if (!this._useLayoutData) {
-        /*pReportor.saveSpeeds({
-          sid: 25,
-          time: this.debugInfo.computeLayout,
-        });*/
-      } else if (this._useLayoutData) {
-        /*pReportor.saveSpeeds({
-          sid: 26,
-          time: this.debugInfo.computeLayout,
-        });*/
-      }
+      } else if (!this._useLayoutData) {} else if (this._useLayoutData) {}
     }
   }, {
     key: "restore",
@@ -1059,14 +939,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.debugInfo.renderChildren = new Date() - start;
       this.bindEvents();
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].RENDERED;
-      this.forceUpdate(); // console.log('drawLayout time ' + (new Date() - start));
-
-      /*pReportor.saveSpeeds({
-        sid: 23,
-        time: (new Date() - start)
-      });*/
-      // pReportor.send();
-      // this.getLayoutData();
+      this.forceUpdate();
     } // 根据x和y找到相应的子节点
 
   }, {
@@ -1081,12 +954,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
     key: "eventHandler",
     value: function eventHandler(eventName) {
       return function touchEventHandler(e) {
-        // if (!this.elementTree) {
-        //     return;
-        // }
-        var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e; // if ( !touch || !touch.pageX || !touch.pageY ) {
-        //     return;
-        // }
+        var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
 
         if (!touch.timeStamp) {
           touch.timeStamp = e.timeStamp || Date.now();
@@ -1108,9 +976,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
         for (var k in e) {
           event[k] = e[k];
-        } // const item  = touch && this.getChildByPos(this, touch.pageX, touch.pageY);
-        // console.log(eventName);
-
+        }
 
         var item = touch && this.getChildByPos(this, touch.clientX - offsetLeft, touch.clientY - offsetTop);
         console.log(eventName, 'item', item.className);
@@ -1124,18 +990,16 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
         if (eventName === 'touchend' && Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["isClick"])(this.touchMsg)) {
           console.log('emit click event!');
-          item && item.emit('click', event); // clearTimeout(this.activeTimer);
+          item && item.emit('click', event);
         }
 
         if (eventName === 'touchstart') {
-          this.startPos = [touch.clientX - offsetLeft, touch.clientY - offsetTop]; // this.activeTimer = setTimeout(() => {
-
-          this.pseudoClassManager.addActiveState(item); // }, 80)
+          this.startPos = [touch.clientX - offsetLeft, touch.clientY - offsetTop];
+          this.pseudoClassManager.addActiveState(item);
         }
 
         if (eventName === 'touchmove') {
           if (!Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["pointInRect"])([touch.clientX - offsetLeft, touch.clientY - offsetTop], [].concat(_toConsumableArray(item.pos), _toConsumableArray(item.size)))) {
-            // clearTimeout(this.activeTimer);
             return;
           }
 
@@ -1143,10 +1007,8 @@ var _Layout = /*#__PURE__*/function (_Element) {
           var offsetY = touch.clientY - this.startPos[1] - offsetTop;
           var offsetLength = Math.hypot(offsetX, offsetY);
 
-          if (offsetLength > 5) {// clearTimeout(this.activeTimer)
-          }
-        } // console.log('eventHandler done');
-
+          if (offsetLength > 5) {}
+        }
       };
     }
   }, {
@@ -1397,8 +1259,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
         if (_common_util_js__WEBPACK_IMPORTED_MODULE_3__["charWidthMap"][key]) {
           width = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["charWidthMap"][key];
         } else {
-          console.log('new text', key); // console.log(charWidthMap);
-
+          // console.log('new text', key);
           width = _this9.fontManager.measureText(str, fontWeight || 'normal', fontStyle || 'normal', (fontSize || 12) * fontSizeRate, fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_3__["DEFAULT_FONT_FAMILY"]) || 0;
           _common_util_js__WEBPACK_IMPORTED_MODULE_3__["charWidthMap"][key] = width;
         }
@@ -1471,27 +1332,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
 var uuid = 0;
-
-function hexToRgb(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
-}
-
-function getRgba(hex, opacity) {
-  var rgbObj = hexToRgb(hex);
-  var o = opacity;
-
-  if (opacity === undefined) {
-    o = 1;
-  }
-
-  return "rgba(".concat(rgbObj.r, ", ").concat(rgbObj.g, ", ").concat(rgbObj.b, ", ").concat(o, ")");
-}
 
 var toEventName = function toEventName(event, id) {
   var elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
@@ -1510,11 +1352,11 @@ var toEventName = function toEventName(event, id) {
 
 var formatStyle = function formatStyle(style) {
   if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
-    style.color = getRgba(style.color, style.opacity);
+    style.color = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getRgba"])(style.color, style.opacity);
   }
 
   if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf('#') > -1) {
-    style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
+    style.backgroundColor = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getRgba"])(style.backgroundColor, style.opacity);
   }
 
   Object.keys(style).forEach(function (key) {
@@ -1758,83 +1600,6 @@ var Element = /*#__PURE__*/function () {
       this.EE && this.EE.off(toEventName(event, this.id), callback);
     }
   }, {
-    key: "renderBorder",
-    value: function renderBorder(ctx, layoutBox) {
-      var isDarkMode = this.root.isDarkMode();
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
-
-      if (this.hasBorderRadius) {}
-
-      var box = layoutBox || this.layoutBox;
-      var borderWidth = style.borderWidth || 0;
-      var borderLeftWidth = style.borderLeftWidth || borderWidth;
-      var borderRightWidth = style.borderRightWidth || borderWidth;
-      var borderTopWidth = style.borderTopWidth || borderWidth;
-      var borderBottomWidth = style.borderBottomWidth || borderWidth;
-      var radius = style.borderRadius || 0;
-      var borderColor = style.borderColor;
-      var drawX = box.absoluteX;
-      var drawY = box.absoluteY;
-      ctx.save();
-      ctx.beginPath();
-
-      if (borderTopWidth && (borderColor || style.borderTopColor)) {
-        ctx.lineWidth = borderTopWidth;
-        ctx.strokeStyle = style.borderTopColor || borderColor;
-
-        if (radius && borderWidth && borderColor) {
-          ctx.arc(drawX + radius, drawY + radius, radius, Math.PI, 1.5 * Math.PI);
-        }
-
-        ctx.moveTo(radius ? drawX + radius : drawX, drawY);
-        ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, // drawY + borderTopWidth / 2
-        drawY);
-      }
-
-      if (borderRightWidth && (borderColor || style.borderRightColor)) {
-        ctx.lineWidth = borderRightWidth;
-        ctx.strokeStyle = style.borderRightColor || borderColor;
-
-        if (radius && borderWidth && borderColor) {
-          // console.log('右上角圆角')
-          ctx.arc(drawX + box.width - radius, drawY + radius, radius, 1.5 * Math.PI, 0);
-        }
-
-        ctx.moveTo(drawX + box.width, radius ? drawY + radius : drawY);
-        ctx.lineTo(drawX + box.width, radius ? drawY + box.height - radius : drawY + box.height);
-      }
-
-      if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
-        ctx.lineWidth = borderBottomWidth;
-        ctx.strokeStyle = style.borderBottomColor || borderColor;
-
-        if (radius && borderWidth && borderColor) {
-          // console.log('右下角圆角')
-          ctx.arc(drawX + box.width - radius, drawY + box.height - radius, radius, 0, 0.5 * Math.PI);
-        }
-
-        ctx.moveTo(radius ? drawX + radius : drawX, drawY + box.height);
-        ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + box.height);
-      }
-
-      if (borderLeftWidth && (borderColor || style.borderLeftColor)) {
-        ctx.lineWidth = borderLeftWidth;
-        ctx.strokeStyle = style.borderLeftColor || borderColor;
-
-        if (radius && borderWidth && borderColor) {
-          // console.log('左下角圆角')
-          ctx.arc(drawX + radius, drawY + box.height - radius, radius, 0.5 * Math.PI, Math.PI);
-        }
-
-        ctx.moveTo(drawX, radius ? drawY + radius : drawY);
-        ctx.lineTo(drawX, radius ? drawY + box.height - radius : drawY + box.height);
-      }
-
-      ctx.closePath();
-      ctx.stroke();
-      ctx.restore();
-    }
-  }, {
     key: "clip",
     value: function clip(dimension) {
       var _ref2 = dimension || this.getDimension(),
@@ -1866,7 +1631,7 @@ var Element = /*#__PURE__*/function () {
       var canvas = this.root.maskCanvas;
       var ctx = this.root.maskCtx;
       var isDarkMode = this.root.isDarkMode();
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
+      var style = _common_util_js__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
       var borderRadius = style.borderRadius;
       var borderLeftTopRadius = style.borderLeftTopRadius,
           borderRightTopRadius = style.borderRightTopRadius,
@@ -1930,98 +1695,70 @@ var Element = /*#__PURE__*/function () {
       };
     }
   }, {
-    key: "addClass",
-    value: function addClass(name) {
+    key: "_refreshStyleAfterClassSet",
+    value: function _refreshStyleAfterClassSet(className) {
       var _this4 = this;
 
-      // 给节点加一个class，会导致整个布局重绘
-      var className = this.className.split(' ');
+      this.className = className.join(' ');
+      this.styleInit = {};
+      this.styleActive = {};
+      this.styleDarkInit = {};
+      this.styleDarkActive = {};
+      className.reduce(function (res, oneClass) {
+        return Object.assign(res, root.cssRules[oneClass]);
+      }, this.styleInit || {});
+      className.reduce(function (res, oneClass) {
+        if (root.cssRules["".concat(oneClass, ":active")]) {
+          return Object.assign(res, root.cssRules["".concat(oneClass, ":active")]);
+        }
 
-      if (className.indexOf(name) === -1) {
-        // 是一个新的class
-        var root = this.root; // 拿到layout
+        return res;
+      }, this.styleActive || {});
+      className.reduce(function (res, oneClass) {
+        return Object.assign(res, root.cssDarkRules[oneClass]);
+      }, this.styleDarkInit || {});
+      className.reduce(function (res, oneClass) {
+        if (root.cssDarkRules["".concat(oneClass, ":active")]) {
+          return Object.assign(res, root.cssDarkRules["".concat(oneClass, ":active")]);
+        }
 
-        className.push(name);
-        this.className = className.join(' '); // 更新下className
-
-        this.styleInit = {};
-        this.styleActive = {};
-        this.styleDarkInit = {};
-        this.styleDarkActive = {};
-        className.reduce(function (res, oneClass) {
-          return Object.assign(res, root.cssRules[oneClass]);
-        }, this.styleInit || {});
-        className.reduce(function (res, oneClass) {
-          if (root.cssRules["".concat(oneClass, ":active")]) {
-            return Object.assign(res, root.cssRules["".concat(oneClass, ":active")]);
-          }
-
-          return res;
-        }, this.styleActive || {});
-        className.reduce(function (res, oneClass) {
-          return Object.assign(res, root.cssDarkRules[oneClass]);
-        }, this.styleDarkInit || {});
-        className.reduce(function (res, oneClass) {
-          if (root.cssDarkRules["".concat(oneClass, ":active")]) {
-            return Object.assign(res, root.cssDarkRules["".concat(oneClass, ":active")]);
-          }
-
-          return res;
-        }, this.styleDarkActive || {});
-        Object.keys(this.styleProp).forEach(function (prop) {
-          _this4.styleInit[prop] = _this4.styleProp[prop];
-          _this4.styleDarkInit[prop] = _this4.styleProp[prop];
-        });
-        this.root.beforeReflow();
-        this.root.emit('reflow');
-      }
+        return res;
+      }, this.styleDarkActive || {});
+      Object.keys(this.styleProp).forEach(function (prop) {
+        _this4.styleInit[prop] = _this4.styleProp[prop];
+        _this4.styleDarkInit[prop] = _this4.styleProp[prop];
+      });
+      this.root.beforeReflow();
+      this.root.emit('reflow');
     }
   }, {
     key: "removeClass",
     value: function removeClass(name) {
-      var _this5 = this;
-
       // 去除节点的一个class，会导致整个布局重绘
       // console.log('removeClass', this);
       var className = this.className.split(' ');
       var classNameIdx = className.indexOf(name);
 
       if (classNameIdx > -1) {
-        var root = this.root; // const isDarkMode = root.isDarkMode();
-        // const css = isDarkMode ? root.cssDarkRules : root.cssRules;
-
+        var _root = this.root;
         className.splice(classNameIdx, 1);
-        this.className = className.join(' ');
-        this.styleInit = {};
-        this.styleActive = {};
-        this.styleDarkInit = {};
-        this.styleDarkActive = {};
-        className.reduce(function (res, oneClass) {
-          return Object.assign(res, root.cssRules[oneClass]);
-        }, this.styleInit || {});
-        className.reduce(function (res, oneClass) {
-          if (root.cssRules["".concat(oneClass, ":active")]) {
-            return Object.assign(res, root.cssRules["".concat(oneClass, ":active")]);
-          }
 
-          return res;
-        }, this.styleActive || {});
-        className.reduce(function (res, oneClass) {
-          return Object.assign(res, root.cssDarkRules[oneClass]);
-        }, this.styleDarkInit || {});
-        className.reduce(function (res, oneClass) {
-          if (root.cssDarkRules["".concat(oneClass, ":active")]) {
-            return Object.assign(res, root.cssDarkRules["".concat(oneClass, ":active")]);
-          }
+        this._refreshStyleAfterClassSet(className);
+      }
+    }
+  }, {
+    key: "addClass",
+    value: function addClass(name) {
+      // 给节点加一个class，会导致整个布局重绘
+      var className = this.className.split(' ');
 
-          return res;
-        }, this.styleDarkActive || {});
-        Object.keys(this.styleProp).forEach(function (prop) {
-          _this5.styleInit[prop] = _this5.styleProp[prop];
-          _this5.styleDarkInit[prop] = _this5.styleProp[prop];
-        });
-        this.root.beforeReflow();
-        this.root.emit('reflow');
+      if (className.indexOf(name) === -1) {
+        // 是一个新的class
+        var _root2 = this.root;
+        className.push(name);
+        this.className = className.join(' '); // 更新下className
+
+        this._refreshStyleAfterClassSet(className);
       }
     }
   }, {
@@ -2053,7 +1790,7 @@ var Element = /*#__PURE__*/function () {
     key: "hasBorderRadius",
     get: function get() {
       var isDarkMode = this.root.isDarkMode();
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
+      var style = _common_util_js__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
       return style.borderRadius || style.borderLeftBottomRadius || style.borderLeftTopRadius || style.borderRightBottomRadius || style.borderRightTopRadius;
     }
   }, {
@@ -2127,6 +1864,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throttle", function() { return throttle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "none", function() { return none; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isClick", function() { return isClick; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCanvas", function() { return createCanvas; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "STATE", function() { return STATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_FONT_FAMILY", function() { return DEFAULT_FONT_FAMILY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getContext", function() { return getContext; });
@@ -2137,6 +1875,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nextTick", function() { return nextTick; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkIntersect", function() { return checkIntersect; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pointInRect", function() { return pointInRect; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hexToRgb", function() { return hexToRgb; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRgba", function() { return getRgba; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementStyle", function() { return getElementStyle; });
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -2192,37 +1933,19 @@ function isClick(touchMsg) {
   var endPosY = end.clientY;
   var touchTimes = end.timeStamp - start.timeStamp;
   return !!(Math.abs(endPosY - startPosY) < 30 && Math.abs(endPosX - startPosX) < 30 && touchTimes < 300);
-} // export function createCanvas() {
-// 	/* istanbul ignore if*/
-// 	if (typeof wx !== "undefined") { // 小程序环境
-// 		return wx.createCanvas();
-// 	} else if (typeof document !== 'undefined') { // web环境
-// 		return document.createElement('canvas');
-// 	}
-// 	else { // jscore环境
-// 		// return new NativeGlobal.OffscreenCanvas();
-// 	}
-// }
-// let dpr = null;
-// export function getDpr() {
-//   if (dpr != null) {
-//     /* istanbul ignore if*/
-//     if ( typeof wx !== "undefined" ) { // 小程序环境
-//         dpr = wx.getSystemInfoSync().devicePixelRatio;
-//     } else if (typeof window !== 'undefined') { // web环境
-//         dpr = window.devicePixelRatio;
-//     } else { // jscore环境
-//         // return canvas.density;
-//         dpr = NativeGlobal.getSystemInfo().pixelRatio;
-//     }
-//   }
-//   return dpr;
-// }
-// export function getDpr() {
-// return WeixinCore.getSystemInfo().pixelRatio;
-// return 1;
-// }
-
+}
+function createCanvas() {
+  /* istanbul ignore if*/
+  if (typeof wx !== "undefined") {
+    // 小程序环境
+    return wx.createCanvas();
+  } else if (typeof document !== 'undefined') {
+    // web环境
+    return document.createElement('canvas');
+  } else {// jscore环境
+    // return new NativeGlobal.OffscreenCanvas();
+  }
+}
 var STATE = {
   UNINIT: 0,
   INITED: 1,
@@ -2281,6 +2004,34 @@ function pointInRect(_ref, _ref2) {
       h = _ref4[3];
 
   return rX <= x && x <= rX + w && rY <= y && y <= rY + h;
+}
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+function getRgba(hex, opacity) {
+  var rgbObj = hexToRgb(hex);
+  var o = opacity;
+
+  if (opacity === undefined) {
+    o = 1;
+  }
+
+  return "rgba(".concat(rgbObj.r, ", ").concat(rgbObj.g, ", ").concat(rgbObj.b, ", ").concat(o, ")");
+}
+function getElementStyle(isDarkMode) {
+  var needInnerStyle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp) : Object.assign({}, this.styleInit, this.styleProp);
+
+  if (needInnerStyle) {
+    Object.assign(style, this._innerStyle);
+  }
+
+  return style;
 }
 
 /***/ }),
@@ -6079,9 +5830,7 @@ var Yoga = function () {
 
         invokerFnBody += "}\n";
         args1.push(invokerFnBody);
-        var temp = new_(Function, args1); // console.log(1111555, temp)
-
-        var invokerFunction = temp.apply(window, args2);
+        var invokerFunction = new_(Function, args1).apply(window, args2);
         return invokerFunction;
       }
 
@@ -6878,7 +6627,6 @@ var Yoga = function () {
       Module.sync = false;
 
       if (!Module.sync) {
-        console.log('createWasm');
         var asm = createWasm();
       } else {
         var asm = createWasmSync();
@@ -7496,11 +7244,14 @@ var PseudoClassManager = /*#__PURE__*/function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 var finder = function finder(t, w, arr, measure) {
   var start = 0;
@@ -7562,7 +7313,7 @@ var TextManager = /*#__PURE__*/function () {
 
       for (var i = 0; i < this.textNodes.length; i++) {
         var node = this.textNodes[i];
-        var style = isDarkMode ? Object.assign({}, node.styleInit, node.styleDarkInit, node.styleProp) : Object.assign({}, node.styleInit, node.styleProp);
+        var style = _util__WEBPACK_IMPORTED_MODULE_0__["getElementStyle"].call(node, isDarkMode, false);
         node.valueBreak = [];
 
         var measure = this.layout._measureText({
@@ -7643,7 +7394,6 @@ var TextManager = /*#__PURE__*/function () {
       var fontWeight = _ref.fontWeight,
           fontSize = _ref.fontSize,
           fontFamily = _ref.fontFamily;
-      console.log('getSubText', width);
 
       var measure = this.layout._measureText({
         fontWeight: fontWeight,
@@ -10641,27 +10391,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -10744,179 +10478,22 @@ var View = /*#__PURE__*/function (_Block) {
   }, {
     key: "checkNeedRender",
     value: function checkNeedRender() {
-      var isDarkMode = this.root.isDarkMode();
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle); // let style = this.computedStyle;
-
-      var borderColor = style.borderColor;
-      return !!(style.backgroundColor || style.borderWidth && borderColor || style.borderTopWidth && (borderColor || style.borderTopColor) || style.borderBottomWidth && (borderColor || style.borderBottomColor) || style.borderLeftWidth && (borderColor || style.borderLeftColor) || style.borderRightWidth && (borderColor || style.borderRightColor));
+      return true;
     } // 废弃
 
   }, {
     key: "render",
-    value: function render(img) {
-      var isDarkMode = this.root.isDarkMode();
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
-      var baseX = this.layoutBox.absoluteX;
-      var baseY = this.layoutBox.absoluteY;
-      var boxWidth = this.layoutBox.width;
-      var boxHeight = this.layoutBox.height;
-      var borderWidth = style.borderWidth || 0;
-      var finalX = baseX - borderWidth; // eslint-disable-line
-
-      var finalY = baseY - borderWidth; // eslint-disable-line
-
-      var width = img.width,
-          height = img.height;
-
-      if (style.backgroundSize) {
-        var splitVal = style.backgroundSize.split(' ');
-
-        if (splitVal.length === 2) {
-          var setWidth = splitVal[0];
-          var setHeight = splitVal[1];
-          width = setWidth[setWidth.length - 1] === '%' ? boxWidth * parseFloat(setWidth.slice(0, -1)) / 100 : parseFloat(setWidth);
-          height = setHeight[setHeight.length - 1] === '%' ? boxHeight * parseFloat(setHeight.slice(0, -1)) / 100 : parseFloat(setHeight);
-        } else if (splitVal.length === 1) {
-          var imgRatio = width / height;
-          var boxRatio = boxWidth / boxHeight;
-
-          switch (splitVal[0]) {
-            case 'contain':
-              if (imgRatio < boxRatio) {
-                height = boxHeight;
-                width = height * imgRatio;
-
-                if (!style.backgroundPosition) {
-                  finalY = baseY;
-                  finalX = baseX + (boxWidth - width) / 2;
-                }
-              } else {
-                width = boxWidth;
-                height = width / imgRatio;
-
-                if (!style.backgroundPosition) {
-                  finalX = baseX;
-                  finalY = baseY + (boxHeight - height) / 2;
-                }
-              }
-
-              break;
-
-            case 'cover':
-              if (imgRatio < boxRatio) {
-                width = boxWidth;
-                height = width / imgRatio;
-
-                if (!style.backgroundPosition) {
-                  finalX = baseX;
-                  finalY = baseY - (height - boxHeight) / 2;
-                }
-              } else {
-                height = boxHeight;
-                width = height * imgRatio;
-
-                if (!style.backgroundPosition) {
-                  finalY = baseY;
-                  finalX = baseX - (width - boxWidth) / 2;
-                }
-              }
-
-              break;
-          }
-        }
-      }
-
-      if (style.backgroundPosition) {
-        var _style$backgroundPosi = style.backgroundPosition.split(' '),
-            _style$backgroundPosi2 = _slicedToArray(_style$backgroundPosi, 2),
-            x = _style$backgroundPosi2[0],
-            y = _style$backgroundPosi2[1];
-
-        switch (x) {
-          case 'left':
-            x = '0%';
-            break;
-
-          case 'center':
-            x = '50%';
-            break;
-
-          case 'right':
-            x = '100%';
-        }
-
-        switch (y) {
-          case 'top':
-            y = '0%';
-            break;
-
-          case 'center':
-            y = '50%';
-            break;
-
-          case 'bottom':
-            y = '100%';
-        }
-
-        x = x[x.length - 1] === '%' ? (boxWidth - width) * parseFloat(x.slice(0, -1)) / 100 : parseFloat(x);
-        y = y[y.length - 1] === '%' ? (boxHeight - height) * parseFloat(y.slice(0, -1)) / 100 : parseFloat(y);
-        finalX += x; // eslint-disable-line
-
-        finalY += y; // eslint-disable-line
-      } // this.glRect.setTexture({
-      //     image: img,
-      //     rect: [finalX - baseX, finalY - baseY, width, height]
-      // })
-
-    } // 废弃
+    value: function render(img) {} // 废弃
 
   }, {
     key: "loadImg",
     value: function loadImg(src) {
-      var _this2 = this;
-
       var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _common_util_js__WEBPACK_IMPORTED_MODULE_1__["none"];
-      var img = this.root.imgPool.get(src);
-
-      if (img && img.loadDone) {
-        callback(img);
-      } else if (img && !img.loadDone) {
-        img.onloadcbks.push(callback);
-      } else {
-        var newImg = this.root.canvasContext.createImage();
-        newImg.onloadcbks = [];
-        this.root.imgPool.set(src, newImg);
-
-        newImg.onload = function () {
-          // newImg.onloadcbks.forEach(fn => fn(newImg));
-          callback = newImg.onloadcbks.pop() || callback;
-          newImg.onloadcbks = [];
-          newImg.loadDone = true;
-          callback(newImg);
-
-          _this2.repaint();
-        };
-
-        newImg.setSrc(src);
-      }
     } // 废弃
 
   }, {
     key: "insert",
-    value: function insert(isDarkMode) {
-      var _this3 = this;
-
-      _get(_getPrototypeOf(View.prototype), "insert", this).call(this, isDarkMode); // const isDarkMode = this.root.isDarkMode();
-
-
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
-
-      if (style.backgroundImage) {
-        this.loadImg(style.backgroundImage, function (img) {
-          _this3.render(img);
-        });
-      }
-    }
+    value: function insert(isDarkMode) {}
   }, {
     key: "updateRenderData",
     value: function updateRenderData(computedStyle) {
@@ -10972,6 +10549,7 @@ var View = /*#__PURE__*/function (_Block) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
 /* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -10993,6 +10571,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -11045,7 +10624,7 @@ var Block = /*#__PURE__*/function (_Element) {
     key: "insert",
     value: function insert(isDarkMode) {
       var rect = this.glRect;
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
+      var style = _common_util__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
 
       if (style.backgroundColor) {
         rect.setBackgroundColor(style.backgroundColor);
@@ -11456,9 +11035,7 @@ var Text = /*#__PURE__*/function (_Element) {
   _createClass(Text, [{
     key: "toCanvasData",
     value: function toCanvasData(isDarkMode) {
-      // const isDarkMode = this.root.isDarkMode();
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle); // let style = this.computedStyle;
-
+      var style = _common_util_js__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
       this.fontSize = style.fontSize || 12;
       this.textBaseline = 'top';
       this.font = "".concat(style.fontWeight || '', " ").concat((style.fontSize || 12) * this.root.getFontSize(), "px ").concat(style.fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_1__["DEFAULT_FONT_FAMILY"]);
@@ -11484,7 +11061,7 @@ var Text = /*#__PURE__*/function (_Element) {
 
       var box = this.layoutBox;
       var isDarkMode = this.root.isDarkMode();
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
+      var style = _common_util_js__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
 
       if (box.width * 1 === 0 || box.height * 1 === 0) {
         // 宽度或者高度等于0，直接不画
@@ -11532,7 +11109,7 @@ var Text = /*#__PURE__*/function (_Element) {
         return;
       }
 
-      var style = isDarkMode ? Object.assign({}, this.styleInit, this.styleDarkInit, this.styleProp, this._innerStyle) : Object.assign({}, this.styleInit, this.styleProp, this._innerStyle);
+      var style = _common_util_js__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
       this.toCanvasData(isDarkMode);
       var ctx = this.offCtx;
       ctx.textBaseline = this.textBaseline;

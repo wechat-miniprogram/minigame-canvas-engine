@@ -2498,10 +2498,7 @@ var Yoga = (function () {
         invokerFnBody += "}\n";
         args1.push(invokerFnBody);
         
-
-        const temp = new_(Function, args1);
-        // console.log(1111555, temp)
-        var invokerFunction = temp.apply(window, args2);
+        var invokerFunction = new_(Function, args1).apply(window, args2);
         return invokerFunction;
       }
 
@@ -3297,7 +3294,6 @@ var Yoga = (function () {
       };
       Module.sync = false;
       if (!Module.sync) {
-        console.log('createWasm')
         var asm = createWasm();
       } else {
         var asm = createWasmSync();
