@@ -50,7 +50,7 @@ export default class Image extends Block {
 
     nextTick(() => {
       if (this.root && this.root.canvasContext) {
-        this.root.canvasContext.postMessage({
+        this.root.canvasContext.postMessage && this.root.canvasContext.postMessage({
           type: 'preload-image',
           data: {
             src: this.src

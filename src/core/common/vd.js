@@ -419,7 +419,6 @@ export function _getChildsByPos(tree, x, y, list = []) {
     if ((box.realX <= x && x <= box.realX + box.width)
       && (box.realY <= y && y <= box.realY + box.height)
       && child.computedStyle.display !== 'none') {
-      console.log(child)
       if (child.childNodes.length) {
         ret = _getChildsByPos(child, x, y, list);
       } else {

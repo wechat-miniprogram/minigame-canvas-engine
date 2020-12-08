@@ -6,12 +6,32 @@ import parser from './libs/fast-xml-parser/parser.js';
 import { adaptor, updateLayout, calculateDirtyNode, initYoga } from './common/adaptor';
 import PseudoClassManager from './common/pseudoClassManager.js';
 import TextManager from './common/textManager.js';
-import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle } from './common/util.js';
+import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle, createImage } from './common/util.js';
 import { dash2camel } from './common/util.js';
 import RenderContextManager from './renderer/renderContextManager';
 import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElementsByClassName, _getChildsByPos, updateRealLayout } from './common/vd';
+import { scale } from '../renderer/m4.js';
+
+
+function getFontManager() {
+  const measureCanvas = wx.createCanvas();
+
+  measureCanvas.width = 1;
+  measureCanvas.height = 1;
+
+  const fontManager = {
+    measureText(str, fontStyle, fontWeight, fontSize, fontFamily) {
+      const canvas = measureCanvas;
+      const ctx = canvas.getContext('2d');
+      ctx.font = `${fontStyle || 'normal'} ${fontWeight || 'normal'} ${fontSize || 12}px ${fontFamily}`;
+      return (ctx.measureText(str)).width;
+    }
+  };
+
+  return fontManager;
+}
 class _Layout extends Element {
-  constructor({ style, name, isDarkMode, getWidth, getFontSize, getFps, canvasId, canvasContext, fontManager } = {}) {
+  constructor({ style, name, isDarkMode, getWidth, getSize, getFontSize, getFps, canvasId, canvasContext, fontManager, scale = 1 } = {}) {
     super({
       style,
       id: 0,
@@ -22,10 +42,11 @@ class _Layout extends Element {
     this.hasEventHandler = false;
     this.elementTree = null;
     this.renderContext = null;
+    this.scale = scale;
     if (canvasContext) {
-      this.setCanvasContext(canvasContext);
+      this.setCanvasContext(canvasContext, scale);
     }
-    this.fontManager = fontManager;
+    this.fontManager = fontManager || getFontManager();
 
     this.debugInfo = {};
     this.renderport = {}; // 包含像素比例的宽高
@@ -49,6 +70,7 @@ class _Layout extends Element {
     this.textManager = new TextManager(this);
     this.isDarkMode = isDarkMode || (() => false); // 是否darkmode
     this.getWidth = getWidth || (() => 0);
+    this.getSize = getSize || (() => { return {width: 0, height: 0}});
     this.getFontSize = getFontSize || (() => 1);
     this.getFps = getFps || (() => 0);
 
@@ -57,9 +79,10 @@ class _Layout extends Element {
     this._emitter = new Emitter();
     this._EE = new Emitter();
 
-    this.viewport = {
-      width: getWidth(),
-    }; // 不包含像素的宽高
+    // this.viewport = {
+    //   width: getWidth(),
+    // }; // 不包含像素的宽高
+    this.viewport = getSize();
 
     this._videos = [];
     this._firstComputeLayout = true; // 是否首次计算布局
@@ -75,9 +98,9 @@ class _Layout extends Element {
     this._methods = config;
   }
 
-  setCanvasContext(ctx) {
+  setCanvasContext(ctx, scale) {
     this.canvasContext = ctx;
-    this.renderContext = new RenderContextManager(ctx);
+    this.renderContext = new RenderContextManager(ctx, scale);
   }
 
   initRepaint() { }
@@ -220,7 +243,8 @@ class _Layout extends Element {
     log('start computeLayout');
     const start = new Date();
     this.renderport.height = 0;
-    this.viewport.width = this.getWidth();
+
+    this.viewport = this.getSize();
 
     const isDarkMode = this.isDarkMode();
     const fontSize = this.getFontSize();
@@ -296,8 +320,8 @@ class _Layout extends Element {
     this.viewport.height = this.renderport.height;
     log('viewport.height', this.viewport.height);
 
-    this.renderContext.width = this.viewport.width;
-    this.renderContext.height = this.viewport.height;
+    this.renderContext.width = this.viewport.width * this.scale;
+    this.renderContext.height = this.viewport.height * this.scale;
 
     this.debugInfo.layoutChildren = new Date() - start;
 
@@ -362,7 +386,7 @@ class _Layout extends Element {
   getChildByPos(tree, x, y) {
     const list = _getChildsByPos(tree, x, y, []);
     const length = list.length;
-    
+
     return list[length - 1];
   }
 
@@ -549,7 +573,7 @@ class _Layout extends Element {
 
   loadImgs(arr) {
     arr.forEach(src => {
-      const img = this.canvasContext.createImage();
+      const img = this.canvasContext.createImage ? this.canvasContext.createImage() : createImage();
 
       this.imgPool.set(src, img);
 
@@ -558,7 +582,11 @@ class _Layout extends Element {
       }
 
       img.onloadcbks = [];
-      img.setSrc(src);
+      if (img.setSrc) {
+        img.setSrc(src);
+      } else {
+        img.src = src;
+      }
     });
   }
 
@@ -664,7 +692,9 @@ const newInstance = function (opt) {
     getFps: opt.getFps || (() => 0),
     canvasId: opt.canvasId,
     canvasContext: opt.canvasContext,
-    fontManager: opt.fontManager
+    fontManager: opt.fontManager,
+    getSize: opt.getSize,
+    scale: opt.scale,
   });
 }
 

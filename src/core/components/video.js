@@ -84,7 +84,7 @@ export default class Video extends Block {
     if (!this.layoutBox) {
       return Promise.resolve();
     }
-    this.root.canvasContext.postMessage({
+    this.root.canvasContext.postMessage && this.root.canvasContext.postMessage({
       type: 'video-ctrl',
       data: {
         id: this.id,
@@ -96,7 +96,7 @@ export default class Video extends Block {
   }
   mute() {
     this.muted = true;
-    this.root.canvasContext.postMessage({
+    this.root.canvasContext.postMessage && this.root.canvasContext.postMessage({
       type: 'video-ctrl',
       data: {
         id: this.id,
@@ -106,7 +106,7 @@ export default class Video extends Block {
   }
   unmute() {
     this.muted = false;
-    this.root.canvasContext.postMessage({
+    this.root.canvasContext.postMessage && this.root.canvasContext.postMessage({
       type: 'video-ctrl',
       data: {
         id: this.id,
@@ -115,7 +115,7 @@ export default class Video extends Block {
     });
   }
   pause() {
-    this.root.canvasContext.postMessage({
+    this.root.canvasContext.postMessage && this.root.canvasContext.postMessage({
       type: 'video-ctrl',
       data: {
         id: this.id,
@@ -156,7 +156,7 @@ export default class Video extends Block {
     // 设置圆角数据
     const radius = this.getRadius(computedStyle);
     this.glRect.setRadius(radius);
-    this.root.canvasContext.postMessage({
+    this.root.canvasContext.postMessage && this.root.canvasContext.postMessage({
       type: 'video-pos',
       data: {
         size: {

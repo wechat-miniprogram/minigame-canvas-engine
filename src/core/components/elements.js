@@ -300,10 +300,6 @@ export default class Element {
     return [box.absoluteX, box.absoluteY, box.width, box.height];
   }
 
-  getOffscreenCanvas(key) {
-    return this.root.canvasContext.getOffscreenCanvas(key);
-  }
-
   getRoundRectMask(width, height) {
     const canvas = this.root.maskCanvas;
     const ctx = this.root.maskCtx;
@@ -428,7 +424,7 @@ export default class Element {
       this._refreshStyleAfterClassSet(className);
     }
   }
-  
+
   getAttribute(attr) {
     return this[attr] || null;
   }

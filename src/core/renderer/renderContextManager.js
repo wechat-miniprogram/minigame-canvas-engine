@@ -1,6 +1,8 @@
 import { setupGl } from '../../renderer/gl_rect.js';
 import { createRender, VIDEOS, renderDetection } from '../../renderer/util.js';
 
+
+import { createImage } from '../common/util'
 // const {WXWebAssembly, wx} = pluginEnv.customEnv;
 
 /**
@@ -8,14 +10,6 @@ import { createRender, VIDEOS, renderDetection } from '../../renderer/util.js';
  */
 import RenderContext from './renderContext'
 
-function createImage() {
-  /* istanbul ignore if*/
-  if ( typeof wx !== "undefined" ) {
-    return wx.createImage();
-  } else {
-    return document.createElement('img');
-  }
-}
 
 function createCanvas() {
   return wx.createCanvas();
@@ -23,19 +17,21 @@ function createCanvas() {
 
 const info = wx.getSystemInfoSync();
 
-// const dpr = info.devicePixelRatio;
-const dpr = 1;
+const dpr = info.devicePixelRatio;
+// const dpr = 1;
 
-const renderer = createRender({
-  dpr,
-  createImage,
-  createCanvas
-});
-
+let renderer;
 export default class RenderContextManager {
-  constructor(canvasContext) {
+  constructor(canvasContext, scale = 1) {
     this.canvasContext = canvasContext;
     this.glRects = [];
+    this.scale = scale;
+
+    renderer = createRender({
+      dpr: scale,
+      createImage,
+      createCanvas
+    });
   }
   createRoundRect(id, type) {
     const glRect = new RenderContext(id, type);
@@ -53,12 +49,6 @@ export default class RenderContextManager {
    * @description 传递数据给渲染线程
    */
   draw() {
-    console.log('draw', {
-      noRepaint: !!this.noRepaint,
-      width: this.width,
-      height: this.height,
-      glRects: this.glRects
-  })
     this.testRun({
         noRepaint: !!this.noRepaint,
         width: this.width,
@@ -68,15 +58,12 @@ export default class RenderContextManager {
   }
 
   testRun(data, canvas) {
-    console.log('data', data);
     const gl = setupGl(canvas);
-    gl.canvas.height = data.height * dpr;
-    gl.canvas.width = data.width * dpr;
+    gl.canvas.height = data.height;
+    gl.canvas.width = data.width;
     
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-
-    console.log(gl.canvas.width, gl.canvas.height)
 
     renderer.repaint(gl, data.glRects);
 

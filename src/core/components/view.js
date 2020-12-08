@@ -29,7 +29,7 @@ export default class View extends Block {
     nextTick(() => {
       const style = this.root.isDarkMode() ? this.styleInit : this.styleDarkInit;
       if (style.backgroundImage && this.root && this.root.canvasContext) {
-        this.root.canvasContext.postMessage({
+        this.root.canvasContext.postMessage && this.root.canvasContext.postMessage({
           type: 'preload-image',
           data: {
             src: style.backgroundImage,

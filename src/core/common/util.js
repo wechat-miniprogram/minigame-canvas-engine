@@ -156,3 +156,12 @@ export function getElementStyle(isDarkMode, needInnerStyle = true) {
 export function log() {
   console.log.apply(null, arguments)
 }
+
+export function createImage() {
+  /* istanbul ignore if*/
+  if ( typeof wx !== "undefined" ) {
+    return wx.createImage();
+  } else {
+    return document.createElement('img');
+  }
+}
