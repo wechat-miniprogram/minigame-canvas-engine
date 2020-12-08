@@ -9,7 +9,7 @@ import TextManager from './common/textManager.js';
 import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle } from './common/util.js';
 import { dash2camel } from './common/util.js';
 import RenderContextManager from './renderer/renderContextManager';
-import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElementsByClassName, _getChildsByPos } from './common/vd';
+import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElementsByClassName, _getChildsByPos, updateRealLayout } from './common/vd';
 class _Layout extends Element {
   constructor({ style, name, isDarkMode, getWidth, getFontSize, getFps, canvasId, canvasContext, fontManager } = {}) {
     super({
@@ -190,7 +190,7 @@ class _Layout extends Element {
   repaint() {
     log('repaint call');
     const renderer = this.renderContext;
-    log(renderer.glRects.length);
+    // log(renderer.glRects.length);
     renderer.draw();
    
   }
@@ -310,6 +310,34 @@ class _Layout extends Element {
     }
   }
 
+  /**
+   * 更新被绘制canvas的窗口信息，本渲染引擎并不关心是否会和其他游戏引擎共同使用
+   * 而本身又需要支持事件处理，因此，如果被渲染内容是绘制到离屏canvas，需要将最终绘制在屏幕上
+   * 的绝对尺寸和位置信息更新到本渲染引擎。
+   * 其中，width为物理像素宽度，height为物理像素高度，x为距离屏幕左上角的物理像素x坐标，y为距离屏幕左上角的物理像素
+   * y坐标
+   */
+  updateViewPort(box) {
+    this.viewport.width  = box.width  || 0;
+    this.viewport.height = box.height || 0;
+    this.viewport.x      = box.x      || 0;
+    this.viewport.y      = box.y      || 0;
+
+    this.realLayoutBox = {
+      realX: this.viewport.x,
+      realY: this.viewport.y,
+    }
+
+    this.hasViewPortSet = true;
+
+    // 计算真实的物理像素位置，用于事件处理
+    updateRealLayout.call(
+      this,
+      this.childNodes,
+      this.viewport.width / this.renderContext.width
+    );
+  }
+
   restore(elementTree, layoutBox) {
     this.elementTree = elementTree;
     this.updateViewPort(layoutBox);
@@ -334,6 +362,7 @@ class _Layout extends Element {
   getChildByPos(tree, x, y) {
     const list = _getChildsByPos(tree, x, y, []);
     const length = list.length;
+    
     return list[length - 1];
   }
 
@@ -423,12 +452,19 @@ class _Layout extends Element {
     }
 
     // this.canvasContext.addEventListener('mousedown', this._touchStartHandler);
-    log('canvasContext addEventListener ', this.canvasContext);
-    this.canvasContext.addEventListener('touchstart', this._touchStartHandler);
-    this.canvasContext.addEventListener('touchmove', this._touchMoveHandler);
-    this.canvasContext.addEventListener('touchend', this._touchEndHandler);
     // this.canvasContext.addEventListener('mouseup', this._touchEndHandler);
-    this.canvasContext.addEventListener('touchcancel', this._touchCancelHandler);
+    
+    if ( typeof wx !== 'undefined' ) {
+      wx.onTouchStart(this.touchStart);
+      wx.onTouchMove(this.touchMove);
+      wx.onTouchEnd(this.touchEnd);
+      wx.onTouchCancel(this.touchCancel);
+    } else {
+      this.canvasContext.addEventListener('touchstart', this._touchStartHandler);
+      this.canvasContext.addEventListener('touchmove', this._touchMoveHandler);
+      this.canvasContext.addEventListener('touchend', this._touchEndHandler);
+      this.canvasContext.addEventListener('touchcancel', this._touchCancelHandler);
+    }
   }
 
   unbindEvents() {

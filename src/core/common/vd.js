@@ -285,6 +285,43 @@ export function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) 
   }
 }
 
+export function updateRealLayout(children, scale) {
+  children.forEach((child) => {
+    child.realLayoutBox = child.realLayoutBox || {};
+
+    ['left', 'top', 'width', 'height'].forEach(prop => {
+      // child.realLayoutBox[prop] = data.layout[prop] * scale;
+      child.realLayoutBox[prop] = child.layoutBox[prop] * scale;
+    });
+
+    if ( child.parent ) {
+      child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+      Object.defineProperty(child.realLayoutBox, 'realY', {
+        configurable: true,
+        enumerable  : true,
+        get: () => {
+          let res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
+
+          /**
+           * 滚动列表事件处理
+           */
+          if ( child.parent && child.parent.type === 'ScrollView' ) {
+            res -= (child.parent.top * scale);
+          }
+
+          return res;
+        },
+      });
+    } else {
+      child.realLayoutBox.realX = child.realLayoutBox.left;
+      child.realLayoutBox.realY = child.realLayoutBox.top;
+    }
+
+    updateRealLayout(child.childNodes, scale);
+  });
+}
+
+
 /**
  * 获取节点需要缓存的数据
  * @param {Array} childNodes
@@ -382,6 +419,7 @@ export function _getChildsByPos(tree, x, y, list = []) {
     if ((box.realX <= x && x <= box.realX + box.width)
       && (box.realY <= y && y <= box.realY + box.height)
       && child.computedStyle.display !== 'none') {
+      console.log(child)
       if (child.childNodes.length) {
         ret = _getChildsByPos(child, x, y, list);
       } else {
