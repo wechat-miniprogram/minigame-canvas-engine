@@ -428,8 +428,7 @@ export default class Element {
       this._refreshStyleAfterClassSet(className);
     }
   }
-
-
+  
   getAttribute(attr) {
     return this[attr] || null;
   }

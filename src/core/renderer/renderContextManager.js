@@ -1,7 +1,7 @@
 import { setupGl } from '../../renderer/gl_rect.js';
 import { createRender, VIDEOS, renderDetection } from '../../renderer/util.js';
 
-const {WXWebAssembly, wx} = pluginEnv.customEnv;
+// const {WXWebAssembly, wx} = pluginEnv.customEnv;
 
 /**
  * @description 逻辑线程渲染管理器，用于搜集每个节点需要的渲染数据
@@ -23,7 +23,9 @@ function createCanvas() {
 
 const info = wx.getSystemInfoSync();
 
-const dpr = info.devicePixelRatio;
+// const dpr = info.devicePixelRatio;
+const dpr = 1;
+
 const renderer = createRender({
   dpr,
   createImage,
@@ -50,7 +52,13 @@ export default class RenderContextManager {
   /**
    * @description 传递数据给渲染线程
    */
-  draw() {    
+  draw() {
+    console.log('draw', {
+      noRepaint: !!this.noRepaint,
+      width: this.width,
+      height: this.height,
+      glRects: this.glRects
+  })
     this.testRun({
         noRepaint: !!this.noRepaint,
         width: this.width,
@@ -64,11 +72,15 @@ export default class RenderContextManager {
     const gl = setupGl(canvas);
     gl.canvas.height = data.height * dpr;
     gl.canvas.width = data.width * dpr;
+    
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
+    console.log(gl.canvas.width, gl.canvas.height)
+
     renderer.repaint(gl, data.glRects);
-    const result = renderDetection(gl, 30);
-    console.log(`render detection ${result}`);
+
+    // const result = renderDetection(gl, 30);
+    // console.log(`render detection ${result}`);
   }
 }

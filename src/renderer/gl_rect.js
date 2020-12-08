@@ -114,6 +114,7 @@ function createProgram(gl) {
     vPosition,
     textureMatrixLocation,
     textureMap,
+    positions
   };
 }
 
@@ -140,7 +141,18 @@ function useProgram(gl) {
     textureMap,
   } = gl.program;
 
-  return function createRoundRect() {
+  const glPool = {
+
+  }
+
+  console.log(glPool);
+
+  return function createRoundRect(idx) {
+    if (glPool[idx]) {
+      // console.log('命中缓存')
+      return glPool[idx]
+    }
+
     let x = 0;
     let y = 0;
     let width = 1;
@@ -284,6 +296,8 @@ function useProgram(gl) {
         // }
       },
     };
+
+    glPool[idx] = result;
     return result;
   };
 }

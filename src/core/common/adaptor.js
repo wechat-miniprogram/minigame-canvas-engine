@@ -22,7 +22,6 @@ export function adaptor(tree) {
 
   const s = Date.now();
   const yogaTree = getYogaTree(tree); // 获得一棵yoga虚拟树
-  // yogaTree.getChild(0).calculateLayout();
   console.log(`calculateLayout ${Date.now() - s}`);
   updateLayout(tree);
 }
@@ -264,7 +263,6 @@ function getYogaTree(node) {
 }
 
 export function updateLayout(node) {
-  // const yogaNode = node.yogaNode;
   if (node.type === 'Text' && isNaN(node.yogaNode.getComputedWidth())) { // todo 临时fix文本节点
     node.yogaNode.calculateLayout();
   }
@@ -293,4 +291,3 @@ export function calculateDirtyNode(node) {
     node.yogaNode.calculateLayout();
   }
 }
-

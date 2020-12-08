@@ -152,3 +152,7 @@ export function getElementStyle(isDarkMode, needInnerStyle = true) {
 
   return style;
 }
+
+export function log() {
+  console.log.apply(null, arguments)
+}

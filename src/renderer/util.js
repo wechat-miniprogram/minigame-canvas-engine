@@ -19,8 +19,6 @@ export function createImageLoader(createImage) {
         IMAGE_POOL[src].onloads = [];
       };
       img.onerror = () => {};
-      // img.setSrc(src);
-
       img.src = src;
     }
   };
@@ -222,14 +220,38 @@ function scaleData(data, dpr) {
 
 export const VIDEOS = Object.create(null);
 
+let flag = false
+
 export function createRender({ dpr, createImage, createCanvas }) {
   const loadImage = createImageLoader(createImage);
   const getTextTexture = createTextTexture(createCanvas);
+
   return {
     loadImage,
     repaint: function drawRects(gl, glRects) {
-      // console.log('createRender repaint call');
+      let start = new Date();
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+      {
+        gl.enable(gl.BLEND);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        // gl.blendEquation(gl.FUNC_ADD);
+        // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE);
+        // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+      }
+
+      { // VBO
+        // bufferId = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.program.bufferId);
+        gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(gl.program.vPosition);
+      }
+
+      gl.useProgram(gl.program.program);
+
       glRects.forEach((d, idx) => {
         const glRectData = scaleData(d, dpr);
         // console.log(JSON.stringify(glRectData));
@@ -275,6 +297,8 @@ export function createRender({ dpr, createImage, createCanvas }) {
         glRect.updateViewPort();
         glRect.draw();
       });
+
+      // console.log('repaint cost', new Date() - start)
     },
   };
 }
