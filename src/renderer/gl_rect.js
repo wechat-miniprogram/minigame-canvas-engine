@@ -145,8 +145,6 @@ function useProgram(gl) {
 
   }
 
-  console.log(glPool);
-
   return function createRoundRect(idx) {
     if (glPool[idx]) {
       // console.log('命中缓存')

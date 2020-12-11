@@ -12,7 +12,8 @@ import RenderContextManager from './renderer/renderContextManager';
 import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElementsByClassName, _getChildsByPos, updateRealLayout } from './common/vd';
 import { scale } from '../renderer/m4.js';
 
-
+const {WXWebAssembly, wx} = pluginEnv.customEnv;
+// 默认的字体管理器getFontManager
 function getFontManager() {
   const measureCanvas = wx.createCanvas();
 
@@ -105,9 +106,14 @@ class _Layout extends Element {
 
   initRepaint() { }
 
-  init(template, style, styleDark = {}) {
+  init(template, style, styleDark = {}, attrValueProcessor) {
     return this.initYoga.then(() => {
       const start = new Date();
+
+      if (typeof styleDark  === "function" && arguments.length === 3) {
+        attrValueProcessor = styleDark;
+        styleDark = {}
+      }
 
       this.cssRules = {}; // 保存下css规则
       this.cssDarkRules = {}; // 保存下css darkmode的规则
@@ -126,8 +132,7 @@ class _Layout extends Element {
         }
       }
 
-      /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
-      const jsonObj = parser.parse(template, { // todo 需要一个预解析操作
+      const parseConfig = { // todo 需要一个预解析操作
         attributeNamePrefix: "",
         attrNodeName: "attr", //default is 'false'
         textNodeName: "#text",
@@ -138,8 +143,16 @@ class _Layout extends Element {
         parseAttributeValue: false,
         trimValues: true,
         parseTrueNumberOnly: false,
-      }, true);
+      }
+
+      if (attrValueProcessor) {
+        parseConfig.attrValueProcessor =  attrValueProcessor;
+      }
+
+      /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
+      const jsonObj = parser.parse(template, parseConfig, true);
       /*}*/
+
 
       const xmlTree = jsonObj.children[0];
 
@@ -193,7 +206,7 @@ class _Layout extends Element {
     this.flushing = true
     nextTick(() => {
       log('nextTick forceUpdate--------');
-     
+
       this.repaint();
       this.flushing = false;
     })
@@ -215,7 +228,7 @@ class _Layout extends Element {
     const renderer = this.renderContext;
     // log(renderer.glRects.length);
     renderer.draw();
-   
+
   }
 
   getLayoutData() { // 缓存layout相关的数据，方便冷启动时恢复
@@ -252,7 +265,7 @@ class _Layout extends Element {
     // 第一层根节点，宽度如果是设置了百分比，把宽度改成屏幕的宽度
     for (let i = 0; i < this.childNodes.length; i++) {
       const child = this.childNodes[i];
-     
+
       const style = getElementStyle.call(child, isDarkMode);
       const computedStyle = getElementStyle.call(child, isDarkMode);
 
@@ -264,6 +277,7 @@ class _Layout extends Element {
         this.renderport.width = computedStyle.width;
       }
     }
+
     if (
       this.layoutData
       && this.layoutData.layoutBoxTree
@@ -317,7 +331,7 @@ class _Layout extends Element {
     for (let i = 0; i < this.childNodes.length; i++) {
       this.renderport.height += this.childNodes[i].layoutBox.height;
     }
-    this.viewport.height = this.renderport.height;
+    this.viewport.height = this.renderport.height
     log('viewport.height', this.viewport.height);
 
     this.renderContext.width = this.viewport.width * this.scale;
@@ -326,7 +340,7 @@ class _Layout extends Element {
     this.debugInfo.layoutChildren = new Date() - start;
 
     log(`computeLayout time ${this.debugInfo.computeLayout}`);
-   
+
     if (this._firstComputeLayout && !this._useLayoutData) { // 这里统计首次计算布局并且没有序列化数据的耗时
       this._firstComputeLayout = false;
     } else if (!this._useLayoutData) {
@@ -358,7 +372,7 @@ class _Layout extends Element {
     updateRealLayout.call(
       this,
       this.childNodes,
-      this.viewport.width / this.renderContext.width
+      this.viewport.width / (this.renderContext.width / this.scale)
     );
   }
 
@@ -387,6 +401,8 @@ class _Layout extends Element {
     const list = _getChildsByPos(tree, x, y, []);
     const length = list.length;
 
+    console.log('event list', list)
+
     return list[length - 1];
   }
 
@@ -412,7 +428,7 @@ class _Layout extends Element {
       }
 
       const item = touch && this.getChildByPos(this, touch.clientX - offsetLeft, touch.clientY - offsetTop);
-      log(eventName, 'item', item.className);
+      // log(eventName, 'item', item.className);
       event.item = item;
       event.target = item;
 
@@ -423,7 +439,7 @@ class _Layout extends Element {
       }
 
       if (eventName === 'touchend' && isClick(this.touchMsg)) {
-        log('emit click event!')
+        // log('emit click event!')
         item && item.emit('click', event);
       }
 
@@ -477,7 +493,7 @@ class _Layout extends Element {
 
     // this.canvasContext.addEventListener('mousedown', this._touchStartHandler);
     // this.canvasContext.addEventListener('mouseup', this._touchEndHandler);
-    
+
     if ( typeof wx !== 'undefined' ) {
       wx.onTouchStart(this.touchStart);
       wx.onTouchMove(this.touchMove);
@@ -493,11 +509,17 @@ class _Layout extends Element {
 
   unbindEvents() {
     if (this.hasEventHandler) {
-      log('removeEventListener when clear');
-      this.canvasContext.removeEventListener('touchstart', this._touchStartHandler);
-      this.canvasContext.removeEventListener('touchmove', this._touchMoveHandler);
-      this.canvasContext.removeEventListener('touchend', this._touchEndHandler);
-      this.canvasContext.removeEventListener('touchcancel', this._touchCancelHandler);
+      if ( typeof wx !== 'undefined' ) {
+        wx.offTouchStart(this.touchStart);
+        wx.offTouchMove(this.touchMove);
+        wx.offTouchEnd(this.touchEnd);
+        wx.offTouchCancel(this.touchCancel);
+      } else {
+        this.canvasContext.removeEventListener('touchstart', this._touchStartHandler);
+        this.canvasContext.removeEventListener('touchmove', this._touchMoveHandler);
+        this.canvasContext.removeEventListener('touchend', this._touchEndHandler);
+        this.canvasContext.removeEventListener('touchcancel', this._touchCancelHandler);
+      }
       this.hasEventHandler = false;
     }
   }

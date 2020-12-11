@@ -3,7 +3,7 @@ import { createRender, VIDEOS, renderDetection } from '../../renderer/util.js';
 
 
 import { createImage } from '../common/util'
-// const {WXWebAssembly, wx} = pluginEnv.customEnv;
+const {WXWebAssembly, wx} = pluginEnv.customEnv;
 
 /**
  * @description 逻辑线程渲染管理器，用于搜集每个节点需要的渲染数据

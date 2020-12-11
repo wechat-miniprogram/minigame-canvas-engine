@@ -238,13 +238,13 @@ export function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) 
     if (child.parent) {
       child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
       child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
-      child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
-      child.realLayoutBox.realY = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
+      // child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+      // child.realLayoutBox.realY = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
     } else {
       child.layoutBox.absoluteX = child.layoutBox.left;
       child.layoutBox.absoluteY = child.layoutBox.top;
-      child.realLayoutBox.realX = child.realLayoutBox.left;
-      child.realLayoutBox.realY = child.realLayoutBox.top;
+      // child.realLayoutBox.realX = child.realLayoutBox.left;
+      // child.realLayoutBox.realY = child.realLayoutBox.top;
     }
 
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;

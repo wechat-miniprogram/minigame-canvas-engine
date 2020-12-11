@@ -172,9 +172,9 @@ export default class Element {
   }
 
   get hasBorderRadius() {
-    const isDarkMode = this.root.isDarkMode();   
+    const isDarkMode = this.root.isDarkMode();
     const style = getElementStyle.call(this, isDarkMode);
-    
+
     return style.borderRadius ||
       style.borderLeftBottomRadius ||
       style.borderLeftTopRadius ||
@@ -371,6 +371,9 @@ export default class Element {
   }
 
   _refreshStyleAfterClassSet(className) {
+    const { root } = this;
+
+    console.log(this.styleInit, this.styleActive, this.styleDarkInit, this.styleDarkInit)
     this.className = className.join(' ');
 
       this.styleInit = {};
@@ -398,6 +401,7 @@ export default class Element {
         this.styleDarkInit[prop] = this.styleProp[prop];
       });
 
+      console.log(this.styleInit, this.styleActive, this.styleDarkInit, this.styleDarkInit)
       this.root.beforeReflow();
       this.root.emit('reflow');
   }
@@ -409,7 +413,7 @@ export default class Element {
     if (classNameIdx > -1) {
       const { root } = this;
       className.splice(classNameIdx, 1);
-      
+
       this._refreshStyleAfterClassSet(className)
     }
   }

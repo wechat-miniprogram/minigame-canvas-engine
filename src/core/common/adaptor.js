@@ -12,7 +12,9 @@ export function initYoga() {
     yoga = res;
     Node = yoga.Node;
     defaultNode = new Node();
+    // defaultNode =  Node.create();
   })
+
 }
 
 yoga = Yoga.init({ sync: true });
@@ -30,8 +32,10 @@ function getYogaTree(node) {
   let yogaNode = null;
 
   if (node.yogaNode) {
-    yogaNode = node.yogaNode;
-    yogaNode.copyStyle(defaultNode);
+    // yogaNode = node.yogaNode;
+    // yogaNode.copyStyle(defaultNode);
+    yogaNode = Node.create();
+    node.yogaNode = yogaNode;
   } else {
     yogaNode = Node.create();
     node.yogaNode = yogaNode;

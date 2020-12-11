@@ -56,7 +56,7 @@ class TextManager {
         fontFamily: style.fontFamily || null,
       }, node.root.getFontSize());
 
-      const maxWidth = style.width || node.parent.layoutBox.width;
+      const maxWidth = style.width || node.parent.layoutBox.width
 
       // if (node.noWrapWidth > node.parent.layoutBox.width) { // 文本的宽度大于父节点的宽度，需要给文本换行
       if (measure(node.valueInit).width > maxWidth) { // 文本的宽度大于父节点的宽度，需要给文本换行
@@ -66,6 +66,8 @@ class TextManager {
           fontSize: style.fontSize || null,
           fontFamily: style.fontFamily || null,
         }, node.root.getFontSize());
+
+        // console.log(nodeTextArray)
 
         if (style.textOverflow === 'ellipsis' && style.whiteSpace === 'nowrap') { // 单行溢出...
           const t = nodeTextArray[0] || ''; // 取截断后的第一个文本片段
@@ -120,6 +122,7 @@ class TextManager {
     while ((m = finder(_text, width, textArray, measure)) > -1) {
       _text = _text.substring(m, _text.length);
     }
+    console.log(textArray)
     return textArray;
   }
 }
