@@ -3,7 +3,7 @@ import { createRender, VIDEOS, renderDetection } from '../../renderer/util.js';
 
 
 import { createImage } from '../common/util'
-const {WXWebAssembly, wx} = pluginEnv.customEnv;
+const { wx } = pluginEnv.customEnv;
 
 /**
  * @description 逻辑线程渲染管理器，用于搜集每个节点需要的渲染数据
@@ -16,9 +16,6 @@ function createCanvas() {
 }
 
 const info = wx.getSystemInfoSync();
-
-const dpr = info.devicePixelRatio;
-// const dpr = 1;
 
 let renderer;
 export default class RenderContextManager {

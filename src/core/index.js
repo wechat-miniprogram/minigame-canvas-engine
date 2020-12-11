@@ -31,6 +31,11 @@ function getFontManager() {
 
   return fontManager;
 }
+
+const start = new Date();
+const initYogaPromise = initYoga().then(() => {
+  log('yoga init cost', new Date() - start)
+})
 class _Layout extends Element {
   constructor({ style, name, isDarkMode, getWidth, getSize, getFontSize, getFps, canvasId, canvasContext, fontManager, scale = 1 } = {}) {
     super({
@@ -88,11 +93,6 @@ class _Layout extends Element {
     this._videos = [];
     this._firstComputeLayout = true; // 是否首次计算布局
     this._useLayoutData = false; // 是否使用了序列化的布局数据
-
-    const start = new Date();
-    this.initYoga = initYoga().then(() => {
-      log('yoga init cost', new Date() - start)
-    })
   }
 
   methods(config) {
@@ -107,7 +107,7 @@ class _Layout extends Element {
   initRepaint() { }
 
   init(template, style, styleDark = {}, attrValueProcessor) {
-    return this.initYoga.then(() => {
+    return initYogaPromise.then(() => {
       const start = new Date();
 
       if (typeof styleDark  === "function" && arguments.length === 3) {
@@ -400,8 +400,6 @@ class _Layout extends Element {
   getChildByPos(tree, x, y) {
     const list = _getChildsByPos(tree, x, y, []);
     const length = list.length;
-
-    console.log('event list', list)
 
     return list[length - 1];
   }

@@ -373,7 +373,6 @@ export default class Element {
   _refreshStyleAfterClassSet(className) {
     const { root } = this;
 
-    console.log(this.styleInit, this.styleActive, this.styleDarkInit, this.styleDarkInit)
     this.className = className.join(' ');
 
       this.styleInit = {};

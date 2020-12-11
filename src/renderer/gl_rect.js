@@ -1,22 +1,6 @@
-// import rgba from 'color-rgba';
 import { orthographic, translate, translation, scale } from './m4.js';
 import vertex from './roundedRect.vert';
 import fragment from './roundedRect.frag';
-
-// function cached(fn) {
-//   const cache = Object.create(null);
-//   return (function cachedFn(str) {
-//     const hit = cache[str];
-//     return hit || (cache[str] = fn(str));
-//   });
-// }
-
-// const normalizeColor = cached(color => rgba(color).map((c, i) => {
-//   if (i === 3) {
-//     return c;
-//   }
-//   return c / 255;
-// }));
 
 const positions = new Float32Array([
   0, 0,
@@ -27,7 +11,6 @@ const positions = new Float32Array([
   1, 1,
 ]);
 
-console.log('gl_rect init');
 function createProgram(gl) {
   const textureMap = new WeakMap();
   let program;
