@@ -4,6 +4,7 @@ import {
 } from '../components/index.js'
 
 import { getElementStyle } from './util';
+import { dash2camel } from './util.js';
 
 const constructorMap = {
   view: View,
