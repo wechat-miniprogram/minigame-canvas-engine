@@ -100,6 +100,7 @@ class _Layout extends Element {
   setCanvasContext(ctx, scale) {
     this.canvasContext = ctx;
     this.renderContext = new RenderContextManager(ctx, scale);
+    this.renderContext.layout = this;
   }
 
   initRepaint() { }

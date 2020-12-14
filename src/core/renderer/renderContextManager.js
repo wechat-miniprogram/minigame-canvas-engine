@@ -15,8 +15,6 @@ function createCanvas() {
   return wx.createCanvas();
 }
 
-const info = wx.getSystemInfoSync();
-
 let renderer;
 export default class RenderContextManager {
   constructor(canvasContext, scale = 1) {
@@ -29,6 +27,8 @@ export default class RenderContextManager {
       createImage,
       createCanvas
     });
+
+    this.layout = null;
   }
   createRoundRect(id, type) {
     const glRect = new RenderContext(id, type);
@@ -52,6 +52,7 @@ export default class RenderContextManager {
         height: this.height,
         glRects: this.glRects
     }, this.canvasContext.canvas)
+
   }
 
   testRun(data, canvas) {
@@ -62,7 +63,11 @@ export default class RenderContextManager {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
-    renderer.repaint(gl, data.glRects);
+    // renderer.repaint(gl, data.glRects);
+
+    renderer.resetGl(gl);
+    
+    renderer.repaintTree(gl, this.layout.childNodes[0]);
 
     // const result = renderDetection(gl, 30);
     // console.log(`render detection ${result}`);

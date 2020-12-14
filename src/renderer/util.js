@@ -1,5 +1,8 @@
 import { SCALE_KEY } from './const.js';
 
+function none() {
+
+}
 const IMAGE_POOL = Object.create(null);
 
 export function createImageLoader(createImage) {
@@ -220,7 +223,7 @@ function scaleData(data, dpr) {
 
 export const VIDEOS = Object.create(null);
 
-let flag = false
+const glPool = new WeakMap();
 
 export function createRender({ dpr, createImage, createCanvas }) {
   const loadImage = createImageLoader(createImage);
@@ -249,70 +252,81 @@ export function createRender({ dpr, createImage, createCanvas }) {
 
       gl.useProgram(gl.program.program);
   }
-  const glPool = {
 
+  function drawOneGlRect(gl, rect, repaintCbk = none) {
+    const glRectData = scaleData(rect, dpr);
+
+    const dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
+    let glRect = glPool.get(rect);
+    if (!glRect) {      
+      glRect = gl.createRoundRect(0);
+      
+      // glPool.set(rect, glRect);
+    
+      glRect.updateContours(dimension);
+      glRectData.radius && glRect.setRadius(glRectData.radius);
+      glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
+      glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
+    }
+
+    if (glRectData.image) {
+      const { src } = glRectData.image;
+      loadImage(src, (image, lazy) => {
+        glRect.setTexture({ image });
+        if (lazy) {
+          repaintCbk();
+        }
+      });
+    }
+    if (glRectData.backgroundImage) {
+      const { src, size, position } = glRectData.backgroundImage;
+      loadImage(src, (image, lazy) => {
+        const rect = getBgImageRect(image, size, position, glRectData.borderWidth || 0, dimension, dpr);
+        glRect.setTexture({ image, rect });
+        if (lazy) {
+          repaintCbk();
+        }
+      });
+    }
+    if (glRectData.text) {
+      glRect.setTexture({ image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr) });
+    }
+    if (glRectData.type === 'Video') {
+      const video = VIDEOS[`${gl.canvas.id}-${glRectData.id}`];
+
+      if (video) {
+        video.repaint = () => repaintCbk();
+
+        if (video.iData) {
+          glRect.setTextureData({ imageData: video.iData, width: video.vWidth, height: video.vHeight });
+        }
+      }
+    }
+    glRect.updateViewPort();
+    glRect.draw();
   }
+
   return {
     loadImage,
+    resetGl,
+
+    repaintTree: function repaintTree(gl, tree) {      
+      drawOneGlRect(gl, tree.glRect);
+      
+      tree.childNodes.forEach(child => {
+        repaintTree(gl, child);
+      })
+    },
+
     repaint: function drawRects(gl, glRects) {
       let start = new Date();
       
       resetGl(gl);
       
-      glRects.forEach((d, idx) => {
-        const glRectData = scaleData(d, dpr);
-
-        const dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
-        let glRect = glPool[idx]; 
-        if (!glRect) {
-          // console.log('命中缓存')
-          
-          glRect = gl.createRoundRect(idx);
-          
-          glPool[idx] = glRect;
-        
-          glRect.updateContours(dimension);
-          glRectData.radius && glRect.setRadius(glRectData.radius);
-          glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
-          glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
-        }
-
-
-        if (glRectData.image) {
-          const { src } = glRectData.image;
-          loadImage(src, (image, lazy) => {
-            glRect.setTexture({ image });
-            if (lazy) {
-              drawRects(gl, glRects);
-            }
-          });
-        }
-        if (glRectData.backgroundImage) {
-          const { src, size, position } = glRectData.backgroundImage;
-          loadImage(src, (image, lazy) => {
-            const rect = getBgImageRect(image, size, position, glRectData.borderWidth || 0, dimension, dpr);
-            glRect.setTexture({ image, rect });
-            if (lazy) {
-              drawRects(gl, glRects);
-            }
-          });
-        }
-        if (glRectData.text) {
-          glRect.setTexture({ image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr) });
-        }
-        if (glRectData.type === 'Video') {
-          const video = VIDEOS[`${gl.canvas.id}-${glRectData.id}`];
-
-          if (video) {
-            video.repaint = () => drawRects(gl, glRects);
-
-            if (video.iData) {
-              glRect.setTextureData({ imageData: video.iData, width: video.vWidth, height: video.vHeight });
-            }
-          }
-        }
-        glRect.updateViewPort();
-        glRect.draw();
+      glRects.forEach((item, idx) => {
+        drawOneGlRect(gl, item, () => {
+          drawRects(gl, glRects);
+        })
       });
 
       console.log('repaint cost', new Date() - start)
