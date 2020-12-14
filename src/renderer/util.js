@@ -226,11 +226,8 @@ export function createRender({ dpr, createImage, createCanvas }) {
   const loadImage = createImageLoader(createImage);
   const getTextTexture = createTextTexture(createCanvas);
 
-  return {
-    loadImage,
-    repaint: function drawRects(gl, glRects) {
-      let start = new Date();
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+  function resetGl(gl) {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
       {
         gl.enable(gl.BLEND);
@@ -251,16 +248,36 @@ export function createRender({ dpr, createImage, createCanvas }) {
       }
 
       gl.useProgram(gl.program.program);
+  }
+  const glPool = {
 
+  }
+  return {
+    loadImage,
+    repaint: function drawRects(gl, glRects) {
+      let start = new Date();
+      
+      resetGl(gl);
+      
       glRects.forEach((d, idx) => {
         const glRectData = scaleData(d, dpr);
-        // console.log(JSON.stringify(glRectData));
-        const glRect = gl.createRoundRect(idx);
+
         const dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
-        glRect.updateContours(dimension);
-        glRectData.radius && glRect.setRadius(glRectData.radius);
-        glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
-        glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
+        let glRect = glPool[idx]; 
+        if (!glRect) {
+          // console.log('命中缓存')
+          
+          glRect = gl.createRoundRect(idx);
+          
+          glPool[idx] = glRect;
+        
+          glRect.updateContours(dimension);
+          glRectData.radius && glRect.setRadius(glRectData.radius);
+          glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
+          glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
+        }
+
+
         if (glRectData.image) {
           const { src } = glRectData.image;
           loadImage(src, (image, lazy) => {
@@ -298,7 +315,7 @@ export function createRender({ dpr, createImage, createCanvas }) {
         glRect.draw();
       });
 
-      // console.log('repaint cost', new Date() - start)
+      console.log('repaint cost', new Date() - start)
     },
   };
 }

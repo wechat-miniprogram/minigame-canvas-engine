@@ -7,12 +7,10 @@ import { adaptor, updateLayout, calculateDirtyNode, initYoga } from './common/ad
 import PseudoClassManager from './common/pseudoClassManager.js';
 import TextManager from './common/textManager.js';
 import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle, createImage } from './common/util.js';
-import { dash2camel } from './common/util.js';
 import RenderContextManager from './renderer/renderContextManager';
 import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElementsByClassName, _getChildsByPos, updateRealLayout } from './common/vd';
-import { scale } from '../renderer/m4.js';
 
-const {WXWebAssembly, wx} = pluginEnv.customEnv;
+const {wx} = pluginEnv.customEnv;
 // 默认的字体管理器getFontManager
 function getFontManager() {
   const measureCanvas = wx.createCanvas();
@@ -153,7 +151,6 @@ class _Layout extends Element {
       const jsonObj = parser.parse(template, parseConfig, true);
       /*}*/
 
-
       const xmlTree = jsonObj.children[0];
 
       this.debugInfo.xmlTree = new Date() - start;
@@ -228,7 +225,6 @@ class _Layout extends Element {
     const renderer = this.renderContext;
     // log(renderer.glRects.length);
     renderer.draw();
-
   }
 
   getLayoutData() { // 缓存layout相关的数据，方便冷启动时恢复

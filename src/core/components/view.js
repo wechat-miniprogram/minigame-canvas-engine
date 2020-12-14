@@ -24,7 +24,6 @@ export default class View extends Block {
     });
 
     this.type = 'View';
-    this.renderBoxes = [];
 
     nextTick(() => {
       const style = this.root.isDarkMode() ? this.styleInit : this.styleDarkInit;
@@ -70,7 +69,7 @@ export default class View extends Block {
     }
     const renderer = this.root ? this.root.renderContext : this.renderContext;
     if (!this.glRect) {
-      this.glRect = renderer.createRoundRect(this.id, this.type);
+      this.glRect = renderer.createRoundRect(this.id, this.type);      
     }
     this.glRect.reset();
     const { width, height, absoluteX, absoluteY } = this.layoutBox;
@@ -96,4 +95,3 @@ export default class View extends Block {
     }
   }
 }
-

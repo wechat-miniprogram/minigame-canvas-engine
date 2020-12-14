@@ -400,7 +400,6 @@ export default class Element {
         this.styleDarkInit[prop] = this.styleProp[prop];
       });
 
-      console.log(this.styleInit, this.styleActive, this.styleDarkInit, this.styleDarkInit)
       this.root.beforeReflow();
       this.root.emit('reflow');
   }

@@ -1,4 +1,4 @@
-// import { getDpr } from './util.js';
+const dpr = 3;
 
 export default class Touch {
   constructor() {
@@ -7,6 +7,8 @@ export default class Touch {
     this.startFunc = this.touchStartHandler.bind(this);
     this.endFunc   = this.touchEndHandler.bind(this);
     this.moveFunc  = this.touchMoveHandler.bind(this);
+
+    this.touchDirection = "X";
   }
 
   reset() {
@@ -28,7 +30,7 @@ export default class Touch {
 
     // for istanbul
     /* istanbul ignore if*/
-    if (typeof cancelAnimationFrame !== 'undefined') {
+    if ( typeof cancelAnimationFrame !== 'undefined' ) {
       cancelAnimationFrame(this.animate);
     }
   }
@@ -50,22 +52,20 @@ export default class Touch {
     this.start = start;
     this.end   = end;
 
-    if (start === 0 && end === 0) {
+    if ( start === 0 && end === 0 ) {
       return;
     }
 
     this.scroll = scroll;
-
-    // this.animate = requestAnimationFrame(this.loop.bind(this));
   }
 
   // 保证滚动目标位置在滚动区间内
   limitTarget(target) {
     let result = target;
 
-    if (target > this.end) {
+    if ( target > this.end ) {
       result = this.end;
-    } else if (target < this.start) {
+    } else if ( target < this.start ) {
       result = this.start;
     }
 
@@ -73,15 +73,13 @@ export default class Touch {
   }
 
   touchStartHandler(e) {
-    const touch = (e.touches && e.touches[0]) || (e.changedTouches &&  e.changedTouches[0]) || e;
-    if (!touch || !touch.pageX || !touch.pageY) {
+    const touch = (e.touches && e.touches[0]) ||( e.changedTouches &&  e.changedTouches[0]) || e;
+    if ( !touch || !touch.pageX || !touch.pageY ) {
       return;
     }
 
-    // this.touchStartX = touch.clientX * getDpr();
-    // this.touchStartY = touch.clientY * getDpr();
-    this.touchStartX = touch.clientX;
-    this.touchStartY = touch.clientY;
+    this.touchStartX = touch.clientX * dpr;
+    this.touchStartY = touch.clientY * dpr;
     this.touchTime   = new Date();
     this.isMoving    = true;
     this.needProcess = true;
@@ -89,59 +87,72 @@ export default class Touch {
   }
 
   touchMoveHandler(e) {
-    if (!this.isMoving) {
+    if ( !this.isMoving ) {
       return;
     }
-    const touch = (e.touches && e.touches[0]) || (e.changedTouches &&  e.changedTouches[0]) || e;
-    if (!touch || !touch.pageX || !touch.pageY) {
+    const touch = (e.touches && e.touches[0]) ||( e.changedTouches &&  e.changedTouches[0]) || e;
+    if ( !touch || !touch.pageX || !touch.pageY ) {
       return;
     }
 
-    const currY = touch.clientY;
+    let currY = touch.clientY * dpr;
 
-    if (this.touchStartY - currY > 2
-            || this.touchStartY - currY < -2) {
-      this.target -= (this.touchStartY - currY);
+    let currX = touch.clientX * dpr;
+
+    if (this.touchDirection === "Y") {
+      if (   this.touchStartY - currY > 2
+        || this.touchStartY - currY < -2 ) {
+        this.target -= (this.touchStartY - currY);
+      }
+
+      this.target      = this.limitTarget(this.target);
+      this.touchStartY = currY;
+    } else {
+      if (   this.touchStartX - currX > 2
+        || this.touchStartX - currX < -2 ) {
+        this.target -= (this.touchStartX - currX);
+      }
+
+      this.target      = this.limitTarget(this.target);
+      this.touchStartX = currX;
     }
-
-    this.target      = this.limitTarget(this.target);
-    this.touchStartY = currY;
   }
 
   touchEndHandler() {
     this.isMoving = false;
 
-    const timeInS = (Date.now() - this.touchTime) / 1000;
-    /* console.log(Date.now(), this.touchTime.getTime(), Date.now() - this.touchTime);*/
-    if (timeInS < 0.9) {
-      /* console.log(1, timeInS, this.target, this.move);*/
-      this.target += ((this.target - this.move) * 0.6) / (timeInS * 5);
-      /* console.log(2, this.target)*/
+    const timeInS = ( Date.now() - this.touchTime ) / 1000;
+    /*console.log(Date.now(), this.touchTime.getTime(), Date.now() - this.touchTime);*/
+    if ( timeInS < 0.9 ) {
+      /*console.log(1, timeInS, this.target, this.move);*/
+      this.target += (this.target - this.move) * 0.6 / (timeInS * 5);
+      /*console.log(2, this.target)*/
 
       this.target = this.limitTarget(this.target);
-      /* console.log(3, this.target)*/
+      /*console.log(3, this.target)*/
     }
   }
 
   loop() {
-    if (this.needProcess) {
-      if (this.isMoving) {
-        if (this.move !== this.target) {
+    if ( this.needProcess ) {
+      if ( this.isMoving ) {
+        if ( this.move !== this.target ) {
           // 手指移动可能过快，切片以使得滑动流畅
-          if (Math.abs(this.target - this.move) > 1) {
-            this.move += (this.target - this.move) * 0.4;
+          if ( Math.abs(this.target - this.move ) > 1 ) {
+            this.move += (this.target - this.move ) * 0.4;
           } else {
             this.move = this.target;
           }
           this.scroll && this.scroll(this.move);
         }
+
       } else {
-        if (this.move !== this.target) {
+        if ( this.move !== this.target ) {
           /**
-                     * 如果滑动很快，为了滚动流畅，需要将滑动过程切片
-                     */
-          if (Math.abs(this.target - this.move) > 1) {
-            this.move += (this.target - this.move) * 0.3;
+           * 如果滑动很快，为了滚动流畅，需要将滑动过程切片
+           */
+          if ( Math.abs(this.target - this.move ) > 1 ) {
+            this.move += (this.target - this.move ) * 0.3;
           } else {
             this.move = this.target;
           }
@@ -154,7 +165,7 @@ export default class Touch {
       }
 
       this.animate = requestAnimationFrame(this.loop.bind(this));
-    } else if (typeof cancelAnimationFrame !== 'undefined') {
+    } else if ( typeof cancelAnimationFrame !== 'undefined' ) {
       cancelAnimationFrame(this.animate);
     }
   }

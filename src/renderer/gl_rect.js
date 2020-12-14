@@ -124,15 +124,7 @@ function useProgram(gl) {
     textureMap,
   } = gl.program;
 
-  const glPool = {
-
-  }
-
   return function createRoundRect(idx) {
-    if (glPool[idx]) {
-      // console.log('命中缓存')
-      return glPool[idx]
-    }
 
     let x = 0;
     let y = 0;
@@ -278,7 +270,6 @@ function useProgram(gl) {
       },
     };
 
-    glPool[idx] = result;
     return result;
   };
 }

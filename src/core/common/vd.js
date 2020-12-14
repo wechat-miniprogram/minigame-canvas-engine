@@ -1,6 +1,6 @@
 // components
 import {
-  View, Text, Image
+  View, Text, Image, ScrollView
 } from '../components/index.js'
 
 import { getElementStyle } from './util';
@@ -10,6 +10,7 @@ const constructorMap = {
   view: View,
   text: Text,
   image: Image,
+  scrollview: ScrollView,
   // video: Video
 }
 
