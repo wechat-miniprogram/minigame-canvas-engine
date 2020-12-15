@@ -30,6 +30,9 @@ export default class RenderContext {
     this.y = y;
     this.width = width;
     this.height = height;
+
+    this.originX = x;
+    this.originY = y;
   }
   setRadius(r) {
     if (typeof r === 'number') {

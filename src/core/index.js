@@ -222,7 +222,7 @@ class _Layout extends Element {
 
   // 把数据丢给渲染线程
   repaint() {
-    log('repaint call');
+    // log('repaint call');
     const renderer = this.renderContext;
     // log(renderer.glRects.length);
     renderer.draw();

@@ -174,15 +174,16 @@ function useProgram(gl) {
       setBackgroundColor(color) {
         backgroundColor = color;
       },
+
       setTexture({ image, rect = [0, 0, width, height], srcRect } = {}) {
         backgroundImage = image;
         imageWidth = image.width;
         imageHeight = image.height;
         imageRect = rect;
         imageSrcRect = srcRect || [0, 0, image.width, image.height];
-
         result.setTexMatrix();
       },
+
       setTextureData({ imageData, width: tWidth, height: tHeight, rect = [0, 0, width, height], srcRect } = {}) {
         backgroundImageData = imageData;
         imageWidth = tWidth;
@@ -200,7 +201,7 @@ function useProgram(gl) {
         texMatrix = translation(srcX / imageWidth, srcY / imageHeight, 0);
         texMatrix = scale(texMatrix, srcWidth / imageWidth, srcHeight / imageHeight, 1);
       },
-      draw() {
+      draw(needUpdateTexture = false) {
         const dstX = (imageRect[0] || 0) + x + borderWidth;
         const dstY = (imageRect[1] || 0) + y + borderWidth;
         const dstWidth = imageRect[2] || width;
@@ -224,7 +225,13 @@ function useProgram(gl) {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
             textureMap.set(backgroundImage, texId);
           }
+
           gl.bindTexture(gl.TEXTURE_2D, texId);
+          
+          if(needUpdateTexture) {
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
+          }
+          
           hasTexture = true;
         } else if (typeof backgroundImageData !== 'undefined') {
           let texId = textureMap.get(ArrayBuffer);

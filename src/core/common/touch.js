@@ -1,4 +1,4 @@
-const dpr = 3;
+const dpr = 1;
 
 export default class Touch {
   constructor() {

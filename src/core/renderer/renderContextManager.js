@@ -1,9 +1,19 @@
-import { setupGl } from '../../renderer/gl_rect.js';
-import { createRender, VIDEOS, renderDetection } from '../../renderer/util.js';
+import {
+  setupGl
+} from '../../renderer/gl_rect.js';
+import {
+  createRender,
+  VIDEOS,
+  renderDetection
+} from '../../renderer/util.js';
 
 
-import { createImage } from '../common/util'
-const { wx } = pluginEnv.customEnv;
+import {
+  createImage
+} from '../common/util'
+const {
+  wx
+} = pluginEnv.customEnv;
 
 /**
  * @description 逻辑线程渲染管理器，用于搜集每个节点需要的渲染数据
@@ -22,6 +32,9 @@ export default class RenderContextManager {
     this.glRects = [];
     this.scale = scale;
 
+    this.width = 0;
+    this.height = 0;
+
     renderer = createRender({
       dpr: scale,
       createImage,
@@ -29,7 +42,34 @@ export default class RenderContextManager {
     });
 
     this.layout = null;
+
+    this.scrollRenderer = createRender({
+      dpr: scale,
+      createCanvas,
+      createImage
+    });
+    this.scrollCanvas = createCanvas();
+
+    this.hasSetup = false;
+    this.gl = null;
+    this.scrollGl = null;
+    this.hasScroll = false;
   }
+
+  setupScrollGl() {
+
+    const gl = setupGl(this.scrollCanvas);
+    gl.canvas.height = this.height;
+    gl.canvas.width = this.width;
+
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+    this.scrollGl = gl;
+
+    this.layout.scrollview.glRect.glTexture = this.scrollCanvas;
+  }
+
   createRoundRect(id, type) {
     const glRect = new RenderContext(id, type);
     this.glRects.push(glRect);
@@ -42,34 +82,54 @@ export default class RenderContextManager {
     console.log('clear call');
     this.glRects = this.glRects.slice(0, 0);
   }
+
+  getChildrenGlRects(node, res = []) {
+    if (node !== this.layout.scrollview && node.glRect) {
+      const index = this.glRects.indexOf(node.glRect);
+      this.glRects.splice(index, 1);
+      res.push(node.glRect)
+    }
+
+    node.childNodes.forEach(child => {
+      this.getChildrenGlRects(child, res);
+    });
+
+    return res;
+  }
+
   /**
    * @description 传递数据给渲染线程
    */
   draw() {
-    this.testRun({
-        noRepaint: !!this.noRepaint,
-        width: this.width,
-        height: this.height,
-        glRects: this.glRects
-    }, this.canvasContext.canvas)
+    if (!this.hasSetup) {
+      this.hasSetup = true;
 
-  }
+      const gl = setupGl(this.canvasContext.canvas);
+      gl.canvas.height = this.height;
+      gl.canvas.width = this.width;
 
-  testRun(data, canvas) {
-    const gl = setupGl(canvas);
-    gl.canvas.height = data.height;
-    gl.canvas.width = data.width;
-    
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // renderer.repaint(gl, data.glRects);
+      this.gl = gl;
 
-    renderer.resetGl(gl);
-    
-    renderer.repaintTree(gl, this.layout.childNodes[0]);
+      if (this.layout.scrollview) {
+        this.hasScroll = true;
+        this.setupScrollGl();
 
-    // const result = renderDetection(gl, 30);
-    // console.log(`render detection ${result}`);
+        this.scrollGlrects = [];
+        this.getChildrenGlRects(this.layout.scrollview, this.scrollGlrects);
+      }
+    }
+
+    if (this.hasScroll) {
+      // scrollview重绘
+      this.scrollRenderer.resetGl(this.scrollGl);
+      renderer.repaint(this.scrollGl, this.scrollGlrects);
+    }
+
+
+    // 除了scrollview之外的glRects重绘
+    renderer.resetGl(this.gl);
+    renderer.repaint(this.gl, this.glRects);
   }
 }

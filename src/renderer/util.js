@@ -133,7 +133,8 @@ export function createTextTexture(createCanvas) {
   return function ([x, y, width, height], { valueShow, valueBreak }, style, dpr = 2) {
     style.font = `${style.fontWeight || ''} ${style.fontSize * dpr}px ${style.fontFamily}`;
 
-    const key = `${x}_${y}_${width}_${height}_${valueShow}_${style.font}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
+    // const key = `${x}_${y}_${width}_${height}_${valueShow}_${style.font}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
+    const key = `${width}_${height}_${valueShow}_${style.font}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
 
     if (TEXT_TEXTURE[key]) {
       return TEXT_TEXTURE[key];
@@ -225,37 +226,41 @@ export const VIDEOS = Object.create(null);
 
 const glPool = new WeakMap();
 
+/**
+ * 
+ * @param {CanvasContext} gl
+ */
+function resetGl(gl) {
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+    {
+      gl.enable(gl.BLEND);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+      // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      // gl.blendEquation(gl.FUNC_ADD);
+      // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE);
+      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+    }
+
+    { // VBO
+      // bufferId = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.program.bufferId);
+      gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
+      gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(gl.program.vPosition);
+    }
+
+    gl.useProgram(gl.program.program);
+}
+
 export function createRender({ dpr, createImage, createCanvas }) {
   const loadImage = createImageLoader(createImage);
   const getTextTexture = createTextTexture(createCanvas);
 
-  function resetGl(gl) {
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-
-      {
-        gl.enable(gl.BLEND);
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-        // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        // gl.blendEquation(gl.FUNC_ADD);
-        // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE);
-        // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-      }
-
-      { // VBO
-        // bufferId = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.program.bufferId);
-        gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
-        gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(gl.program.vPosition);
-      }
-
-      gl.useProgram(gl.program.program);
-  }
-
   function drawOneGlRect(gl, rect, repaintCbk = none) {
     const glRectData = scaleData(rect, dpr);
-
+  
     const dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
     let glRect = glPool.get(rect);
     if (!glRect) {      
@@ -268,7 +273,7 @@ export function createRender({ dpr, createImage, createCanvas }) {
       glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
       glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
     }
-
+  
     if (glRectData.image) {
       const { src } = glRectData.image;
       loadImage(src, (image, lazy) => {
@@ -288,48 +293,65 @@ export function createRender({ dpr, createImage, createCanvas }) {
         }
       });
     }
+
     if (glRectData.text) {
       glRect.setTexture({ image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr) });
     }
+
+    if (glRectData.type === 'ScrollView' && glRectData.glTexture) {
+      glRect.setTexture({ image: glRectData.glTexture, srcRect: [glRectData.x, glRectData.y, glRectData.width, glRectData.height]});
+    }
+
     if (glRectData.type === 'Video') {
       const video = VIDEOS[`${gl.canvas.id}-${glRectData.id}`];
-
+  
       if (video) {
         video.repaint = () => repaintCbk();
-
+  
         if (video.iData) {
           glRect.setTextureData({ imageData: video.iData, width: video.vWidth, height: video.vHeight });
         }
       }
     }
     glRect.updateViewPort();
-    glRect.draw();
-  }
 
+    const needUpdateTexture = !!(glRectData.type === 'ScrollView');
+    glRect.draw(needUpdateTexture);
+  }
+  
   return {
     loadImage,
     resetGl,
 
-    repaintTree: function repaintTree(gl, tree) {      
-      drawOneGlRect(gl, tree.glRect);
+    /**
+     * 
+     * @param {CanvasContext} gl canvas webgl上下文 
+     * @param {Object} node layout节点树
+     * 
+     * 通过递归的方式绘制一颗节点树，Scrollview绘制需要知道状态，而不是简单解耦绘制
+     */
+    repaintTree: function repaintTree(gl, node, skipScrollView = true) {      
+      drawOneGlRect(gl, node.glRect);
       
-      tree.childNodes.forEach(child => {
-        repaintTree(gl, child);
-      })
+      if (node.type === 'ScrollView' && skipScrollView) {
+        // console.log("skipScrollView");
+      } else {
+        node.childNodes.forEach(child => {
+          repaintTree(gl, child);
+        });  
+      }
     },
 
     repaint: function drawRects(gl, glRects) {
-      let start = new Date();
-      
-      resetGl(gl);
-      
+      // let start = new Date();
+            
       glRects.forEach((item, idx) => {
         drawOneGlRect(gl, item, () => {
-          drawRects(gl, glRects);
+          // drawRects(gl, glRects);
         })
       });
 
-      console.log('repaint cost', new Date() - start)
+      // console.log('repaint cost', new Date() - start)
     },
   };
 }
@@ -353,7 +375,6 @@ export function renderDetection(gl, count) {
     const column = Math.random() * height; // 取一列
     const p = 3 * row * width + 3 * column;
     const key = `${pixels[p]}_${pixels[p + 1]}_${pixels[p + 2]}`;
-    // result.push(mapData);
     if (map[key]) {
       map[key] += 1;
       if (map[key] > map[maxKey]) {
