@@ -271,6 +271,12 @@ export function updateLayout(node) {
     node.yogaNode.calculateLayout();
   }
 
+  // if (node.type === "ScrollView") {
+  //   console.log('traverseToChangeGlRect for ScrollView', node.scrollLeft, node.scrollTop)
+  //   node.traverseToChangeGlRect(node, node.scrollLeft, node.scrollTop);
+  //   console.log(node)
+  // }
+
   const layout = node.yogaNode.getComputedLayout();
 
   node.layoutBox = {

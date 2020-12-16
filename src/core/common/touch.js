@@ -28,6 +28,8 @@ export default class Touch {
     // 滚动回调函数
     this.scroll = null;
 
+    this.currentEvent = null;
+
     // for istanbul
     /* istanbul ignore if*/
     if ( typeof cancelAnimationFrame !== 'undefined' ) {
@@ -84,6 +86,8 @@ export default class Touch {
     this.isMoving    = true;
     this.needProcess = true;
     this.animate     = requestAnimationFrame(this.loop.bind(this));
+
+    this.currentEvent = e;
   }
 
   touchMoveHandler(e) {
@@ -116,21 +120,21 @@ export default class Touch {
       this.target      = this.limitTarget(this.target);
       this.touchStartX = currX;
     }
+
+    this.currentEvent = e;
   }
 
-  touchEndHandler() {
+  touchEndHandler(e) {
     this.isMoving = false;
 
     const timeInS = ( Date.now() - this.touchTime ) / 1000;
-    /*console.log(Date.now(), this.touchTime.getTime(), Date.now() - this.touchTime);*/
     if ( timeInS < 0.9 ) {
-      /*console.log(1, timeInS, this.target, this.move);*/
       this.target += (this.target - this.move) * 0.6 / (timeInS * 5);
-      /*console.log(2, this.target)*/
 
       this.target = this.limitTarget(this.target);
-      /*console.log(3, this.target)*/
     }
+
+    this.currentEvent = e;
   }
 
   loop() {
@@ -143,7 +147,7 @@ export default class Touch {
           } else {
             this.move = this.target;
           }
-          this.scroll && this.scroll(this.move);
+          this.scroll && this.scroll(this.move, this.currentEvent);
         }
 
       } else {
@@ -157,7 +161,7 @@ export default class Touch {
             this.move = this.target;
           }
 
-          this.scroll && this.scroll(this.move);
+          this.scroll && this.scroll(this.move, this.currentEvent);
         } else {
           // 滑动结束，停止动画
           this.needProcess = false;

@@ -299,6 +299,7 @@ export function createRender({ dpr, createImage, createCanvas }) {
     }
 
     if (glRectData.type === 'ScrollView' && glRectData.glTexture) {
+      // console.log(glRectData.glTexture.toDataURL('image/png'))
       glRect.setTexture({ image: glRectData.glTexture, srcRect: [glRectData.x, glRectData.y, glRectData.width, glRectData.height]});
     }
 
@@ -342,16 +343,12 @@ export function createRender({ dpr, createImage, createCanvas }) {
       }
     },
 
-    repaint: function drawRects(gl, glRects) {
-      // let start = new Date();
-            
+    repaint: function drawRects(gl, glRects) {            
       glRects.forEach((item, idx) => {
         drawOneGlRect(gl, item, () => {
-          // drawRects(gl, glRects);
+          drawRects(gl, glRects);
         })
       });
-
-      // console.log('repaint cost', new Date() - start)
     },
   };
 }

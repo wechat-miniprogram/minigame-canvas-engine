@@ -27,14 +27,33 @@ export default class ScrollView extends View {
     this.type            = 'ScrollView';
 
     // 当前列表滚动的值
-    this.top             = 0;
-
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+    
     // 滚动处理器
     this.touch           = new Touch();
 
     this.requestID = null;
 
     this.sharedTexture = false;
+
+    this._enableTouch = true;
+
+    this.hasEventBind = false;
+  }
+
+  get enableTouch() {
+    return this._enableTouch;
+  }
+
+  set enableTouch(value) {
+    this._enableTouch = value;
+
+    if (this._enableTouch) {
+      this.touch.enable();
+    } else {
+      this.touch.disable();
+    }
   }
 
   /**
@@ -67,32 +86,15 @@ export default class ScrollView extends View {
    * 与主canvas的尺寸保持一致
    */
   updateRenderPort(renderport) {
+    if (this.hasEventBind) {
+      console.log('has binded')
+      return;
+    }
+
+    this.hasEventBind = true;
+    
     this.root.scrollview = this;
 
-    this.insertScrollView();
-  }
-
-  traverseToChangeGlRect(node, x = 0, y = 0) {
-    const glRect = node.glRect;
-    if (node.type !== "ScrollView" && glRect) {
-      glRect.x = glRect.originX - x;
-      glRect.y = glRect.originY - y;
-    }
-    
-    node.childNodes.forEach(child => {
-      this.traverseToChangeGlRect(child, x, y);
-    })
-  }
-  
-  scrollRender(top) {
-    // console.log('scrollRender', top)
-    
-    this.traverseToChangeGlRect(this, -top, 0);
-
-    this.root.repaint();
-  }
-
-  insertScrollView() {
     if ( this.scrollHeight > this.layoutBox.height ) {
       this.touch.setTouchRange(
         -(this.scrollHeight - this.layoutBox.height),
@@ -115,6 +117,36 @@ export default class ScrollView extends View {
       this.on('touchstart', this.touch.startFunc);
       this.on('touchmove',  this.touch.moveFunc);
       this.on('touchend',   this.touch.endFunc);
-    } 
+    }
+  }
+
+  /**
+   * 
+   * @param {*} node 
+   * @param {*} x 
+   * @param {*} y 
+   */
+  traverseToChangeGlRect(node, x = 0, y = 0) {
+    const glRect = node.glRect;
+    if (node.type !== "ScrollView" && glRect) {
+      glRect.x = glRect.originX - x;
+      glRect.y = glRect.originY - y;
+    }
+    
+    node.childNodes.forEach(child => {
+      this.traverseToChangeGlRect(child, x, y);
+    })
+  }
+
+  scrollRender(top, event) {
+    this.scrollLeft = -top;
+
+    this.traverseToChangeGlRect(this, this.scrollLeft, 0);
+
+    event.type = 'scroll';
+    event.currentTarget = this;
+
+    this.emit('scroll', event);
+    this.root.repaint(false);
   }
 }

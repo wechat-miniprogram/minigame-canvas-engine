@@ -186,6 +186,10 @@ class _Layout extends Element {
             this.textManager.hasUpdate = false;
 
             this.computeLayout();
+
+            // @hardcode
+            this.scrollview.traverseToChangeGlRect(this.scrollview, this.scrollview.scrollLeft, this.scrollview.scrollTop);
+
             this.drawLayout();
           }
         });
@@ -197,13 +201,13 @@ class _Layout extends Element {
   }
 
   forceUpdate() {
-    log('forceUpdate--------');
+    // log('forceUpdate--------');
     if (this.flushing) {
       return
     }
     this.flushing = true
     nextTick(() => {
-      log('nextTick forceUpdate--------');
+      // log('nextTick forceUpdate--------');
 
       this.repaint();
       this.flushing = false;
@@ -221,11 +225,11 @@ class _Layout extends Element {
   }
 
   // 把数据丢给渲染线程
-  repaint() {
+  repaint(needInit = true) {
     // log('repaint call');
     const renderer = this.renderContext;
     // log(renderer.glRects.length);
-    renderer.draw();
+    renderer.draw(needInit);
   }
 
   getLayoutData() { // 缓存layout相关的数据，方便冷启动时恢复
@@ -250,7 +254,7 @@ class _Layout extends Element {
 
   // 计算布局树
   computeLayout() {
-    log('start computeLayout');
+    // log('start computeLayout');
     const start = new Date();
     this.renderport.height = 0;
 
@@ -380,12 +384,9 @@ class _Layout extends Element {
 
   // 渲染布局树
   drawLayout() {
-    const start = new Date();
     if (!this.canvasContext) {
       return;
     }
-    log('drawLayout')
-    this.debugInfo.renderChildren = new Date() - start;
 
     this.bindEvents();
 

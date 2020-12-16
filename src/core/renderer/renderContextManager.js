@@ -100,8 +100,8 @@ export default class RenderContextManager {
   /**
    * @description 传递数据给渲染线程
    */
-  draw() {
-    if (!this.hasSetup) {
+  draw(needInit = false) {
+    if (!this.hasSetup || needInit) {
       this.hasSetup = true;
 
       const gl = setupGl(this.canvasContext.canvas);

@@ -5,7 +5,7 @@ import { getRgba, getElementStyle } from '../common/util';
 let uuid = 0;
 
 const toEventName = (event, id) => {
-  const elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
+  const elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel', 'scroll'];
 
   if (elementEvent.indexOf(event) !== -1) {
     return `element-${id}-${event}`;
@@ -128,7 +128,7 @@ export default class Element {
 
     nextTick(() => {
       // 事件冒泡逻辑
-      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach((eventName) => {
+      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'scroll'].forEach((eventName) => {
         this.EE.on(toEventName(eventName, this.id), (e, touchMsg) => {
           if (!this.permanentListeners[eventName]) { // 本身没有事件处理器，直接抛给父节点
             this.parent && this.parent.emit(eventName, e, touchMsg);
