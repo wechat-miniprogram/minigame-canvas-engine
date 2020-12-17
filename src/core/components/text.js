@@ -37,9 +37,9 @@ export default class Text extends Element {
         return this.valueInit; // 初始化是的value
       },
       set(newValue) {
-        console.log('set text value 1 ', newValue, this.valueInit);
+        // console.log('set text value 1 ', newValue, this.valueInit);
         if (newValue !== this.valueInit) {
-          console.log('set text value 2 ', newValue, this.valueInit);
+          // console.log('set text value 2 ', newValue, this.valueInit);
           this.valueInit = newValue;
           this.valueShow = newValue;
           this.computedStyle.width = this.root._getTextWidth(this.style, newValue, this.root.getFontSize());

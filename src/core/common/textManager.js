@@ -122,7 +122,7 @@ class TextManager {
     while ((m = finder(_text, width, textArray, measure)) > -1) {
       _text = _text.substring(m, _text.length);
     }
-    console.log(textArray)
+    // console.log(textArray)
     return textArray;
   }
 }

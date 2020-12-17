@@ -106,7 +106,7 @@ class _Layout extends Element {
   initRepaint() { }
 
   deactive() {
-    console.log('deactive call')
+    // console.log('deactive call')
     this._oldState = this.state;
     this.state = STATE.DEACTIVE;
 
@@ -114,7 +114,7 @@ class _Layout extends Element {
   }
 
   active() {
-    console.log('active call')
+    // console.log('active call')
     this.state = this._oldState || STATE.RENDERED;
 
     this._activeTree(this);

@@ -79,7 +79,7 @@ export default class RenderContextManager {
    * @description 清空数据
    */
   clear() {
-    console.log('clear call');
+    // console.log('clear call');
     this.glRects = this.glRects.slice(0, 0);
   }
 
@@ -123,13 +123,11 @@ export default class RenderContextManager {
 
     if (this.hasScroll) {
       // scrollview重绘
-      this.scrollRenderer.resetGl(this.scrollGl);
       renderer.repaint(this.scrollGl, this.scrollGlrects);
     }
 
 
     // 除了scrollview之外的glRects重绘
-    renderer.resetGl(this.gl);
     renderer.repaint(this.gl, this.glRects);
   }
 }

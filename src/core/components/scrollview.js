@@ -36,6 +36,9 @@ export default class ScrollView extends View {
     this.requestID = null;
 
     this.hasEventBind = false;
+    
+    this.overflowX = false;
+    this.overflowY = false;
   }
 
   _active() {
@@ -77,7 +80,7 @@ export default class ScrollView extends View {
    */
   updateRenderPort(renderport) {
     if (this.hasEventBind) {
-      console.log('has binded')
+      // console.log('has binded')
       return;
     }
 
@@ -86,6 +89,9 @@ export default class ScrollView extends View {
     this.root.scrollview = this;
 
     if ( this.scrollHeight > this.layoutBox.height ) {
+      this.overflowY = true;
+      this.touch.touchDirection = "Y";
+      // console.log(this.overflowY)
       this.touch.setTouchRange(
         -(this.scrollHeight - this.layoutBox.height),
         0,
@@ -97,6 +103,9 @@ export default class ScrollView extends View {
       this.on('touchmove',  this.touch.moveFunc);
       this.on('touchend',   this.touch.endFunc);
     } else if (this.scrollWidth > this.layoutBox.width) {
+      this.overflowX = true;
+      this.touch.touchDirection = "X";
+      // console.log(this.overflowX)
       this.touch.setTouchRange(
         -(this.scrollWidth - this.layoutBox.width),
         0,
@@ -129,9 +138,14 @@ export default class ScrollView extends View {
   }
 
   scrollRender(top, event) {
-    this.scrollLeft = -top;
+    if (this.overflowX) {
+      this.scrollLeft = -top;
+    }
+    if (this.overflowY) {
+      this.scrollTop = -top;
+    }
 
-    this.traverseToChangeGlRect(this, this.scrollLeft, 0);
+    this.traverseToChangeGlRect(this, this.scrollLeft, this.scrollTop);
 
     event.type = 'scroll';
     event.currentTarget = this;

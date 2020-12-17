@@ -323,27 +323,9 @@ export function createRender({ dpr, createImage, createCanvas }) {
   return {
     loadImage,
     resetGl,
-
-    /**
-     * 
-     * @param {CanvasContext} gl canvas webgl上下文 
-     * @param {Object} node layout节点树
-     * 
-     * 通过递归的方式绘制一颗节点树，Scrollview绘制需要知道状态，而不是简单解耦绘制
-     */
-    repaintTree: function repaintTree(gl, node, skipScrollView = true) {      
-      drawOneGlRect(gl, node.glRect);
-      
-      if (node.type === 'ScrollView' && skipScrollView) {
-        // console.log("skipScrollView");
-      } else {
-        node.childNodes.forEach(child => {
-          repaintTree(gl, child);
-        });  
-      }
-    },
-
-    repaint: function drawRects(gl, glRects) {            
+    
+    repaint: function drawRects(gl, glRects) {      
+      resetGl(gl);
       glRects.forEach((item, idx) => {
         drawOneGlRect(gl, item, () => {
           drawRects(gl, glRects);
