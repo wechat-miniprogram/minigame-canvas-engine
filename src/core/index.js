@@ -105,6 +105,21 @@ class _Layout extends Element {
 
   initRepaint() { }
 
+  deactive() {
+    console.log('deactive call')
+    this._oldState = this.state;
+    this.state = STATE.DEACTIVE;
+
+    this._deactiveTree(this)
+  }
+
+  active() {
+    console.log('active call')
+    this.state = this._oldState || STATE.RENDERED;
+
+    this._activeTree(this);
+  }
+
   init(template, style, styleDark = {}, attrValueProcessor) {
     return initYogaPromise.then(() => {
       const start = new Date();
@@ -188,7 +203,7 @@ class _Layout extends Element {
             this.computeLayout();
 
             // @hardcode
-            this.scrollview.traverseToChangeGlRect(this.scrollview, this.scrollview.scrollLeft, this.scrollview.scrollTop);
+            this.scrollview && this.scrollview.traverseToChangeGlRect(this.scrollview, this.scrollview.scrollLeft, this.scrollview.scrollTop);
 
             this.drawLayout();
           }
@@ -404,6 +419,9 @@ class _Layout extends Element {
 
   eventHandler(eventName) {
     return function touchEventHandler(e) {
+      if (this.state === STATE.DEACTIVE) {
+        return;
+      }
       const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
       if (!touch.timeStamp) {
         touch.timeStamp = e.timeStamp || Date.now();
@@ -465,19 +483,19 @@ class _Layout extends Element {
     if (this.hasEventHandler) {
       return;
     }
-    log('bindEvents call');
+    // log('bindEvents call');
 
     this.hasEventHandler = true;
 
     this._touchStartHandler = (e) => {
-      log('touch start');
+      // log('touch start');
       this.touchStart(e);
     }
     this._touchMoveHandler = (e) => {
       this.touchMove(e);
     }
     this._touchEndHandler = (e) => {
-      log('touch end');
+      // log('touch end');
       this.touchEnd(e);
       // log('before pseudoClassManager clearActiveState');
       this.pseudoClassManager.clearActiveState(); // 清除所有:active的状态

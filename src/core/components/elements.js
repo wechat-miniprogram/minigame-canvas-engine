@@ -232,6 +232,32 @@ export default class Element {
     }
   }
 
+  _activeTree(node) {
+    node._active();
+
+    node.childNodes.forEach(child => {
+      this._activeTree(child);
+    })
+  }
+
+  _deactiveTree(node) {
+    node._deactive();
+
+    node.childNodes.forEach(child => {
+      this._deactiveTree(child);
+    })
+  }
+
+  // 子类填充实现
+  _active() {
+
+  }
+
+  // 子类填充实现
+  _deactive() {
+    
+  }
+
   // 子类填充实现
   insert() {}
 

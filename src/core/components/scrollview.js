@@ -35,25 +35,15 @@ export default class ScrollView extends View {
 
     this.requestID = null;
 
-    this.sharedTexture = false;
-
-    this._enableTouch = true;
-
     this.hasEventBind = false;
   }
 
-  get enableTouch() {
-    return this._enableTouch;
+  _active() {
+    this.touch.enable();
   }
 
-  set enableTouch(value) {
-    this._enableTouch = value;
-
-    if (this._enableTouch) {
-      this.touch.enable();
-    } else {
-      this.touch.disable();
-    }
+  _deactive() {
+    this.touch.disable();
   }
 
   /**

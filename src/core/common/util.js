@@ -73,6 +73,7 @@ export const STATE = {
   INITED: 1,
   RENDERED: 2,
   CLEAR: 3,
+  DEACTIVE: 4,
 };
 export const DEFAULT_FONT_FAMILY = 'sans-serif';
 
@@ -154,7 +155,7 @@ export function getElementStyle(isDarkMode, needInnerStyle = true) {
 }
 
 export function log() {
-  console.log.apply(null, arguments)
+  // console.log.apply(null, arguments)
 }
 
 export function createImage() {

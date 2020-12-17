@@ -102,7 +102,6 @@ function createProgram(gl) {
 }
 
 function useProgram(gl) {
-  console.log('useProgram');
   if (!gl.program) {
     gl.program = createProgram(gl); // eslint-disable-line
   }
