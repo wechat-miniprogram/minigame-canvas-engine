@@ -1,3 +1,5 @@
+const {wx} = pluginEnv.customEnv;
+
 export function throttle(fn, threshhold, scope) {
   threshhold || (threshhold = 250);
   let last;
@@ -155,7 +157,7 @@ export function getElementStyle(isDarkMode, needInnerStyle = true) {
 }
 
 export function log() {
-  // console.log.apply(null, arguments)
+  console.log.apply(null, arguments)
 }
 
 export function createImage() {

@@ -45,7 +45,7 @@ module.exports = {
   plugins: [
   ],
   mode: 'none',
-  mode: 'production',
+  /*mode: 'production',*/
   /*mode: 'development',*/
   /*optimization: {
     usedExports: true,
