@@ -3,6 +3,11 @@ import { SCALE_KEY } from './const.js';
 function none() {
 
 }
+
+function uid() {
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
+
 const IMAGE_POOL = Object.create(null);
 
 export function createImageLoader(createImage) {
@@ -224,7 +229,7 @@ function scaleData(data, dpr) {
 
 export const VIDEOS = Object.create(null);
 
-const glPool = new WeakMap();
+const glPool = Object.create(null);
 
 /**
  * 
@@ -251,7 +256,7 @@ function resetGl(gl) {
       gl.enableVertexAttribArray(gl.program.vPosition);
     }
 
-    gl.useProgram(gl.program.program);
+    // gl.useProgram(gl.program.program);
 }
 
 export function createRender({ dpr, createImage, createCanvas }) {
@@ -260,19 +265,24 @@ export function createRender({ dpr, createImage, createCanvas }) {
 
   function drawOneGlRect(gl, rect, repaintCbk = none) {
     const glRectData = scaleData(rect, dpr);
+    
+    if (!rect.uid) {
+      rect.uid = uid();
+    }
   
     const dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
-    let glRect = glPool.get(rect);
-    if (!glRect) {      
-      glRect = gl.createRoundRect(0);
-      
-      // glPool.set(rect, glRect);
-    
-      glRect.updateContours(dimension);
-      glRectData.radius && glRect.setRadius(glRectData.radius);
-      glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
-      glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
+    let glRect = glPool[rect.uid];
+    if (!glRect) {
+      glRect = gl.createRoundRect();
+      // glPool[rect.uid] = glRect;
     }
+
+    glRect.reset();
+
+    glRectData.radius && glRect.setRadius(glRectData.radius);
+    glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
+    glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
+    glRect.updateContours(dimension);
   
     if (glRectData.image) {
       const { src } = glRectData.image;

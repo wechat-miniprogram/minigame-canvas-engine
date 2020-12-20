@@ -2,6 +2,18 @@ import { orthographic, translate, translation, scale } from './m4.js';
 import vertex from './roundedRect.vert';
 import fragment from './roundedRect.frag';
 
+// 创建纹理
+function createTexture(gl) {
+  const texId = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texId);
+
+    // 设置参数，让我们可以绘制任何尺寸的图像
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  return texId;
+}
+
 const positions = new Float32Array([
   0, 0,
   0, 1,
@@ -59,6 +71,7 @@ function createProgram(gl) {
     uColor = gl.getUniformLocation(program, 'u_color');
     uMatrix = gl.getUniformLocation(program, 'u_matrix');
     uRect = gl.getUniformLocation(program, 'u_rect');
+
     uTexRect = gl.getUniformLocation(program, 'u_tex_rect');
     uBitset = gl.getUniformLocation(program, 'u_bitset');
     uResolution = gl.getUniformLocation(program, 'u_resolution');
@@ -70,15 +83,18 @@ function createProgram(gl) {
     bufferId = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+    // vertexAttribPointer几个参数解释：
+    // 每次迭代运行提取两个单位数据
+    // 每个单位的数据类型是32位浮点型
+    // 不需要归一化数据
+    // 0 = 移动单位数量 * 每个单位占用内存（sizeof(type)）
+    // 每次迭代运行运动多少内存到下一个数据开始点
+    // 从缓冲起始位置开始读取
     gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
   }
-  // { //空白纹理
-  //   blankTexId = gl.createTexture();
-  //   gl.bindTexture(gl.TEXTURE_2D, blankTexId);
-  //   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-  //   // gl.bindTexture(gl.TEXTURE_2D, null);
-  // }
+
   gl.useProgram(program);
   return {
     program,
@@ -123,7 +139,7 @@ function useProgram(gl) {
     textureMap,
   } = gl.program;
 
-  return function createRoundRect(idx) {
+  return function createRoundRect() {
 
     let x = 0;
     let y = 0;
@@ -139,6 +155,7 @@ function useProgram(gl) {
     let borderColor = [0, 0, 0, 0];
     let imageWidth = 1;
     let imageHeight = 1;
+
     let canvasWidth;
     let canvasHeight;
 
@@ -146,6 +163,24 @@ function useProgram(gl) {
     let texMatrix = translation(0, 0, 0);
 
     const result = {
+      reset() {
+        x = 0;
+        y = 0;
+        width = 1;
+        height = 1;
+        radius = [0, 0, 0, 0];
+        backgroundColor = [0, 0, 0, 0];
+        backgroundImage = undefined
+        backgroundImageData = undefined;
+        imageRect = [];
+        imageSrcRect = [];
+        borderWidth = 0;
+        borderColor = [0, 0, 0, 0];
+        imageWidth = 1;
+        imageHeight = 1;
+        texMatrix = translation(0, 0, 0);
+      },
+
       updateContours(dimension) {
         [x, y, width, height] = dimension;
       },
@@ -156,6 +191,8 @@ function useProgram(gl) {
           matrix = orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
           matrix = translate(matrix, x, y, 0);
           matrix = scale(matrix, width, height, 1);
+          // canvasWidth = gl.canvas.width;
+          // canvasHeight = gl.canvas.height;
         }
       },
       setRadius(r) {
@@ -167,7 +204,6 @@ function useProgram(gl) {
       },
       setBorder(width, color) {
         borderWidth = width;
-        // borderColor = normalizeColor(color);
         borderColor = color;
       },
       setBackgroundColor(color) {
@@ -206,28 +242,22 @@ function useProgram(gl) {
         const dstWidth = imageRect[2] || width;
         const dstHeight = imageRect[3] || height;
 
-        function createTexture() {
-          const texId = gl.createTexture();
-          gl.bindTexture(gl.TEXTURE_2D, texId);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-          return texId;
-        }
-
         let hasTexture = false;
         if (typeof backgroundImage !== 'undefined') {
           let texId = textureMap.get(backgroundImage);
           if (!texId) {
-            texId = createTexture();
-            // 首屏只绘制一次
+            texId = createTexture(gl);
+
+            // 将图像上传到纹理
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
             textureMap.set(backgroundImage, texId);
           }
 
           gl.bindTexture(gl.TEXTURE_2D, texId);
           
+          // scrollview每次重绘都需要更新纹理
           if(needUpdateTexture) {
+            // 将图像上传到纹理
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
           }
           
@@ -235,7 +265,7 @@ function useProgram(gl) {
         } else if (typeof backgroundImageData !== 'undefined') {
           let texId = textureMap.get(ArrayBuffer);
           if (!texId) {
-            texId = createTexture();
+            texId = createTexture(gl);
             textureMap.set(ArrayBuffer, texId);
           }
           gl.bindTexture(gl.TEXTURE_2D, texId);
@@ -254,9 +284,14 @@ function useProgram(gl) {
         } else {
           // gl.bindTexture(gl.TEXTURE_2D, blankTexId);
         }
+
         gl.uniformMatrix4fv(uMatrix, false, matrix);
+        // 设置矩形除去border左下角和右上角位置
         gl.uniform4f(uTexRect, dstX, dstY + dstHeight, dstX + dstWidth, dstY);
+        // 设置完整矩形的位置
         gl.uniform4f(uRect, x, y + height, x + width, y);
+
+        // 纹理设置
         gl.uniform4f(uBitset, hasTexture ? 1 : 0, 0, 0, 0);
         gl.uniformMatrix4fv(textureMatrixLocation, false, texMatrix);
 
@@ -266,13 +301,9 @@ function useProgram(gl) {
         gl.uniform4f(uRadius, ...radius);
         gl.uniform4f(uBorderColor, ...borderColor);
         gl.uniform1f(uBorderWidth, borderWidth);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        // 非常耗时
-        // const err = gl.getError();
-        // if (err) {
-        //   console.error('gl draw err', err);
-        // }
+        // 因为count = 6，所以顶点着色器将运行6次
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
       },
     };
 
