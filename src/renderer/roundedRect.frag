@@ -5,10 +5,12 @@ uniform vec4 u_color;
 uniform vec4 u_radius;
 uniform vec4 u_border_color;
 uniform float u_border_width;
+uniform float u_opacity;
 uniform vec4 u_bitset; //texture[, context, border, radius]
 varying vec2 v_resolution;
 varying vec2 v_texcoord;
 varying vec4 v_tex_rect;
+
 
 // float sdfBox(vec2 coord, vec2 center, vec2 rect) {
 //   vec2 d = abs(coord - center) - rect;
@@ -128,5 +130,9 @@ void main() {
     vec4 textureColor = mix(texture2D(u_texture, v_texcoord), vec4(0.0), step(abs(u_bitset.x), 0.0));
     textureColor.rgb /= mix(textureColor.a, 1.0, step(textureColor.a, 0.0));
     textureColor.a *= sign(-texContent) * smoothstep(-anti, anti, -content);
-    gl_FragColor = blend(blend(contentColor, textureColor), borderColor);
+    
+    vec4 temp = blend(blend(contentColor, textureColor), borderColor);
+    temp.a *= u_opacity;
+
+    gl_FragColor = temp;
 }

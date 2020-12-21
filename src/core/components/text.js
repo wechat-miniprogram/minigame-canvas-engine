@@ -159,5 +159,7 @@ export default class Text extends Element {
         color: computedStyle.color || '#000',
       },
     });
+
+    this.glRect.setOpacity(this.opacity);
   }
 }

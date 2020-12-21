@@ -282,6 +282,7 @@ export function createRender({ dpr, createImage, createCanvas }) {
     glRectData.radius && glRect.setRadius(glRectData.radius);
     glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
     glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
+    glRectData.opacity && glRect.setOpacity(glRectData.opacity);
     glRect.updateContours(dimension);
   
     if (glRectData.image) {

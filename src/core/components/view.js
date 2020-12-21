@@ -83,9 +83,13 @@ export default class View extends Block {
     if (computedStyle.borderWidth) {
       this.glRect.setBorder(computedStyle.borderWidth, computedStyle.borderColor);
     }
+
+
     // 设置圆角数据
     const radius = this.getRadius(computedStyle);
     this.glRect.setRadius(radius);
+
+    this.glRect.setOpacity(this.opacity);
 
     if (computedStyle.backgroundImage) { // 设置背景图片
       this.glRect.setBackgroundImage(

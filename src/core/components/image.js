@@ -120,6 +120,9 @@ export default class Image extends Block {
     if (computedStyle.borderWidth) {
       this.glRect.setBorder(computedStyle.borderWidth, computedStyle.borderColor);
     }
+
+    this.glRect.setOpacity(this.opacity);
+
     // 设置圆角数据
     const radius = this.getRadius(computedStyle);
     this.glRect.setRadius(radius);

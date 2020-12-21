@@ -100,7 +100,14 @@ export default class Element {
         if (isDarkMode) {
           return this.styleProp[key] || this.styleDarkInit[key] || this.styleInit[key];
         }
-        return this.styleProp[key] || this.styleInit[key];
+        let res = this.styleProp[key] || this.styleInit[key];
+        
+        // if (key === 'opacity') {
+        //   console.log('get prop opacity')
+        //   res *= (res.parent && res.parent.style ? res.parent.style.opacity : 1);
+        // }
+
+        return res;
       },
     });
 
@@ -218,6 +225,22 @@ export default class Element {
 
   get pos() {
     return [this.x, this.y];
+  }
+
+  get opacity() {
+    let opacity = 1;
+    if (this.style.opacity !== undefined) {
+      opacity = this.style.opacity;
+    }
+    let parent = this.parent;
+    
+    while (parent) {
+      opacity *= (parent.style.opacity !== undefined ? parent.style.opacity : 1);
+
+      parent = parent.parent;
+    }
+
+    return opacity;
   }
 
   forceUpdate(...args) {

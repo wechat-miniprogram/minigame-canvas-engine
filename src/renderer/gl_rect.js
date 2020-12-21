@@ -40,6 +40,7 @@ function createProgram(gl) {
   let uTex;
   let vPosition;
   let textureMatrixLocation;
+  let uOpacity;
 
   {
     gl.enable(gl.BLEND);
@@ -68,6 +69,7 @@ function createProgram(gl) {
     uRadius = gl.getUniformLocation(program, 'u_radius');
     uBorderWidth = gl.getUniformLocation(program, 'u_border_width');
     uBorderColor = gl.getUniformLocation(program, 'u_border_color');
+    uOpacity = gl.getUniformLocation(program, 'u_opacity')
     uColor = gl.getUniformLocation(program, 'u_color');
     uMatrix = gl.getUniformLocation(program, 'u_matrix');
     uRect = gl.getUniformLocation(program, 'u_rect');
@@ -113,7 +115,8 @@ function createProgram(gl) {
     vPosition,
     textureMatrixLocation,
     textureMap,
-    positions
+    positions,
+    uOpacity
   };
 }
 
@@ -137,6 +140,7 @@ function useProgram(gl) {
     // vPosition,
     textureMatrixLocation,
     textureMap,
+    uOpacity,
   } = gl.program;
 
   return function createRoundRect() {
@@ -155,6 +159,7 @@ function useProgram(gl) {
     let borderColor = [0, 0, 0, 0];
     let imageWidth = 1;
     let imageHeight = 1;
+    let opacity = 1;
 
     let canvasWidth;
     let canvasHeight;
@@ -208,6 +213,10 @@ function useProgram(gl) {
       },
       setBackgroundColor(color) {
         backgroundColor = color;
+      },
+
+      setOpacity(value = 1) {
+        opacity = value;
       },
 
       setTexture({ image, rect = [0, 0, width, height], srcRect } = {}) {
@@ -300,6 +309,8 @@ function useProgram(gl) {
         gl.uniform2f(uResolution, gl.canvas.width, gl.canvas.height);
         gl.uniform4f(uRadius, ...radius);
         gl.uniform4f(uBorderColor, ...borderColor);
+
+        gl.uniform1f(uOpacity, opacity);
         gl.uniform1f(uBorderWidth, borderWidth);
 
         // 因为count = 6，所以顶点着色器将运行6次

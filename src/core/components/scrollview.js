@@ -42,11 +42,24 @@ export default class ScrollView extends View {
   }
 
   _active() {
-    this.touch.enable();
+    // console.log('scrollview active call')
+    this.touch.needProcess = true;
   }
 
   _deactive() {
-    this.touch.disable();
+    this.touch.needProcess = false;
+  }
+
+  destroySelf() {
+    this.isDestroyed = true;
+    this.children = null;
+
+    this.off('touchstart')
+    this.off('touchmove')
+    this.off('touchend');
+
+    this.touch = null;
+    
   }
 
   /**
@@ -130,11 +143,14 @@ export default class ScrollView extends View {
     if (node.type !== "ScrollView" && glRect) {
       glRect.x = glRect.originX - x;
       glRect.y = glRect.originY - y;
+    } else {
+      this.scrollTop = y;
+      this.scrollLeft = x;
     }
     
     node.childNodes.forEach(child => {
       this.traverseToChangeGlRect(child, x, y);
-    })
+    });
   }
 
   scrollRender(top, event) {

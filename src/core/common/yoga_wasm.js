@@ -2308,6 +2308,7 @@ var Yoga = (function () {
           var body = "return function " + name + "(" + args.join(", ") + ") {\n";
           body += "    return dynCall(rawFunction" + (args.length ? ", " : "") + args.join(", ") + ");\n";
           body += "};\n";
+
           return new Function("dynCall", "rawFunction", body)(dynCall, rawFunction);
         }
 

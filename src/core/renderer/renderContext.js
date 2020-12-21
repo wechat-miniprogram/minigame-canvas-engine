@@ -24,6 +24,7 @@ export default class RenderContext {
   constructor(id, type) {
     this.id = id;
     this.type = type;
+    this.opacity = 1;
   }
   updateContours([x, y, width, height]) {
     this.x = x;
@@ -33,7 +34,13 @@ export default class RenderContext {
 
     this.originX = x;
     this.originY = y;
+    
   }
+
+  setOpacity(v) {
+    this.opacity = v;
+  }
+
   setRadius(r) {
     if (typeof r === 'number') {
       this.radius = [r, r, r, r];
