@@ -139,7 +139,7 @@ export function createTextTexture(createCanvas) {
     style.font = `${style.fontWeight || ''} ${style.fontSize * dpr}px ${style.fontFamily}`;
 
     // const key = `${x}_${y}_${width}_${height}_${valueShow}_${style.font}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
-    const key = `${width}_${height}_${valueShow}_${style.font}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
+    const key = `${width}_${height}_${valueShow}_${style.font || '_'}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
 
     if (TEXT_TEXTURE[key]) {
       return TEXT_TEXTURE[key];
@@ -205,6 +205,7 @@ export function createTextTexture(createCanvas) {
     }
     ctx.restore();
 
+    // console.log(key, drawX, drawY, canvas.toDataURL('image/png'))
     TEXT_TEXTURE[key] = canvas;
     return TEXT_TEXTURE[key];
   };

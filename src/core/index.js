@@ -594,7 +594,10 @@ class _Layout extends Element {
       this.off(eventName);
     });
 
-    this.EE.off('image__render__done');
+    this.off('reflow');
+    this.scrollview = null;
+
+    console.log('layout clear call', this._EE, this._emitter)
   }
 
   clearPool() {

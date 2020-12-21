@@ -59,7 +59,6 @@ export default class ScrollView extends View {
     this.off('touchend');
 
     this.touch = null;
-    
   }
 
   /**
@@ -143,6 +142,12 @@ export default class ScrollView extends View {
     if (node.type !== "ScrollView" && glRect) {
       glRect.x = glRect.originX - x;
       glRect.y = glRect.originY - y;
+  
+      if (node.type === 'Text') {
+        
+        glRect.text.style.drawX -= x;
+        glRect.text.style.drawY -= y;
+      }
     } else {
       this.scrollTop = y;
       this.scrollLeft = x;

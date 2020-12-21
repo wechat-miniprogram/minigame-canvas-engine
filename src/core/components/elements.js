@@ -290,10 +290,9 @@ export default class Element {
 
   // 子类填充实现
   destroy() {
-    ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach((eventName) => {
+    ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint', 'scroll'].forEach((eventName) => {
       this.off(eventName);
     });
-    this.EE.off('image__render__done');
 
     this.isDestroyed = true;
     this.EE = null;
