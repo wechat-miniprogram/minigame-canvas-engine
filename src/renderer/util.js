@@ -19,6 +19,7 @@ export function createImageLoader(createImage) {
         IMAGE_POOL[src].onloads.push(cb);
       }
     } else {
+      console.log(src)
       const img = createImage();
       IMAGE_POOL[src] = { image: img, loaded: false, onloads: [cb] };
       img.onload = () => {

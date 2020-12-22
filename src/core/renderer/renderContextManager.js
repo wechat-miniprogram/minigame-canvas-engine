@@ -25,6 +25,8 @@ function createCanvas() {
   return wx.createCanvas();
 }
 
+const canvasPool = [];
+
 let renderer;
 export default class RenderContextManager {
   constructor(canvasContext, scale = 1) {
@@ -48,7 +50,11 @@ export default class RenderContextManager {
       createCanvas,
       createImage
     });
-    this.scrollCanvas = createCanvas();
+
+    let canvas = canvasPool.pop()|| createCanvas();
+    this.scrollCanvas = canvas;
+
+    console.log('scrollcanvas', canvas)
 
     this.hasSetup = false;
     this.gl = null;
@@ -57,7 +63,11 @@ export default class RenderContextManager {
   }
 
   setupScrollGl() {
-    const gl = setupGl(this.scrollCanvas, true);
+
+    if (!this.scrollCanvas) {
+      this.scrollCanvas = canvasPool.pop() || createCanvas();
+    }
+    const gl = setupGl(this.scrollCanvas, false);
     gl.canvas.height = this.height;
     gl.canvas.width = this.width;
 
@@ -80,6 +90,13 @@ export default class RenderContextManager {
   clear() {
     // console.log('clear call');
     this.glRects = this.glRects.slice(0, 0);
+  }
+
+  release() {
+    canvasPool.push(this.scrollCanvas);
+    this.scrollCanvas = null;
+
+    console.log('renderContext release call')
   }
 
   getChildrenGlRects(node, res = []) {

@@ -568,6 +568,8 @@ class _Layout extends Element {
   destroyAll(tree) {
     if (!tree) {
       tree = this;
+
+      this.renderContext.release();
     }
 
     for (let i = 0; i < tree.childNodes.length; i++) {

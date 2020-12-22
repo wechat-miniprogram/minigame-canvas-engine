@@ -142,7 +142,8 @@ export default class ScrollView extends View {
     if (node.type !== "ScrollView" && glRect) {
       glRect.x = glRect.originX - x;
       glRect.y = glRect.originY - y;
-  
+
+      
       if (node.type === 'Text') {
         
         glRect.text.style.drawX -= x;
@@ -151,6 +152,16 @@ export default class ScrollView extends View {
     } else {
       this.scrollTop = y;
       this.scrollLeft = x;
+
+      if (this.touch && this.touch.touchDirection === "X") {
+        // this.touch.move = -x;
+        // this.touch.target = -x;
+      } else if (this.touch) {
+        // console.log('set touch move ', -y)
+        this.touch.move = -y;
+        this.touch.target = -y;
+      }
+  
     }
     
     node.childNodes.forEach(child => {
