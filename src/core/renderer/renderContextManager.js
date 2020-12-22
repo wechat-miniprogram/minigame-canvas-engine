@@ -57,8 +57,7 @@ export default class RenderContextManager {
   }
 
   setupScrollGl() {
-
-    const gl = setupGl(this.scrollCanvas);
+    const gl = setupGl(this.scrollCanvas, true);
     gl.canvas.height = this.height;
     gl.canvas.width = this.width;
 
@@ -104,7 +103,7 @@ export default class RenderContextManager {
     if (!this.hasSetup || needInit) {
       this.hasSetup = true;
 
-      const gl = setupGl(this.canvasContext.canvas);
+      const gl = setupGl(this.canvasContext.canvas, false);
       gl.canvas.height = this.height;
       gl.canvas.width = this.width;
 

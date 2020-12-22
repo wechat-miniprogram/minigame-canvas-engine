@@ -23,7 +23,7 @@ const positions = new Float32Array([
   1, 1,
 ]);
 
-function createProgram(gl) {
+function createProgram(gl, needFlipY = true) {
   const textureMap = new WeakMap();
   let program;
   let bufferId;
@@ -45,6 +45,8 @@ function createProgram(gl) {
   {
     gl.enable(gl.BLEND);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, needFlipY)
     // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     // gl.blendEquation(gl.FUNC_ADD);
     // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -120,9 +122,9 @@ function createProgram(gl) {
   };
 }
 
-function useProgram(gl) {
+function useProgram(gl, needFlipY = true) {
   if (!gl.program) {
-    gl.program = createProgram(gl); // eslint-disable-line
+    gl.program = createProgram(gl, needFlipY); // eslint-disable-line
   }
   const {
     // bufferId,
@@ -322,7 +324,7 @@ function useProgram(gl) {
   };
 }
 
-export function setupGl(canvas) {
+export function setupGl(canvas, needFlipY = true) {
   if (!canvas.webgl) {
     const gl = canvas.getContext('webgl', {
       preserveDrawingBuffer: true,
@@ -332,7 +334,7 @@ export function setupGl(canvas) {
       depth: false,
       stencil: false,
     });
-    gl.createRoundRect = useProgram(gl);
+    gl.createRoundRect = useProgram(gl, needFlipY);
     canvas.webgl = gl; // eslint-disable-line
   }
   const gl = canvas.webgl;
