@@ -3508,6 +3508,8 @@ var Yoga = (function () {
     } : void 0;
   }
 
+  var syncMod;
+
   function init(opt) {
     // var task = Module({
     //   locateFile: initConfig(opt.filepath)
@@ -3517,9 +3519,12 @@ var Yoga = (function () {
     // });
 
     if (opt.sync) {
-      var syncMod = Module({
-        sync: true,
-      });
+      if (!syncMod) {
+        syncMod = Module({
+          sync: true,
+        });
+      }
+      
       
       return syncMod.then(res => {
         return Object.assign(mod, entryCommon(bind, res));

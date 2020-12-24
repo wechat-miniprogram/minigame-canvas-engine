@@ -3,7 +3,7 @@ import Pool from './common/pool.js';
 import Emitter from 'tiny-emitter';
 import { isClick, STATE, setCharMap, nextTick, log } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
-import { adaptor, updateLayout, calculateDirtyNode, initYoga } from './common/adaptor';
+import { adaptor, updateLayout, initYoga } from './common/adaptor';
 import PseudoClassManager from './common/pseudoClassManager.js';
 import TextManager from './common/textManager.js';
 import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle, createImage } from './common/util.js';
@@ -328,8 +328,8 @@ class _Layout extends Element {
       this.textManager.hasUpdate = true;
       this.textManager.updateTextNodeLayoutBox();
       log('updateTextNodeLayoutBox');
-      calculateDirtyNode(this);
-      updateLayout(this);
+      // calculateDirtyNode(this);
+      // updateLayout(this);
     }
 
     const webGLRenderData = [];

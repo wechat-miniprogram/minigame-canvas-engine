@@ -72,7 +72,7 @@ export default class RenderContextManager {
     gl.canvas.width = this.width;
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
     this.scrollGl = gl;
 
@@ -130,20 +130,22 @@ export default class RenderContextManager {
 
       if (this.layout.scrollview) {
         this.hasScroll = true;
-        this.setupScrollGl();
+        // this.setupScrollGl();
 
         this.scrollGlrects = [];
         this.getChildrenGlRects(this.layout.scrollview, this.scrollGlrects);
       }
     }
 
-    if (this.hasScroll) {
-      // scrollview重绘
-      renderer.repaint(this.scrollGl, this.scrollGlrects);
-    }
+    // if (this.hasScroll) {
+    //   // scrollview重绘
+    //   renderer.repaint(this.gl, this.scrollGlrects);
+    // }
 
+    renderer.resetGl(this.gl);
 
     // 除了scrollview之外的glRects重绘
-    renderer.repaint(this.gl, this.glRects);
+    renderer.repaint(this.gl, this.glRects, this.scrollGlrects);
+    // renderer.repaint(this.gl, this.scrollGlrects);
   }
 }

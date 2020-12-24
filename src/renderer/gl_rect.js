@@ -123,6 +123,7 @@ function createProgram(gl, needFlipY = true) {
 }
 
 function useProgram(gl, needFlipY = true) {
+  let hasSetuResolution = false;
   if (!gl.program) {
     gl.program = createProgram(gl, needFlipY); // eslint-disable-line
   }
@@ -198,8 +199,8 @@ function useProgram(gl, needFlipY = true) {
           matrix = orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
           matrix = translate(matrix, x, y, 0);
           matrix = scale(matrix, width, height, 1);
-          // canvasWidth = gl.canvas.width;
-          // canvasHeight = gl.canvas.height;
+          canvasWidth = gl.canvas.width;
+          canvasHeight = gl.canvas.height;
         }
       },
       setRadius(r) {
@@ -266,11 +267,13 @@ function useProgram(gl, needFlipY = true) {
 
           gl.bindTexture(gl.TEXTURE_2D, texId);
           
-          // scrollview每次重绘都需要更新纹理
-          if(needUpdateTexture) {
-            // 将图像上传到纹理
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
-          }
+          // // scrollview每次重绘都需要更新纹理
+          // if(needUpdateTexture) {
+          //   // 将图像上传到纹理
+          //   // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
+            
+          //   gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage)
+          // }
           
           hasTexture = true;
         } else if (typeof backgroundImageData !== 'undefined') {
@@ -296,6 +299,29 @@ function useProgram(gl, needFlipY = true) {
           // gl.bindTexture(gl.TEXTURE_2D, blankTexId);
         }
 
+        // // needUpdateTexture代表为scrollview
+        // if (needUpdateTexture) {
+        //   // 清除模板缓存
+        //   gl.clear(gl.STENCIL_BUFFER_BIT);
+        //   // 开启模板测试
+        //   gl.enable(gl.STENCIL_TEST);
+
+        //   // 设置模板测试参数
+        //   gl.stencilFunc(gl.ALWAYS, 1, 1);
+        //   // 设置模板值操作
+        //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        // } else {
+        //   gl.stencilFunc(gl.EQUAL, 1, 1);
+        //   //设置模板测试后的操作
+        //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        // }
+
+        // 所有绘制共用一个就行
+        if (!hasSetuResolution) {
+          gl.uniform2f(uResolution, gl.canvas.width, gl.canvas.height);
+          hasSetuResolution = true;
+        }
+
         gl.uniformMatrix4fv(uMatrix, false, matrix);
         // 设置矩形除去border左下角和右上角位置
         gl.uniform4f(uTexRect, dstX, dstY + dstHeight, dstX + dstWidth, dstY);
@@ -307,10 +333,13 @@ function useProgram(gl, needFlipY = true) {
         gl.uniformMatrix4fv(textureMatrixLocation, false, texMatrix);
 
         gl.uniform1i(uTex, 0);
-        gl.uniform4f(uColor, ...backgroundColor);
-        gl.uniform2f(uResolution, gl.canvas.width, gl.canvas.height);
-        gl.uniform4f(uRadius, ...radius);
-        gl.uniform4f(uBorderColor, ...borderColor);
+        // gl.uniform4f(uColor, ...backgroundColor);
+        gl.uniform4f(uColor, backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
+        
+        // gl.uniform4f(uRadius, ...radius);
+        gl.uniform4f(uRadius, radius[0], radius[1], radius[2], radius[3]);
+        // gl.uniform4f(uBorderColor, ...borderColor);
+        gl.uniform4f(uBorderColor, borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
 
         gl.uniform1f(uOpacity, opacity);
         gl.uniform1f(uBorderWidth, borderWidth);
@@ -332,7 +361,7 @@ export function setupGl(canvas, needFlipY = true) {
       antialias: true,
       premultipliedAlpha: true,
       depth: false,
-      stencil: false,
+      stencil: true,
     });
     gl.createRoundRect = useProgram(gl, needFlipY);
     canvas.webgl = gl; // eslint-disable-line

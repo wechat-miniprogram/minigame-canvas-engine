@@ -293,11 +293,11 @@ export function updateLayout(node) {
   }
 }
 
-export function calculateDirtyNode(node) {
-  for (let i = 0; i < node.childNodes.length; i++) {
-    calculateDirtyNode(node.childNodes[i]);
-  }
-  if (node.yogaNode.isDirty()) {
-    node.yogaNode.calculateLayout();
-  }
-}
+// export function calculateDirtyNode(node) {
+//   for (let i = 0; i < node.childNodes.length; i++) {
+//     calculateDirtyNode(node.childNodes[i]);
+//   }
+//   if (node.yogaNode.isDirty()) {
+//     node.yogaNode.calculateLayout();
+//   }
+// }

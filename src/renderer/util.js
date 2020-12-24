@@ -238,7 +238,7 @@ const glPool = Object.create(null);
  * @param {CanvasContext} gl
  */
 function resetGl(gl) {
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
     {
       gl.enable(gl.BLEND);
@@ -277,6 +277,11 @@ export function createRender({ dpr, createImage, createCanvas }) {
     if (!glRect) {
       glRect = gl.createRoundRect();
       // glPool[rect.uid] = glRect;
+    } else {
+      // scrollview每一项会更新，存在glRect直接绘制
+      glRect.updateContours(dimension);
+      glRect.draw();
+      return;
     }
 
     glRect.reset();
@@ -311,10 +316,10 @@ export function createRender({ dpr, createImage, createCanvas }) {
       glRect.setTexture({ image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr) });
     }
 
-    if (glRectData.type === 'ScrollView' && glRectData.glTexture) {
-      // console.log(glRectData.glTexture.toDataURL('image/png'))
-      glRect.setTexture({ image: glRectData.glTexture, srcRect: [glRectData.x, glRectData.y, glRectData.width, glRectData.height]});
-    }
+    // if (glRectData.type === 'ScrollView' && glRectData.glTexture) {
+    //   // console.log(glRectData.glTexture.toDataURL('image/png'))
+    //   glRect.setTexture({ image: glRectData.glTexture, srcRect: [glRectData.x, glRectData.y, glRectData.width, glRectData.height]});
+    // }
 
     if (glRectData.type === 'Video') {
       const video = VIDEOS[`${gl.canvas.id}-${glRectData.id}`];
@@ -329,20 +334,52 @@ export function createRender({ dpr, createImage, createCanvas }) {
     }
     glRect.updateViewPort();
 
-    const needUpdateTexture = !!(glRectData.type === 'ScrollView');
-    glRect.draw(needUpdateTexture);
+    // const needUpdateTexture = !!(glRectData.type === 'ScrollView');
+    glRect.draw();
   }
   
   return {
     loadImage,
     resetGl,
     
-    repaint: function drawRects(gl, glRects) {      
-      resetGl(gl);
+    repaint: function drawRects(gl, glRects, scrollGlrects) {      
+      // resetGl(gl);
       glRects.forEach((item, idx) => {
-        drawOneGlRect(gl, item, () => {
-          drawRects(gl, glRects);
-        })
+        // scrollview开启模板测试
+        if (item.type === 'ScrollView') {
+          // 清除模板缓存
+          gl.clear(gl.STENCIL_BUFFER_BIT);
+          // 开启模板测试
+          gl.enable(gl.STENCIL_TEST);
+
+          // 设置模板测试参数
+          gl.stencilFunc(gl.ALWAYS, 1, 1);
+          // 设置模板值操作
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+
+          // 绘制scrollview
+          drawOneGlRect(gl, item);
+
+          // 设置模板测试参数，只有滚动窗口内的才进行绘制
+          gl.stencilFunc(gl.EQUAL, 1, 1);
+          //设置模板测试后的操作
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+          scrollGlrects.forEach(scrollItem => {
+            drawOneGlRect(gl, scrollItem, () => {
+              resetGl(gl)
+              drawRects(gl, glRects, scrollGlrects);
+            })
+          });
+
+          // 关闭模板测试
+          gl.disable(gl.STENCIL_TEST);
+        } else {
+          drawOneGlRect(gl, item, () => {
+            resetGl(gl)
+            drawRects(gl, glRects, scrollGlrects);
+          })
+        }
       });
     },
   };
