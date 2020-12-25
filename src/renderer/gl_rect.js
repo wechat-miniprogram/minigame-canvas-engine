@@ -1,4 +1,4 @@
-import { orthographic, translate, translation, scale } from './m4.js';
+import { orthographic, translate, translation, scale, identity } from './m4.js';
 import vertex from './roundedRect.vert';
 import fragment from './roundedRect.frag';
 
@@ -167,7 +167,7 @@ function useProgram(gl, needFlipY = true) {
     let canvasWidth;
     let canvasHeight;
 
-    let matrix;
+    let matrix = identity();
     let texMatrix = translation(0, 0, 0);
 
     const result = {
@@ -196,9 +196,9 @@ function useProgram(gl, needFlipY = true) {
         if (canvasWidth !== gl.canvas.width || canvasHeight !== gl.canvas.height) {
           canvasWidth !== gl.canvas.width && (canvasWidth = gl.canvas.width);
           canvasHeight !== gl.canvas.height && (canvasHeight = gl.canvas.height);
-          matrix = orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
-          matrix = translate(matrix, x, y, 0);
-          matrix = scale(matrix, width, height, 1);
+          orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1, matrix);
+          translate(matrix, x, y, 0, matrix);
+          scale(matrix, width, height, 1, matrix);
           canvasWidth = gl.canvas.width;
           canvasHeight = gl.canvas.height;
         }
@@ -245,8 +245,8 @@ function useProgram(gl, needFlipY = true) {
         const srcY = imageSrcRect[1] || 0;
         const srcWidth = imageSrcRect[2] || imageWidth;
         const srcHeight = imageSrcRect[3] || imageHeight;
-        texMatrix = translation(srcX / imageWidth, srcY / imageHeight, 0);
-        texMatrix = scale(texMatrix, srcWidth / imageWidth, srcHeight / imageHeight, 1);
+        translation(srcX / imageWidth, srcY / imageHeight, texMatrix);
+        scale(texMatrix, srcWidth / imageWidth, srcHeight / imageHeight, 1, texMatrix);
       },
       draw(needUpdateTexture = false) {
         const dstX = (imageRect[0] || 0) + x + borderWidth;
