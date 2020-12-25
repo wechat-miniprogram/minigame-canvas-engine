@@ -158,8 +158,8 @@ export default class ScrollView extends View {
         // this.touch.target = -x;
       } else if (this.touch) {
         // console.log('set touch move ', -y)
-        this.touch.move = -y;
-        this.touch.target = -y;
+        // this.touch.move = -y;
+        // this.touch.target = -y;
       }
   
     }
@@ -170,6 +170,9 @@ export default class ScrollView extends View {
   }
 
   scrollRender(top, event) {
+    if (!this.root) {
+      return;
+    }
     if (this.overflowX) {
       this.scrollLeft = -top;
     }

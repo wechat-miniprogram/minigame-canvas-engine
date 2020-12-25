@@ -19,7 +19,6 @@ export function createImageLoader(createImage) {
         IMAGE_POOL[src].onloads.push(cb);
       }
     } else {
-      console.log(src)
       const img = createImage();
       IMAGE_POOL[src] = { image: img, loaded: false, onloads: [cb] };
       img.onload = () => {
@@ -366,10 +365,12 @@ export function createRender({ dpr, createImage, createCanvas }) {
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
           scrollGlrects.forEach(scrollItem => {
-            drawOneGlRect(gl, scrollItem, () => {
-              resetGl(gl)
-              drawRects(gl, glRects, scrollGlrects);
-            })
+            // if (scrollItem.y + scrollItem.height >= item.y && scrollItem.y <= item.y + item.height) {
+              drawOneGlRect(gl, scrollItem, () => {
+                resetGl(gl)
+                drawRects(gl, glRects, scrollGlrects);
+              })
+            // }
           });
 
           // 关闭模板测试
