@@ -4,7 +4,7 @@ import {
 } from '../components/index.js'
 
 import { getElementStyle } from './util';
-import { dash2camel } from './util.js';
+import { dash2camel, nextTick } from './util.js';
 
 const constructorMap = {
   view: View,
@@ -22,7 +22,7 @@ const constructorMap = {
  * @param {*} isDarkMode 是否darkmode
  * @param {*} fontSize 字体大小
  */
-export function create (node, style, styleDark = {}, isDarkMode, fontSize) {
+export function create(node, style, styleDark = {}, isDarkMode, fontSize) {
   const _constructor = constructorMap[node.name];
 
   const children = node.children || [];
@@ -222,15 +222,20 @@ export function create (node, style, styleDark = {}, isDarkMode, fontSize) {
  * @param {Array} children 子节点
  * @param {Boolean} isDarkMode 是否暗黑模式
  * @param {Number} fontSize 字体大小
- * @param {Array} webGLRenderData
  */
-export function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
+export function layoutChildren(children, isDarkMode, fontSize) {
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
 
     const style = getElementStyle.call(child, isDarkMode);
     const computedStyle = getElementStyle.call(child, isDarkMode);
-   
+
+    child.layoutBox = child.layoutBox || {};
+
+    ['left', 'top', 'width', 'height'].forEach(prop => {
+      child.layoutBox[prop] = child.layout[prop];
+    });
+
     child.realLayoutBox = child.realLayoutBox || {};
 
     ['left', 'top', 'width', 'height'].forEach((prop) => {
@@ -252,7 +257,9 @@ export function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) 
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
 
     if (child.type === 'ScrollView') { // 滚动列表的画板尺寸和主画板保持一致
-      child.updateRenderPort(this.renderport);
+      nextTick(() => {
+        child.updateRenderPort(this.renderport);
+      });
     } else if (child.type === 'Text') { // 文本节点处理下ellipsis
       const width = child.layoutBox.width > child.parent.layoutBox.width
         ? child.parent.layoutBox.width
@@ -283,7 +290,7 @@ export function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) 
     }
     // 子节点的updateRenderData会收集渲染相关的数据
     child.updateRenderData && child.updateRenderData(computedStyle);
-    layoutChildren.call(this, child.childNodes, isDarkMode, fontSize, webGLRenderData);
+    layoutChildren.call(this, child.children, isDarkMode, fontSize);
   }
 }
 
@@ -336,19 +343,19 @@ export function updateRealLayout(children, scale) {
       child.realLayoutBox.realY = child.realLayoutBox.top;
     }
 
-    updateRealLayout(child.childNodes, scale);
+    updateRealLayout(child.children, scale);
   });
 }
 
 
 /**
  * 获取节点需要缓存的数据
- * @param {Array} childNodes
+ * @param {Array} children
  */
-function getNodeData(childNodes) {
+function getNodeData(children) {
   const layoutData = [];
-  for (let i = 0; i < childNodes.length; i++) {
-    const child = childNodes[i];
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
     layoutData[i] = {
       layoutBox: child.layoutBox, // 布局信息
       type: child.type, // 节点信息
@@ -362,20 +369,20 @@ function getNodeData(childNodes) {
       layoutData[i]['value'] = child.value;
       layoutData[i]['valueBreak'] = child.valueBreak;
     }
-    if (child.childNodes && child.childNodes.length) {
-      layoutData[i].childNodes = getNodeData(child.childNodes);
+    if (child.children && child.children.length) {
+      layoutData[i].children = getNodeData(child.children);
     } else {
-      layoutData[i].childNodes = [];
+      layoutData[i].children = [];
     }
   }
   return layoutData;
 }
 
 // 恢复布局数据，需要保证节点树、节点样式完全一致
-export function restoreLayoutTree(childNodes, layoutNodes) {
+export function restoreLayoutTree(children, layoutNodes) {
   let ret = true;
-  for (let i = 0; i < childNodes.length; i++) {
-    const child = childNodes[i];
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
     const node = layoutNodes[i];
     if (
       child.type === node.type
@@ -387,10 +394,10 @@ export function restoreLayoutTree(childNodes, layoutNodes) {
       if (child.type === 'text') {
         child.valueBreak = node.valueBreak;
       }
-      if (child.childNodes.length !== node.childNodes.length) {
+      if (child.children.length !== node.children.length) {
         ret = false;
       } else {
-        ret = restoreLayoutTree(child.childNodes, node.childNodes);
+        ret = restoreLayoutTree(child.children, node.children);
       }
       if (!ret) break;
     } else {
@@ -403,12 +410,12 @@ export function restoreLayoutTree(childNodes, layoutNodes) {
 
 export function _getElementById(tree, id) {
   let result = null;
-  for (let i = 0; i < tree.childNodes.length; i++) {
-    const child = tree.childNodes[i];
+  for (let i = 0; i < tree.children.length; i++) {
+    const child = tree.children[i];
     if (child.idName === id) {
       result = child;
       break;
-    } else if (child.childNodes.length) {
+    } else if (child.children.length) {
       result = _getElementById(child, id);
       if (result) break;
     }
@@ -417,12 +424,12 @@ export function _getElementById(tree, id) {
 }
 
 export function _getElementsByClassName(tree, list = [], className) {
-  for (let i = 0; i < tree.childNodes.length; i++) {
-    const child = tree.childNodes[i];
+  for (let i = 0; i < tree.children.length; i++) {
+    const child = tree.children[i];
     if (child.className.split(/\s+/).indexOf(className) > -1) {
       list.push(child);
     }
-    if (child.childNodes.length) {
+    if (child.children.length) {
       _getElementsByClassName(child, list, className);
     }
   }
@@ -432,13 +439,13 @@ export function _getElementsByClassName(tree, list = [], className) {
 
 export function _getChildsByPos(tree, x, y, list = []) {
   let ret = [];
-  for (let i = 0; i < tree.childNodes.length; i++) {
-    const child = tree.childNodes[i];
+  for (let i = 0; i < tree.children.length; i++) {
+    const child = tree.children[i];
     const box = child.realLayoutBox;
     if ((box.realX <= x && x <= box.realX + box.width)
       && (box.realY <= y && y <= box.realY + box.height)
       && child.computedStyle.display !== 'none') {
-      if (child.childNodes.length) {
+      if (child.children.length) {
         ret = _getChildsByPos(child, x, y, list);
       } else {
         list.push(child);

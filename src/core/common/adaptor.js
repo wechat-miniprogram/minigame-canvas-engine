@@ -12,9 +12,7 @@ export function initYoga() {
     yoga = res;
     Node = yoga.Node;
     defaultNode = new Node();
-    // defaultNode =  Node.create();
   })
-
 }
 
 yoga = Yoga.init({ sync: true });
@@ -254,8 +252,8 @@ function getYogaTree(node) {
   }
 
   const childCount = yogaNode.getChildCount();
-  for (let i = 0; i < node.childNodes.length; i++) {
-    const childYogaNode = getYogaTree(node.childNodes[i]);
+  for (let i = 0; i < node.children.length; i++) {
+    const childYogaNode = getYogaTree(node.children[i]);
     if (childCount * 1 === 0) {
       yogaNode.insertChild(childYogaNode, i);
     }
@@ -288,14 +286,14 @@ export function updateLayout(node) {
     bottom: layout.bottom,
   }
 
-  for (let i = 0; i < node.childNodes.length; i++) {
-    updateLayout(node.childNodes[i]);
+  for (let i = 0; i < node.children.length; i++) {
+    updateLayout(node.children[i]);
   }
 }
 
 // export function calculateDirtyNode(node) {
-//   for (let i = 0; i < node.childNodes.length; i++) {
-//     calculateDirtyNode(node.childNodes[i]);
+//   for (let i = 0; i < node.children.length; i++) {
+//     calculateDirtyNode(node.children[i]);
 //   }
 //   if (node.yogaNode.isDirty()) {
 //     node.yogaNode.calculateLayout();

@@ -14,34 +14,6 @@ const toEventName = (event, id) => {
   return `element-${id}-${event}`;
 };
 
-/**
- * 格式化样式
- * @param {Object} style
- */
-const formatStyle = (style) => {
-  if (style.opacity !== undefined &&
-    style.color &&
-    style.color.indexOf('#') > -1
-  ) {
-    style.color = getRgba(style.color, style.opacity);
-  }
-
-  if (style.opacity !== undefined &&
-    style.backgroundColor &&
-    style.backgroundColor.indexOf('#') > -1
-  ) {
-    style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
-  }
-
-  Object.keys(style).forEach((key) => {
-    if (scalableStyles.indexOf(key) > -1 && typeof style[key] === 'number') {
-      style[key] *= 1;
-    }
-  });
-
-  return style;
-};
-
 /* eslint no-param-reassign: ["error", { "props": false }] */
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
 export default class Element {
@@ -56,17 +28,17 @@ export default class Element {
     className = '',
     id = (uuid += 1),
   }) {
-    this.childNodes = [];
+    this.children = [];
     this.parent = null;
     this.parentId = 0;
     this.id = id;
     this.props = props;
     this.idName = idName;
     this.className = className;
-    this.styleInit = formatStyle(styleInit);
-    this.styleActive = formatStyle(styleActive);
-    this.styleDarkInit = formatStyle(styleDarkInit);
-    this.styleDarkActive = formatStyle(styleDarkActive);
+    this.styleInit = styleInit;
+    this.styleActive = styleActive;
+    this.styleDarkInit = styleDarkInit;
+    this.styleDarkActive = styleDarkActive;
     this.dataset = dataset;
     this.root = null;
     this.isDestroyed = false;
@@ -77,7 +49,7 @@ export default class Element {
     // 保存用户写在属性上的style，同时也保存用户通过xxxx.style.xxxx设置的style
     this.styleProp = {};
     // 为了让用户修改style的时候，可以触发reflow，这里需要监听style属性的变化，只给用户修改样式的时候使用
-    this.style = new Proxy({}, {
+    this.styleOrigin = new Proxy({}, {
       set: (obj, key, value) => {
         if (value !== this.styleProp[key]) {
           this.styleProp[key] = value;
@@ -101,11 +73,6 @@ export default class Element {
           return this.styleProp[key] || this.styleDarkInit[key] || this.styleInit[key];
         }
         let res = this.styleProp[key] || this.styleInit[key];
-        
-        // if (key === 'opacity') {
-        //   console.log('get prop opacity')
-        //   res *= (res.parent && res.parent.style ? res.parent.style.opacity : 1);
-        // }
 
         return res;
       },
@@ -233,7 +200,7 @@ export default class Element {
       opacity = this.style.opacity;
     }
     let parent = this.parent;
-    
+
     while (parent) {
       opacity *= (parent.style.opacity !== undefined ? parent.style.opacity : 1);
 
@@ -258,7 +225,7 @@ export default class Element {
   _activeTree(node) {
     node._active();
 
-    node.childNodes.forEach(child => {
+    node.children.forEach(child => {
       this._activeTree(child);
     })
   }
@@ -266,7 +233,7 @@ export default class Element {
   _deactiveTree(node) {
     node._deactive();
 
-    node.childNodes.forEach(child => {
+    node.children.forEach(child => {
       this._deactiveTree(child);
     })
   }
@@ -278,7 +245,7 @@ export default class Element {
 
   // 子类填充实现
   _deactive() {
-    
+
   }
 
   // 子类填充实现
@@ -312,7 +279,7 @@ export default class Element {
     element.parent = this;
     element.parentId = this.id;
 
-    this.childNodes.push(element);
+    this.children.push(element);
   }
 
   emit(event, ...theArgs) {

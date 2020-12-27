@@ -34,9 +34,9 @@ function changeStateTrans(item, activeStyle) {
     activeStyle.backgroundColor
     && !(activeStyle.backgroundColor.indexOf('rgba') > -1
       && getAlpha(activeStyle.backgroundColor) !== 1)) {
-    if (item.childNodes) {
-      for (let i = 0; i < item.childNodes.length; i++) {
-        item.childNodes[i].repaint();
+    if (item.children) {
+      for (let i = 0; i < item.children.length; i++) {
+        item.children[i].repaint();
       }
     }
   }

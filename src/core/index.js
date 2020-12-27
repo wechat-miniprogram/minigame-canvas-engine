@@ -3,12 +3,15 @@ import Pool from './common/pool.js';
 import Emitter from 'tiny-emitter';
 import { isClick, STATE, setCharMap, nextTick, log } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
-import { adaptor, updateLayout, initYoga } from './common/adaptor';
+// import { adaptor, updateLayout, initYoga } from './common/adaptor';
 import PseudoClassManager from './common/pseudoClassManager.js';
 import TextManager from './common/textManager.js';
 import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle, createImage } from './common/util.js';
 import RenderContextManager from './renderer/renderContextManager';
 import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElementsByClassName, _getChildsByPos, updateRealLayout } from './common/vd';
+
+import {adaptor} from './common/cssLayoutAdapter';
+import computeLayout from 'css-layout';
 
 const {wx} = pluginEnv.customEnv;
 // 默认的字体管理器getFontManager
@@ -30,10 +33,6 @@ function getFontManager() {
   return fontManager;
 }
 
-const start = new Date();
-const initYogaPromise = initYoga().then(() => {
-  log('yoga init cost', new Date() - start)
-})
 class _Layout extends Element {
   constructor({ style, name, isDarkMode, getWidth, getSize, getFontSize, getFps, canvasId, canvasContext, fontManager, scale = 1 } = {}) {
     super({
@@ -121,7 +120,7 @@ class _Layout extends Element {
   }
 
   init(template, style, styleDark = {}, attrValueProcessor) {
-    return initYogaPromise.then(() => {
+    return new Promise((resolve, reject) => {
       const start = new Date();
 
       if (typeof styleDark  === "function" && arguments.length === 3) {
@@ -146,7 +145,7 @@ class _Layout extends Element {
         }
       }
 
-      const parseConfig = { // todo 需要一个预解析操作
+      const parseConfig = {
         attributeNamePrefix: "",
         attrNodeName: "attr", //default is 'false'
         textNodeName: "#text",
@@ -184,6 +183,8 @@ class _Layout extends Element {
       this.debugInfo.layoutTree = new Date() - start;
       this.add(this.layoutTree);
 
+      console.log(this.layoutTree);
+
       this.debugInfo.renderTree = new Date() - start;
 
       this.state = STATE.INITED;
@@ -212,7 +213,9 @@ class _Layout extends Element {
 
       log(`init time ${new Date() - start}`);
       this.computeLayout();
-    })
+
+      resolve();
+    });
   }
 
   forceUpdate() {
@@ -229,13 +232,13 @@ class _Layout extends Element {
     })
   }
 
-  beforeReflow(childNodes) {
-    childNodes = childNodes || this.childNodes;
-    for (let i = 0, len = childNodes.length; i < len; i++) {
-      if (childNodes[i].beforeReflow) {
-        childNodes[i].beforeReflow();
+  beforeReflow(children) {
+    children = children || this.children;
+    for (let i = 0, len = children.length; i < len; i++) {
+      if (children[i].beforeReflow) {
+        children[i].beforeReflow();
       }
-      this.beforeReflow(childNodes[i].childNodes)
+      this.beforeReflow(children[i].children)
     }
   }
 
@@ -252,7 +255,7 @@ class _Layout extends Element {
       charWidthMap: charWidthMap, // 存下之前计算过的文本的宽度，避免重复计算
       layoutBoxTree: {
         layoutBox: this.layoutBox,
-        childNodes: getNodeData(this.childNodes),
+        children: getNodeData(this.children),
       },
     };
     // log(data);
@@ -279,8 +282,8 @@ class _Layout extends Element {
     const fontSize = this.getFontSize();
 
     // 第一层根节点，宽度如果是设置了百分比，把宽度改成屏幕的宽度
-    for (let i = 0; i < this.childNodes.length; i++) {
-      const child = this.childNodes[i];
+    for (let i = 0; i < this.children.length; i++) {
+      const child = this.children[i];
 
       const style = getElementStyle.call(child, isDarkMode);
       const computedStyle = getElementStyle.call(child, isDarkMode);
@@ -297,12 +300,12 @@ class _Layout extends Element {
     if (
       this.layoutData
       && this.layoutData.layoutBoxTree
-      && this.layoutData.layoutBoxTree.childNodes
-      && this.layoutData.layoutBoxTree.childNodes.length
+      && this.layoutData.layoutBoxTree.children
+      && this.layoutData.layoutBoxTree.children.length
     ) { // 有layout数据，不用再用yoga跑一遍
       const layoutBoxTree = this.layoutData.layoutBoxTree;
       this.layoutBox = layoutBoxTree.layoutBox;
-      if (restoreLayoutTree(this.childNodes, layoutBoxTree.childNodes)) {
+      if (restoreLayoutTree(this.children, layoutBoxTree.children)) {
         log('restoreLayoutTree success');
         this.layoutData = null;
         this.textManager.hasUpdate = true;
@@ -318,6 +321,8 @@ class _Layout extends Element {
       this._useLayoutData = false;
     }
 
+    computeLayout(this);
+
     this.debugInfo.yogaLayout = new Date() - start;
     log(`yoga-layout time ${this.debugInfo.yogaLayout}`);
 
@@ -332,23 +337,20 @@ class _Layout extends Element {
       // updateLayout(this);
     }
 
-    const webGLRenderData = [];
-
     log('before renderContext clear');
     this.renderContext.clear();
     layoutChildren.call(
       this,
-      this.childNodes,
+      this.children,
       isDarkMode,
       fontSize,
-      webGLRenderData
     );
 
-    for (let i = 0; i < this.childNodes.length; i++) {
-      this.renderport.height += this.childNodes[i].layoutBox.height;
+    for (let i = 0; i < this.children.length; i++) {
+      this.renderport.height += this.children[i].layoutBox.height;
     }
     this.viewport.height = this.renderport.height
-    log('viewport.height', this.viewport.height);
+    console.log('viewport.height', this.viewport.height);
 
     this.renderContext.width = this.viewport.width * this.scale;
     this.renderContext.height = this.viewport.height * this.scale;
@@ -387,7 +389,7 @@ class _Layout extends Element {
     // 计算真实的物理像素位置，用于事件处理
     updateRealLayout.call(
       this,
-      this.childNodes,
+      this.children,
       this.viewport.width / (this.renderContext.width / this.scale)
     );
   }
@@ -572,8 +574,8 @@ class _Layout extends Element {
       this.renderContext.release();
     }
 
-    for (let i = 0; i < tree.childNodes.length; i++) {
-      const child = tree.childNodes[i];
+    for (let i = 0; i < tree.children.length; i++) {
+      const child = tree.children[i];
       child.destroy();
       this.destroyAll(child);
       child.destroySelf && child.destroySelf();
@@ -587,8 +589,7 @@ class _Layout extends Element {
     this._methods = null;
     this._videos = [];
     this.elementTree = null;
-    this.childNodes = [];
-    this.children = {};
+    this.children = [];
     this.layoutTree = {};
     this.state = STATE.CLEAR;
 
@@ -723,8 +724,8 @@ class _Layout extends Element {
 const newInstance = function (opt) {
   return new _Layout({
     style: {
-      width: 'auto',
-      height: 'auto',
+      width: '100%',
+      height: '100%',
     },
     name: 'layout',
     isDarkMode: opt.isDarkMode || (() => false),

@@ -106,7 +106,7 @@ export default class RenderContextManager {
       res.push(node.glRect)
     }
 
-    node.childNodes.forEach(child => {
+    node.children.forEach(child => {
       this.getChildrenGlRects(child, res);
     });
 

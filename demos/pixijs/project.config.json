@@ -1,65 +1,60 @@
 {
-	"description": "项目配置文件。",
-	"setting": {
-		"urlCheck": false,
-		"es6": true,
-		"enhance": false,
-		"postcss": true,
-		"preloadBackgroundData": false,
-		"minified": true,
-		"newFeature": true,
-		"coverView": true,
-		"nodeModules": false,
-		"autoAudits": false,
-		"showShadowRootInWxmlPanel": true,
-		"scopeDataCheck": false,
-		"uglifyFileName": false,
-		"checkInvalidKey": true,
-		"checkSiteMap": true,
-		"uploadWithSourceMap": true,
-		"compileHotReLoad": false,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		},
-		"useIsolateContext": true,
-		"useCompilerModule": false,
-		"userConfirmedUseCompilerModuleSwitch": false
-	},
-	"compileType": "game",
-	"libVersion": "2.11.2",
-	"appid": "wx20afc706a711eefc",
-	"projectname": "aircraft-war",
-	"simulatorType": "wechat",
-	"simulatorPluginLibVersion": {},
-	"condition": {
-		"search": {
-			"current": -1,
-			"list": []
-		},
-		"conversation": {
-			"current": -1,
-			"list": []
-		},
-		"plugin": {
-			"current": -1,
-			"list": []
-		},
-		"game": {
-			"current": 0,
-			"list": [
-				{
-					"id": 0,
-					"name": "房间对战",
-					"query": "accessInfo=uJ6wwLPV54CW4YYwlA5U0XTjypPQLCwITvb9uCiJyq4",
-					"scene": "1001"
-				}
-			]
-		},
-		"miniprogram": {
-			"current": -1,
-			"list": []
-		}
-	}
+  "description": "项目配置文件。",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": false,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "uglifyFileName": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "useIsolateContext": true,
+    "useCompilerModule": false,
+    "userConfirmedUseCompilerModuleSwitch": false
+  },
+  "compileType": "game",
+  "libVersion": "2.11.2",
+  "appid": "wxe327ea46003227b0",
+  "projectname": "aircraft-war",
+  "simulatorType": "wechat",
+  "simulatorPluginLibVersion": {},
+  "condition": {
+    "search": {
+      "list": []
+    },
+    "conversation": {
+      "list": []
+    },
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": [
+        {
+          "id": 0,
+          "name": "房间对战",
+          "query": "accessInfo=uJ6wwLPV54CW4YYwlA5U0XTjypPQLCwITvb9uCiJyq4",
+          "scene": "1001"
+        }
+      ]
+    },
+    "miniprogram": {
+      "list": []
+    }
+  }
 }

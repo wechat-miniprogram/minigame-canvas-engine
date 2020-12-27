@@ -29,14 +29,14 @@ export default class ScrollView extends View {
     // 当前列表滚动的值
     this.scrollTop = 0;
     this.scrollLeft = 0;
-    
+
     // 滚动处理器
     this.touch           = new Touch();
 
     this.requestID = null;
 
     this.hasEventBind = false;
-    
+
     this.overflowX = false;
     this.overflowY = false;
   }
@@ -67,22 +67,22 @@ export default class ScrollView extends View {
    */
   get scrollHeight() {
     // scrollview为空的情况
-    if (!this.childNodes.length) {
+    if (!this.children.length) {
       return 0;
     }
 
-    const last = this.childNodes[this.childNodes.length - 1];
+    const last = this.children[this.children.length - 1];
 
     return last.layoutBox.top + last.layoutBox.height;
   }
 
   get scrollWidth() {
     // scrollview为空的情况
-    if (!this.childNodes.length) {
+    if (!this.children.length) {
       return 0;
     }
 
-    const last = this.childNodes[this.childNodes.length - 1];
+    const last = this.children[this.children.length - 1];
 
     return last.layoutBox.left + last.layoutBox.width;
   }
@@ -97,7 +97,7 @@ export default class ScrollView extends View {
     }
 
     this.hasEventBind = true;
-    
+
     this.root.scrollview = this;
 
     if ( this.scrollHeight > this.layoutBox.height ) {
@@ -132,10 +132,10 @@ export default class ScrollView extends View {
   }
 
   /**
-   * 
-   * @param {*} node 
-   * @param {*} x 
-   * @param {*} y 
+   *
+   * @param {*} node
+   * @param {*} x
+   * @param {*} y
    */
   traverseToChangeGlRect(node, x = 0, y = 0) {
     const glRect = node.glRect;
@@ -143,9 +143,9 @@ export default class ScrollView extends View {
       glRect.x = glRect.originX - x;
       glRect.y = glRect.originY - y;
 
-      
+
       if (node.type === 'Text') {
-        
+
         glRect.text.style.drawX -= x;
         glRect.text.style.drawY -= y;
       }
@@ -161,10 +161,10 @@ export default class ScrollView extends View {
         // this.touch.move = -y;
         // this.touch.target = -y;
       }
-  
+
     }
-    
-    node.childNodes.forEach(child => {
+
+    node.children.forEach(child => {
       this.traverseToChangeGlRect(child, x, y);
     });
   }
