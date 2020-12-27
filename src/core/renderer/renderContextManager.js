@@ -127,25 +127,16 @@ export default class RenderContextManager {
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
       this.gl = gl;
+      console.log(this.glRects.filter((item => item.type === 'Text' || item.type === 'Image')));
 
       if (this.layout.scrollview) {
         this.hasScroll = true;
-        // this.setupScrollGl();
 
         this.scrollGlrects = [];
         this.getChildrenGlRects(this.layout.scrollview, this.scrollGlrects);
       }
     }
 
-    // if (this.hasScroll) {
-    //   // scrollview重绘
-    //   renderer.repaint(this.gl, this.scrollGlrects);
-    // }
-
-    renderer.resetGl(this.gl);
-
-    // 除了scrollview之外的glRects重绘
     renderer.repaint(this.gl, this.glRects, this.scrollGlrects);
-    // renderer.repaint(this.gl, this.scrollGlrects);
   }
 }

@@ -266,15 +266,15 @@ function useProgram(gl, needFlipY = true) {
           }
 
           gl.bindTexture(gl.TEXTURE_2D, texId);
-          
+
           // // scrollview每次重绘都需要更新纹理
           // if(needUpdateTexture) {
           //   // 将图像上传到纹理
           //   // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
-            
+
           //   gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage)
           // }
-          
+
           hasTexture = true;
         } else if (typeof backgroundImageData !== 'undefined') {
           let texId = textureMap.get(ArrayBuffer);
@@ -335,7 +335,7 @@ function useProgram(gl, needFlipY = true) {
         gl.uniform1i(uTex, 0);
         // gl.uniform4f(uColor, ...backgroundColor);
         gl.uniform4f(uColor, backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
-        
+
         // gl.uniform4f(uRadius, ...radius);
         gl.uniform4f(uRadius, radius[0], radius[1], radius[2], radius[3]);
         // gl.uniform4f(uBorderColor, ...borderColor);

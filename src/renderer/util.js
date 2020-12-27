@@ -342,7 +342,7 @@ export function createRender({ dpr, createImage, createCanvas }) {
     resetGl,
 
     repaint: function drawRects(gl, glRects, scrollGlrects) {
-      // resetGl(gl);
+       resetGl(gl);
       glRects.forEach((item, idx) => {
         // scrollview开启模板测试
         if (item.type === 'ScrollView') {
@@ -367,7 +367,6 @@ export function createRender({ dpr, createImage, createCanvas }) {
           scrollGlrects.forEach(scrollItem => {
             // if (scrollItem.y + scrollItem.height >= item.y && scrollItem.y <= item.y + item.height) {
               drawOneGlRect(gl, scrollItem, () => {
-                resetGl(gl)
                 drawRects(gl, glRects, scrollGlrects);
               })
             // }
@@ -377,7 +376,6 @@ export function createRender({ dpr, createImage, createCanvas }) {
           gl.disable(gl.STENCIL_TEST);
         } else {
           drawOneGlRect(gl, item, () => {
-            resetGl(gl)
             drawRects(gl, glRects, scrollGlrects);
           })
         }

@@ -2847,22 +2847,18 @@ var RenderContextManager = /*#__PURE__*/function () {
         gl.canvas.width = this.width;
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         this.gl = gl;
+        console.log(this.glRects.filter(function (item) {
+          return item.type === 'Text' || item.type === 'Image';
+        }));
 
         if (this.layout.scrollview) {
-          this.hasScroll = true; // this.setupScrollGl();
-
+          this.hasScroll = true;
           this.scrollGlrects = [];
           this.getChildrenGlRects(this.layout.scrollview, this.scrollGlrects);
         }
-      } // if (this.hasScroll) {
-      //   // scrollview重绘
-      //   renderer.repaint(this.gl, this.scrollGlrects);
-      // }
+      }
 
-
-      renderer.resetGl(this.gl); // 除了scrollview之外的glRects重绘
-
-      renderer.repaint(this.gl, this.glRects, this.scrollGlrects); // renderer.repaint(this.gl, this.scrollGlrects);
+      renderer.repaint(this.gl, this.glRects, this.scrollGlrects);
     }
   }]);
 
@@ -5087,7 +5083,7 @@ function createRender(_ref7) {
     loadImage: loadImage,
     resetGl: resetGl,
     repaint: function drawRects(gl, glRects, scrollGlrects) {
-      // resetGl(gl);
+      resetGl(gl);
       glRects.forEach(function (item, idx) {
         // scrollview开启模板测试
         if (item.type === 'ScrollView') {
@@ -5108,7 +5104,6 @@ function createRender(_ref7) {
           scrollGlrects.forEach(function (scrollItem) {
             // if (scrollItem.y + scrollItem.height >= item.y && scrollItem.y <= item.y + item.height) {
             drawOneGlRect(gl, scrollItem, function () {
-              resetGl(gl);
               drawRects(gl, glRects, scrollGlrects);
             }); // }
           }); // 关闭模板测试
@@ -5116,7 +5111,6 @@ function createRender(_ref7) {
           gl.disable(gl.STENCIL_TEST);
         } else {
           drawOneGlRect(gl, item, function () {
-            resetGl(gl);
             drawRects(gl, glRects, scrollGlrects);
           });
         }
