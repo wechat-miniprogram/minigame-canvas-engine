@@ -282,6 +282,24 @@ export default class Element {
     this.children.push(element);
   }
 
+  remove(element) {
+    if (!element) {
+      return false;
+    }
+
+    element.parent = null;
+    element.parentId = null;
+
+    const index = this.children.indexOf(element);
+    if (index === -1) {
+      return false;
+    }
+
+    this.children.splice(index, 1);
+
+    return true;
+  }
+
   emit(event, ...theArgs) {
     this.EE && this.EE.emit(toEventName(event, this.id), ...theArgs);
   }

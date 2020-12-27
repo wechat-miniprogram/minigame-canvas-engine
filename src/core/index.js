@@ -321,12 +321,11 @@ class _Layout extends Element {
       this._useLayoutData = false;
     }
 
+    let computedStart = Date.now();
     computeLayout(this);
+    console.log('computeLayout cost', Date.now() - computedStart);
 
     this.debugInfo.yogaLayout = new Date() - start;
-    log(`yoga-layout time ${this.debugInfo.yogaLayout}`);
-
-    this.debugInfo.computeLayout = new Date() - start;
 
     // 这里更新下文本节点的宽高
     if (!this.textManager.hasUpdate) {
@@ -350,7 +349,7 @@ class _Layout extends Element {
       this.renderport.height += this.children[i].layoutBox.height;
     }
     this.viewport.height = this.renderport.height
-    console.log('viewport.height', this.viewport.height);
+    /*console.log('viewport.height', this.viewport.height);*/
 
     this.renderContext.width = this.viewport.width * this.scale;
     this.renderContext.height = this.viewport.height * this.scale;

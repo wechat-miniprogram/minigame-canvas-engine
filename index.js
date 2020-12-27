@@ -98,20 +98,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(3);
 /* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
 /* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _common_adaptor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(11);
-/* harmony import */ var _common_pseudoClassManager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(14);
-/* harmony import */ var _common_textManager_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(15);
-/* harmony import */ var _renderer_renderContextManager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(16);
-/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(36);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+/* harmony import */ var _common_pseudoClassManager_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(11);
+/* harmony import */ var _common_textManager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(12);
+/* harmony import */ var _renderer_renderContextManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(13);
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(26);
+/* harmony import */ var _common_cssLayoutAdapter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(37);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(38);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_10__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -119,16 +125,25 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+ // import { adaptor, updateLayout, initYoga } from './common/adaptor';
 
 
 
@@ -137,15 +152,27 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+var wx = pluginEnv.customEnv.wx; // 默认的字体管理器getFontManager
 
+function getFontManager() {
+  var measureCanvas = wx.createCanvas();
+  measureCanvas.width = 1;
+  measureCanvas.height = 1;
+  var fontManager = {
+    measureText: function measureText(str, fontStyle, fontWeight, fontSize, fontFamily) {
+      var canvas = measureCanvas;
+      var ctx = canvas.getContext('2d');
+      ctx.font = "".concat(fontStyle || 'normal', " ").concat(fontWeight || 'normal', " ").concat(fontSize || 12, "px ").concat(fontFamily);
+      return ctx.measureText(str).width;
+    }
+  };
+  return fontManager;
+}
 
-
-
-
-var _Layout =
-/*#__PURE__*/
-function (_Element) {
+var _Layout = /*#__PURE__*/function (_Element) {
   _inherits(_Layout, _Element);
+
+  var _super = _createSuper(_Layout);
 
   function _Layout() {
     var _this;
@@ -155,30 +182,34 @@ function (_Element) {
         name = _ref.name,
         isDarkMode = _ref.isDarkMode,
         getWidth = _ref.getWidth,
+        getSize = _ref.getSize,
         getFontSize = _ref.getFontSize,
         getFps = _ref.getFps,
         canvasId = _ref.canvasId,
         canvasContext = _ref.canvasContext,
-        fontManager = _ref.fontManager;
+        fontManager = _ref.fontManager,
+        _ref$scale = _ref.scale,
+        scale = _ref$scale === void 0 ? 1 : _ref$scale;
 
     _classCallCheck(this, _Layout);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(_Layout).call(this, {
+    _this = _super.call(this, {
       style: style,
       id: 0,
       name: name
-    }));
+    });
     _this._methods = {};
     _this.canvasId = canvasId;
     _this.hasEventHandler = false;
     _this.elementTree = null;
     _this.renderContext = null;
+    _this.scale = scale;
 
     if (canvasContext) {
-      _this.setCanvasContext(canvasContext);
+      _this.setCanvasContext(canvasContext, scale);
     }
 
-    _this.fontManager = fontManager;
+    _this.fontManager = fontManager || getFontManager();
     _this.debugInfo = {};
     _this.renderport = {}; // 包含像素比例的宽高
 
@@ -193,8 +224,8 @@ function (_Element) {
       realX: 0,
       realY: 0
     };
-    _this.pseudoClassManager = new _common_pseudoClassManager_js__WEBPACK_IMPORTED_MODULE_6__["default"](_assertThisInitialized(_this));
-    _this.textManager = new _common_textManager_js__WEBPACK_IMPORTED_MODULE_7__["default"](_assertThisInitialized(_this));
+    _this.pseudoClassManager = new _common_pseudoClassManager_js__WEBPACK_IMPORTED_MODULE_5__["default"](_assertThisInitialized(_this));
+    _this.textManager = new _common_textManager_js__WEBPACK_IMPORTED_MODULE_6__["default"](_assertThisInitialized(_this));
 
     _this.isDarkMode = isDarkMode || function () {
       return false;
@@ -203,6 +234,13 @@ function (_Element) {
 
     _this.getWidth = getWidth || function () {
       return 0;
+    };
+
+    _this.getSize = getSize || function () {
+      return {
+        width: 0,
+        height: 0
+      };
     };
 
     _this.getFontSize = getFontSize || function () {
@@ -216,20 +254,16 @@ function (_Element) {
     _this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].UNINIT;
     _this.imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('imgPool');
     _this._emitter = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a();
-    _this._EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a();
-    _this.viewport = {
-      width: getWidth()
-    }; // 不包含像素的宽高
+    _this._EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a(); // this.viewport = {
+    //   width: getWidth(),
+    // }; // 不包含像素的宽高
 
+    _this.viewport = getSize();
     _this._videos = [];
     _this._firstComputeLayout = true; // 是否首次计算布局
 
     _this._useLayoutData = false; // 是否使用了序列化的布局数据
 
-    var start = new Date();
-    _this.initYoga = Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["initYoga"])().then(function () {
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('yoga init cost', new Date() - start);
-    });
     return _this;
   }
 
@@ -240,21 +274,47 @@ function (_Element) {
     }
   }, {
     key: "setCanvasContext",
-    value: function setCanvasContext(ctx) {
+    value: function setCanvasContext(ctx, scale) {
       this.canvasContext = ctx;
-      this.renderContext = new _renderer_renderContextManager__WEBPACK_IMPORTED_MODULE_8__["default"](ctx);
+      this.renderContext = new _renderer_renderContextManager__WEBPACK_IMPORTED_MODULE_7__["default"](ctx, scale);
+      this.renderContext.layout = this;
     }
   }, {
     key: "initRepaint",
     value: function initRepaint() {}
   }, {
+    key: "deactive",
+    value: function deactive() {
+      console.log('deactive call');
+      this._oldState = this.state;
+      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].DEACTIVE;
+
+      this._deactiveTree(this);
+    }
+  }, {
+    key: "active",
+    value: function active() {
+      console.log('active call');
+      this.state = this._oldState || _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].RENDERED;
+
+      this._activeTree(this);
+    }
+  }, {
     key: "init",
     value: function init(template, style) {
-      var _this2 = this;
+      var _arguments = arguments,
+          _this2 = this;
 
       var styleDark = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      return this.initYoga.then(function () {
+      var attrValueProcessor = arguments.length > 3 ? arguments[3] : undefined;
+      return new Promise(function (resolve, reject) {
         var start = new Date();
+
+        if (typeof styleDark === "function" && _arguments.length === 3) {
+          attrValueProcessor = styleDark;
+          styleDark = {};
+        }
+
         _this2.cssRules = {}; // 保存下css规则
 
         _this2.cssDarkRules = {}; // 保存下css darkmode的规则
@@ -275,11 +335,8 @@ function (_Element) {
             _this2.cssDarkRules[_k][_key] = styleDark[_k][_key];
           }
         }
-        /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
 
-
-        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_4___default.a.parse(template, {
-          // todo 需要一个预解析操作
+        var parseConfig = {
           attributeNamePrefix: "",
           attrNodeName: "attr",
           //default is 'false'
@@ -291,19 +348,28 @@ function (_Element) {
           parseAttributeValue: false,
           trimValues: true,
           parseTrueNumberOnly: false
-        }, true);
+        };
+
+        if (attrValueProcessor) {
+          parseConfig.attrValueProcessor = attrValueProcessor;
+        }
+        /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
+
+
+        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_4___default.a.parse(template, parseConfig, true);
         /*}*/
 
         var xmlTree = jsonObj.children[0];
         _this2.debugInfo.xmlTree = new Date() - start;
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])("init getXmlTree time ".concat(new Date() - start)); // XML树生成渲染树
 
-        _this2.layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_9__["create"].call(_this2, xmlTree, style, styleDark, _this2.isDarkMode(), _this2.getFontSize());
+        _this2.layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_8__["create"].call(_this2, xmlTree, style, styleDark, _this2.isDarkMode(), _this2.getFontSize());
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])("create time ".concat(new Date() - start));
         _this2.debugInfo.layoutTree = new Date() - start;
 
         _this2.add(_this2.layoutTree);
 
+        console.log(_this2.layoutTree);
         _this2.debugInfo.renderTree = new Date() - start;
         _this2.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].INITED;
         _this2.reflowRequest = 0;
@@ -317,7 +383,10 @@ function (_Element) {
               _this2.reflowRequest = 0;
               _this2.textManager.hasUpdate = false;
 
-              _this2.computeLayout();
+              _this2.computeLayout(); // @hardcode
+
+
+              _this2.scrollview && _this2.scrollview.traverseToChangeGlRect(_this2.scrollview, _this2.scrollview.scrollLeft, _this2.scrollview.scrollTop);
 
               _this2.drawLayout();
             }
@@ -327,6 +396,8 @@ function (_Element) {
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])("init time ".concat(new Date() - start));
 
         _this2.computeLayout();
+
+        resolve();
       });
     }
   }, {
@@ -334,16 +405,14 @@ function (_Element) {
     value: function forceUpdate() {
       var _this3 = this;
 
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('forceUpdate--------');
-
+      // log('forceUpdate--------');
       if (this.flushing) {
         return;
       }
 
       this.flushing = true;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["nextTick"])(function () {
-        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('nextTick forceUpdate--------');
-
+        // log('nextTick forceUpdate--------');
         _this3.repaint();
 
         _this3.flushing = false;
@@ -351,25 +420,26 @@ function (_Element) {
     }
   }, {
     key: "beforeReflow",
-    value: function beforeReflow(childNodes) {
-      childNodes = childNodes || this.childNodes;
+    value: function beforeReflow(children) {
+      children = children || this.children;
 
-      for (var i = 0, len = childNodes.length; i < len; i++) {
-        if (childNodes[i].beforeReflow) {
-          childNodes[i].beforeReflow();
+      for (var i = 0, len = children.length; i < len; i++) {
+        if (children[i].beforeReflow) {
+          children[i].beforeReflow();
         }
 
-        this.beforeReflow(childNodes[i].childNodes);
+        this.beforeReflow(children[i].children);
       }
     } // 把数据丢给渲染线程
 
   }, {
     key: "repaint",
     value: function repaint() {
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('repaint call');
-      var renderer = this.renderContext;
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])(renderer.glRects.length);
-      renderer.draw();
+      var needInit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      // log('repaint call');
+      var renderer = this.renderContext; // log(renderer.glRects.length);
+
+      renderer.draw(needInit);
     }
   }, {
     key: "getLayoutData",
@@ -380,7 +450,7 @@ function (_Element) {
         // 存下之前计算过的文本的宽度，避免重复计算
         layoutBoxTree: {
           layoutBox: this.layoutBox,
-          childNodes: getNodeData(this.childNodes)
+          children: getNodeData(this.children)
         }
       }; // log(data);
 
@@ -400,15 +470,15 @@ function (_Element) {
   }, {
     key: "computeLayout",
     value: function computeLayout() {
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('start computeLayout');
+      // log('start computeLayout');
       var start = new Date();
       this.renderport.height = 0;
-      this.viewport.width = this.getWidth();
+      this.viewport = this.getSize();
       var isDarkMode = this.isDarkMode();
       var fontSize = this.getFontSize(); // 第一层根节点，宽度如果是设置了百分比，把宽度改成屏幕的宽度
 
-      for (var i = 0; i < this.childNodes.length; i++) {
-        var child = this.childNodes[i];
+      for (var i = 0; i < this.children.length; i++) {
+        var child = this.children[i];
         var style = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["getElementStyle"].call(child, isDarkMode);
         var computedStyle = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["getElementStyle"].call(child, isDarkMode);
 
@@ -421,12 +491,12 @@ function (_Element) {
         }
       }
 
-      if (this.layoutData && this.layoutData.layoutBoxTree && this.layoutData.layoutBoxTree.childNodes && this.layoutData.layoutBoxTree.childNodes.length) {
+      if (this.layoutData && this.layoutData.layoutBoxTree && this.layoutData.layoutBoxTree.children && this.layoutData.layoutBoxTree.children.length) {
         // 有layout数据，不用再用yoga跑一遍
         var layoutBoxTree = this.layoutData.layoutBoxTree;
         this.layoutBox = layoutBoxTree.layoutBox;
 
-        if (Object(_common_vd__WEBPACK_IMPORTED_MODULE_9__["restoreLayoutTree"])(this.childNodes, layoutBoxTree.childNodes)) {
+        if (Object(_common_vd__WEBPACK_IMPORTED_MODULE_8__["restoreLayoutTree"])(this.children, layoutBoxTree.children)) {
           Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('restoreLayoutTree success');
           this.layoutData = null;
           this.textManager.hasUpdate = true;
@@ -434,39 +504,41 @@ function (_Element) {
         } else {
           Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('restoreLayoutTree fail');
           this.layoutData = null;
-          Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["adaptor"])(this);
+          Object(_common_cssLayoutAdapter__WEBPACK_IMPORTED_MODULE_9__["adaptor"])(this);
         }
       } else {
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('without layoutData');
-        Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["adaptor"])(this);
+        Object(_common_cssLayoutAdapter__WEBPACK_IMPORTED_MODULE_9__["adaptor"])(this);
         this._useLayoutData = false;
       }
 
-      this.debugInfo.yogaLayout = new Date() - start;
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])("yoga-layout time ".concat(this.debugInfo.yogaLayout));
-      this.debugInfo.computeLayout = new Date() - start; // 这里更新下文本节点的宽高
+      var computedStart = Date.now();
+
+      css_layout__WEBPACK_IMPORTED_MODULE_10___default()(this);
+
+      console.log('computeLayout cost', Date.now() - computedStart);
+      this.debugInfo.yogaLayout = new Date() - start; // 这里更新下文本节点的宽高
 
       if (!this.textManager.hasUpdate) {
         this.textManager.hasUpdate = true;
         this.textManager.updateTextNodeLayoutBox();
-        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('updateTextNodeLayoutBox');
-        Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["calculateDirtyNode"])(this);
-        Object(_common_adaptor__WEBPACK_IMPORTED_MODULE_5__["updateLayout"])(this);
+        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('updateTextNodeLayoutBox'); // calculateDirtyNode(this);
+        // updateLayout(this);
       }
 
-      var webGLRenderData = [];
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('before renderContext clear');
       this.renderContext.clear();
-      _common_vd__WEBPACK_IMPORTED_MODULE_9__["layoutChildren"].call(this, this.childNodes, isDarkMode, fontSize, webGLRenderData);
+      _common_vd__WEBPACK_IMPORTED_MODULE_8__["layoutChildren"].call(this, this.children, isDarkMode, fontSize);
 
-      for (var _i = 0; _i < this.childNodes.length; _i++) {
-        this.renderport.height += this.childNodes[_i].layoutBox.height;
+      for (var _i = 0; _i < this.children.length; _i++) {
+        this.renderport.height += this.children[_i].layoutBox.height;
       }
 
       this.viewport.height = this.renderport.height;
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('viewport.height', this.viewport.height);
-      this.renderContext.width = this.viewport.width;
-      this.renderContext.height = this.viewport.height;
+      /*console.log('viewport.height', this.viewport.height);*/
+
+      this.renderContext.width = this.viewport.width * this.scale;
+      this.renderContext.height = this.viewport.height * this.scale;
       this.debugInfo.layoutChildren = new Date() - start;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])("computeLayout time ".concat(this.debugInfo.computeLayout));
 
@@ -474,6 +546,29 @@ function (_Element) {
         // 这里统计首次计算布局并且没有序列化数据的耗时
         this._firstComputeLayout = false;
       } else if (!this._useLayoutData) {} else if (this._useLayoutData) {}
+    }
+    /**
+     * 更新被绘制canvas的窗口信息，本渲染引擎并不关心是否会和其他游戏引擎共同使用
+     * 而本身又需要支持事件处理，因此，如果被渲染内容是绘制到离屏canvas，需要将最终绘制在屏幕上
+     * 的绝对尺寸和位置信息更新到本渲染引擎。
+     * 其中，width为物理像素宽度，height为物理像素高度，x为距离屏幕左上角的物理像素x坐标，y为距离屏幕左上角的物理像素
+     * y坐标
+     */
+
+  }, {
+    key: "updateViewPort",
+    value: function updateViewPort(box) {
+      this.viewport.width = box.width || 0;
+      this.viewport.height = box.height || 0;
+      this.viewport.x = box.x || 0;
+      this.viewport.y = box.y || 0;
+      this.realLayoutBox = {
+        realX: this.viewport.x,
+        realY: this.viewport.y
+      };
+      this.hasViewPortSet = true; // 计算真实的物理像素位置，用于事件处理
+
+      _common_vd__WEBPACK_IMPORTED_MODULE_8__["updateRealLayout"].call(this, this.children, this.viewport.width / (this.renderContext.width / this.scale));
     }
   }, {
     key: "restore",
@@ -485,14 +580,10 @@ function (_Element) {
   }, {
     key: "drawLayout",
     value: function drawLayout() {
-      var start = new Date();
-
       if (!this.canvasContext) {
         return;
       }
 
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('drawLayout');
-      this.debugInfo.renderChildren = new Date() - start;
       this.bindEvents();
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].RENDERED;
       this.forceUpdate();
@@ -501,7 +592,7 @@ function (_Element) {
   }, {
     key: "getChildByPos",
     value: function getChildByPos(tree, x, y) {
-      var list = Object(_common_vd__WEBPACK_IMPORTED_MODULE_9__["_getChildsByPos"])(tree, x, y, []);
+      var list = Object(_common_vd__WEBPACK_IMPORTED_MODULE_8__["_getChildsByPos"])(tree, x, y, []);
 
       var length = list.length;
       return list[length - 1];
@@ -510,6 +601,10 @@ function (_Element) {
     key: "eventHandler",
     value: function eventHandler(eventName) {
       return function touchEventHandler(e) {
+        if (this.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].DEACTIVE) {
+          return;
+        }
+
         var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
 
         if (!touch.timeStamp) {
@@ -534,8 +629,8 @@ function (_Element) {
           event[k] = e[k];
         }
 
-        var item = touch && this.getChildByPos(this, touch.clientX - offsetLeft, touch.clientY - offsetTop);
-        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])(eventName, 'item', item.className);
+        var item = touch && this.getChildByPos(this, touch.clientX - offsetLeft, touch.clientY - offsetTop); // log(eventName, 'item', item.className);
+
         event.item = item;
         event.target = item;
         item && item.emit(eventName, event);
@@ -545,7 +640,7 @@ function (_Element) {
         }
 
         if (eventName === 'touchend' && Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["isClick"])(this.touchMsg)) {
-          Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('emit click event!');
+          // log('emit click event!')
           item && item.emit('click', event);
         }
 
@@ -575,14 +670,13 @@ function (_Element) {
       // log('bindEvents call');
       if (this.hasEventHandler) {
         return;
-      }
+      } // log('bindEvents call');
 
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('bindEvents call');
+
       this.hasEventHandler = true;
 
       this._touchStartHandler = function (e) {
-        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('touch start');
-
+        // log('touch start');
         _this4.touchStart(e);
       };
 
@@ -591,8 +685,7 @@ function (_Element) {
       };
 
       this._touchEndHandler = function (e) {
-        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('touch end');
-
+        // log('touch end');
         _this4.touchEnd(e); // log('before pseudoClassManager clearActiveState');
 
 
@@ -606,24 +699,37 @@ function (_Element) {
         _this4.pseudoClassManager.clearActiveState(); // 清除所有:active的状态
 
       }; // this.canvasContext.addEventListener('mousedown', this._touchStartHandler);
+      // this.canvasContext.addEventListener('mouseup', this._touchEndHandler);
 
 
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('canvasContext addEventListener ', this.canvasContext);
-      this.canvasContext.addEventListener('touchstart', this._touchStartHandler);
-      this.canvasContext.addEventListener('touchmove', this._touchMoveHandler);
-      this.canvasContext.addEventListener('touchend', this._touchEndHandler); // this.canvasContext.addEventListener('mouseup', this._touchEndHandler);
-
-      this.canvasContext.addEventListener('touchcancel', this._touchCancelHandler);
+      if (typeof wx !== 'undefined') {
+        wx.onTouchStart(this.touchStart);
+        wx.onTouchMove(this.touchMove);
+        wx.onTouchEnd(this.touchEnd);
+        wx.onTouchCancel(this.touchCancel);
+      } else {
+        this.canvasContext.addEventListener('touchstart', this._touchStartHandler);
+        this.canvasContext.addEventListener('touchmove', this._touchMoveHandler);
+        this.canvasContext.addEventListener('touchend', this._touchEndHandler);
+        this.canvasContext.addEventListener('touchcancel', this._touchCancelHandler);
+      }
     }
   }, {
     key: "unbindEvents",
     value: function unbindEvents() {
       if (this.hasEventHandler) {
-        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["log"])('removeEventListener when clear');
-        this.canvasContext.removeEventListener('touchstart', this._touchStartHandler);
-        this.canvasContext.removeEventListener('touchmove', this._touchMoveHandler);
-        this.canvasContext.removeEventListener('touchend', this._touchEndHandler);
-        this.canvasContext.removeEventListener('touchcancel', this._touchCancelHandler);
+        if (typeof wx !== 'undefined') {
+          wx.offTouchStart(this.touchStart);
+          wx.offTouchMove(this.touchMove);
+          wx.offTouchEnd(this.touchEnd);
+          wx.offTouchCancel(this.touchCancel);
+        } else {
+          this.canvasContext.removeEventListener('touchstart', this._touchStartHandler);
+          this.canvasContext.removeEventListener('touchmove', this._touchMoveHandler);
+          this.canvasContext.removeEventListener('touchend', this._touchEndHandler);
+          this.canvasContext.removeEventListener('touchcancel', this._touchCancelHandler);
+        }
+
         this.hasEventHandler = false;
       }
     }
@@ -654,22 +760,23 @@ function (_Element) {
   }, {
     key: "getElementsByClassName",
     value: function getElementsByClassName(className) {
-      return Object(_common_vd__WEBPACK_IMPORTED_MODULE_9__["_getElementsByClassName"])(this, [], className);
+      return Object(_common_vd__WEBPACK_IMPORTED_MODULE_8__["_getElementsByClassName"])(this, [], className);
     }
   }, {
     key: "getElementById",
     value: function getElementById(id) {
-      return Object(_common_vd__WEBPACK_IMPORTED_MODULE_9__["_getElementById"])(this, id);
+      return Object(_common_vd__WEBPACK_IMPORTED_MODULE_8__["_getElementById"])(this, id);
     }
   }, {
     key: "destroyAll",
     value: function destroyAll(tree) {
       if (!tree) {
         tree = this;
+        this.renderContext.release();
       }
 
-      for (var i = 0; i < tree.childNodes.length; i++) {
-        var child = tree.childNodes[i];
+      for (var i = 0; i < tree.children.length; i++) {
+        var child = tree.children[i];
         child.destroy();
         this.destroyAll(child);
         child.destroySelf && child.destroySelf();
@@ -686,14 +793,15 @@ function (_Element) {
       this._methods = null;
       this._videos = [];
       this.elementTree = null;
-      this.childNodes = [];
-      this.children = {};
+      this.children = [];
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR;
       ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
         _this5.off(eventName);
       });
-      this.EE.off('image__render__done');
+      this.off('reflow');
+      this.scrollview = null;
+      console.log('layout clear call', this._EE, this._emitter);
     }
   }, {
     key: "clearPool",
@@ -712,7 +820,7 @@ function (_Element) {
       var _this6 = this;
 
       arr.forEach(function (src) {
-        var img = _this6.canvasContext.createImage();
+        var img = _this6.canvasContext.createImage ? _this6.canvasContext.createImage() : Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createImage"])();
 
         _this6.imgPool.set(src, img);
 
@@ -721,7 +829,12 @@ function (_Element) {
         };
 
         img.onloadcbks = [];
-        img.setSrc(src);
+
+        if (img.setSrc) {
+          img.setSrc(src);
+        } else {
+          img.src = src;
+        }
       });
     }
     /**
@@ -833,8 +946,8 @@ function (_Element) {
 var newInstance = function newInstance(opt) {
   return new _Layout({
     style: {
-      width: 'auto',
-      height: 'auto'
+      width: '100%',
+      height: '100%'
     },
     name: 'layout',
     isDarkMode: opt.isDarkMode || function () {
@@ -851,7 +964,9 @@ var newInstance = function newInstance(opt) {
     },
     canvasId: opt.canvasId,
     canvasContext: opt.canvasContext,
-    fontManager: opt.fontManager
+    fontManager: opt.fontManager,
+    getSize: opt.getSize,
+    scale: opt.scale
   });
 };
 
@@ -868,11 +983,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Element; });
 /* harmony import */ var _style_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -888,7 +1007,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var uuid = 0;
 
 var toEventName = function toEventName(event, id) {
-  var elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
+  var elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel', 'scroll'];
 
   if (elementEvent.indexOf(event) !== -1) {
     return "element-".concat(id, "-").concat(event);
@@ -896,36 +1015,12 @@ var toEventName = function toEventName(event, id) {
 
   return "element-".concat(id, "-").concat(event);
 };
-/**
- * 格式化样式
- * @param {Object} style
- */
-
-
-var formatStyle = function formatStyle(style) {
-  if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
-    style.color = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getRgba"])(style.color, style.opacity);
-  }
-
-  if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf('#') > -1) {
-    style.backgroundColor = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getRgba"])(style.backgroundColor, style.opacity);
-  }
-
-  Object.keys(style).forEach(function (key) {
-    if (_style_js__WEBPACK_IMPORTED_MODULE_0__["scalableStyles"].indexOf(key) > -1 && typeof style[key] === 'number') {
-      style[key] *= 1;
-    }
-  });
-  return style;
-};
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
 
 
-var Element =
-/*#__PURE__*/
-function () {
+var Element = /*#__PURE__*/function () {
   function Element(_ref) {
     var _this = this;
 
@@ -950,17 +1045,17 @@ function () {
 
     _classCallCheck(this, Element);
 
-    this.childNodes = [];
+    this.children = [];
     this.parent = null;
     this.parentId = 0;
     this.id = id;
     this.props = props;
     this.idName = idName;
     this.className = className;
-    this.styleInit = formatStyle(styleInit);
-    this.styleActive = formatStyle(styleActive);
-    this.styleDarkInit = formatStyle(styleDarkInit);
-    this.styleDarkActive = formatStyle(styleDarkActive);
+    this.styleInit = styleInit;
+    this.styleActive = styleActive;
+    this.styleDarkInit = styleDarkInit;
+    this.styleDarkActive = styleDarkActive;
     this.dataset = dataset;
     this.root = null;
     this.isDestroyed = false;
@@ -972,7 +1067,7 @@ function () {
 
     this.styleProp = {}; // 为了让用户修改style的时候，可以触发reflow，这里需要监听style属性的变化，只给用户修改样式的时候使用
 
-    this.style = new Proxy({}, {
+    this.styleOrigin = new Proxy({}, {
       set: function set(obj, key, value) {
         if (value !== _this.styleProp[key]) {
           _this.styleProp[key] = value;
@@ -999,7 +1094,8 @@ function () {
           return _this.styleProp[key] || _this.styleDarkInit[key] || _this.styleInit[key];
         }
 
-        return _this.styleProp[key] || _this.styleInit[key];
+        var res = _this.styleProp[key] || _this.styleInit[key];
+        return res;
       }
     });
     this._innerStyle = {};
@@ -1027,7 +1123,7 @@ function () {
     });
     Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["nextTick"])(function () {
       // 事件冒泡逻辑
-      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
+      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'scroll'].forEach(function (eventName) {
         _this.EE.on(toEventName(eventName, _this.id), function (e, touchMsg) {
           if (!_this.permanentListeners[eventName]) {
             // 本身没有事件处理器，直接抛给父节点
@@ -1083,7 +1179,37 @@ function () {
 
         (_this$parent2 = this.parent).repaint.apply(_this$parent2, arguments);
       }
+    }
+  }, {
+    key: "_activeTree",
+    value: function _activeTree(node) {
+      var _this3 = this;
+
+      node._active();
+
+      node.children.forEach(function (child) {
+        _this3._activeTree(child);
+      });
+    }
+  }, {
+    key: "_deactiveTree",
+    value: function _deactiveTree(node) {
+      var _this4 = this;
+
+      node._deactive();
+
+      node.children.forEach(function (child) {
+        _this4._deactiveTree(child);
+      });
     } // 子类填充实现
+
+  }, {
+    key: "_active",
+    value: function _active() {} // 子类填充实现
+
+  }, {
+    key: "_deactive",
+    value: function _deactive() {} // 子类填充实现
 
   }, {
     key: "insert",
@@ -1097,12 +1223,11 @@ function () {
   }, {
     key: "destroy",
     value: function destroy() {
-      var _this3 = this;
+      var _this5 = this;
 
-      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
-        _this3.off(eventName);
+      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint', 'scroll'].forEach(function (eventName) {
+        _this5.off(eventName);
       });
-      this.EE.off('image__render__done');
       this.isDestroyed = true;
       this.EE = null;
       this.root = null;
@@ -1121,7 +1246,25 @@ function () {
     value: function add(element) {
       element.parent = this;
       element.parentId = this.id;
-      this.childNodes.push(element);
+      this.children.push(element);
+    }
+  }, {
+    key: "remove",
+    value: function remove(element) {
+      if (!element) {
+        return false;
+      }
+
+      element.parent = null;
+      element.parentId = null;
+      var index = this.children.indexOf(element);
+
+      if (index === -1) {
+        return false;
+      }
+
+      this.children.splice(index, 1);
+      return true;
     }
   }, {
     key: "emit",
@@ -1173,11 +1316,6 @@ function () {
     value: function getDimension() {
       var box = this.layoutBox;
       return [box.absoluteX, box.absoluteY, box.width, box.height];
-    }
-  }, {
-    key: "getOffscreenCanvas",
-    value: function getOffscreenCanvas(key) {
-      return this.root.canvasContext.getOffscreenCanvas(key);
     }
   }, {
     key: "getRoundRectMask",
@@ -1251,8 +1389,9 @@ function () {
   }, {
     key: "_refreshStyleAfterClassSet",
     value: function _refreshStyleAfterClassSet(className) {
-      var _this4 = this;
+      var _this6 = this;
 
+      var root = this.root;
       this.className = className.join(' ');
       this.styleInit = {};
       this.styleActive = {};
@@ -1279,8 +1418,8 @@ function () {
         return res;
       }, this.styleDarkActive || {});
       Object.keys(this.styleProp).forEach(function (prop) {
-        _this4.styleInit[prop] = _this4.styleProp[prop];
-        _this4.styleDarkInit[prop] = _this4.styleProp[prop];
+        _this6.styleInit[prop] = _this6.styleProp[prop];
+        _this6.styleDarkInit[prop] = _this6.styleProp[prop];
       });
       this.root.beforeReflow();
       this.root.emit('reflow');
@@ -1294,7 +1433,7 @@ function () {
       var classNameIdx = className.indexOf(name);
 
       if (classNameIdx > -1) {
-        var _root = this.root;
+        var root = this.root;
         className.splice(classNameIdx, 1);
 
         this._refreshStyleAfterClassSet(className);
@@ -1308,7 +1447,7 @@ function () {
 
       if (className.indexOf(name) === -1) {
         // 是一个新的class
-        var _root2 = this.root;
+        var root = this.root;
         className.push(name);
         this.className = className.join(' '); // 更新下className
 
@@ -1386,6 +1525,24 @@ function () {
     get: function get() {
       return [this.x, this.y];
     }
+  }, {
+    key: "opacity",
+    get: function get() {
+      var opacity = 1;
+
+      if (this.style.opacity !== undefined) {
+        opacity = this.style.opacity;
+      }
+
+      var parent = this.parent;
+
+      while (parent) {
+        opacity *= parent.style.opacity !== undefined ? parent.style.opacity : 1;
+        parent = parent.parent;
+      }
+
+      return opacity;
+    }
   }]);
 
   return Element;
@@ -1433,14 +1590,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRgba", function() { return getRgba; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementStyle", function() { return getElementStyle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "log", function() { return log; });
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createImage", function() { return createImage; });
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+var wx = pluginEnv.customEnv.wx;
 function throttle(fn, threshhold, scope) {
   threshhold || (threshhold = 250);
   var last;
@@ -1501,7 +1664,8 @@ var STATE = {
   UNINIT: 0,
   INITED: 1,
   RENDERED: 2,
-  CLEAR: 3
+  CLEAR: 3,
+  DEACTIVE: 4
 };
 var DEFAULT_FONT_FAMILY = 'sans-serif';
 var context = null;
@@ -1587,6 +1751,14 @@ function getElementStyle(isDarkMode) {
 function log() {
   console.log.apply(null, arguments);
 }
+function createImage() {
+  /* istanbul ignore if*/
+  if (typeof wx !== "undefined") {
+    return wx.createImage();
+  } else {
+    return document.createElement('img');
+  }
+}
 
 /***/ }),
 /* 4 */
@@ -1601,9 +1773,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var Pool =
-/*#__PURE__*/
-function () {
+var Pool = /*#__PURE__*/function () {
   function Pool() {
     var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'pool';
 
@@ -2202,4027 +2372,6 @@ module.exports = function (tagname, parent, val) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initYoga", function() { return initYoga; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "adaptor", function() { return adaptor; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateLayout", function() { return updateLayout; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculateDirtyNode", function() { return calculateDirtyNode; });
-/* harmony import */ var _yoga_wasm_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
-
-var yoga;
-var Node;
-var defaultNode;
-/**
- * 小游戏wasm初始化只能是异步的，这里暴露wasm初始化函数给外部
- */
-
-function initYoga() {
-  return _yoga_wasm_js__WEBPACK_IMPORTED_MODULE_0__["Yoga"].init({
-    sync: true
-  }).then(function (res) {
-    yoga = res;
-    Node = yoga.Node;
-    defaultNode = new Node();
-  });
-}
-yoga = _yoga_wasm_js__WEBPACK_IMPORTED_MODULE_0__["Yoga"].init({
-  sync: true
-});
-function adaptor(tree) {
-  console.log('adaptor call');
-  var s = Date.now();
-  var yogaTree = getYogaTree(tree); // 获得一棵yoga虚拟树
-
-  console.log("calculateLayout ".concat(Date.now() - s));
-  updateLayout(tree);
-}
-
-function getYogaTree(node) {
-  var yogaNode = null;
-
-  if (node.yogaNode) {
-    yogaNode = node.yogaNode;
-    yogaNode.copyStyle(defaultNode);
-  } else {
-    yogaNode = Node.create();
-    node.yogaNode = yogaNode;
-  }
-
-  var isDarkMode = false;
-
-  if (node.root) {
-    isDarkMode = node.root.isDarkMode();
-  } else {
-    isDarkMode = node.isDarkMode();
-  }
-
-  var style = {};
-
-  if (isDarkMode) {
-    style = Object.assign({}, node.styleInit, node.styleDarkInit, node.styleProp, node._innerStyle);
-  } else {
-    style = Object.assign({}, node.styleInit, node.styleProp, node._innerStyle);
-  } // 处理宽度
-
-
-  if (style.width === 'auto') {
-    yogaNode.setWidthAuto();
-  } else if (typeof style.width === 'string' && style.width.endsWith('%')) {
-    yogaNode.setWidthPercent(parseFloat(style.width));
-  } else if (typeof style.width !== 'undefined') {
-    yogaNode.setWidth(style.width);
-  } else {
-    yogaNode.setWidthAuto();
-  } // 处理最大宽度
-
-
-  if (typeof style.maxWidth === 'string' && style.maxWidth.endsWith('%')) {
-    yogaNode.setMaxWidthPercent(parseFloat(style.maxWidth));
-  } else if (typeof style.maxWidth !== 'undefined') {
-    yogaNode.setMaxWidth(style.maxWidth);
-  } // 处理最小宽度
-
-
-  if (typeof style.minWidth === 'string' && style.minWidth.endsWith('%')) {
-    yogaNode.setMinWidthPercent(parseFloat(style.minWidth));
-  } else if (typeof style.minWidth !== 'undefined') {
-    yogaNode.setMinWidth(style.minWidth);
-  } // 处理高度
-
-
-  if (style.height === 'auto') {
-    yogaNode.setHeightAuto();
-  } else if (typeof style.height === 'string' && style.height.endsWith('%')) {
-    yogaNode.setHeightPercent(parseFloat(style.height));
-  } else if (typeof style.height !== 'undefined') {
-    yogaNode.setHeight(style.height);
-  } else {
-    yogaNode.setHeightAuto();
-  } // 处理最大高度
-
-
-  if (typeof style.maxHeight === 'string' && style.maxHeight.endsWith('%')) {
-    yogaNode.setMaxHeightPercent(parseFloat(style.maxHeight));
-  } else if (typeof style.maxHeight !== 'undefined') {
-    yogaNode.setMaxHeight(style.maxHeight);
-  } // 处理最小高度
-
-
-  if (typeof style.minHeight === 'string' && style.minHeight.endsWith('%')) {
-    yogaNode.setMinHeightPercent(parseFloat(style.minHeight));
-  } else if (typeof style.minHeight !== 'undefined') {
-    yogaNode.setMinHeight(style.minHeight);
-  } // 处理padding/margin/border
-
-
-  for (var _i = 0, _arr = ['padding', 'margin', 'borderWidth']; _i < _arr.length; _i++) {
-    var styleName = _arr[_i];
-    var fnName = "set".concat(styleName.charAt(0).toUpperCase()).concat(styleName.slice(1)).replace('Width', '');
-
-    if (typeof style[styleName] === 'number') {
-      yogaNode[fnName](yoga.EDGE_TOP, style[styleName]);
-      yogaNode[fnName](yoga.EDGE_BOTTOM, style[styleName]);
-      yogaNode[fnName](yoga.EDGE_LEFT, style[styleName]);
-      yogaNode[fnName](yoga.EDGE_RIGHT, style[styleName]);
-    } else if (typeof style[styleName] === 'string') {
-      var s = style[styleName].split(' '); // 根据空格分割出padding的不同参数
-
-      if (s.length === 1) {
-        yogaNode[fnName](yoga.EDGE_TOP, style[styleName]);
-        yogaNode[fnName](yoga.EDGE_BOTTOM, style[styleName]);
-        yogaNode[fnName](yoga.EDGE_LEFT, style[styleName]);
-        yogaNode[fnName](yoga.EDGE_RIGHT, style[styleName]);
-      } else if (s.length === 2) {
-        yogaNode[fnName](yoga.EDGE_TOP, s[0]);
-        yogaNode[fnName](yoga.EDGE_BOTTOM, s[0]);
-        yogaNode[fnName](yoga.EDGE_LEFT, s[1]);
-        yogaNode[fnName](yoga.EDGE_RIGHT, s[1]);
-      } else if (s.length === 3) {
-        yogaNode[fnName](yoga.EDGE_TOP, s[0]);
-        yogaNode[fnName](yoga.EDGE_LEFT, s[1]);
-        yogaNode[fnName](yoga.EDGE_RIGHT, s[1]);
-        yogaNode[fnName](yoga.EDGE_BOTTOM, s[2]);
-      } else if (s.length === 4) {
-        yogaNode[fnName](yoga.EDGE_TOP, s[0]);
-        yogaNode[fnName](yoga.EDGE_RIGHT, s[1]);
-        yogaNode[fnName](yoga.EDGE_BOTTOM, s[2]);
-        yogaNode[fnName](yoga.EDGE_LEFT, s[3]);
-      }
-    }
-
-    for (var _i7 = 0, _arr7 = ['Top', 'Bottom', 'Left', 'Right']; _i7 < _arr7.length; _i7++) {
-      var direction = _arr7[_i7];
-      var name = "".concat(styleName).concat(direction);
-
-      if (typeof style[name] !== 'undefined') {
-        yogaNode[fnName](yoga["EDGE_".concat(direction.toUpperCase())], style[name]);
-      }
-    }
-  }
-
-  for (var _i2 = 0, _arr2 = ['overflow', 'display']; _i2 < _arr2.length; _i2++) {
-    var _styleName = _arr2[_i2];
-    var _s = style[_styleName];
-
-    var _fnName = "set".concat(_styleName.charAt(0).toUpperCase()).concat(_styleName.slice(1));
-
-    if (typeof _s !== 'undefined') {
-      yogaNode[_fnName](yoga["".concat(_styleName.toUpperCase(), "_").concat(_s.toUpperCase())]);
-    }
-  }
-
-  for (var _i3 = 0, _arr3 = ['flexBasis']; _i3 < _arr3.length; _i3++) {
-    var _styleName2 = _arr3[_i3];
-    var _s2 = style[_styleName2];
-
-    var _fnName2 = "set".concat(_styleName2.charAt(0).toUpperCase()).concat(_styleName2.slice(1));
-
-    if (typeof _s2 === 'number') {
-      yogaNode[_fnName2](_s2);
-    } else if (_s2 === 'auto') {
-      yogaNode[_fnName2](yoga.UNIT_AUTO);
-    }
-  }
-
-  for (var _i4 = 0, _arr4 = ['flexGrow', 'flexShrink']; _i4 < _arr4.length; _i4++) {
-    var _styleName3 = _arr4[_i4];
-    var _s3 = style[_styleName3];
-
-    var _fnName3 = "set".concat(_styleName3.charAt(0).toUpperCase()).concat(_styleName3.slice(1));
-
-    if (typeof _s3 === 'number') {
-      yogaNode[_fnName3](_s3);
-    }
-  }
-
-  for (var _i5 = 0, _arr5 = ['alignContent', 'alignItems', 'alignSelf']; _i5 < _arr5.length; _i5++) {
-    var _styleName4 = _arr5[_i5];
-    var _s4 = style[_styleName4];
-
-    var _fnName4 = "set".concat(_styleName4.charAt(0).toUpperCase()).concat(_styleName4.slice(1));
-
-    if (typeof _s4 !== 'undefined') {
-      yogaNode[_fnName4](yoga["ALIGN_".concat(_s4.toUpperCase().replace('-', '_'))]);
-    }
-  }
-
-  for (var _i6 = 0, _arr6 = ['top', 'bottom', 'right', 'left']; _i6 < _arr6.length; _i6++) {
-    var _styleName5 = _arr6[_i6];
-    var _s5 = style[_styleName5];
-
-    if (typeof _s5 !== 'undefined') {
-      yogaNode.setPosition(yoga["EDGE_".concat(_styleName5.toUpperCase())], _s5);
-    }
-  }
-
-  if (typeof style.position !== 'undefined') {
-    yogaNode.setPositionType(yoga["POSITION_TYPE_".concat(style.position.toUpperCase())]);
-  }
-
-  if (typeof style.flex === 'number') {
-    yogaNode.setFlex(style.flex);
-  } else if (typeof style.flex !== 'undefined') {
-    var f = style.flex.split(' ');
-
-    if (f.length === 1) {
-      if (f[0] === 'auto') {
-        yogaNode.setFlexGrow(1);
-        yogaNode.setFlexShrink(1);
-        yogaNode.setFlexBasis(yoga.UNIT_AUTO);
-      } else if (f[0] === 'none') {
-        yogaNode.setFlexGrow(0);
-        yogaNode.setFlexShrink(0);
-        yogaNode.setFlexBasis(yoga.UNIT_AUTO);
-      } else if (f[0] === 'initial') {
-        yogaNode.setFlexGrow(0);
-        yogaNode.setFlexShrink(1);
-        yogaNode.setFlexBasis(yoga.UNIT_AUTO);
-      }
-    } else {
-      yogaNode.setFlexGrow(f[0] * 1);
-      yogaNode.setFlexShrink(f[1] * 1);
-
-      if (f[2] === 'auto') {
-        yogaNode.setFlexBasis(yoga.UNIT_AUTO);
-      }
-    }
-  }
-
-  if (typeof style.flexDirection !== 'undefined') {
-    yogaNode.setFlexDirection(yoga["FLEX_DIRECTION_".concat(style.flexDirection.toUpperCase().replace('-', '_'))]);
-  }
-
-  if (typeof style.flexWrap !== 'undefined') {
-    yogaNode.setFlexWrap(yoga["WRAP_".concat(style.flexWrap.toUpperCase().replace('-', '_'))]);
-  }
-
-  if (typeof style.justifyContent !== 'undefined') {
-    yogaNode.setJustifyContent(yoga["JUSTIFY_".concat(style.justifyContent.toUpperCase().replace('-', '_'))]);
-  }
-
-  var childCount = yogaNode.getChildCount();
-
-  for (var i = 0; i < node.childNodes.length; i++) {
-    var childYogaNode = getYogaTree(node.childNodes[i]);
-
-    if (childCount * 1 === 0) {
-      yogaNode.insertChild(childYogaNode, i);
-    }
-  }
-
-  yogaNode.calculateLayout();
-  return yogaNode;
-}
-
-function updateLayout(node) {
-  if (node.type === 'Text' && isNaN(node.yogaNode.getComputedWidth())) {
-    // todo 临时fix文本节点
-    node.yogaNode.calculateLayout();
-  }
-
-  var layout = node.yogaNode.getComputedLayout();
-  node.layoutBox = {
-    width: layout.width,
-    height: layout.height,
-    top: layout.top,
-    left: layout.left,
-    right: layout.right,
-    bottom: layout.bottom
-  };
-
-  for (var i = 0; i < node.childNodes.length; i++) {
-    updateLayout(node.childNodes[i]);
-  }
-}
-function calculateDirtyNode(node) {
-  for (var i = 0; i < node.childNodes.length; i++) {
-    calculateDirtyNode(node.childNodes[i]);
-  }
-
-  if (node.yogaNode.isDirty()) {
-    node.yogaNode.calculateLayout();
-  }
-}
-
-/***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Yoga", function() { return Yoga; });
-function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
-
-var __code = 'AGFzbQEAAAAB3QVUYAF/AX9gAn9/AGABfwBgAn9/AX9gA39/fwBgA39/fwF/YAR/f39/AGAAAGACf30AYAJ/fABgA39/fQBgBn9/f39/fwBgBX9/f39/AGADf398AGADf399AX1gAX8BfWABfwF8YAABf2ACf38BfWACf38BfGAFf39/f38Bf2AGf399f31/AGADf31/AGACfX0Bf2ACfX0BfWADf399AX9gBH9/f38Bf2AEf39/fABgBX9/fHx/AGAEf3x8fwBgBn98f39/fwF/YAN/fn8BfmACf30BfWADf39/AXxgB39/f39/f38AYAd/f31/fX9/AGAFf399fX0AYAR/fn5/AGAGf39/f39/AX9gBn9/fX99fwF/YAJ+fwF/YAF9AX9gBX9/fX19AX1gBH99fX8BfWAIf39/f39/f38AYAp/f39/f39/f39/AGANf39/f39/f39/f39/fwBgDn9/f39/f399fX19fX9/AGARf39/f319fX19f39/f39/f38AYAV/f39/fABgBH9/f30AYAd/f399f31/AGAIf39/fX19f38AYAZ/f398fH8AYAt/f31/fX9/f39/fwBgDn9/fX99fX1/f39/f39/AGAGf399fX9/AGAEf319fwBgD399fX9/f319f39/f39/fwBgB399fX9/fX0AYAp/fX1/f319f39/AGAEf3x8fABgB39/f31/fX8Bf2AHf398f39/fwF/YAJ/fQF/YAR/fX99AX9gDX99f31/fX99fX19fX8Bf2AFf31/fX0Bf2ADf319AX9gD399fX9/f319f39/f39/fwF/YAd/fX1/f319AX9gA35/fwF/YAJ8fAF/YAN/f38BfWARf39/f319fX19f39/f39/f38BfWAEf399fQF9YAN/fX0BfWANf319f39/f39/f39/fwF9YAR8fH9/AX1gBH9/f38BfGAFf39/f38BfGACfn4BfGABfAF8YAJ8fwF8At4BIgFhAWEALAFhAWIABAFhAWMADAFhAWQAIgFhAWUALgFhAWYALQFhAWcAAgFhAWgACwFhAWkABAFhAWoAAAFhAWsACwFhAWwABwFhAW0AGgFhAW4ABAFhAW8AAQFhAXAAAwFhAXEABQFhAXIABAFhAXMAAAFhAXQAFAFhAXUAAgFhAXYABQFhAXcAAAFhAXgAAAFhAXkAAQFh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AiABLQAAOgAAIAFBAWohASACQQFqIgIgA0cNAAsLIAAL8wICAn8BfgJAIAJFDQAgACACaiIDQX9qIAE6AAAgACABOgAAIAJBA0kNACADQX5qIAE6AAAgACABOgABIANBfWogAToAACAAIAE6AAIgAkEHSQ0AIANBfGogAToAACAAIAE6AAMgAkEJSQ0AIABBACAAa0EDcSIEaiIDIAFB/wFxQYGChAhsIgE2AgAgAyACIARrQXxxIgRqIgJBfGogATYCACAEQQlJDQAgAyABNgIIIAMgATYCBCACQXhqIAE2AgAgAkF0aiABNgIAIARBGUkNACADIAE2AhggAyABNgIUIAMgATYCECADIAE2AgwgAkFwaiABNgIAIAJBbGogATYCACACQWhqIAE2AgAgAkFkaiABNgIAIAQgA0EEcUEYciIEayICQSBJDQAgAa0iBUIghiAFhCEFIAMgBGohAQNAIAEgBTcDGCABIAU3AxAgASAFNwMIIAEgBTcDACABQSBqIQEgAkFgaiICQR9LDQALCyAAC20BAX8jAEGAAmsiBSQAIARBgMAEcSACIANMckUEQCAFIAFB/wFxIAIgA2siAkGAAiACQYACSSIBGxA+GiABRQRAA0AgACAFQYACEDUgAkGAfmoiAkH/AUsNAAsLIAAgBSACEDULIAVBgAJqJAALCgAgACgCABCsAQsSACAAKAIAKAIAIAAoAgQQngELOwEBfyMAQSBrIgIkACACIAE4AgggAiAAOAIQIAJBGGogAioCECACKgIIkhApKgIAIQAgAkEgaiQAIAALLAACQCAAECINACABECINACAAIAGTi0MXt9E4XQ8LIAAQIgR/IAEQIgVBAAsLBwAgAEEUagsKACAAIAFBGGxqCxcAIAEoAgAhASAAIAI2AgQgACABNgIACw8AIAAgACgCAEEEajYCAAsKACAAKAIEEKwBC6UBACABIAIQJBAxRQRAIAAgASACECQoAgA2AgAPCwJAIAJBfXFBAUcNACABQQcQJBAxDQAgACABQQcQJCgCADYCAA8LAkBBASACdEE1cUUgAkEFS3INACABQQYQJBAxDQAgACABQQYQJCgCADYCAA8LIAFBCBAkEDFFBEAgACABQQgQJCgCADYCAA8LIAJBfnFBBEYEQCAAEFAPCyAAIAMoAgA2AgALEQAgAEH4A2ogAhAgIAE4AgALpgEBAn8jAEEwayIDJAACfQJAIAEQMkUNACAAQRhqIgQQREEEECQQMQ0AIAMgBBBEQQQQJCgCACIANgIUIAMgADYCKCADQRRqIAIQpwEMAQsgAEEYahBEIQBBvAwgARAgKAIAIQEgA0EYahCGASADIAMoAhg2AhAgA0EgaiAAIAEgA0EQahBJIAMgAygCIDYCDCADQQxqIAIQpwELIQIgA0EwaiQAIAILCgAgACABdkEBcQsxAQF/IwBBEGsiAyQAIAFFBEAgAyACNgIAIABBBUHIDiADEHAgAhDwAgsgA0EQaiQACwsAIAAgATYCACAAC6ICAQR/IwBBQGoiAiQAIAAoAgAiA0F8aigCACEEIANBeGooAgAhBSACQQA2AhQgAkGEPzYCECACIAA2AgwgAiABNgIIQQAhAyACQRhqQQBBJxA+GiAAIAVqIQACQCAEIAFBABAwBEAgAkEBNgI4IAQgAkEIaiAAIABBAUEAIAQoAgAoAhQRCwAgAEEAIAIoAiBBAUYbIQMMAQsgBCACQQhqIABBAUEAIAQoAgAoAhgRDAACQAJAIAIoAiwOAgABAgsgAigCHEEAIAIoAihBAUYbQQAgAigCJEEBRhtBACACKAIwQQFGGyEDDAELIAIoAiBBAUcEQCACKAIwDQEgAigCJEEBRw0BIAIoAihBAUcNAQsgAigCGCEDCyACQUBrJAAgAwsIACAAENIBGgs2AQF/IwBBEGsiAyQAIAMgACABIAIQ8gEgACABIAIQ7wIQQjgCCCADKgIIIQIgA0EQaiQAIAILEAAgAEEQNgIEIAAgATYCAAuZAQECfyMAQTBrIgIkAAJ/IAEQMgRAIABBGGoQVSEDIAJBIGoQUCACIAIoAiA2AgwgAkEoaiADQQQgAkEMahBJQQEgAkEoahAxRQ0BGgsgAEEYahBVIQBBvAwgARAgKAIAIQEgAkEQahBQIAIgAigCEDYCCCACQRhqIAAgASACQQhqEEkgAkEYahAxQQFzCyEDIAJBMGokACADC2wBAX8jAEEQayICJAACQAJAAkACQCAAKAIEQX9qDgIAAQILIAJBCGogACoCABApGgwCCyACQQhqIAAqAgAgAZRDCtcjPJQQKRoMAQsgAkEANgIIIAJBCGoQaRoLIAIqAgghASACQRBqJAAgAQsHACAAQThqCxQAIAAgAUGwBGogAhB2KQIANwIAC4YCAQN/IwBBMGsiAyQAIANBKGogAEG4DiABECAoAgAQViADKgIoECIhBSADQShqIABBuA4gARAgKAIAEFYCQAJAIAMoAixBA0YNACADQSBqIABBuA4gARAgKAIAEFYgAygCJEUNACADQRhqIABBuA4gARAgKAIAEFZBASEEIAUgAygCHEEBR3JFBEAgA0EQaiAAQbgOIAEQICgCABBWIAMqAhBDAAAAAF0NAQsgA0EIaiAAQbgOIAEQICgCABBWIAUgAygCDEECR3INASADIABBuA4gARAgKAIAEFZBACEEIAMqAgBDAAAAAF0NASACECJBAXMhBAwBC0EAIQQLIANBMGokACAECyEAAkAgARAiRQRAIAEQsQJFDQELIAAQUA8LIAAgARDoAgsIACAAQaAEagtMAQF/IwBBIGsiAiQAIAIgACgCACIANgIYIAIgASgCACIBNgIQIAIgADYCDCACIAE2AgggAigCDCACKAIIRiEAIAJBIGokACAAQQFzCwwAIAAtAEhBABCeAQsSACAAECooAgAgACgCAGtBAnULCAAgAEGsAWoLCAAgAEG0AWoLOQEBfyMAQRBrIgIkACACIAEpAgA3AwhBuCggAEEDQZApQawoQawBIAJBCGoQKEEAEAAgAkEQaiQACxQBAX9BBBA5IgEgACgCADYCACABCzwAAn8CfyABECEQogFFBEAgABAhELgBDAELIAEQIRCiAQsiAUEFRgRAQQEgABAhELkBELsBDQEaCyABCwv6AQIBfQF8AkAgACABoiIAEMcBIgVEAAAAAAAA8D+gIAUgBUQAAAAAAAAAAGMbIgVEAAAAAAAAAAAQdwRAIAAgBaEhAAwBCyAAIAWhIQAgBUQAAAAAAADwPxB3BEAgAEQAAAAAAADwP6AhAAwBCyACBEAgAEQAAAAAAADwP6AhAAwBCyADDQAgAAJ8RAAAAAAAAAAAIAW2ECINABpEAAAAAAAA8D8gBUQAAAAAAADgP2QNABpEAAAAAAAA8D9EAAAAAAAAAAAgBUQAAAAAAADgPxB3GwugIQALQwAAwH8hBAJAIAC2ECINACABthAiDQAgACABo7YhBAsgBAshAAJAIAEQIkUEQCABELECRQ0BCyAAEFAPCyAAIAEQ5wILNQEBfyMAQRBrIgIkACACIAAoAgA2AgwgACAB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IAJBGGogAkEQahAuIAIqAhhDAAAAABAzIQQLIAJBIGokACAEC48BAgF/AX0jAEEQayIBJAACQCAAKAKcBEUNACABIABBGGoiACoCCDgCCCABQQhqECVFBEAgASAAKgIIOAIIIAEqAgghAgwBCyABIAAqAgQ4AgggAUEIahAlDQAgASAAKgIEOAIAIAEqAgBDAAAAAF5BAXMNACABIAAqAgQ4AgggASoCCCECCyABQRBqJAAgAgtKAQJ/IwBBEGsiAiQAIAIgATgCACACIAA4AggCf0EBIAIqAgggAioCAFsNABpBACACQQhqECVFDQAaIAIQJQshAyACQRBqJAAgAwtBACAAAn8CQCACEDJFDQAgAUEYaiIAEERBBRAkEDENACAAEERBBRAkDAELIAFBGGoQREHMDCACECAoAgAQJAsQLgtBACAAAn8CQCACEDJFDQAgAUEYaiIAEERBBBAkEDENACAAEERBBBAkDAELIAFBGGoQREG8DCACECAoAgAQJAsQLgsSACAAKAIAKAIAIAAoAgQQ+gILDAAgACABKAIANgIACzMBAX8jAEEQayIBJAAgASABQQhqQY+evPwHEE4oAgA2AgQgACABQQRqEIUBIAFBEGokAAuDAQIDfwF+AkAgAEKAgICAEFQEQCAAIQUMAQsDQCABQX9qIgEgACAAQgqAIgVCCn59p0EwcjoAACAAQv////+fAVYhAiAFIQAgAg0ACwsgBaciAgRAA0AgAUF/aiIBIAIgAkEKbiIDQQpsa0EwcjoAACACQQlLIQQgAyECIAQNAAsLIAELNwEBfyAAKAIEIgNBAXUgAWohASAAKAIAIQAgASACIANBAXEEfyABKAIAIABqKAIABSAACxEBAAvqAQECfyMAQUBqIgMkAAJAIAMCfQJAIAEQMkUNACAAQRhqEFUhBCADQShqEFAgAyADKAIoNgIMIANBMGogBEEEIANBDGoQSSADQTBqEDENACADIAMoAjAiADYCICADIAA2AgggA0EIaiACECwMAQsgAEEYahBVIQBBvAwgARAgKAIAIQEgA0EYahBQIAMgAygCGDYCBCADQTBqIAAgASADQQRqEEkgA0EwahAxBEAgA0E4akMAAAAAECkqAgAhAgwCCyADIAMoAjAiADYCECADIAA2AgAgAyACECwLIgI4AjgLIANBQGskACACCzkB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IARBGGogBEEIahDGBSAEQTBqJAALEAAgAEEENgIEIAAgATYCAAsQAEEHEDYgARA3IABxIAF1C6kBAQR/IwBBIGsiAiQAIAIgAEEAECAoAgA2AhggAiABQQAQICgCACIENgIQIAIgAigCGDYCDCACIAQ2AgggAkEMaiACQQhqEFpFBEADQCADIgRBAWoiA0EJRwRAIAIgACADECAoAgA2AhggAiABIAMQICgCACIFNgIQIAIgAigCGDYCBCACIAU2AgAgAkEEaiACEFpFDQELCyAEQQdLIQMLIAJBIGokACADCwwAIAAoAgBBFRC+AQsMACAAKAIAQQoQtQELDAAgACgCAEECEPoCCzQBA38DQCAAIAIQICoCACABIAIQICoCABBDIgMEQCACQQNJIQQgAkEBaiECIAQNAQsLIAMLBwAgAEECSQsjAQJ/QQgQEiIBIgIgABCHAiACQZw+NgIAIAFBvD5BARARAAsdAQF/IABBJGohAQNAIAAQ0gFBBGoiACABRw0ACwsQAEEBEDYgARA3IABxIAF1CwwAIAAgASgCEDYCAAsRACAAQZACaiACECAgATgCAAscAQF/QQEhAiAAIAEQ+AEEfyACBSAAIAEQgQELCxEAIABBgAJqIAIQICABOAIACxEAIABB8AFqIAIQICABOAIACxoAIAEgAGsiAQRAIAIgACABEIECCyABIAJqC1oBAn8jAEEQayICJAAgAiABNgIMIAAQ5AIiAyABTwRAIAAQXCIAIANBAXZJBEAgAiAAQQF0NgIIIAJBCGogAkEMahDeAigCACEDCyACQRBqJAAgAw8LEIYCAAsQACAAKAIAIAEoAgBrQQJ1C5cDAgJ/A34CQCAAvSIFQjSIp0H/D3EiAUH/D0cNACAAIACjDwsgBUIBhiIDQoCAgICAgIDw/wBWBEACfiABRQRAQQAhASAFQgyGIgNCAFkEQANAIAFBf2ohASADQgGGIgNCf1UNAAsLIAVBASABa62GDAELIAVC/////////weDQoCAgICAgIAIhAshAyABQf8HSgRAA0ACQCADQoCAgICAgIAIfSIEQgBTDQAgBCIDQgBSDQAgAEQAAAAAAAAAAKIPCyADQgGGIQMgAUF/aiIBQf8HSg0AC0H/ByEBCwJAIANCgICAgICAgAh9IgRCAFMNACAEIgNCAFINACAARAAAAAAA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AwtRAQJ/IwBBEGsiAiQAIAAoAgAhAyACIAAoAgQiAEEBdSABaiIBIABBAXEEfyABKAIAIANqKAIABSADCxEAADYCDCACKAIMIQAgAkEQaiQAIAALMwEBfyAAKAIAIQIgACgCBCIAQQF1IAFqIgEgAEEBcQR/IAEoAgAgAmooAgAFIAILEQIACxYAAn8gABCXAgRAIAAoAgAMAQsgAAsLCgAgACwAC0EASAsZACAAKAIAIAE2AgAgACAAKAIAQQhqNgIACxkAIAAoAgAgATgCACAAIAAoAgBBCGo2AgALEwAgACABKAIANgIAIAFBADYCAAsJACAAQQA6AAALCQAgACABENcBCwwAIAEgACgCABECAAsJACAAQQE6AAQLNwEBfyAAKAIEIgNBAXUgAWohASAAKAIAIQAgASACIANBAXEEfyABKAIAIABqKAIABSAACxEDAAs5AQF/IAAoAgQiBEEBdSABaiEBIAAoAgAhACABIAIgAyAEQQFxBH8gASgCACAAaigCAAUgAAsRBAALDwAgASAAKAIAaiACOAIACw0AIAEgACgCAGoqAgALEQEBf0EIEDkiAEIANwMAIAALEQAgACgCACAAKAIEIAEQhAYLCQAgASAAEQIACwkAIAEgABEAAAtGAQF/IwBBEGsiAyQAIAMgAjYCDEHAICABQfTCAEGEKEGiASADQQxqEGBB9MIAQYQfQaMBIANBDGoQYBAFIANBEGokACAACzQBAX8jAEEQayICJAAgAkEIaiABEJwCIAJBCGogABEAACEAIAJBCGoQmgEgAkEQaiQAIAALQAAgACABQaAEED0iAEGgBGogAUGgBGoQlgQgACABKAK8BDYCvAQgACABKQK0BDcCtAQgACABKQKsBDcCrAQgAAsrACAAQoCAgPyLgIDAv383AhAgAEIANwIIIABCgICA/IuAgMC/fzcCACAACwgAIAAQ6QIaCwgAIABBABB7CygBAX8jAEEQayIBJAAgAUEANgIMIAAgAUEMaigCADYCACABQRBqJAALJgAgAARAAn8gACgCABDUAiAAQQhqEKwCIABBBGoQrAIgAAsQOAsLOwAgAAJ/IAEEQCABKAIAENcCDAELENYCENcCCzYCACAAQQRqEK0CIABBCGoQrQIgACgCACAANgIAIAALHwACfyAARQRAENYCIQALIAALIAAgASACIAMgBBCLBgsTACAAvEH/////B3FBgICA/AdGCw8AIABBFGogARC0Ai0AAAtVAQF/IwBBwAJrIgIkACACQQBBwAIQPiICEOABGiAAECMgAkHAAhA9GiAAQwAAAABBABCVASAAQwAAAABBARCVASAAEOUBIAAgARCoBSACQcACaiQACwcAIAAgAWoLIQAgACgCBCAAECooAgBHBEAgACABEP0BDwsgACABEKcFC0ABAn8jAEEgayICJAAgABBcIAFJBEAgABAqIQMgACACQQhqIAEgABAnIAMQlwEiABD1ASAAEKUBCyACQSBqJAALEwBB7MkAQezJACgCAEEBajYCAAuCAQECfyMAQRBrIgEkAAJAIAAoAqwERQ0AQeDJAEHgyQAoAgBBf2o2AgAgACgCrAQiAkUNACACEDgLIAEgABBZIgAQQDYCCCABIAAQSDYCACABQQhqIAEQKwRAA0AgASgCCCgCABC4AiABQQhqEEcgAUEIaiABECsNAAsLIAFBEGokAAthAQF/IwBBEGsiASQAIAAoAqwEQQA6AAsgASAAEFkiABBANgIIIAEgABBINgIAIAFBCGogARArBEADQCABKAIIKAIAELkCIAFBCGoQRyABQQhqIAEQKw0ACwsgAUEQaiQAC+sBAQR/IwBBIGsiASQAAn8gACgCrAQQrgUhAkHABBA5IAAQqQIiAyACNgKsBCACLQAKBEAgAxDbAQsgAwtBABBqIAEgAygCrAQ2AhAgAUEQahCxASICIAAQWRAnELYCIAFBADYCDCABIAAQWSIAEEA2AgggASAAEEg2AgAgAUEIaiABECsEQANAIAEgASgCCCgCABC6AiIANgIMIAAgAxBqIAIgAUEMahC1AiABQQhqEEcgAUEIaiABECsNAAsLIANBoARqIgQgAiIARwRAIAQgACgCACAAKAIEEK0FCyACEPEBIAFBIGokACADC1kBAX0gARAjQaACakG4DiACECAoAgAQICoCACEDIAEgABAjQaACakG4DiACECAoAgAQICoCACADkyABECNBiBEgAhAgKAIAECAqAgCTQcwMIAIQICgCABAtC6YBAQR/IwBBEGsiASQAIAFBCGogABAhEG8Cf0EAIAFBCGoQhAEQuwENABogAUEIaiAAECEQ3AFBASABQQhqEJ0BQQVGDQAaQQAgABBsIgNFDQAaA0Ag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CyAAQRBqIgQgACoCEBAiDQEaQQAhAyACRQ0DIAEqAhAhBgwCC0EAIQIgACoCEBAiRQRAQQAhAwwDCyAAQRBqCyEEIAIgASoCECIGECIiBXEhAyAFIAJFcg0BCyAEKgIAIAZbIQMLAkACQCAAKgIUECIEQCADIAEqAhQiBhAiIgFxIQIgAQ0CIANBAXNFDQEMAgtBACECIANFDQEgASoCFCEGCyAAKgIUIAZbIQILIAILbwEDfyMAQRBrIgIkACAAKAKcBCIBBEAgASAAEP4CGiAAQQAQagsgABBsIgMEQEEAIQEDQCAAIAEQfUEAEGogAUEBaiIBIANHDQALCyAAEPcCIAIgACgCrAQ2AgggAARAIAAQ6gIQOAsgAkEQaiQACyABAX9BHBA5EJAGIQBB4MkAQeDJACgCAEEBajYCACAACzMAAkBB6MkALQAAQQFxDQBB6MkAEM8BRQ0AQeTJABDVAjYCAEHoyQAQzgELQeTJACgCAAszAQJ/IwBBEGsiASQAQcAEEDkgABDrAiECIABBAUGQChDkASABIAA2AgggAUEQaiQAIAILCwAgAC0ABEECEEwLCQAgACABNgIUCwkAIAAgARCFAwsQAEEFEDYgARA3IABxIAF1CwwAIAAoAgBBABCeAQsnACADIAMoAgAgAiABayIAayICNgIAIABBAU4EQCACIAEgABA9GgsLCQAgACABEIIGCzYBAX8gACgCAARAIAAQ9gIgABAqGiAAKAIAIQEgABBcGiABEDggABAqQQA2AgAgAEIANwIACwssAQF/IAEgACgCBCICRwRAA0AgABAqGiACQXxqIgIgAUcNAAsLIAAgATYCBAsNACAAKAIAIAEoAgBJCxwAQf////8DIABJBEBBtAkQvAEACyAAQQJ0EDkLKAAgAiABayIAQQFOBEAgAygCACABIAAQPRogAyADKAIAIABqNgIACwtDAQF/IwBBEGsiASQAIAAQKhogAUH/////AzYCDCABQf////8HNgIIIAFBDGogAUEIahCGBigCACEAIAFBEGokACAAC0MBAX8CQCAAKAIAIgUEQAJ/IAAtAAgEQCABIAIgAyAEIAURGgAMAQsgASACIAMgBREFAAsiAA0BCyABEPoFIQALIAALQQEBfyAAEOQCIAFJBEAQhgIACyAAECoaIAAgARDiAiICNgIAIAAgAjYCBCAAECogAiABQQJ0ajYCACAAQQAQ7wELtgECAn8BfSMAQSBrIgIkAAJAIAFDAAAAAFxBACABQwAAACBdQQFzIAFDAAAAoF5BAXNyG0UEQCACIAJBGGpB8OGD/AcQTigCADYCACAAIAIQhQEMAQsgAkEQakP//39fIAGYIgQgBCABIAFD//9/310bIAFD//9/X14bECkiAyADKAIAQYCAgIB+akGAgICABHIiAzYCACACIAM2AgQgAiADNgIIIAAgAkEEahCFAQsgAkEgaiQAC68BAgJ/AX0jAEEgayICJAACQCABQwAAAABcQQAgAUMAAAAgXUEBcyABQwAAAKBeQQFzchtFBEAgAiACQRhqQY+evPwHEE4oAgA2AgAgACACEIUBDAELIAJBEGpD////XyABmCIEIAQgASABQ////99dGyABQ////19eGxApIgMgAygCAEGAgICAfmoiAzYCACACIAM2AgQgAiADNgIIIAAgAkEEahCFAQsgAkEgaiQACyMBAn8gAEEIaiECIAAhAQNAIAEQ0gFBBGoiASACRw0ACyAACw0AIABBoARqEPEBIAALeAEBfiAAQgA3AgggAEEBOwEEIABBADYCACAAQgA3AhAgAEEYahDIBSAAQdgBakEAQcACED4Q4AEaIABCADcCmAQgAEGgBGoQsQEaIAAgATYCrAQgAEGACikCACICNwK4BCAAIAI3ArAEIAEtAAoEQCAAENsBCyAACw0AIAAoAgAgAUECdGoLkQEBBH8jAEHAAmsiBCQAAkAgAEGgBGoiAhAnIAFBoARqIgUQJ0cNACAAQdgBaiAEIAFB2AFqQcACED0QjgYNAEEBIQMgAhAnRQ0AIAIQJ0UNAEEAIQADQCAFIAAQ7AIoAgAhASACIAAQ7AIoAgAgARDtAiIDRQ0BIABBAWoiACACECdJDQALCyAEQcACaiQAIAMLCwAgAC0ASEECEEwLMwEBfyMAQRBrIgMkACAAIAEgAhDzASADQQhqIAAgARB/ECkqAgAQQiECIANBEGokACACCxkBAX9BCBASIgEgABCHAiABQYg+QQEQEQALUQEBfyMAQRBrIgEkACABQQhqIABBGGoQUgJ/QQAgAUEIahA8QQFGDQAaQQEgABCAAUMAAAAAXA0AGiAAEJQBQwAAAABcCyEAIAFBEGokACAACx4AIABBBGpBAkEBEGggAEGgBGoiABBAIAAQSBCRBgsDAAELKgAgACgCABogACgCACAAEFxBAnRqGiAAKAIAGiAAKAIAIAAQJ0ECdGoaCwwAIAAgACgCABDgAgsWAQF/IAAQJyEBIAAQ9QIgACABEPQCCxIAIABBoARqIgAQ9gIgABCTBgsQACAAQQA2AgQgACABNgIACzEBAX8jAEEQayICJAAgAkEIaiAAEC4gAiABEC4gAkEIaiACELYDIQAgAkEQaiQAIAALEABBAxA2IAEQNyAAcSABdQtlAQF/IwBBEGsiAyQAAn0gACABEFMEQCAAIAEgAhCJAQwBCyADIAAgASACEJgBOAIIIANBCGoQJQRAIAMqAggMAQsgAyADIAMqAgiMECkoAgAiADYCCCAAvgshAiADQRBqJAAgAgsKACAAIAE2AqQCCxgBAX8gABAnIQIgACABEOACIAAgAhD0AgtnAQF/IwBBIGsiAiQAIAIgATYCHCACIABBoARqIgAQQCAAEEggAkEcahCXBjYCGCACIAAQSDYCECACQRhqIAJBEGoQKyIBBEAgACACQQhqIAJBGGoQ/gEoAgAQlgYLIAJBIGokACABC2gBAn8gABDrASABKAIEIQMgABAqIAAoAgAgAiABQQRqIgQQ3QIgABAqIAIgACgCBCABQQhqIgIQ4wIgACAEEGQgAEEEaiACEGQgABAqIAEQdBBkIAEgASgCBDYCACAAIAAQJxDvASADC6oCAQZ/IwBBMGsiAyQAAkAgACgCCCAAEHQoAgBHDQAgAEEIaiEEIABBBGohBSAAKAIEIgIgACgCACIGSwRAIAQgAiAEKAIAIAIgAiAGa0ECdUEBakF+bUECdCIEahDEATYCACAFIAUoAgAgBGo2AgAMAQsgAyAAEHQoAgAgACgCAGtBAXU2AhggA0EBNgIsIANBGGogA0EYaiADQSxqEN4CKAIAIgIgAkECdiAAKAIQEJcBIQIgA0EQaiAAKAIEEE4hBiADQQhqIAAoAggQTiEHIAIgBigCACAHKAIAEIMGIAAgAhBkIAUgAkEEahBkIAQgAkEIahBkIAAQdCACEHQQZCACEKUBCyAAKAIQIAAoAgggARCjASAAIAAoAghBBGo2AgggA0EwaiQAC4MBAQR/IwBBEGsiBiQAIAYgACACIAEgACgCBCIHIANraiIDa0ECdRDuASEEIAIgA0sEQCADIQUDQCAAECogBCgCBCAFEKMBIAQgBCgCBEEEajYCBCAFQQRqIgUgAkkNAAsLIAQQ7QEgAyABayIABEAgByAAayABIAAQgQILIAZBEGokAAvaAQECfyMAQSBrIgMkACADIAE2AhggACgCACEBIAMgABBANgIAIAEgA0EYaiADEMYBQQJ0aiEBAkAgACgCBCAAECooAgBJBEAgACgCBCIEIAFGBEAgACACEP0BDAILIAAgASAEIAFBBGoQgQMgASABIAJNBH8gAkEEaiACIAIgACgCBEkbBSACCygCADYCAAwBCyAAECohBCADIAAgABAnQQFqEMUBIAEgACgCAGtBAnUgBBCXASIEIAIQgAMgACAEIAEQ/wIhASAEEKUBCyABEKwBGiADQSBqJAALNwEBfyMAQRBrIgIkACACIAAoAgA2AgggAiACKAIIIAFBAnRqNgIIIAIoAgghACACQRBqJAAgAAtTAQF/IwBBIGsiAyQAIAMgATYCHCADIABBoARqIgAQQDYCCCADIANBCGogAhCDAzYCECAAIANBGGogA0EQahD+ASgCACADQRxqEIIDIANBIGokAAs3AQF/IwBBEGsiAiQAIABBBGpBBEEAEGggAiABNgIEIAIgATYCCCAAIAJBBGoQhwMgAkEQaiQACzEBAn8gAC0AACECQQEQNkEDEDchAyAAQQEQNkEDEDcgAUEDdHEgAiADQX9zcXI6AAALMwAgAEEEagJ/QQAgASgCACIBRQ0AGiAAIABBoARqECdFQYAIEE1BAQsQhgMgACABNgIICy0AIAAtAARBBRBMBEAgACABIAIgAyAAKAIMESsADwsgACABIAIgACgCDBFMAAs5ACABLQAEQQQQTARAIAAgASACIAMgBCAFIAYgASgCCBEjAA8LIAAgASACIAMgBCAFIAEoAggRFQALIgEBfiABIAKtIAOtQiCGhCAEIAARHwAiBUIgiKcQFCAFpwsRACABIAIgAyAEIAUgABEMAAsTACABIAIgAyAEIAUgBiAAEQsACxMAIAEgAiADIAQgBSAGIAARHgALBwAgABEHAAsRACABIAIgAyAEIAUgABEcAAsNACABIAIgAyAAESEACw8AIAEgAiADIAQgABEbAAsLACABIAIgABESAAsTACABIAIgAyAEIAUgBiAAEScACw8AIAEgAiADIAQgABEdAAsJACABIAAREAALCwAgASACIAARCQALDQAgASACIAMgABENAAsLACABIAIgABETAAsNACABIAIgAyAAEQUACw0AIAEgAiADIAARCgALDwAgASACIAMgBCAAEQYACwsAIAEgAiAAEQMACwsAIAEgAiAAEQgACw0AIAEgAiADIAARBAALEwAgASACIAMgBCAFIAYgABEVAAsLACABIAIgABEBAAsRACABIAIgAyAEIAUgABEUAAupAQEDfwJAIAIoAhAiBAR/IAQFIAIQowMNASACKAIQCyACKAIUIgVrIAFJBEAgAiAAIAEgAigCJBEFABoPCwJAIAIsAEtBAEgNACABIQQDQCAEIgNFDQEgACADQX9qIgRqLQAAQQpHDQALIAIgACADIAIoAiQRBQAgA0kNASAAIANqIQAgASADayEBIAIoAhQhBQsgBSAAIAEQPRogAiACKAIUIAFqNgIUCwtZAQF/IAAgAC0ASiIBQX9qIAFyOgBKIAAoAgAiAUEIcQRAIAAgAUEgcjYCAEF/DwsgAEIANwIEIAAgACgCLCIBNgIcIAAgATYCFCAAIAEgACgCMGo2AhBBAAsyACAAvEH/////B3FBgICA/AdNBEAgACAAIAGXIAG8Qf////8HcUGAgID8B0sbDwsgAQsyACAAvEH/////B3FBgICA/AdNBEAgACAAIAGWIAG8Qf////8HcUGAgID8B0sbDwsgAQsbACAAIAEoAgggBRAwBEAgASACIAMgBBDLAQsLOAAgACABKAIIIAUQMARAIAEgAiADIAQQywEPCyAAKAIIIgAgASACIAMgBCAFIAAoAgAoAhQRCwALlgIBBn8gACABKAIIIAUQMARAIAEgAiADIAQQywEPCyABLQA1IQcgACgCDCEGIAFBADoANSABLQA0IQggAUEAOgA0IABBEGoiCSABIAIgAyAEIAUQyQEgByABLQA1IgpyIQcgCCABLQA0IgtyIQgCQCAGQQJIDQAgCSAGQQN0aiEJIABBGGohBgNAIAEtADYNAQJAIAsEQCABKAIYQQFGDQMgAC0ACEECcQ0BDAMLIApFDQAgAC0ACEEBcUUNAgsgAUEAOwE0IAYgASACIAMgBCAFEMkBIAEtADUiCiAHciEHIAEtADQiCyAIciEIIAZBCGoiBiAJSQ0ACwsgASAHQf8BcUEARzoANSAB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fFQEQCABQgSGIABCPIiEIQQgAEL//////////w+DIgBCgYCAgICAgIAIWgRAIARCgYCAgICAgIDAAHwhBAwCCyAEQoCAgICAgICAQH0hBCAAQoCAgICAgICACIVCAFINASAEQgGDIAR8IQQMAQsgAFAgBUKAgICAgIDA//8AVCAFQoCAgICAgMD//wBRG0UEQCABQgSGIABCPIiEQv////////8Dg0KAgICAgICA/P8AhCEEDAELQoCAgICAgID4/wAhBCAFQv///////7//wwBWDQBCACEEIAVCMIinIgNBkfcASQ0AIAJBEGogACABQv///////z+DQoCAgICAgMAAhCIEIANB/4h/ahDCAyACIAAgBEGB+AAgA2sQwQMgAikDCEIEhiACKQMAIgBCPIiEIQQgAikDECACKQMYhEIAUq0gAEL//////////w+DhCIAQoGAgICAgICACFoEQCAEQgF8IQQMAQsgAEKAgICAgICAgAiFQgBSDQAgBEIBgyAEfCEECyACQSBqJAAgBCABQoCAgICAgICAgH+DhL8LUAEBfgJAIANBwABxBEAgAiADQUBqrYghAUIAIQIMAQsgA0UNACACQcAAIANrrYYgASADrSIEiIQhASACIASIIQILIAAgATcDACAAIAI3AwgLUAEBfgJAIANBwABxBEAgASADQUBqrYYhAkIAIQEMAQsgA0UNACACIAOtIgSGIAFBwAAgA2utiIQhAiABIASGIQELIAAgATcDACAAIAI3AwgLIgECfyAAEIACQQFqIgEQyAEiAkUEQEEADwsgAiAAIAEQPQu4AQEBfyABQQBHIQICQAJAAkAgAUUgAEEDcUVyDQADQCAALQAARQ0CIABBAWohACABQX9qIgFBAEchAiABRQ0BIABBA3ENAAsLIAJFDQELAkAgAC0AAEUgAUEESXINAANAIAAoAgAiAkF/cyACQf/9+3dqcUGAgYKEeHENASAAQQRqIQAgAUF8aiIBQQNLDQALCyABRQ0AA0AgAC0AAEUEQCAADwsgAEEBaiEAIAFBf2oiAQ0ACwtBAAsEAEIACwQAQQALKQAgASABKAIAQQ9qQXBxIgFBEGo2AgAgACABKQMAIAEpAwgQwAM5AwAL8xYDEn8CfgF8IwBBsARrIgkkACAJQQA2AiwCfyABvSIYQn9XBEBBASESIAGaIgG9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IAFEAAAAAAAAAABiDQALIABBICACIA8gECAJQRBqayAMayAHaiADIBBqIAxrQQJqIANFIAcgCWtBbmogA05yGyIDaiINIAQQPyAAIAogDxA1IABBMCACIA0gBEGAgARzED8gACAJQRBqIAcgCUEQamsiBRA1IABBMCADIAUgECAMayIDamtBAEEAED8gACAMIAMQNQsgAEEgIAIgDSAEQYDAAHMQPyAJQbAEaiQAIAIgDSANIAJIGwstACAAUEUEQANAIAFBf2oiASAAp0EHcUEwcjoAACAAQgOIIgBCAFINAAsLIAELNAAgAFBFBEADQCABQX9qIgEgAKdBD3FBwDtqLQAAIAJyOgAAIABCBIgiAEIAUg0ACwsgAQvvAgEDfyMAQdABayIDJAAgAyACNgLMAUEAIQIgA0GgAWpBAEEoED4aIAMgAygCzAE2AsgBAkBBACABIANByAFqIANB0ABqIANBoAFqENEBQQBIBEBBfyEBDAELIAAoAkxBAE4EQEEBIQILIAAoAgAhBCAALABKQQBMBEAgACAEQV9xNgIACyAEQSBxIQUCfyAAKAIwBEAgACABIANByAFqIANB0ABqIANBoAFqENEBDAELIABB0AA2AjAgACADQdAAajYCECAAIAM2AhwgACADNgIUIAAoAiwhBCAAIAM2AiwgACABIANByAFqIANB0ABqIANBoAFqENEBIgEgBEUNABogAEEAQQAgACgCJBEFABogAEEANgIwIAAgBDYCLCAAQQA2AhwgAEEANgIQIAAoAhQhBCAAQQA2AhQgAUF/IAQbCyEBIAAgACgCACIAIAVyNgIAQX8gASAAQSBxGyEBIAJFDQALIANB0AFqJAAgAQuLAgACQCAABH8gAUH/AE0NAQJAQZDIACgCACgCAEUEQCABQYB/cUGAvwNGDQMMAQsgAUH/D00EQCAAIAFBP3FBgAFyOgABIAAgAUEGdkHAAXI6AABBAg8LIAFBgLADT0EAIAFBgEBxQYDAA0cbRQRAIAAgAUE/cUGAAXI6AAIgACABQQx2QeABcjoAACAAIAFBBnZBP3FBgAFyOgABQQMPCyABQYCAfGpB//8/TQRAIAAgAUE/cUGAAXI6AAMgACABQRJ2QfABcjoAACAAIAFBBnZBP3FBgAFyOgACIAAgAUEMdkE/cUGAAXI6AAFBBA8LC0GUygBBGTYCAEF/BUEBCw8LIAAgAToAAEEBC00BAX8jAEEQayIDJAACfiAAKAI8IAGnIAFCIIinIAJB/wFxIANBCGoQExDQAUUEQCADKQMIDAELIANCfzcDCEJ/CyEBIANBEGokACABC9sCAQd/IwBBIGsiAyQAIAMgACgCHCIENgIQIAAoAhQhBSADIAI2AhwgAyABNgIYIAMgBSAEayIBNgIUIAEgAmohBEECIQcgA0EQaiEBAn8CQAJAIAAoAjwgA0EQakECIANBDGoQDBDQAUUEQANAIAQgAygCDCIFRg0CIAVBf0wNAyABIAUgASgCBCIISyIGQQN0aiIJIAUgCEEAIAYbayIIIAkoAgBqNgIAIAFBDEEEIAYbaiIJIAkoAgAgCGs2AgAgBCAFayEEIAAoAjwgAUEIaiABIAYbIgEgByAGayIHIANBDGoQDBDQAUUNAAsLIANBfzYCDCAEQX9HDQELIAAgACgCLCIBNgIcIAAgATYCFCAAIAEgACgCMGo2AhAgAgwBCyAAQQA2AhwgAEIANwMQIAAgACgCAEEgcjYCAEEAIAdBAkYNABogAiABKAIEawshBCADQSBqJAAgBAsJACAAKAI8EBcLJwEBfyMAQRBrIgEkACABIAA2AgwgASgCDCEAEJMCIAFBEGokACAACygBAX8jAEEQayIAJAAgAEGKMTYCDEHEN0EHIAAoAgwQASAAQRBqJAALKAEBfyMAQRBrIgAkACAAQeswNgIMQZw3QQYgACgCDBABIABBEGokAAsoAQF/IwBBEGsiACQAIABB/S42AgxB9DZBBSAAKAIMEAEgAEEQaiQACygBAX8jAEEQayIAJAAgAEHfLjYCDEHMNkEEIAAoAgwQASAAQRBqJAALKAEBfyMAQRBrIgAkACAAQessNgIMQbQ0QQAgACgCDBABIABBEGokAAspAQF/IwBBEGsiACQAIABB/Cs2AgxBgMMAIAAoAgxBCBANIABBEGokAAspAQF/IwBBEGsiACQAIABB9is2AgxB9MIAIAAoAgxBBBANIABBEGokAAstAQF/IwBBEGsiACQAIABB6Cs2AgxB6MIAIAAoAgxBBEEAQX8QAiAAQRBqJAALNQEBfyMAQRBrIgAkACAAQeMrNgIMQdzCACAAKAIMQQRBgICAgHhB/////wcQAiAAQRBqJAALLQEBfyMAQRBrIgAkACAAQdYrNgIMQdDCACAAKAIMQQRBAEF/EAIgAEEQaiQACzUBAX8jAEEQayIAJAAgAEHSKzYCDEHEwgAgACgCDEEEQYCAgIB4Qf////8HEAIgAEEQaiQACy8BAX8jAEEQayIAJAAgAEHDKzYCDEG4wgAgACgCDEECQQBB//8DEAIgAEEQaiQACzEBAX8jAEEQayIAJAAgAEG9KzYCDEGswgAgACgCDEECQYCAfkH//wEQAiAAQRBqJAALLgEBfyMAQRBrIgAkACAAQa8rNgIMQZTCACAAKAIMQQFBAEH/ARACIABBEGokAAsvAQF/IwBBEGsiACQAIABBoys2AgxBoMIAIAAoAgxBAUGAf0H/ABACIABBEGokAAsvAQF/IwBBEGsiACQAIABBnis2AgxBiMIAIAAoAgxBAUGAf0H/ABACIABBEGokAAsqAQF/IwBBEGsiASQAIAEgADYCDCABKAIMENMBEMMDIQAgAUEQaiQAIAALUwECfyMAQTBrIgIkACAAKAIAIQMgAiAAKAIEIgBBAXUgAWoiASAAQQFxBH8gASgCACADaigCAAUgAwsRAQBBMBA5IAJBMBA9IQAgAkEwaiQAIAALOwEBfyAAKAIEIgVBAXUgAWohASAAKAIAIQAgASACIAMgBCAFQQFxBH8gASgCACAAaigCAAUgAAsRHQALVwICfwF8IwBBEGsiAyQAIAAoAgQiBEEBdSABaiEBIAAoAgAhACADIAEgAiAEQQFxBH8gASgCACAAaigCAAUgAAsREwA5AwggAysDCCEFIANBEGokACAFC1MCAn8BfCMAQRBrIgIkACAAKAIAIQMgAiAAKAIEIgBBAXUgAWoiASAAQQFxBH8gASgCACADaigCAAUgAwsREAA5AwggAisDCCEEIAJBEGokACAEC1MBAn8jAEEQayICJAAgACgCACEDIAJBCGogACgCBCIAQQF1IAFqIgEgAEEBcQR/IAEoAgAgA2ooAgAFIAMLEQEAIAJBCGoQKCEAIAJBEGokACAAC1cBAn8jAEEQayIDJAAgACgCBCIEQQF1IAFqIQEgACgCACEAIANBCGogASACIARBAXEEfyABKAIAIABqKAIABSAACxEEACADQQhqECghACADQRBqJAAgAAs3AQF/IAAoAgQiA0EBdSABaiEBIAAoAgAhACABIAIgA0EBcQR/IAEo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AswFIABB0gA2AsgFIAAgACkDyAU3A6AEQbIWIABBoARqEDogAEEANgLMBSAAQdMANgLIBSAAIAApA8gFNwOYBEHGFiAAQZgEahA6IABBADYCzAUgAEHUADYCyAUgACAAKQPIBTcDkARB0hYgAEGQBGoQOiAAQQA2AswFIABB1QA2AsgFIAAgACkDyAU3A4gEQeAWIABBiARqEDogAEEANgLMBSAAQdYANgLIBSAAIAApA8gFNwOABEHpFiAAQYAEahA6IABBADYCzAUgAEHXADYCyAUgACAAKQPIBTcD+ANB+RYgAEH4A2oQigEgAEEANgLMBSAAQdgANgLIBSAAIAApA8gFNwPwA0GGFyAAQfADahA6IABBADYCzAUgAEHZADYCyAUgACAAKQPIBTcD6ANBkBcgAEHoA2oQOiAAQQA2AswFIABB2gA2AsgFIAAgACkDyAU3A+ADQaEXIABB4ANqEIoBIABBADYCzAUgAEHbADYCyAUgACAAKQPIBTcD2ANBrxcgAEHYA2oQOiAAQQA2AswFIABB3AA2AsgFIAAgACkDyAU3A9ADQbsXIABB0ANqEDogAEEANgLMBSAAQd0ANgLIBSAAIAApA8gFNwPIA0HOFyAAQcgDahA6IABBADYCzAUgAEHeADYCyAUgACAAKQPIBTcDwANB2xcgAEHAA2oQOiAAQQA2AswFIABB3wA2AsgFIAAgACkDyAU3A7gDQe8XIABBuANqEDogAEEANgLMBSAAQeAANgLIBSAAIAApA8gFNwOwA0H7FyAAQbADahA6IABBADYCzAUgAEHhADYCyAUgACAAKQPIBTcDqANBjhggAEGoA2oQOiAAQQA2AswFIABB4gA2AsgFIAAgACkDyAU3A6ADQZsYIABBoANqEDogAEEANgLMBSAAQeMANgLIBSAAIAApA8gFNwOYA0GvGCAAQZgDahA6IABBADYCzAUgAEHkADYCyAUgACAAKQPIBTcDkANBvhggAEGQA2oQeiAAQQA2AswFIABB5QA2AsgFIAAgACkDyAU3A4gDQcgYIABBiANqEHogAEEANgLMBSAAQeYANgLIBSAAIAApA8gFNwOAA0HTGCAAQYADahB6IABBADYCzAUgAEHnADYCyAUgACAAKQPIBTcD+AJB5RggAEH4AmoQZyAAQQA2AswFIABB6AA2AsgFIAAgACkD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EMMFCw0AIAAoAgAgAbYQxAULDQAgACgCACABthDFBQsNACAAKAIAIAG2EMcFCwoAIAAoAgAQyQULDQAgACgCACABthDKBQsNACAAKAIAIAG2EMsFCwoAIAAoAgAQzAULDQAgACgCACABthDNBQsNACAAKAIAIAG2EM8FCw0AIAAoAgAgAbYQ5gULDQAgACgCACABthDoBQsNACAAKAIAIAG2EOEFCw0AIAAoAgAgAbYQ4wULDQAgACgCACABthDqBQsMACAAKAIAIAEQ6wULDAAgACgCACABEOwFCwwAIAAoAgAgARDaBQsPACAAKAIAIAEgArYQ2wULDwAgACgCACABIAK2EN0FCwwAIAAoAgAgARDzBQsMACAAKAIAIAEQ7QULDAAgACgCACABEPUFCwwAIAAoAgAgARDvBQsMACAAKAIAIAEQ8AULDAAgACgCACABEPEFCw8AIAAoAgAgASACthDeBQsPACAAKAIAIAEgArYQ4AULDAAgACgCACABEO4FCw8AIAAoAgAgASgCABD4BQscACAAQQRqQQAQeyAAQQhqQQAQeyAAKAIAEI0GCwsAQQwQOSAAEK8CCwsAQQwQOUEAEK8CCwwAIAAoAgAgARCyAgssACAAKAIAIgAgAUMAAAAAYEGMDhDkASAAQwAAAAAgASABQwAAAABbGzgCEAsUACAAKAIAQRRqIAEQtAIgAjoAAAsSAQF/QQQQOSIAENUCNgIAIAALKAEBfyMAQRBrIgIkACAAEOkCQQIgAkEIaiABEIoGEIgGIAJBEGokAAspAQF/IwBBEGsiAiQAIAIgATYCDCAAQQBBBUHIDiABELACIAJBEGokAAuFAQECfyMAQSBrIgMkACADIAIoAgA2AhggACgCBCECIAMgASAAKAIIIgRBAXVqIgEgBEEBcQR/IAEoAgAgAmooAgAFIAILEQAANgIIIANBEGogA0EIaiAAKAIAEEYgAyADKAIYNgIEIAMoAhBBtAFqIAMoAhQQJCADKAIENgIAIANBIGokAAueAQEDfyMAQTBrIgMkACAAKAIEIQQgAyABIAAoAggiBUEBdWoiASAFQQFxBH8gASgCACAEaigCAAUgBAsRAAA2AhggA0EgaiADQRhqIAAoAgAQRiADIAMoAiBBtAFqIAMoAiQQJCgCADYCKCADIAIoAgAiADYCECADIAMoAig2AgwgAyAANgIIIANBDGogA0EIahBaIQAgA0EwaiQAIAALhQEBAn8jAEEgayIDJAAgAyACKAIANgIYIAAoAgQhAiADIAEgACgCCCIEQQF1aiIBIARBAXEEfyABKAIAIAJqKAIABSACCxEAADYCCCADQRBqIANBCGogACgCABBGIAMgAygCGDYCBCADKAIQQawBaiADKAIUECQgAygCBDYCACADQSBqJAALngEBA38jAEEwayIDJAAgACgCBCEEIAMgASAAKAIIIgVBAXVqIgEgBUEBcQR/IAEoAgAgBGooAgAFIAQLEQAANgIYIANBIGogA0EYaiAAKAIAEEYgAyADKAIgQawBaiADKAIkECQoAgA2AiggAyACKAIAIgA2AhAgAyADKAIoNgIMIAMgADYCCCADQQxqIANBCGoQWiEAIANBMGokACAAC4UBAQJ/IwBBIGsiAyQAIAMgAigCADYCGCAAKAIEIQIgAyABIAAoAggiBEEBdWoiASAEQQFxBH8gASgCACACaigCAAUgAgsRAAA2AgggA0EQaiADQQhqIAAoAgAQRiADIAMoAhg2AgQgAygCEEGkAWogAygCFBAkIAMoAgQ2AgAgA0EgaiQAC54BAQN/IwBBMGsiAyQAIAAoAgQhBCADIAEgACgCCCIFQQF1aiIBIAVBAXEEfyABKAIAIARqKAIABSAECxEAADYCGCADQSBqIANBGGogACgCABBGIAMgAygCIEGkAWogAygCJBAkKAIANgIoIAMgAigCACIANgIQIAMgAygCKDYCDCADIAA2AgggA0EMaiADQQhqEFohACADQTBqJAAgAAtTAQJ/IwBBEGsiAyQAIAAoAgAhBCADIAEgACgCBCIAQQF1aiIBIABBAXEEfyABKAIAIARqKAIABSAECxEAADYCCCADKAIIIAI4ArwBIANBEGokAAtaAQJ/IwBBEGsiAyQAIAAoAgAhBCADIAEgACgCBCIAQQF1aiIBIABBAXEEfyABKAIAIARqKAIABSAECxEAADYCCCADKAIIKgK8ASACEK4BIQAgA0EQaiQAIAALhQEBAn8jAEEgayIDJAAgAyACKAIANgIYIAAoAgQhAiADIAEgACgCCCIEQQF1aiIBIARBAXEEfyABKAIAIAJqKAIABSACCxEAADYCCCADQRBqIANBCGogACgCABBGIAMgAygCGDYCBCADKAIQQYABaiADKAIUECQgAygCBDYCACADQSBqJAALngEBA38jAEEwayIDJAAgACgCBCEEIAMgASAAKAIIIgVBAXVqIgEgBUEBcQR/IAEoAgAgBGooAgAFIAQLEQAANgIYIANBIGogA0EYaiAAKAIAEEYgAyADKAIgQYABaiADKAIkECQoAgA2AiggAyACKAIAIgA2AhAgAyADKAIoNgIMIAMgADYCCCADQQxqIANBCGoQWiEAIANBMGokACAAC4UBAQJ/IwBBIGsiAyQAIAMgAigCADYCGCAAKAIEIQIgAyABIAAoAggiBEEBdWoiASAEQQFxBH8gASgCACACaigCAAUgAgsRAAA2AgggA0EQaiADQQhqIAAoAgAQRiADIAMoAhg2AgQgAygCEEHcAGogAygCFBAkIAMoAgQ2AgAgA0EgaiQAC54BAQN/IwBBMGsiAyQAIAAoAgQhBCADIAEgACgCCCIFQQF1aiIBIAVBAXEEfyABKAIAIARqKAIABSAECxEAADYCGCADQSBqIANBGGogACgCABBGIAMgAygCIEHcAGogAygCJBAkKAIANgIoIAMgAigCACIANgIQIAMgAygCKDYCDCADIAA2AgggA0EMaiADQQhqEFohACADQTBqJAAgAAuEAQECfyMAQSBrIgMkACADIAIoAgA2AhggACgCBCECIAMgASAAKAIIIgRBAXVqIgEgBEEBcQR/IAEoAgAgAmooAgAFIAILEQAANgIIIANBEGogA0EIaiAAKAIAEEYgAyADKAIYNgIEIAMoAhBBFGogAygCFBAkIAMoAgQ2AgAgA0EgaiQAC50BAQN/IwBBMGsiAyQAIAAoAgQhBCADIAEgACgCCCIFQQF1aiIBIAVBAXEEfyABKAIAIARqKAIABSAECxEAADYCGCADQSBqIANBGGogACgCABBGIAMgAygCIEEUaiADKAIkECQoAgA2AiggAyACKAIAIgA2AhAgAyADKAIoNgIMIAMgADYCCCADQQxqIANBCGoQWiEAIANBMGokACAAC4QBAQJ/IwBBIGsiAyQAIAMgAigCADYCGCAAKAIEIQIgAyABIAAoAggiBEEBdWoiASAEQQFxBH8gASgCACACaigCAAUgAgsRAAA2AgggA0EQaiADQQhqIAAoAgAQRiADIAMoAhg2AgQgAygCEEE4aiADKAIUECQgAygCBDYCACADQSBqJAALnQEBA38jAEEwayIDJAAgACgCBCEEIAMgASAAKAIIIgVBAXVqIgEgBUEBcQR/IAEoAgAgBGooAgAFIAQLEQAANgIYIANBIGogA0EYaiAAKAIAEEYgAyADKAIgQThqIAMoAiQQJCgCADYCKCADIAIoAgAiADYCECADIAMoAig2AgwgAyAANgIIIANBDGogA0EIahBaIQAgA0EwaiQAIAALaQEBfyMAQSBrIgMkACADIAIoAgA2AhggACgCACECIAMgASAAKAIEIgBBAXVqIgEgAEEBcQR/IAEoAgAgAmooAgAFIAILEQAANgIQIAMgAygCGDYCDCADKAIQIAMoAgw2AhAgA0EgaiQAC38BAn8jAEEgayIDJAAgACgCACEEIAMgASAAKAIEIgBBAXVqIgEgAEEBcQR/IAEoAgAgBGooAgAFIAQLEQAANgIQIAMgAygCECgCEDYCGCADIAIoAgAiADYCCCADIAMoAhg2AgQgAyAANgIAIANBBGogAxBaIQAgA0EgaiQAIAALUgECfyMAQRBrIgMkACAAKAIAIQQgAyABIAAoAgQiAEEBdWoiASAAQQFxBH8gASgCACAEaigCAAUgBAsRAAA2AgggAygCCCACOAIMIANBEGokAAtZAQJ/IwBBEGsiAyQAIAAoAgAhBCADIAEgACgCBCIAQQF1aiIBIABBAXEEfyABKAIAIARqKAIABSAECxEAADYCCCADKAIIKgIMIAIQrgEhACADQRBqJAAgAAtSAQJ/IwBBEGsiAyQAIAAoAgAhBCADIAEgACgCBCIAQQF1aiIBIABBAXEEfyABKAIAIARqKAIABSAECxEAADYCCCADKAIIIAI4AgggA0EQaiQAC1kBAn8jAEEQayIDJAAgACgCACEEIAMgASAAKAIEIgBBAXVqIgEgAEEBcQR/IAEoAgAgBGooAgAFIAQLEQAANgIIIAMoAggqAgggAhCuASEAIANBEGokACAAC1IBAn8jAEEQayIDJAAgACgCACEEIAMgASAAKAIEIgBBAXVqIgEgAEEBcQR/IAEoAgAgBGooAgAFIAQLEQAANgIIIAMoAgggAjgCBCADQRBqJAALWQECfyMAQRBrIgMkACAAKAIAIQQgAyABIAAoAgQiAEEBdWoiASAAQQFxBH8gASgCACAEaigCAAUgBAsRAAA2AgggAygCCCoCBCACEK4BIQAgA0EQaiQAIAALMQECfyAAKAIAIQNBAhA2IAEQNyEEIABBAhA2IAEQNyACIAF0cSADIARBf3NxcjYCAAtXAQJ/IwBBEGsiAyQAIAAoAgAhBCADQQhqIAEgACgCBCIAQQF1aiIBIABBAXEEfyABKAIAIARqKAIABSAECxEBACADKAIIIAMoAgwgAhCaBSADQRBqJAALWAECfyMAQRBrIgMkACABIAAoAgQiBEEBdWohASAAKAIAIQAgA0EIaiABIARBAXEEfyABKAIAIABqKAIABSAACxEBACADQQhqEEEhACADQRBqJAAgACACRwsxAQJ/IAAoAgAhA0EBEDYgARA3IQQgAEEBEDYgARA3IAIgAXRxIAMgBEF/c3FyNgIAC1cBAn8jAEEQayIDJAAgACgCACEEIANBCGogASAAKAIEIgBBAXVqIgEgAEEBcQR/IAEoAgAgBGooAgAFIAQLEQEAIAMoAgggAygCDCACEJ0FIANBEGokAAtYAQJ/IwBBEGsiAyQAIAEgACgCBCIEQQF1aiEBIAAoAgAhACADQQhqIAEgBEEBcQR/IAEoAgAgAGooAgAFIAALEQEAIANBCGoQPCEAIANBEGokACAAIAJHC1QBAn8jAEEQayIDJAAgASAAKAIEIgRBAXVqIQEgACgCACEAIANBCGogASAEQQFxBH8gASgCACAAaigCAAUgAAsRAQAgA0EIaiACEK0BIANBEGokAAtZAQJ/IwBBEGsiAyQAIAEgACgCBCIEQQF1aiEBIAAoAgAhACADQQhqIAEgBEEBcQR/IAEoAgAgAGooAgAFIAALEQEAIANBCGoQnQEhACADQRBqJAAgACACRwsxAQJ/IAAoAgAhA0EFEDYgARA3IQQgAEEFEDYgARA3IAIgAXRxIAMgBEF/c3FyNgIAC1cBAn8jAEEQayIDJAAgACgCACEEIANBCGogASAAKAIEIgBBAXVqIgEgAEEBcQR/IAEoAgAgBGooAgAFIAQLEQEAIAMoAgggAygCDCACEKIFIANBEGokAAtZAQJ/IwBBEGsiAyQAIAEgACgCBCIEQQF1aiEBIAAoAgAhACADQQhqIAEgBEEBcQR/IAEoAgAgAGooAgAFIAALEQEAIANBCGoQrwEhACADQRBqJAAgACACRwtUAQJ/IwBBEGsiAyQAIAEgACgCBCIEQQF1aiEBIAAoAgAhACADQQhqIAEgBEEBcQR/IAEoAgAgAGooAgAFIAALEQEAIANBCGogAhCkAiADQRBqJAALWQECfyMAQRBrIgMkACABIAAoAgQiBEEBdWohASAAKAIAIQAgA0EIaiABIARBAXEEfyABKAIAIABqKAIABSAACxEBACADQQhqEIQBIQAgA0EQaiQAIAAgAkcLVwECfyMAQSBrIgMkACAAECoiAiADQQhqIAAgABAnQQFqEMUBIAAQJyACEJcBIgIoAgggARCjASACIAIoAghBBGo2AgggACACEPUBIAIQpQEgA0EgaiQAC5kBAQR/IwBBEGsiAiQAIAIgAEGgBGoiAxBANgIIIAIgAxBINgIAIAJBCGogAhArBEBBACEDA0AgACACKAIIIgQoAgAoApwERwRAIAQgACgCrAQgBCgCACAAIAMgARDlAiIFNgIAIAUgABBqCyAEKAIAIAFBGBEBACADQQFqIQMgAkEIahBHIAJBCGogAhArDQALCyACQRBqJAALNQEBfyMAQRBrIgIkACACIAE4AgAgAiAAOAIIIAIqAgghACACKgIAIQEgAkEQaiQAIAAgAV0L8gcCBn8GfSMAQUBqIhEkACACEDIhEyARQThqIAEQIRCTASARQThqEEEhEiARIABBFGoiFBBANgIwIBEgFBBINgIoIBFBMGogEUEoahArBEAgEkUgCUEBc3IhFgNAIBEgESgCMCgCACIJIAIgCRAjKgJQIAQQjgE4AjggESoCOCEXAn0gACoCIBAiIAAqAiAiGEMAAAAAXUEBc3JFBEAgFyAXIAkQlAGMlCIYQwAAAABbDQEaIAAqAgwQIiESIAkgAiAXQQAgACoCDCIZQwAAAABbIBIbBH0gGAUgGCAAKgIgIBmVlAuSIAUgBxA0DAELIBgQIiESIBcgACoCIEMAAAAAXkEBcw0AGiAXIBINABogCRCAASIYECIhEiAXIBhDAAAAAFsNABogFyASDQAaIAkgAiAXIBggACoCICAAKgIIlZSSIAUgBxA0CyEYIBEgCSACIAcQJjgCOCARKgI4IRkgESAJIAMgBxAmOAI4IBEqAjghGyARIBggGZIiGjgCICARQQE2AhggESAJECEiEioCvAE4AjgCQCARQThqECVFBEAgGiAZkyEZIBIqArwBIRoCfSATBEAgESAa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IAEQI0GgAmpBuA4gDBAgKAIAECAqAgCTQbwMIAwQICgCABAtCwJAAkAgASANEKkBRQ0AIAEgDRBTDQAgABAjQaACakG4DiANECAoAgAQICoCACESIAEQI0GgAmpBuA4gDRAgKAIAECAqAgAhEyAAIA0QfyEUIAsgASANIAIQZTgCICALKgIgIRUgCyABIA0gBCACIA8bEJgBOAI4IAEgEiATkyAUkyAVkyALKgI4k0G8DCANECAoAgAQLQwBCwJAIAEgDRBTDQAgACABEGFBAkcNACABIAAQI0GgAmpBuA4gDRAgKAIAECAqAgAgARAjQaACakG4DiANECAoAgAQICoCAJNDAAAAP5RBvAwgDRAgKAIAEC0MAQsgASANEFMNACAAIAEQYSEDIAtBIGogABAhEJMBIANBA0YgC0EgahBBQQJGRg0AIAEgABAjQaACakG4DiANECAoAgAQICoCACABECNBoAJqQbgOIA0QICgCABAgKgIAk0G8DCANECAoAgAQLQsgC0FAayQACysBAX0gABAjQaACakG4DiABECAoAgAQICoCACICQwAAAABgIAIQIkEBc3ELpAkCBH8IfSMAQfACayIOJAAgABAhIRAgDiAAIAMgCBDyATgCICAOKgIgIRIgDiAAIAMgCBDvAjgCICAOKgIgIRQCQCAFQQJHDQAgASoCIEMAAAAAXkEBcw0AAkAgEBBdQbgOIAMQICgCABAkEDENACAOIBAQXUG4DiADECAoAgAQJCgCACIFNgIMIA4gBTYC6AIgDiAOQQxqIAcQLDgCICAOQSBqECUNACAOIBAQXUG4DiADECAoAgAQJCgCACIFNgIIIA4gBTYC4AIgDiAOQQhqIAcQLDgCICABQwAAAAAgDioCICASkyAUkyAJIAEqAiCTkxAzOAIgDAELIAFBADYCIAsgASgCECACSwRAIAIhBQNAIA5BIGogACAFEHMiERAhEFIgDkEgahA8QQFHBEAgDkEgaiARIAMQgwEgDigCJCEQIA5BIGogESADEIIBIA8gEEEDRmogDigCJEEDRmohDwsgBUEBaiIFIAEoAhBJDQALCyAOQSBqIAAQIRC0ASAOQSBqEK8BIQVDAAAAACEIQwAAAAAhBwJAIA8NAAJAAkACQAJAAkAgBUF/ag4FAAECBAMFCyABKgIgQwAAAD+UIQcMBAsgASoC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cCAPKgJwISUgD0GgAWogD0HAAWpBARCQASAPIA8oAqABNgIAIA8gDyAHECw4AnAgDyoCcCEoIA8oAswBQQIgASAGIAYQvgIhIiAPKALMAUEAIAIgByAGEL4CISxBASAEIAUgFBsiACAPKALMASAiICwgBCAFIBUgEyAJIAggCiALIAwgDRC2BSAiICwgFBsiKV4iEhsgACAAQQJGGyAAIA4bIRkgAEEARyAScSEbICwgIiAUGyEmIAUgBCAUGyIaQQFGIgAgCEEBc3EhHCAhICUgFBsgL5MhJSAnICggFBsgL5MhKCAHIAYgFBshMCAGIAcgFBshLiAUQQFzIR0gGkF9cSEeIAAgDkVxIR8gD0HwAGoiEUEUahCxARpBACEFQQAhAANAIA9BQGsgD0HMAWogAyAuICIgKSAFIhIgACIWELUFIBEgD0FAaxC0BSAPQUBrEL0CIBEoAhAhBQJ9IBECfQJAAkAgGUEBRgRAICkhIQwBCyAlECIhACARKgIEICVdQQFzRQRAICUhISAARQ0BCyAoECIhACARKgIEICheQQFzRQRAICghISAARQ0BCwJ9AkAgDygCzAEoAqwELQALDQACQCARKgIIECIEQCARKgIIQwAAAABbDQELIA8oAswBEIABECJFDQEgKSAPKALMARCAAUMAAAAAXA0CGgsgESoCBAwBCyApCyEhIA8oAswBKAKsBC0ACwRAIA8oAswBQaACakECQQEQaAsgDygCzAEoAqwELQALRQ0BCyAhECINACAhIBEqAgSTDAELICEgESoCBCInQwAAAABdQQFzDQEaICeMCzgCICAhCyEpIBxFBEAgDygCzAEgESATIBAgLiApICYgIiAsIBsgGiAIIAkgCiALIAwgDRCzBQsgDygCzAEiACAAECMQnwEgESoCIEMAAAAAXXIQ+gEgDygCzAEgESASIBMgECAZIBogLiAGICkgJiAiIAggCxCyBSAmIScgHkUEQCAPKALMASAQICogESoCKJIgMCAGEDQgKpMhJwsCfSAfRQRAIBEqAigMAQsgESAmOAIoICYLISEgESAPKALMASAQICogIZIgMCAGEDQgKpMiITgCKCAIRSASIAVPckUEQANAIA9BQGsgDygCzAEgEhBzIgAQIRB8AkAgD0FAaxA8QQFGDQAgD0FAayAAECEQUiAPQUBrEDxBAUYEQCAAIBAQUwRAIA8gACAQICYQiQE4AkAgD0FAayoCACEhIA8oAswBIBAQbiEkIA8gACAQICIQSzgCOCAAICEgJJIgDyoCOJJBiBEgEBAgKAIAEC0gABAjQYgRIBAQICgCABAgKgIAECJFDQILIA8oAswBIBAQbiEhIA8gACAQICIQSzgCQCAAICEgD0FAayoCAJJBiBEgEBAgKAIAEC0MAQsCQAJAIA8oAswBIAAQYSIYQQRHDQAgD0FAayAAIBAQgwEgDygCREEDRg0AIA9BOGogACAQEIIBIA8oAjxBA0YNACAjISEgACAQICYQVw0BIA8gABAjQaACakG4DiATECAoAgAQICgCACIYNgI4IA8gABAhIiAqArwBOAJAIBi+ISEgDwJ9IA9BQGsQJUUEQCAPIAAgECAiECY4AiggICoCvAEhJCAPKgIoAn0gFARAIA8gJDgCICAhIA8qAiCVDAELIA8gJDgCICAPKgIgICGUC5IMAQsgESoCKAs4AjAgDyAAIBMgIhAmOAJAIA8gD0FAayoCACAhkjgCOCAPQQE2AiggD0EBNgIgIAAgEyApICIgD0EoaiAPQThqEI8BIAAgECAmICIgD0EgaiAPQTBqEI8BIA8qAjAhISAPKgI4ISQgD0FAayAPKALMARAhEJwBIA9BQGsQnQEhGCAAICQgISAUGyItICEgJCAUGyIhIBUgLRAiIA5BAEcgGEEER3EiGCAdcXJBAXMgIRAiIBQgGHFyQQFzICIgLEEBQQIgCSAKIAsgDCANEHEaICMhIQwBCyAAIBAgIhDeASEhIA9BQGsgACAQEIMBICcgIZMhJAJAIA8oAkRBA0cNACAPQThqIAAgEBCCASAPKAI8QQNHDQAgI0MAAAAAICRDAAAAP5QQM5IhIQwBCyAPQUBrIAAgEBCCASAjISEgDygCREEDRg0AIA9BQGsgACAQEIMBIA8oAkRBA0YEQCAjQwAAAAAgJBAzkiEhDAELAkACQCAYQX9qDgICAAELICMgJEMAAAA/lJIhIQwBCyAjICSSISELIAAgISArIAAQI0GIESAQECAoAgAQICoCAJKSQYgRIBAQICgCABAtCyASQQFqIhIgBUcNAAsgESoCKCEhCyAWQQFqIQAgKyAhkiErIDEgESoCJBAzITEgBSAXSQ0ACwJAIAhFDQAgDkUEQCAPKALMARC8AkUNAQtDAAAAACEkAkACQCAmECINACAPQUBrIA8oAswBECEQnAEgJiArkyEhAkACQAJAAkACQCAPQUBrEJ0BQX5qDgYABAEFAwIFCyAjICFDAAAAP5SSISMMBAsgJiArXkEBcw0DICEgALOVISQMAwsgJiArXkEBc0UEQCAjICEgAEEBdLOVkiEjIABBAkkNAyAhIACzlSEkDAQLICMgIUMAAAA/lJIhIwwCCyAmICteQQFzIABBAklyDQEgISAWs5UhJAwCCyAjICGSISMLIABFDQELQQAhDkEAIQBBACEFA0BDAAAAACElQwAAAAAhJ0MAAAAAISEgACESQwAAAAAhKCAkIAAgF0kEfQJ/A0AgD0FAayAPKALMASASEHMiAxAhEHwCQCAPQUBrEDxBAUYNACAPQUBrIAMQIRBSIA9BQGsQPEEBRg0AIBIgDiADKAKYBEcNAhogAyAQELEFBEAgAxAjQaACakG4DiAQECAoAgAQICoCACEoIA8gAyAQICIQJjgCQCAhICggD0FAayoCAJIQMyEhCyAPKALMASADEGFBBUcNACADIAsQsAEhKCAPIANBACAiEEs4AkAgD0FAayoCACEtIAMQI0GgAmpBARAgKgIAITQgDyADQQAgIhAmOAJAIA9BQGsqAgAhNSAhICcgKCAtkiIhEDMiJyAlIDQgNZIgIZMQMyIlkhAzISELIBJBAWoiEiAXRw0ACyAXCyEFICchKCAhBUMAAAAAC5IhISAAIAVPBH0gIyAhkgUgIyAhkiEnICMgKJIhKANAIA9BQGsgDygCzAEgABBzIgMQIRB8AkAgD0FAaxA8QQFGDQAgD0FAayADECEQUiAPQUBrEDxBAUYNAAJAAkACQAJAAkAgDygCzAEgAxBhQX9qDgUAAgEDBAULIA8gAyAQICIQSzgCQCADICMgD0FAayoCAJJBiBEgEBAgKAIAEC0MBAsgDyADIBAgIhBlOAJAIAMgJyAPQUBrKgIAkyADECNBoAJqQbgOIBAQICgCABAgKgIAk0GIESAQECAoAgAQLQwDCyADICMgISADECNBoAJqQbgOIBAQICgCABAgKgIAk0MAAAA/lJJBiBEgEBAgKAIAEC0MAgsgDyADIBAgIhBLOAJAIAMgIyAPQUBrKgIAkkGIESAQECAoAgAQLSADIBAgJhBXDQECfSAUBEAgAxAjQaACakEAECAqAgAhLSAPIAMgEyAiECY4AkAgISElIC0gD0FAayoCAJIMAQsgAxAjQaACakEBECAqAgAhJSAPIAMgECAiECY4AkAgJSAPQUBrKgIAkiElICELIi0gAxAjQaACakEAECAqAgAQQwRAICUgAxAjQaACakEBECAqAgAQQw0CCyADIC0gJSAVQQFBASAiICxBAUEDIAkgCiALIAwgDRBxGgwBCyADIAsQsAEhJSAPIANBACAmEIkBOAJAIAMgKCAlkyAPQUBrKgIAkkEBEC0LIABBAWoiACAFRw0ACyAnCyEjIA4gFkchAyAOQQFqIQ4gBSEAIAMNAAsLIA8oAswBIgAgAEECIAEgMpMgBiAGEDRBABBKIA8oAswBIgAgAEEAIAIgM5MgByAGEDRBARBKAkACQCAZBEAgD0FAayAPKALMARAhEGsgD0FAaxBBQQJGIBlBAkdyDQELIA8oAswBIgAgACATIDEgLiAGEDRBuA4gExAgKAIAEEoMAQsgGUECRw0AIA9BQGsgDygCzAEQIRBrIA9BQGsQQUECRw0AIA8gDygCzAEiACATIA9BGGogMRApKgIAIC4QjgE4AkAgACAvICmSIA9BQGsqAgAQ1QEgLxAzQbgOIBMQICgCABBKCwJAAkAgGgRAIA9BQGsgDygCzAEQIRBrIBpBAkciACAPQUBrEEFBAkZyDQELIA8oAswBIgAgACAQICogK5IgMCAGEDRBuA4gEBAgKAIAEEoMAQsgAA0AIA9BQGsgDygCzAEQIRBrIA9BQGsQQUECRw0AIA8gDygCzAEiACAQIA9BEGogKiArkhApKgIAIDAQjgE4AkAgACAqICaSIA9BQGsqAgAQ1QEgKhAzQbgOIBAQICgCABBKCwJAIAhFDQAgD0FAayAPKALMARAhEJMBIA9BQGsQQUECRgRAIBdBASAXQQFLGyEFQQAhAANAIA9BQGsgDygCzAEgABB9IgMQIRBSIA9BQGsQPEEBRwRAIAMgDygCzAEQI0GgAmpBuA4gEBAgKAIAECAqAgAgAxAjQYgRIBAQICgCABAgKgIAkyADECNBoAJqQbgOIBAQICgCABAgKgIAk0GIESAQECAoAgAQLQsgAEEBaiIAIAVHDQALCyAPIA8oAswBEFkiABBANgI4IA8gABBINgIwIA9BOGogD0EwahArBEAgGSAEIBQbIQADQCAPQUBrIA8oAjgoAgAiAxAhEFIgD0FAaxA8QQFGBEAgDygCzAEgAyAiIAAgLCAVIAkgCiALIAwgDRCwBQsgD0E4ahBHIA9BOGogD0EwahArDQALCyATQX1xIgRBAUdBACAQQX1xIgVBAUcbDQAgF0EBIBdBAUsbIQhBACEAA0AgD0FAayAPKALMASAAEHMiAxAhEHwCQCAPQUBrEDxBAUYNACAEQQFGBEAgDygCzAEgAyATELsCCyAFQQFHDQAgDygCzAEgAyAQELsCCyAAQQFqIgAgCEcNAAsLIBEQvQILIA9B0AFqJAALhAEAIAAgAUEGSEGDDBBNAn8CQAJAAkAgAUF8ag4CAAECCyAAECMQWyEBIAAQI0E4aiEAIAFBAkYEQCAAQQIQIAwDCyAAQQAQIAwCCyAAECMQWyEBIAAQI0E4aiEAIAFBAkYEQCAAQQAQIAwCCyAAQQIQIAwBCyAAECNBOGogARAgCyoCAAuEAQAgACABQQZIQYMMEE0CfwJAAkACQCABQXxqDgIAAQILIAAQIxBbIQEgABAjQShqIQAgAUECRgRAIABBAhAgDAMLIABBABAgDAILIAAQIxBbIQEgABAjQShqIQAgAUECRgRAIABBABAgDAILIABBAhAgDAELIAAQI0EoaiABECALKgIAC4QBACAAIAFBBkhBgwwQTQJ/AkACQAJAIAFBfGoOAgABAgsgABAjEFshASAAECNBGGohACABQQJGBEAgAEECECAMAwsgAEEAECAMAgsgABAjEFshASAAECNBGGohACABQQJGBEAgAEEAECAMAgsgAEECECAMAQsgABAjQRhqIAEQIAsqAgALWQECfyMAQTBrIgIkACACQShqIAEQYyACQQA2AhwgAkEXNgIYIAIgAigCKCIDNgIgIAIgAzYCDCACIAIpAxg3AxAgACACQRBqQQEgAkEMahCyASACQTBqJAALWQECfyMAQTBrIgIkACACQShqIAEQWCACQQA2AhwgAkEXNgIYIAIgAigCKCIDNgIgIAIgAzYCDCACIAIpAxg3AxAgACACQRBqQQEgAkEMahCyASACQTBqJAALWQECfyMAQTBrIgIkACACQShqIAEQYyACQQA2AhwgAkEXNgIYIAIgAigCKCIDNgIgIAIgAzYCDCACIAIpAxg3AxAgACACQRBqQQAgAkEMahCyASACQTBqJAALYAECfyMAQSBrIgQkACAAECEhBSAEIAEoAgAiATYCDCAEIAE2AhggAiAFIARBDGoQgwUEQCAAECEhAiAEIAE2AgggBCABNgIQIAMgAiAEQQhqEIIFIAAQLwsgBEEgaiQAC1kBAn8jAEEwayICJAAgAkEoaiABEFggAkEANgIcIAJBFzYCGCACIAIoAigiAzYCICACIAM2AgwgAiACKQMYNwMQIAAgAkEQakEAIAJBDGoQsgEgAkEwaiQAC1kBAn8jAEEwayICJAAgAkEoaiABEGMgAkEANgIcIAJBFjYCGCACIAIoAigiAzYCICACIAM2AgwgAiACKQMYNwMQIAAgAkEQakEBIAJBDGoQswEgAkEwaiQAC1kBAn8jAEEwayICJAAgAkEoaiABEFggAkEANgIcIAJBFjYCGCACIAIoAigiAzYCICACIAM2AgwgAiACKQMYNwMQIAAgAkEQakEBIAJBDGoQswEgAkEwaiQAC1kBAn8jAEEwayICJAAgAkEoaiABEGMgAkEANgIcIAJBFjYCGCACIAIoAigiAzYCICACIAM2AgwgAiACKQMYNwMQIAAgAkEQakEAIAJBDGoQswEgAkEwaiQAC2ABAn8jAEEgayIEJAAgABAhIQUgBCABKAIAIgE2AgwgBCABNgIYIAIgBSAEQQxqEIUFBEAgABAhIQIgBCABNgIIIAQgATYCECADIAIgBEEIahCEBSAAEC8LIARBIGokAAtZAQJ/IwBBMGsiAiQAIAJBKGogARBYIAJBADYCHCACQRY2AhggAiACKAIoIgM2AiAgAiADNgIMIAIgAikDGDcDECAAIAJBEGpBACACQQxqELMBIAJBMGokAAv6AQEBfyMAQRBrIgEkACAAQgA3AgAgAEEEahBpGiAAQQA2AgggAEEIahBpGiAAQQA2AgwgAEEMahBpGiAAQRBqEIwBIABBFGpBAEEkED4QvQEgAEE4akEAQSQQPhC9ASAAQdwAakEAQSQQPhC9ASAAQYABakEAQSQQPhC9ASABEIwBIAFBCGogARAuIABBpAFqIAFBCGoQgAUgAEIANwKsASAAQawBahCrAiAAQgA3ArQBIABBtAFqEKsCIABBADYCvAEgAEG8AWoQaRogAUEIaiAAEJwBIAFBCGpBARCtASABQQhqIAAQ3AEgAUEIakEEEK0BIAFBEGokAAtPAQF/IwBBIGsiASQAIAFBGGoQjAEgAUEANgIUIAFBFTYCECABIAEoAhg2AgQgASABKQMQNwMIIAAgAUEIakEBIAFBBGoQkgEgAUEgaiQAC1kBAn8jAEEwayICJAAgAkEoaiABEGMgAkEANgIcIAJBFTYCGCACIAIoAigiAzYCICACIAM2AgwgAiACKQMYNwMQIAAgAkEQakEBIAJBDGoQkgEgAkEwaiQAC1kBAn8jAEEwayICJAAgAkEoaiABEFggAkEANgIcIAJBFTYCGCACIAIoAigiAzYCICACIAM2AgwgAiACKQMYNwMQIAAgAkEQakEBIAJBDGoQkgEgAkEwaiQAC08BAX8jAEEgayIBJAAgAUEYahCMASABQQA2AhQgAUEVNgIQIAEgASgCGDYCBCABIAEpAxA3AwggACABQQhqQQAgAUEEahCSASABQSBqJAALWQECfyMAQTBrIgIkACACQShqIAEQYyACQQA2AhwgAkEVNgIYIAIgAigCKCIDNgIgIAIgAzYCDCACIAIpAxg3AxAgACACQRBqQQAgAkEMahCSASACQTBqJAALYAECfyMAQSBrIgQkACAAECEhBSAEIAEoAgAiATYCDCAEIAE2AhggAiAFIARBDGoQhwUEQCAAECEhAiAEIAE2AgggBCABNgIQIAMgAiAEQQhqEIYFIAAQLwsgBEEgaiQAC1kBAn8jAEEwayICJAAgAkEoaiABEFggAkEANgIcIAJBFTYCGCACIAIoAigiAzYCICACIAM2AgwgAiACKQMYNwMQIAAgAkEQakEAIAJBDGoQkgEgAkEwaiQAC2ABAn8jAEEQayIDJAAgASgCACEEIAMgASgCBCIBNgIMIAMgBDYCCCADIAE2AgQgAyAENgIAIAMhASADQQhqIAAQISACEIkFBEAgASAAECEgAhCIBSAAEC8LIANBEGokAAtKAQJ/IwBBIGsiAiQAIAJBGGogARApIQMgAkEANgIUIAJBFDYCECADKgIAIQEgAiACKQMQNwMIIAAgAkEIaiABENAFIAJBIGokAAs+AgF/AX0jAEEQayIBJAAgASAAECEqArwBOAIIQwAAwH8hAiABQQhqECVFBEAgASoCCCECCyABQRBqJAAgAgtXAgF/AX0jAEEQayICJAAgAiAAECEQbSABECQoAgA2AghDAADAfyED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IAEoAgQiATYCDCADIAQ2AgggAyABNgIEIAMgBDYCACADIQEgA0EIaiAAECEgAhCXBQRAIAEgABAhIAIQlgUgABAvCyADQRBqJAALSgECfyMAQSBrIgIkACACQRhqIAEQKSEDIAJBADYCFCACQQ02AhAgAyoCACEBIAIgAikDEDcDCCAAIAJBCGogARDnBSACQSBqJAALYAECfyMAQRBrIgMkACABKAIAIQQgAyABKAIEIgE2AgwgAyAENgIIIAMgATYCBCADIAQ2AgAgAyEBIANBCGogABAhIAIQmQUEQCABIAAQISACEJgFIAAQLwsgA0EQaiQAC0oBAn8jAEEgayICJAAgAkEYaiABECkhAyACQQA2AhQgAkEMNgIQIAMqAgAhASACIAIpAxA3AwggACACQQhqIAEQ6QUgAkEgaiQACzUBAX8jAEEQayICJAAgAkEANgIMIAJBCzYCCCACIAIpAwg3AwAgACACIAEQzwIgAkEQaiQACzUBAX8jAEEQayICJAAgAkEANgIMIAJBCjYCCCACIAIpAwg3AwAgACACIAEQzgIgAkEQaiQACzUBAX8jAEEQayICJAAgAkEANgIMIAJBCTYCCCACIAIpAwg3AwAgACACIAEQzgIgAkEQaiQACzUBAX8jAEEQayICJAAgAkEANgIMIAJBCDYCCCACIAIpAwg3AwAgACACIAEQzwIgAkEQaiQACzUBAX8jAEEQayICJAAgAkEANgIMIAJBBzYCCCACIAIpAwg3AwAgACACIAEQ4gEgAkEQaiQACzUBAX8jAEEQayICJAAgAkEANgIMIAJBBjYCCCACIAIpAwg3AwAgACACIAEQ4gEgAkEQaiQACzUBAX8jAEEQayICJAAgAkEANgIMIAJBBTYCCCACIAIpAwg3AwAgACACIAEQ4gEgAkEQaiQAC2ABAn8jAEEQayIDJAAgASgCACEEIAMgASgCBCIBNgIMIAMgBDYCCCADIAE2AgQgAyAENgIAIAMhASADQQhqIAAQISACEKQFBEAgASAAECEgAhCjBSAAEC8LIANBEGokAAs1AQF/IwBBEGsiAiQAIAJBADYCDCACQQQ2AgggAiACKQMINwMAIAAgAiABEPIFIAJBEGokAAtgAQJ/IwBBEGsiAyQAIAEoAgAhBCADIAEoAgQiATYCDCADIAQ2AgggAyABNgIEIAMg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AEEBIQICQCAAQdgBahDuAg0AIAEgAEGgBGoiABBANgIIIAEgABBINgIAQQAhAiABQQhqIAEQK0UNAANAIAEoAggoAgBB2AFqEO4CIgINASABQQhqEEcgAUEIaiABECsNAAsLIAFBEGokACACCzkAIABBADYCGCAAQQA6ABQgAEGAgID8AzYCECAAQQA2AQogAEEANgIAIABBADoACSAAQQI2AgQgAAtOAQF/IwBBEGsiAiQAIAIgATYCACACIAA2AgggAkEIaiACECsEQANAIAIoAggoAgAQ8gIgAkEIahBHIAJBCGogAhArDQALCyACQRBqJAALjQEBA38jAEEQayICJAAgAiAAQaAEaiIDEEA2AgggAiADEEg2AgAgAkEIaiACECsEQEEAIQMDQCAAIAIoAggiBCgCACgCnARHBEAgBCAAKAKsBCAEKAIAIAAgAyABEOUCIgQ2AgAgBCAAEGoLIANBAWohAyACQQhqEEcgAkEIaiACECsNAAsLIAJBEGokAAtEAQJ/IwBBIGsiASQAIAAQXCAAECdLBEAgABAqIQIgACABQQhqIAAQJyAAECcgAhCXASIAEPUBIAAQpQELIAFBIGokAAulAQECfyMAQSBrIgIkACACQRBqIAFBGGoiAxC/ASACQRhqIAJBEGoQLgJAAkACQCACKAIcDgQBAAABAAsgACACKQMYNwIADAELIAIgAyoCBDgCEAJAIAJBEGoQJQ0AIAIgAyoCBDgCCCACKgIIQwAAAABeQQFzDQAgAEGICkH4CSABLQAEQQcQTBspAgA3AgAMAQsgAEGICikCADcCAAsgAkEgaiQACy4BAn8gAC0AACECQQIQNkEAEDchAyAAQQIQNkEAEDcgAXEgAiADQX9zcXI6AAALVQEBfyMAQRBrIgIkACACIAE2AgggAiAAEEA2AgAgAkEIaiACEMYBIQEgACAAKAIAIAFBAnRqIgFBBGogACgCBCABEMQBEP0CIAEQrAEaIAJBEGokAAtfAQF/IwBBEGsiAyQAIAMgATYCACADIAA2AggCQCADQQhqIAMQK0UNAANAIAMoAggoAgAgAigCAEYNASADQQhqEEcgA0EIaiADECsNAAsLIAMoAgghACADQRBqJAAgAAsWABCfBBCYBBCTBEGIygBBwwERAAAaCwuXPRwAQYAIC70GQ2Fubm90IHNldCBtZWFzdXJlIGZ1bmN0aW9uOiBOb2RlcyB3aXRoIG1lYXN1cmUgZnVuY3Rpb25zIGNhbm5vdCBoYXZlIGNoaWxkcmVuLgBDYW5ub3QgcmVzZXQgYSBub2RlIHdoaWNoIHN0aWxsIGhhcyBjaGlsZHJlbiBhdHRhY2hlZABDYW5ub3QgcmVzZXQgYSBub2RlIHN0aWxsIGF0dGFjaGVkIHRvIGEgb3duZXIAYWxsb2NhdG9yPFQ+OjphbGxvY2F0ZShzaXplX3QgbikgJ24nIGV4Y2VlZHMgbWF4aW11bSBzdXBwb3J0ZWQgc2l6ZQAAAAAAAQAAAAAAwH8AAAAAAADAfwMAAABDb3VsZCBub3QgYWxsb2NhdGUgbWVtb3J5IGZvciBub2RlAENoaWxkIGFscmVhZHkgaGFzIGEgb3duZXIsIGl0IG11c3QgYmUgcmVtb3ZlZCBmaXJzdC4AQ2Fubm90IGFkZCBjaGlsZDogTm9kZXMgd2l0aCBtZWFzdXJlIGZ1bmN0aW9ucyBjYW5ub3QgaGF2ZSBjaGlsZHJlbi4AT25seSBsZWFmIG5vZGVzIHdpdGggY3VzdG9tIG1lYXN1cmUgZnVuY3Rpb25zc2hvdWxkIG1hbnVhbGx5IG1hcmsgdGhlbXNlbHZlcyBhcyBkaXJ0eQBDYW5ub3QgZ2V0IGxheW91dCBwcm9wZXJ0aWVzIG9mIG11bHRpLWVkZ2Ugc2hvcnRoYW5kcwAAAAABAAAAAwAAAAAAAAACAAAAAwAAAAEAAAACAAAAAAAAACVzJWQue1tza2lwcGVkXSAAd206ICVzLCBobTogJXMsIGF3OiAlZiBhaDogJWYgPT4gZDogKCVmLCAlZikgJXMKACVzJWQueyVzACoAAHdtOiAlcywgaG06ICVzLCBhdzogJWYgYWg6ICVmICVzCgAlcyVkLn0lcwB3bTogJXMsIGhtOiAlcywgZDogKCVmLCAlZikgJXMKAE91dCBvZiBjYWNoZSBlbnRyaWVzIQoAU2NhbGUgZmFjdG9yIHNob3VsZCBub3QgYmUgbGVzcyB0aGFuIHplcm8AAAABAAAAAQBByA4LihAlcwoAICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgAFVOREVGSU5FRABFWEFDVExZAEFUX01PU1QAAIkHAACTBwAAmwcAAExBWV9VTkRFRklORUQATEFZX0VYQUNUTFkATEFZX0FUX01PU1QAAACwBwAAvgcAAMoHAABhdmFpbGFibGVXaWR0aCBpcyBpbmRlZmluaXRlIHNvIHdpZHRoTWVhc3VyZU1vZGUgbXVzdCBiZSBZR01lYXN1cmVNb2RlVW5kZWZpbmVkAGF2YWlsYWJsZUhlaWdodCBpcyBpbmRlZmluaXRlIHNvIGhlaWdodE1lYXN1cmVNb2RlIG11c3QgYmUgWUdNZWFzdXJlTW9kZVVuZGVmaW5lZAAAAAEAAAADAAAAAAAAAAIAAABFeHBlY3RlZCBub2RlIHRvIGhhdmUgY3VzdG9tIG1lYXN1cmUgZnVuY3Rpb24ARXhwZWN0IGN1c3RvbSBiYXNlbGluZSBmdW5jdGlvbiB0byBub3QgcmV0dXJuIE5hTgBDb3VsZCBub3QgYWxsb2NhdGUgbWVtb3J5IGZvciBjb25maWcAQ29uZmlnAGNyZWF0ZQBzZXRFeHBlcmltZW50YWxGZWF0dXJlRW5hYmxlZABzZXRQb2ludFNjYWxlRmFjdG9yAGlzRXhwZXJpbWVudGFsRmVhdHVyZUVuYWJsZWQATGF5b3V0AGxlZnQAcmlnaHQAdG9wAGJvdHRvbQB3aWR0aABoZWlnaHQATWVhc3VyZUNhbGxiYWNrAG1lYXN1cmUATWVhc3VyZUNhbGxiYWNrV3JhcHBlcgBEaXJ0aWVkQ2FsbGJhY2sAZGlydGllZABEaXJ0aWVkQ2FsbGJhY2tXcmFwcGVyAFNpemUAVmFsdWUAdmFsdWUAdW5pdABOb2RlAGNyZWF0ZURlZmF1bHQAY3JlYXRlV2l0aENvbmZpZwBkZXN0cm95AHJlc2V0AGNvcHlTdHlsZQBzZXRQb3NpdGlvblR5cGUAc2V0UG9zaXRpb24Ac2V0UG9zaXRpb25QZXJjZW50AHNldEFsaWduQ29udGVudABzZXRBbGlnbkl0ZW1zAHNldEFsaWduU2VsZgBzZXRGbGV4RGlyZWN0aW9uAHNldEZsZXhXcmFwAHNldEp1c3RpZnlDb250ZW50AHNldE1hcmdpbgBzZXRNYXJnaW5QZXJjZW50AHNldE1hcmdpbkF1dG8Ac2V0T3ZlcmZsb3cAc2V0RGlzcGxheQBzZXRGbGV4AHNldEZsZXhCYXNpcwBzZXRGbGV4QmFzaXNQZXJjZW50AHNldEZsZXhHcm93AHNldEZsZXhTaHJpbmsAc2V0V2lkdGgAc2V0V2lkdGhQZXJjZW50AHNldFdpZHRoQXV0bwBzZXRIZWlnaHQAc2V0SGVpZ2h0UGVyY2VudABzZXRIZWlnaHRBdXRvAHNldE1pbldpZHRoAHNldE1pbldpZHRoUGVyY2VudABzZXRNaW5IZWlnaHQAc2V0TWluSGVpZ2h0UGVyY2VudABzZXRNYXhXaWR0aABzZXRNYXhXaWR0aFBlcmNlbnQAc2V0TWF4SGVpZ2h0AHNldE1heEhlaWdodFBlcmNlbnQAc2V0QXNwZWN0UmF0aW8Ac2V0Qm9yZGVyAHNldFBhZGRpbmcAc2V0UGFkZGluZ1BlcmNlbnQAZ2V0UG9zaXRpb25UeXBlAGdldFBvc2l0aW9uAGdldEFsaWduQ29udGVudABnZXRBbGlnbkl0ZW1zAGdldEFsaWduU2VsZgBnZXRGbGV4RGlyZWN0aW9uAGdldEZsZXhXcmFwAGdldEp1c3RpZnlDb250ZW50AGdldE1hcmdpbgBnZXRGbGV4QmFzaXMAZ2V0RmxleEdyb3cAZ2V0RmxleFNocmluawBnZXRXaWR0aABnZXRIZWlnaHQAZ2V0TWluV2lkdGgAZ2V0TWluSGVpZ2h0AGdldE1heFdpZHRoAGdldE1heEhlaWdodABnZXRBc3BlY3RSYXRpbwBnZXRCb3JkZXIAZ2V0T3ZlcmZsb3cAZ2V0RGlzcGxheQBnZXRQYWRkaW5nAGluc2VydENoaWxkAHJlbW92ZUNoaWxkAGdldENoaWxkQ291bnQAZ2V0UGFyZW50AGdldENoaWxkAGlzUmVmZXJlbmNlQmFzZWxpbmUAc2V0SXNSZWZlcmVuY2VCYXNlbGluZQBzZXRNZWFzdXJlRnVuYwB1bnNldE1lYXN1cmVGdW5jAHNldERpcnRpZWRGdW5jAHVuc2V0RGlydGllZEZ1bmMAbWFya0RpcnR5AGlzRGlydHkAY2FsY3VsYXRlTGF5b3V0AGdldENvbXB1dGVkTGVmdABnZXRDb21wdXRlZFJpZ2h0AGdldENvbXB1dGVkVG9wAGdldENvbXB1dGVkQm90dG9tAGdldENvbXB1dGVkV2lkdGgAZ2V0Q29tcHV0ZWRIZWlnaHQAZ2V0Q29tcHV0ZWRMYXlvdXQAZ2V0Q29tcHV0ZWRNYXJnaW4AZ2V0Q29tcHV0ZWRCb3JkZXIAZ2V0Q29tcHV0ZWRQYWRkaW5nADZDb25maWcA3CEAAAAPAABQNkNvbmZpZwAAAAC8IgAAEA8AAAAAAAAIDwAAUEs2Q29uZmlnAAAAvCIAACwPAAABAAAACA8AAGlpAHYAdmkAHA8AQeAeC6wC5CAAABwPAABEIQAA/CAAAHZpaWlpAAAA5CAAABwPAAB0IQAAdmlpZgAAAAD8IAAAOA8AAEQhAABpaWlpADZMYXlvdXQAAAAA3CEAAJ0PAABpAGRpaQB2aWlkADE1TWVhc3VyZUNhbGxiYWNrAAAAANwhAAC7DwAAUDE1TWVhc3VyZUNhbGxiYWNrAAC8IgAA2A8AAAAAAADQDwAAUEsxNU1lYXN1cmVDYWxsYmFjawC8IgAA/A8AAAEAAADQDwAAQBAAAOwPAAB0IQAAWBAAAHQhAABYEAAANllHU2l6ZQDcIQAAOBAAADEzWUdNZWFzdXJlTW9kZQCQIQAASBAAAGlpaWZpZmkAbm90aWZ5T25EZXN0cnVjdGlvbgBpbXBsZW1lbnQAZXh0ZW5kAEGVIQvLFhEAAMAAAABfX2Rlc3RydWN0AE4xMGVtc2NyaXB0ZW43d3JhcHBlckkxNU1lYXN1cmVDYWxsYmFja0VFAE4xMGVtc2NyaXB0ZW44aW50ZXJuYWwxMVdyYXBwZXJCYXNlRQAAANwhAADREAAAYCIAAKcQAAAAAAAAAgAAANAPAAACAAAA+BAAAAIEAADkIAAAMjJNZWFzdXJlQ2FsbGJhY2tXcmFwcGVyAAAAAAQiAAAkEQAAABEAAFAyMk1lYXN1cmVDYWxsYmFja1dyYXBwZXIAAAC8IgAATBEAAAAAAABAEQAAUEsyMk1lYXN1cmVDYWxsYmFja1dyYXBwZXIAALwiAAB4EQAAAQAAAEARAADkIAAAQBEAAHZpaQBoEQAAzBEAAE4xMGVtc2NyaXB0ZW4zdmFsRQAA3CEAALgRAABpaWkAAAAAAEARAADBAAAAAAAAANAPAADAAAAAQBAAAHQhAABYEAAAdCEAAFgQAADMEQAAgBIAAMwRAABOU3QzX18yMTJiYXNpY19zdHJpbmdJY05TXzExY2hhcl90cmFpdHNJY0VFTlNfOWFsbG9jYXRvckljRUVFRQBOU3QzX18yMjFfX2Jhc2ljX3N0cmluZ19jb21tb25JTGIxRUVFAAAAANwhAABPEgAAYCIAABASAAAAAAAAAQAAAHgSAAAAAAAAMTVEaXJ0aWVkQ2FsbGJhY2sAAADcIQAAmBIAAFAxNURpcnRpZWRDYWxsYmFjawAAvCIAALQSAAAAAAAArBIAAFBLMTVEaXJ0aWVkQ2FsbGJhY2sAvCIAANgSAAABAAAArBIAAOQgAADIEgAAAAAAADwTAADAAAAATjEwZW1zY3JpcHRlbjd3cmFwcGVySTE1RGlydGllZENhbGxiYWNrRUUAAABgIgAAEBMAAAAAAAACAAAArBIAAAIAAAD4EAAAAgQAADIyRGlydGllZENhbGxiYWNrV3JhcHBlcgAAAAAEIgAAXBMAADwTAABQMjJEaXJ0aWVkQ2FsbGJhY2tXcmFwcGVyAAAAvCIAAIQTAAAAAAAAeBMAAFBLMjJEaXJ0aWVkQ2FsbGJhY2tXcmFwcGVyAAC8IgAAsBMAAAEAAAB4EwAA5CAAAHgTAACgEwAAzBEAAAAAAAB4EwAAwgAAAAAAAACsEgAAwAAAAGZpaQA3WUdWYWx1ZQAAAADcIQAACBQAADZZR1VuaXQAkCEAABwUAAB2aWlpADROb2RlAADcIQAAMRQAAFA0Tm9kZQAAvCIAAEAUAAAAAAAAOBQAAFBLNE5vZGUAvCIAAFgUAAABAAAAOBQAAEgUAABIFAAAHA8AAOQgAABIFAAA5CAAAEgUAAA4FAAA5CAAAEgUAABEIQAAAAAAAOQgAABIFAAARCEAAIAhAAB2aWlpZAAAAOQgAABIFAAAgCEAAEQhAABgFAAAFBQAAGAUAABEIQAAFBQAAGAUAACAIQAAYBQAAIAhAABgFAAARCEAAGRpaWkAAAAAAAAAAOQgAABIFAAASBQAAFAhAADkIAAASBQAAEgUAABQIQAAYBQAAEgUAABIFAAASBQAAEgUAABQIQAA/CAAAEgUAADkIAAASBQAAPwgAADkIAAASBQAAOwPAADkIAAASBQAAMgSAAD8IAAAYBQAAAAAAADkIAAASBQAAIAhAACAIQAARCEAAHZpaWRkaQAAqA8AAGAUAAB2b2lkAGJvb2wAY2hhcgBzaWduZWQgY2hhcgB1bnNpZ25lZCBjaGFyAHNob3J0AHVuc2lnbmVkIHNob3J0AGludAB1bnNpZ25lZCBpbnQAbG9uZwB1bnNpZ25lZCBsb25nAGZsb2F0AGRvdWJsZQBzdGQ6OnN0cmluZwBzdGQ6OmJhc2ljX3N0cmluZzx1bnNpZ25lZCBjaGFyPgBzdGQ6OndzdHJpbmcAc3RkOjp1MTZzdHJpbmcAc3RkOjp1MzJzdHJpbmcAZW1zY3JpcHRlbjo6dmFsAGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PGNoYXI+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PHNpZ25lZCBjaGFyPgBlbXNjcmlwdGVuOjptZW1vcnlfdmlldzx1bnNpZ25lZCBjaGFyPgBlbXNjcmlwdGVuOjptZW1vcnlfdmlldzxzaG9ydD4AZW1zY3JpcHRlbjo6bWVtb3J5X3ZpZXc8dW5zaWduZWQgc2hvcnQ+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PGludD4AZW1zY3JpcHRlbjo6bWVtb3J5X3ZpZXc8dW5zaWduZWQgaW50PgBlbXNjcmlwdGVuOjptZW1vcnlfdmlldzxsb25nPgBlbXNjcmlwdGVuOjptZW1vcnlfdmlldzx1bnNpZ25lZCBsb25nPgBlbXNjcmlwdGVuOjptZW1vcnlfdmlldzxpbnQ4X3Q+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PHVpbnQ4X3Q+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PGludDE2X3Q+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PHVpbnQxNl90PgBlbXNjcmlwdGVuOjptZW1vcnlfdmlldzxpbnQzMl90PgBlbXNjcmlwdGVuOjptZW1vcnlfdmlldzx1aW50MzJfdD4AZW1zY3JpcHRlbjo6bWVtb3J5X3ZpZXc8ZmxvYXQ+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PGRvdWJsZT4ATlN0M19fMjEyYmFzaWNfc3RyaW5nSWhOU18xMWNoYXJfdHJhaXRzSWhFRU5TXzlhbGxvY2F0b3JJaEVFRUUAAAAAYCIAAKoYAAAAAAAAAQAAAHgSAAAAAAAATlN0M19fMjEyYmFzaWNfc3RyaW5nSXdOU18xMWNoYXJfdHJhaXRzSXdFRU5TXzlhbGxvY2F0b3JJd0VFRUUAAGAiAAAEGQAAAAAAAAEAAAB4EgAAAAAAAE5TdDNfXzIxMmJhc2ljX3N0cmluZ0lEc05TXzExY2hhcl90cmFpdHNJRHNFRU5TXzlhbGxvY2F0b3JJRHNFRUVFAAAAYCIAAFwZAAAAAAAAAQAAAHgSAAAAAAAATlN0M19fMjEyYmFzaWNfc3RyaW5nSURpTlNfMTFjaGFyX3RyYWl0c0lEaUVFTlNfOWFsbG9jYXRvcklEaUVFRUUAAABgIgAAuBkAAAAAAAABAAAAeBIAAAAAAABOMTBlbXNjcmlwdGVuMTFtZW1vcnlfdmlld0ljRUUAANwhAAAUGgAATjEwZW1zY3JpcHRlbjExbWVtb3J5X3ZpZXdJYUVFAADcIQAAPBoAAE4xMGVtc2NyaXB0ZW4xMW1lbW9yeV92aWV3SWhFRQAA3CEAAGQaAABOMTBlbXNjcmlwdGVuMTFtZW1vcnlfdmlld0lzRUUAANwhAACMGgAATjEwZW1zY3JpcHRlbjExbWVtb3J5X3ZpZXdJdEVFAADcIQAAtBoAAE4xMGVtc2NyaXB0ZW4xMW1lbW9yeV92aWV3SWlFRQAA3CEAANwaAABOMTBlbXNjcmlwdGVuMTFtZW1vcnlfdmlld0lqRUUAANwhAAAEGwAATjEwZW1zY3JpcHRlbjExbWVtb3J5X3ZpZXdJbEVFAADcIQAALBsAAE4xMGVtc2NyaXB0ZW4xMW1lbW9yeV92aWV3SW1FRQAA3CEAAFQbAABOMTBlbXNjcmlwdGVuMTFtZW1vcnlfdmlld0lmRUUAANwhAAB8GwAATjEwZW1zY3JpcHRlbjExbWVtb3J5X3ZpZXdJZEVFAADcIQAApBsAANAiAAAtKyAgIDBYMHgAKG51bGwpAEHwNwtBEQAKABEREQAAAAAFAAAAAAAACQAAAAALAAAAAAAAAAARAA8KERERAwoHAAEACQsLAAAJBgsAAAsABhEAAAAREREAQcE4CyELAAAAAAAAAAARAAoKERERAAoAAAIACQsAAAAJAAsAAAsAQfs4CwEMAEGHOQsVDAAAAAAMAAAAAAkMAAAAAAAMAAAMAEG1OQsBDgBBwTkLFQ0AAAAEDQAAAAAJDgAAAAAADgAADgBB7zkLARAAQfs5Cx4PAAAAAA8AAAAACRAAAAAAABAAABAAABIAAAASEhIAQbI6Cw4SAAAAEhISAAAAAAAACQBB4zoLAQsAQe86CxUKAAAAAAoAAAAACQsAAAAAAAsAAAsAQZ07CwEMAEGpOwukCgwAAAAADAAAAAAJDAAAAAAADAAADAAAMDEyMzQ1Njc4OUFCQ0RFRi0wWCswWCAwWC0weCsweCAweABpbmYASU5GAG5hbgBOQU4ALgAAAABIJAAAYmFzaWNfc3RyaW5nAGFsbG9jYXRvcjxUPjo6YWxsb2NhdGUoc2l6ZV90IG4pICduJyBleGNlZWRzIG1heGltdW0gc3VwcG9ydGVkIHNpemUAdmVjdG9yAF9fY3hhX2d1YXJkX2FjcXVpcmUgZGV0ZWN0ZWQgcmVjdXJzaXZlIGluaXRpYWxpemF0aW9uAFB1cmUgdmlydHVhbCBmdW5jdGlvbiBjYWxsZWQhAHN0ZDo6ZXhjZXB0aW9uAAAAAAAA3B4AAMsAAADMAAAAzQAAAFN0OWV4Y2VwdGlvbgAAAADcIQAAzB4AAAAAAAAIHwAAAQAAAM4AAADPAAAAU3QxMWxvZ2ljX2Vycm9yAAQiAAD4HgAA3B4AAAAAAAA8HwAAAQAAANAAAADPAAAAU3QxMmxlbmd0aF9lcnJvcgAAAAAEIgAAKB8AAAgfAABTdDl0eXBlX2luZm8AAAAA3CEAAEgfAABOMTBfX2N4eGFiaXYxMTZfX3NoaW1fdHlwZV9pbmZvRQAAAAAEIgAAYB8AAFgfAABOMTBfX2N4eGFiaXYxMTdfX2NsYXNzX3R5cGVfaW5mb0UAAAAEIgAAkB8AAIQfAABOMTBfX2N4eGFiaXYxMTdfX3BiYXNlX3R5cGVfaW5mb0UAAAAEIgAAwB8AAIQfAABOMTBfX2N4eGFiaXYxMTlfX3BvaW50ZXJfdHlwZV9pbmZvRQAEIgAA8B8AAOQfAABOMTBfX2N4eGFiaXYxMjBfX2Z1bmN0aW9uX3R5cGVfaW5mb0UAAAAABCIAACAgAACEHwAATjEwX19jeHhhYml2MTI5X19wb2ludGVyX3RvX21lbWJlcl90eXBlX2luZm9FAAAABCIAAFQgAADkHwAAAAAAANQgAADRAAAA0gAAANMAAADUAAAA1QAAAE4xMF9fY3h4YWJpdjEyM19fZnVuZGFtZW50YWxfdHlwZV9pbmZvRQAEIgAArCAAAIQfAAB2AAAAmCAAAOAgAABEbgAAmCAAAOwgAABiAAAAmCAAAPggAABjAAAAmCAAAAQhAABoAAAAmCAAABAhAABhAAAAmCAAABwhAABzAAAAmCAAACghAAB0AAAAmCAAADQhAABpAAAAmCAAAEAhAABqAAAAmCAAAEwhAABsAAAAmCAAAFghAABtAAAAmCAAAGQhAABmAAAAmCAAAHAhAABkAAAAmCAAAHwhAAAAAAAAyCEAANEAAADWAAAA0wAAANQAAADXAAAATjEwX19jeHhhYml2MTE2X19lbnVtX3R5cGVfaW5mb0UAAAAABCIAAKQhAACEHwAAAAAAALQfAADRAAAA2AAAANMAAADUAAAA2QAAANoAAADbAAAA3AAAAAAAAABMIgAA0QAAAN0AAADTAAAA1AAAANkAAADeAAAA3wAAAOAAAABOMTBfX2N4eGFiaXYxMjBfX3NpX2NsYXNzX3R5cGVfaW5mb0UAAAAABCIAACQiAAC0HwAAAAAAAKgiAADRAAAA4QAAANMAAADUAAAA2QAAAOIAAADjAAAA5AAAAE4xMF9fY3h4YWJpdjEyMV9fdm1pX2NsYXNzX3R5cGVfaW5mb0UAAAAEIgAAgCIAALQfAAAAAAAAFCAAANEAAADlAAAA0wAAANQAAADmAEHQxQALAQUAQdzFAAsBxABB9MUACwrFAAAAxgAAABElAEGMxgALAQIAQZvGAAsF//////8AQZDIAAsCQCUAQcjIAAsBBQBB1MgACwHJAEHsyAALDsUAAADKAAAAaCUAAAAEAEGEyQALAQEAQZPJAAsFCv////8='; // const {WXWebAssembly, wx} = pluginEnv.customEnv;
-
-var Function = WXWebAssembly.Function;
-var WebAssembly = WXWebAssembly;
-
-var Yoga = function () {
-  'use strict';
-
-  function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
-      _typeof = function _typeof(obj) {
-        return _typeof2(obj);
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
-      };
-    }
-
-    return _typeof(obj);
-  }
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-  }
-
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  }
-
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      if (enumerableOnly) symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-      keys.push.apply(keys, symbols);
-    }
-
-    return keys;
-  }
-
-  function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-
-      if (i % 2) {
-        ownKeys(Object(source), true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
-        });
-      } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-      } else {
-        ownKeys(Object(source)).forEach(function (key) {
-          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
-      }
-    }
-
-    return target;
-  }
-  /**
-   * Copyright (c) Facebook, Inc. and its affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   *
-   * 
-   * @format
-   */
-
-
-  var CONSTANTS = {
-    ALIGN_COUNT: 8,
-    ALIGN_AUTO: 0,
-    ALIGN_FLEX_START: 1,
-    ALIGN_CENTER: 2,
-    ALIGN_FLEX_END: 3,
-    ALIGN_STRETCH: 4,
-    ALIGN_BASELINE: 5,
-    ALIGN_SPACE_BETWEEN: 6,
-    ALIGN_SPACE_AROUND: 7,
-    DIMENSION_COUNT: 2,
-    DIMENSION_WIDTH: 0,
-    DIMENSION_HEIGHT: 1,
-    DIRECTION_COUNT: 3,
-    DIRECTION_INHERIT: 0,
-    DIRECTION_LTR: 1,
-    DIRECTION_RTL: 2,
-    DISPLAY_COUNT: 2,
-    DISPLAY_FLEX: 0,
-    DISPLAY_NONE: 1,
-    EDGE_COUNT: 9,
-    EDGE_LEFT: 0,
-    EDGE_TOP: 1,
-    EDGE_RIGHT: 2,
-    EDGE_BOTTOM: 3,
-    EDGE_START: 4,
-    EDGE_END: 5,
-    EDGE_HORIZONTAL: 6,
-    EDGE_VERTICAL: 7,
-    EDGE_ALL: 8,
-    EXPERIMENTAL_FEATURE_COUNT: 1,
-    EXPERIMENTAL_FEATURE_WEB_FLEX_BASIS: 0,
-    FLEX_DIRECTION_COUNT: 4,
-    FLEX_DIRECTION_COLUMN: 0,
-    FLEX_DIRECTION_COLUMN_REVERSE: 1,
-    FLEX_DIRECTION_ROW: 2,
-    FLEX_DIRECTION_ROW_REVERSE: 3,
-    JUSTIFY_COUNT: 6,
-    JUSTIFY_FLEX_START: 0,
-    JUSTIFY_CENTER: 1,
-    JUSTIFY_FLEX_END: 2,
-    JUSTIFY_SPACE_BETWEEN: 3,
-    JUSTIFY_SPACE_AROUND: 4,
-    JUSTIFY_SPACE_EVENLY: 5,
-    LOG_LEVEL_COUNT: 6,
-    LOG_LEVEL_ERROR: 0,
-    LOG_LEVEL_WARN: 1,
-    LOG_LEVEL_INFO: 2,
-    LOG_LEVEL_DEBUG: 3,
-    LOG_LEVEL_VERBOSE: 4,
-    LOG_LEVEL_FATAL: 5,
-    MEASURE_MODE_COUNT: 3,
-    MEASURE_MODE_UNDEFINED: 0,
-    MEASURE_MODE_EXACTLY: 1,
-    MEASURE_MODE_AT_MOST: 2,
-    NODE_TYPE_COUNT: 2,
-    NODE_TYPE_DEFAULT: 0,
-    NODE_TYPE_TEXT: 1,
-    OVERFLOW_COUNT: 3,
-    OVERFLOW_VISIBLE: 0,
-    OVERFLOW_HIDDEN: 1,
-    OVERFLOW_SCROLL: 2,
-    POSITION_TYPE_COUNT: 2,
-    POSITION_TYPE_RELATIVE: 0,
-    POSITION_TYPE_ABSOLUTE: 1,
-    PRINT_OPTIONS_COUNT: 3,
-    PRINT_OPTIONS_LAYOUT: 1,
-    PRINT_OPTIONS_STYLE: 2,
-    PRINT_OPTIONS_CHILDREN: 4,
-    UNIT_COUNT: 4,
-    UNIT_UNDEFINED: 0,
-    UNIT_POINT: 1,
-    UNIT_PERCENT: 2,
-    UNIT_AUTO: 3,
-    WRAP_COUNT: 3,
-    WRAP_NO_WRAP: 0,
-    WRAP_WRAP: 1,
-    WRAP_WRAP_REVERSE: 2
-  };
-  var YGEnums = CONSTANTS;
-  /**
-   * Copyright (c) Facebook, Inc. and its affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   *
-   * 
-   * @format
-   */
-
-  var Layout =
-  /*#__PURE__*/
-  function () {
-    function Layout(left, right, top, bottom, width, height) {
-      _classCallCheck(this, Layout);
-
-      this.left = left;
-      this.right = right;
-      this.top = top;
-      this.bottom = bottom;
-      this.width = width;
-      this.height = height;
-    }
-
-    _createClass(Layout, [{
-      key: "fromJS",
-      value: function fromJS(expose) {
-        expose(this.left, this.right, this.top, this.bottom, this.width, this.height);
-      }
-    }, {
-      key: "toString",
-      value: function toString() {
-        return "<Layout#".concat(this.left, ":").concat(this.right, ";").concat(this.top, ":").concat(this.bottom, ";").concat(this.width, ":").concat(this.height, ">");
-      }
-    }]);
-
-    return Layout;
-  }();
-
-  var Size =
-  /*#__PURE__*/
-  function () {
-    _createClass(Size, null, [{
-      key: "fromJS",
-      value: function fromJS(_ref) {
-        var width = _ref.width,
-            height = _ref.height;
-        return new Size(width, height);
-      }
-    }]);
-
-    function Size(width, height) {
-      _classCallCheck(this, Size);
-
-      this.width = width;
-      this.height = height;
-    }
-
-    _createClass(Size, [{
-      key: "fromJS",
-      value: function fromJS(expose) {
-        expose(this.width, this.height);
-      }
-    }, {
-      key: "toString",
-      value: function toString() {
-        return "<Size#".concat(this.width, "x").concat(this.height, ">");
-      }
-    }]);
-
-    return Size;
-  }();
-
-  var Value =
-  /*#__PURE__*/
-  function () {
-    function Value(unit, value) {
-      _classCallCheck(this, Value);
-
-      this.unit = unit;
-      this.value = value;
-    }
-
-    _createClass(Value, [{
-      key: "fromJS",
-      value: function fromJS(expose) {
-        expose(this.unit, this.value);
-      }
-    }, {
-      key: "toString",
-      value: function toString() {
-        switch (this.unit) {
-          case YGEnums.UNIT_POINT:
-            return String(this.value);
-
-          case YGEnums.UNIT_PERCENT:
-            return "".concat(this.value, "%");
-
-          case YGEnums.UNIT_AUTO:
-            return 'auto';
-
-          default:
-            {
-              return "".concat(this.value, "?");
-            }
-        }
-      }
-    }, {
-      key: "valueOf",
-      value: function valueOf() {
-        return this.value;
-      }
-    }]);
-
-    return Value;
-  }();
-
-  var entryCommon = function entryCommon(bind, lib) {
-    function patch(prototype, name, fn) {
-      var original = prototype[name];
-
-      prototype[name] = function () {
-        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-          args[_key] = arguments[_key];
-        }
-
-        return fn.call.apply(fn, [this, original].concat(args));
-      };
-    }
-
-    var _loop = function _loop() {
-      var _methods;
-
-      var fnName = _arr[_i];
-      var methods = (_methods = {}, _defineProperty(_methods, YGEnums.UNIT_POINT, lib.Node.prototype[fnName]), _defineProperty(_methods, YGEnums.UNIT_PERCENT, lib.Node.prototype["".concat(fnName, "Percent")]), _defineProperty(_methods, YGEnums.UNIT_AUTO, lib.Node.prototype["".concat(fnName, "Auto")]), _methods);
-      patch(lib.Node.prototype, fnName, function (original) {
-        for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-          args[_key2 - 1] = arguments[_key2];
-        } // We patch all these functions to add support for the following calls:
-        // .setWidth(100) / .setWidth("100%") / .setWidth(.getWidth()) / .setWidth("auto")
-
-
-        var value = args.pop();
-        var unit, asNumber;
-
-        if (value === 'auto') {
-          unit = YGEnums.UNIT_AUTO;
-          asNumber = undefined;
-        } else if (value instanceof Value) {
-          unit = value.unit;
-          asNumber = value.valueOf();
-        } else {
-          unit = typeof value === 'string' && value.endsWith('%') ? YGEnums.UNIT_PERCENT : YGEnums.UNIT_POINT;
-          asNumber = parseFloat(value);
-
-          if (!Number.isNaN(value) && Number.isNaN(asNumber)) {
-            throw new Error("Invalid value ".concat(value, " for ").concat(fnName));
-          }
-        }
-
-        if (!methods[unit]) throw new Error("Failed to execute \"".concat(fnName, "\": Unsupported unit '").concat(value, "'"));
-
-        if (asNumber !== undefined) {
-          var _methods$unit;
-
-          return (_methods$unit = methods[unit]).call.apply(_methods$unit, [this].concat(args, [asNumber]));
-        } else {
-          var _methods$unit2;
-
-          return (_methods$unit2 = methods[unit]).call.apply(_methods$unit2, [this].concat(args));
-        }
-      });
-    };
-
-    for (var _i = 0, _arr = ['setPosition', 'setMargin', 'setFlexBasis', 'setWidth', 'setHeight', 'setMinWidth', 'setMinHeight', 'setMaxWidth', 'setMaxHeight', 'setPadding']; _i < _arr.length; _i++) {
-      _loop();
-    }
-
-    patch(lib.Config.prototype, 'free', function () {
-      // Since we handle the memory allocation ourselves (via lib.Config.create),
-      // we also need to handle the deallocation
-      lib.Config.destroy(this);
-    });
-    patch(lib.Node, 'create', function (_, config) {
-      // We decide the constructor we want to call depending on the parameters
-      return config ? lib.Node.createWithConfig(config) : lib.Node.createDefault();
-    });
-    patch(lib.Node.prototype, 'free', function () {
-      // Since we handle the memory allocation ourselves (via lib.Node.create),
-      // we also need to handle the deallocation
-      lib.Node.destroy(this);
-    });
-    patch(lib.Node.prototype, 'freeRecursive', function () {
-      for (var t = 0, T = this.getChildCount(); t < T; ++t) {
-        this.getChild(0).freeRecursive();
-      }
-
-      this.free();
-    });
-    patch(lib.Node.prototype, 'setMeasureFunc', function (original, measureFunc) {
-      // This patch is just a convenience patch, since it helps write more
-      // idiomatic source code (such as .setMeasureFunc(null))
-      // We also automatically convert the return value of the measureFunc
-      // to a Size object, so that we can return anything that has .width and
-      // .height properties
-      if (measureFunc) {
-        return original.call(this, function () {
-          return Size.fromJS(measureFunc.apply(void 0, arguments));
-        });
-      } else {
-        return this.unsetMeasureFunc();
-      }
-    });
-    patch(lib.Node.prototype, 'calculateLayout', function (original) {
-      var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : NaN;
-      var height = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : NaN;
-      var direction = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : YGEnums.DIRECTION_LTR; // Just a small patch to add support for the function default parameters
-
-      return original.call(this, width, height, direction);
-    });
-    return _objectSpread2({
-      Config: lib.Config,
-      Node: lib.Node,
-      Layout: bind('Layout', Layout),
-      Size: bind('Size', Size),
-      Value: bind('Value', Value)
-    }, YGEnums);
-  };
-
-  var Module = function () {
-    // var _scriptDir = (document.currentScript && document.currentScript.src || new URL('index.umd.js', document.baseURI).href);
-    var _scriptDir = '';
-    return function (Module) {
-      Module = Module || {};
-      var Module = typeof Module !== "undefined" ? Module : {};
-      var readyPromiseResolve, readyPromiseReject;
-      Module["ready"] = new Promise(function (resolve, reject) {
-        readyPromiseResolve = resolve;
-        readyPromiseReject = reject;
-      });
-      var moduleOverrides = {};
-      var key;
-
-      for (key in Module) {
-        if (Module.hasOwnProperty(key)) {
-          moduleOverrides[key] = Module[key];
-        }
-      }
-
-      var arguments_ = [];
-      var thisProgram = "./this.program";
-
-      var quit_ = function quit_(status, toThrow) {
-        throw toThrow;
-      };
-
-      var ENVIRONMENT_IS_WEB = false;
-      var ENVIRONMENT_IS_WORKER = false;
-      var ENVIRONMENT_IS_NODE = false;
-      var ENVIRONMENT_IS_SHELL = false;
-      ENVIRONMENT_IS_WEB = (typeof window === "undefined" ? "undefined" : _typeof(window)) === "object";
-      ENVIRONMENT_IS_WORKER = typeof importScripts === "function";
-      ENVIRONMENT_IS_NODE = (typeof process === "undefined" ? "undefined" : _typeof(process)) === "object" && _typeof(process.versions) === "object" && typeof process.versions.node === "string";
-      ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
-      var scriptDirectory = "";
-
-      function locateFile(path) {
-        if (Module["locateFile"]) {
-          return Module["locateFile"](path, scriptDirectory);
-        }
-
-        return scriptDirectory + path;
-      }
-
-      var read_, readBinary;
-      var nodeFS;
-      var nodePath;
-
-      if (ENVIRONMENT_IS_NODE) {// if (ENVIRONMENT_IS_WORKER) {
-        //   scriptDirectory = require("path").dirname(scriptDirectory) + "/";
-        // } else {
-        //   scriptDirectory = __dirname + "/";
-        // }
-        // read_ = function shell_read(filename, binary) {
-        //   if (!nodeFS) nodeFS = require("fs");
-        //   if (!nodePath) nodePath = require("path");
-        //   filename = nodePath["normalize"](filename);
-        //   return nodeFS["readFileSync"](filename, binary ? null : "utf8");
-        // };
-        // readBinary = function readBinary(filename) {
-        //   var ret = read_(filename, true);
-        //   if (!ret.buffer) {
-        //     ret = new Uint8Array(ret);
-        //   }
-        //   assert(ret.buffer);
-        //   return ret;
-        // };
-        // if (process["argv"].length > 1) {
-        //   thisProgram = process["argv"][1].replace(/\\/g, "/");
-        // }
-        // arguments_ = process["argv"].slice(2);
-        // process["on"]("uncaughtException", function (ex) {
-        //   if (!(ex instanceof ExitStatus)) {
-        //     throw ex;
-        //   }
-        // });
-        // process["on"]("unhandledRejection", abort);
-        // quit_ = function quit_(status) {
-        //   process["exit"](status);
-        // };
-        // Module["inspect"] = function () {
-        //   return "[Emscripten Module object]";
-        // };
-      } else if (ENVIRONMENT_IS_SHELL) {// if (typeof read != "undefined") {
-        //   read_ = function shell_read(f) {
-        //     return read(f);
-        //   };
-        // }
-        // readBinary = function readBinary(f) {
-        //   var data;
-        //   if (typeof readbuffer === "function") {
-        //     return new Uint8Array(readbuffer(f));
-        //   }
-        //   data = read(f, "binary");
-        //   assert(_typeof(data) === "object");
-        //   return data;
-        // };
-        // if (typeof scriptArgs != "undefined") {
-        //   arguments_ = scriptArgs;
-        // } else if (typeof arguments != "undefined") {
-        //   arguments_ = arguments;
-        // }
-        // if (typeof quit === "function") {
-        //   quit_ = function quit_(status) {
-        //     quit(status);
-        //   };
-        // }
-        // if (typeof print !== "undefined") {
-        //   if (typeof console === "undefined") console = {};
-        //   console.log = print;
-        //   console.warn = console.error = typeof printErr !== "undefined" ? printErr : print;
-        // }
-      } else if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
-        if (ENVIRONMENT_IS_WORKER) {
-          scriptDirectory = self.location.href;
-        } else if (document.currentScript) {
-          scriptDirectory = document.currentScript.src;
-        }
-
-        if (_scriptDir) {
-          scriptDirectory = _scriptDir;
-        }
-
-        if (scriptDirectory.indexOf("blob:") !== 0) {
-          scriptDirectory = scriptDirectory.substr(0, scriptDirectory.lastIndexOf("/") + 1);
-        } else {
-          scriptDirectory = "";
-        }
-
-        {
-          read_ = function shell_read(url) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", url, false);
-            xhr.send(null);
-            return xhr.responseText;
-          };
-
-          if (ENVIRONMENT_IS_WORKER) {
-            readBinary = function readBinary(url) {
-              var xhr = new XMLHttpRequest();
-              xhr.open("GET", url, false);
-              xhr.responseType = "arraybuffer";
-              xhr.send(null);
-              return new Uint8Array(xhr.response);
-            };
-          }
-        }
-      }
-
-      var out = Module["print"] || console.log;
-      var err = Module["printErr"] || console.warn;
-
-      for (key in moduleOverrides) {
-        if (moduleOverrides.hasOwnProperty(key)) {
-          Module[key] = moduleOverrides[key];
-        }
-      }
-
-      moduleOverrides = null;
-      if (Module["arguments"]) arguments_ = Module["arguments"];
-      if (Module["thisProgram"]) thisProgram = Module["thisProgram"];
-      if (Module["quit"]) quit_ = Module["quit"];
-      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-      function atob(input) {
-        var str = String(input).replace(/[=]+$/, ''); // #31: ExtendScript bad parse of /=
-
-        if (str.length % 4 === 1) {
-          throw new Error("'atob' failed: The string to be decoded is not correctly encoded.");
-        }
-
-        for ( // initialize result and counters
-        var bc = 0, bs, buffer, idx = 0, output = ''; // get next character
-        buffer = str.charAt(idx++); // eslint-disable-line no-cond-assign
-        // character found in table? initialize bit storage and add its ascii value;
-        ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer, // and if not first of each 4 characters,
-        // convert the first 8 bits to one ascii character
-        bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0) {
-          // try to find character in table (0-63, not found => -1)
-          buffer = chars.indexOf(buffer);
-        }
-
-        return output;
-      }
-
-      function base64ToUint8Array(base64String) {
-        var padding = '='.repeat((4 - base64String.length % 4) % 4);
-        var base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-        var rawData = atob(base64);
-        var outputArray = new Uint8Array(rawData.length);
-
-        for (var i = 0; i < rawData.length; ++i) {
-          outputArray[i] = rawData.charCodeAt(i);
-        }
-
-        return outputArray;
-      }
-
-      var wasmBinary = base64ToUint8Array(__code);
-      if (Module["wasmBinary"]) wasmBinary = Module["wasmBinary"];
-      var noExitRuntime;
-      if (Module["noExitRuntime"]) noExitRuntime = Module["noExitRuntime"];
-
-      if ((typeof WebAssembly === "undefined" ? "undefined" : _typeof(WebAssembly)) !== "object") {
-        abort("no native wasm support detected");
-      }
-
-      var wasmMemory;
-      var wasmTable = new WebAssembly.Table({
-        "initial": 231,
-        "maximum": 231 + 0,
-        "element": "anyfunc"
-      });
-      var ABORT = false;
-
-      function assert(condition, text) {
-        if (!condition) {
-          abort("Assertion failed: " + text);
-        }
-      }
-
-      var UTF8Decoder = typeof TextDecoder !== "undefined" ? new TextDecoder("utf8") : undefined;
-
-      function UTF8ArrayToString(heap, idx, maxBytesToRead) {
-        var endIdx = idx + maxBytesToRead;
-        var endPtr = idx;
-
-        while (heap[endPtr] && !(endPtr >= endIdx)) {
-          ++endPtr;
-        }
-
-        if (endPtr - idx > 16 && heap.subarray && UTF8Decoder) {
-          return UTF8Decoder.decode(heap.subarray(idx, endPtr));
-        } else {
-          var str = "";
-
-          while (idx < endPtr) {
-            var u0 = heap[idx++];
-
-            if (!(u0 & 128)) {
-              str += String.fromCharCode(u0);
-              continue;
-            }
-
-            var u1 = heap[idx++] & 63;
-
-            if ((u0 & 224) == 192) {
-              str += String.fromCharCode((u0 & 31) << 6 | u1);
-              continue;
-            }
-
-            var u2 = heap[idx++] & 63;
-
-            if ((u0 & 240) == 224) {
-              u0 = (u0 & 15) << 12 | u1 << 6 | u2;
-            } else {
-              u0 = (u0 & 7) << 18 | u1 << 12 | u2 << 6 | heap[idx++] & 63;
-            }
-
-            if (u0 < 65536) {
-              str += String.fromCharCode(u0);
-            } else {
-              var ch = u0 - 65536;
-              str += String.fromCharCode(55296 | ch >> 10, 56320 | ch & 1023);
-            }
-          }
-        }
-
-        return str;
-      }
-
-      function UTF8ToString(ptr, maxBytesToRead) {
-        return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : "";
-      }
-
-      function stringToUTF8Array(str, heap, outIdx, maxBytesToWrite) {
-        if (!(maxBytesToWrite > 0)) return 0;
-        var startIdx = outIdx;
-        var endIdx = outIdx + maxBytesToWrite - 1;
-
-        for (var i = 0; i < str.length; ++i) {
-          var u = str.charCodeAt(i);
-
-          if (u >= 55296 && u <= 57343) {
-            var u1 = str.charCodeAt(++i);
-            u = 65536 + ((u & 1023) << 10) | u1 & 1023;
-          }
-
-          if (u <= 127) {
-            if (outIdx >= endIdx) break;
-            heap[outIdx++] = u;
-          } else if (u <= 2047) {
-            if (outIdx + 1 >= endIdx) break;
-            heap[outIdx++] = 192 | u >> 6;
-            heap[outIdx++] = 128 | u & 63;
-          } else if (u <= 65535) {
-            if (outIdx + 2 >= endIdx) break;
-            heap[outIdx++] = 224 | u >> 12;
-            heap[outIdx++] = 128 | u >> 6 & 63;
-            heap[outIdx++] = 128 | u & 63;
-          } else {
-            if (outIdx + 3 >= endIdx) break;
-            heap[outIdx++] = 240 | u >> 18;
-            heap[outIdx++] = 128 | u >> 12 & 63;
-            heap[outIdx++] = 128 | u >> 6 & 63;
-            heap[outIdx++] = 128 | u & 63;
-          }
-        }
-
-        heap[outIdx] = 0;
-        return outIdx - startIdx;
-      }
-
-      function stringToUTF8(str, outPtr, maxBytesToWrite) {
-        return stringToUTF8Array(str, HEAPU8, outPtr, maxBytesToWrite);
-      }
-
-      function lengthBytesUTF8(str) {
-        var len = 0;
-
-        for (var i = 0; i < str.length; ++i) {
-          var u = str.charCodeAt(i);
-          if (u >= 55296 && u <= 57343) u = 65536 + ((u & 1023) << 10) | str.charCodeAt(++i) & 1023;
-          if (u <= 127) ++len;else if (u <= 2047) len += 2;else if (u <= 65535) len += 3;else len += 4;
-        }
-
-        return len;
-      }
-
-      var UTF16Decoder = typeof TextDecoder !== "undefined" ? new TextDecoder("utf-16le") : undefined;
-
-      function UTF16ToString(ptr, maxBytesToRead) {
-        var endPtr = ptr;
-        var idx = endPtr >> 1;
-        var maxIdx = idx + maxBytesToRead / 2;
-
-        while (!(idx >= maxIdx) && HEAPU16[idx]) {
-          ++idx;
-        }
-
-        endPtr = idx << 1;
-
-        if (endPtr - ptr > 32 && UTF16Decoder) {
-          return UTF16Decoder.decode(HEAPU8.subarray(ptr, endPtr));
-        } else {
-          var i = 0;
-          var str = "";
-
-          while (1) {
-            var codeUnit = HEAP16[ptr + i * 2 >> 1];
-            if (codeUnit == 0 || i == maxBytesToRead / 2) return str;
-            ++i;
-            str += String.fromCharCode(codeUnit);
-          }
-        }
-      }
-
-      function stringToUTF16(str, outPtr, maxBytesToWrite) {
-        if (maxBytesToWrite === undefined) {
-          maxBytesToWrite = 2147483647;
-        }
-
-        if (maxBytesToWrite < 2) return 0;
-        maxBytesToWrite -= 2;
-        var startPtr = outPtr;
-        var numCharsToWrite = maxBytesToWrite < str.length * 2 ? maxBytesToWrite / 2 : str.length;
-
-        for (var i = 0; i < numCharsToWrite; ++i) {
-          var codeUnit = str.charCodeAt(i);
-          HEAP16[outPtr >> 1] = codeUnit;
-          outPtr += 2;
-        }
-
-        HEAP16[outPtr >> 1] = 0;
-        return outPtr - startPtr;
-      }
-
-      function lengthBytesUTF16(str) {
-        return str.length * 2;
-      }
-
-      function UTF32ToString(ptr, maxBytesToRead) {
-        var i = 0;
-        var str = "";
-
-        while (!(i >= maxBytesToRead / 4)) {
-          var utf32 = HEAP32[ptr + i * 4 >> 2];
-          if (utf32 == 0) break;
-          ++i;
-
-          if (utf32 >= 65536) {
-            var ch = utf32 - 65536;
-            str += String.fromCharCode(55296 | ch >> 10, 56320 | ch & 1023);
-          } else {
-            str += String.fromCharCode(utf32);
-          }
-        }
-
-        return str;
-      }
-
-      function stringToUTF32(str, outPtr, maxBytesToWrite) {
-        if (maxBytesToWrite === undefined) {
-          maxBytesToWrite = 2147483647;
-        }
-
-        if (maxBytesToWrite < 4) return 0;
-        var startPtr = outPtr;
-        var endPtr = startPtr + maxBytesToWrite - 4;
-
-        for (var i = 0; i < str.length; ++i) {
-          var codeUnit = str.charCodeAt(i);
-
-          if (codeUnit >= 55296 && codeUnit <= 57343) {
-            var trailSurrogate = str.charCodeAt(++i);
-            codeUnit = 65536 + ((codeUnit & 1023) << 10) | trailSurrogate & 1023;
-          }
-
-          HEAP32[outPtr >> 2] = codeUnit;
-          outPtr += 4;
-          if (outPtr + 4 > endPtr) break;
-        }
-
-        HEAP32[outPtr >> 2] = 0;
-        return outPtr - startPtr;
-      }
-
-      function lengthBytesUTF32(str) {
-        var len = 0;
-
-        for (var i = 0; i < str.length; ++i) {
-          var codeUnit = str.charCodeAt(i);
-          if (codeUnit >= 55296 && codeUnit <= 57343) ++i;
-          len += 4;
-        }
-
-        return len;
-      }
-
-      var WASM_PAGE_SIZE = 65536;
-
-      function alignUp(x, multiple) {
-        if (x % multiple > 0) {
-          x += multiple - x % multiple;
-        }
-
-        return x;
-      }
-
-      var buffer, HEAP8, HEAPU8, HEAP16, HEAPU16, HEAP32, HEAPU32, HEAPF32, HEAPF64;
-
-      function updateGlobalBufferAndViews(buf) {
-        buffer = buf;
-        Module["HEAP8"] = HEAP8 = new Int8Array(buf);
-        Module["HEAP16"] = HEAP16 = new Int16Array(buf);
-        Module["HEAP32"] = HEAP32 = new Int32Array(buf);
-        Module["HEAPU8"] = HEAPU8 = new Uint8Array(buf);
-        Module["HEAPU16"] = HEAPU16 = new Uint16Array(buf);
-        Module["HEAPU32"] = HEAPU32 = new Uint32Array(buf);
-        Module["HEAPF32"] = HEAPF32 = new Float32Array(buf);
-        Module["HEAPF64"] = HEAPF64 = new Float64Array(buf);
-      }
-
-      var DYNAMIC_BASE = 5254160,
-          DYNAMICTOP_PTR = 11120;
-      var INITIAL_INITIAL_MEMORY = Module["INITIAL_MEMORY"] || 16777216;
-
-      if (Module["wasmMemory"]) {
-        wasmMemory = Module["wasmMemory"];
-      } else {
-        wasmMemory = new WebAssembly.Memory({
-          "initial": INITIAL_INITIAL_MEMORY / WASM_PAGE_SIZE,
-          "maximum": 2147483648 / WASM_PAGE_SIZE
-        });
-      }
-
-      if (wasmMemory) {
-        buffer = wasmMemory.buffer;
-      }
-
-      INITIAL_INITIAL_MEMORY = buffer.byteLength;
-      updateGlobalBufferAndViews(buffer);
-      HEAP32[DYNAMICTOP_PTR >> 2] = DYNAMIC_BASE;
-
-      function callRuntimeCallbacks(callbacks) {
-        while (callbacks.length > 0) {
-          var callback = callbacks.shift();
-
-          if (typeof callback == "function") {
-            callback(Module);
-            continue;
-          }
-
-          var func = callback.func;
-
-          if (typeof func === "number") {
-            if (callback.arg === undefined) {
-              Module["dynCall_v"](func);
-            } else {
-              Module["dynCall_vi"](func, callback.arg);
-            }
-          } else {
-            func(callback.arg === undefined ? null : callback.arg);
-          }
-        }
-      }
-
-      var __ATPRERUN__ = [];
-      var __ATINIT__ = [];
-      var __ATMAIN__ = [];
-      var __ATPOSTRUN__ = [];
-
-      function preRun() {
-        if (Module["preRun"]) {
-          if (typeof Module["preRun"] == "function") Module["preRun"] = [Module["preRun"]];
-
-          while (Module["preRun"].length) {
-            addOnPreRun(Module["preRun"].shift());
-          }
-        }
-
-        callRuntimeCallbacks(__ATPRERUN__);
-      }
-
-      function initRuntime() {
-        callRuntimeCallbacks(__ATINIT__);
-      }
-
-      function preMain() {
-        callRuntimeCallbacks(__ATMAIN__);
-      }
-
-      function postRun() {
-        if (Module["postRun"]) {
-          if (typeof Module["postRun"] == "function") Module["postRun"] = [Module["postRun"]];
-
-          while (Module["postRun"].length) {
-            addOnPostRun(Module["postRun"].shift());
-          }
-        }
-
-        callRuntimeCallbacks(__ATPOSTRUN__);
-      }
-
-      function addOnPreRun(cb) {
-        __ATPRERUN__.unshift(cb);
-      }
-
-      function addOnPostRun(cb) {
-        __ATPOSTRUN__.unshift(cb);
-      }
-
-      var runDependencies = 0;
-      var dependenciesFulfilled = null;
-
-      function addRunDependency(id) {
-        runDependencies++;
-
-        if (Module["monitorRunDependencies"]) {
-          Module["monitorRunDependencies"](runDependencies);
-        }
-      }
-
-      function removeRunDependency(id) {
-        runDependencies--;
-
-        if (Module["monitorRunDependencies"]) {
-          Module["monitorRunDependencies"](runDependencies);
-        }
-
-        if (runDependencies == 0) {
-          if (dependenciesFulfilled) {
-            var callback = dependenciesFulfilled;
-            dependenciesFulfilled = null;
-            callback();
-          }
-        }
-      }
-
-      Module["preloadedImages"] = {};
-      Module["preloadedAudios"] = {};
-
-      function abort(what) {
-        if (Module["onAbort"]) {
-          Module["onAbort"](what);
-        }
-
-        what += "";
-        err(what);
-        ABORT = true;
-        what = "abort(" + what + "). Build with -s ASSERTIONS=1 for more info.";
-        var e = new WebAssembly.RuntimeError(what);
-        readyPromiseReject(e);
-        throw e;
-      }
-
-      function hasPrefix(str, prefix) {
-        return String.prototype.startsWith ? str.startsWith(prefix) : str.indexOf(prefix) === 0;
-      }
-
-      var dataURIPrefix = "data:application/octet-stream;base64,";
-
-      function isDataURI(filename) {
-        return hasPrefix(filename, dataURIPrefix);
-      }
-
-      var fileURIPrefix = "file://";
-
-      function isFileURI(filename) {
-        return hasPrefix(filename, fileURIPrefix);
-      }
-
-      var wasmBinaryFile = "yoga.wasm";
-
-      if (!isDataURI(wasmBinaryFile)) {
-        wasmBinaryFile = locateFile(wasmBinaryFile);
-      }
-
-      function getBinary() {
-        try {
-          if (wasmBinary) {
-            return new Uint8Array(wasmBinary);
-          }
-
-          if (readBinary) {
-            return readBinary(wasmBinaryFile);
-          } else {
-            throw "both async and sync fetching of the wasm failed";
-          }
-        } catch (err) {
-          abort(err);
-        }
-      }
-
-      function getBinaryPromise() {
-        if (!wasmBinary && (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && typeof fetch === "function" && !isFileURI(wasmBinaryFile)) {
-          return fetch(wasmBinaryFile, {
-            credentials: "same-origin"
-          }).then(function (response) {
-            if (!response["ok"]) {
-              throw "failed to load wasm binary file at '" + wasmBinaryFile + "'";
-            }
-
-            return response["arrayBuffer"]();
-          })["catch"](function () {
-            return getBinary();
-          });
-        }
-
-        return new Promise(function (resolve, reject) {
-          resolve(getBinary());
-        });
-      }
-
-      function createWasm() {
-        var info = {
-          "a": asmLibraryArg
-        };
-
-        function receiveInstance(instance, module) {
-          var exports = instance.exports;
-          Module["asm"] = exports;
-          removeRunDependency();
-        }
-
-        addRunDependency();
-
-        function receiveInstantiatedSource(output) {
-          receiveInstance(output["instance"]);
-        } // function instantiateArrayBuffer(receiver) {
-        //   return getBinaryPromise().then(function (binary) {
-        //     return WebAssembly.instantiate(binary, info);
-        //   }).then(receiver, function (reason) {
-        //     err("failed to asynchronously prepare wasm: " + reason);
-        //     abort(reason);
-        //   });
-        // }
-
-
-        function instantiateArrayBuffer(receiver) {
-          return WebAssembly.instantiate(wasmBinary, info).then(receiver);
-        }
-
-        function instantiateAsync() {
-          if (!wasmBinary && typeof WebAssembly.instantiateStreaming === "function" && !isDataURI(wasmBinaryFile) && !isFileURI(wasmBinaryFile) && typeof fetch === "function") {
-            fetch(wasmBinaryFile, {
-              credentials: "same-origin"
-            }).then(function (response) {
-              var result = WebAssembly.instantiateStreaming(response, info);
-              return result.then(receiveInstantiatedSource, function (reason) {
-                err("wasm streaming compile failed: " + reason);
-                err("falling back to ArrayBuffer instantiation");
-                return instantiateArrayBuffer(receiveInstantiatedSource);
-              });
-            });
-          } else {
-            return instantiateArrayBuffer(receiveInstantiatedSource);
-          }
-        }
-
-        if (Module["instantiateWasm"]) {
-          try {
-            var exports = Module["instantiateWasm"](info, receiveInstance);
-            return exports;
-          } catch (e) {
-            err("Module.instantiateWasm callback failed with error: " + e);
-            return false;
-          }
-        }
-
-        instantiateAsync();
-        return {};
-      }
-
-      function createWasmSync() {
-        var info = {
-          "a": asmLibraryArg
-        };
-
-        function receiveInstance(instance, module) {
-          var exports = instance.exports;
-          Module["asm"] = exports;
-          removeRunDependency();
-        }
-
-        addRunDependency();
-
-        function receiveInstantiatedSource(output) {
-          receiveInstance(output);
-        }
-
-        function instantiateArrayBuffer() {
-          return receiveInstantiatedSource(new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array(wasmBinary)), info));
-        }
-
-        function instantiateSync() {
-          return instantiateArrayBuffer(receiveInstantiatedSource);
-        }
-
-        if (Module["instantiateWasm"]) {
-          try {
-            var exports = Module["instantiateWasm"](info, receiveInstance);
-            return exports;
-          } catch (e) {
-            err("Module.instantiateWasm callback failed with error: " + e);
-            return false;
-          }
-        }
-
-        return instantiateSync();
-      }
-
-      __ATINIT__.push({
-        func: function func() {
-          ___wasm_call_ctors();
-        }
-      });
-
-      function __ZN8facebook4yoga24LayoutPassReasonToStringENS0_16LayoutPassReasonE() {
-        err("missing function: _ZN8facebook4yoga24LayoutPassReasonToStringENS0_16LayoutPassReasonE");
-        abort(-1);
-      }
-
-      function ___cxa_allocate_exception(size) {
-        return _malloc(size);
-      }
-
-      function ___cxa_throw(ptr, type, destructor) {
-        throw ptr;
-      }
-
-      var char_0 = 48;
-      var char_9 = 57;
-
-      function makeLegalFunctionName(name) {
-        if (undefined === name) {
-          return "_unknown";
-        }
-
-        name = name.replace(/[^a-zA-Z0-9_]/g, "$");
-        var f = name.charCodeAt(0);
-
-        if (f >= char_0 && f <= char_9) {
-          return "_" + name;
-        } else {
-          return name;
-        }
-      }
-
-      function createNamedFunction(name, body) {
-        name = makeLegalFunctionName(name);
-        return new Function("body", "return function " + name + "() {\n" + '    "use strict";' + "    return body.apply(this, arguments);\n" + "};\n")(body);
-      }
-
-      var emval_free_list = [];
-      var emval_handle_array = [{}, {
-        value: undefined
-      }, {
-        value: null
-      }, {
-        value: true
-      }, {
-        value: false
-      }];
-
-      function count_emval_handles() {
-        var count = 0;
-
-        for (var i = 5; i < emval_handle_array.length; ++i) {
-          if (emval_handle_array[i] !== undefined) {
-            ++count;
-          }
-        }
-
-        return count;
-      }
-
-      function get_first_emval() {
-        for (var i = 5; i < emval_handle_array.length; ++i) {
-          if (emval_handle_array[i] !== undefined) {
-            return emval_handle_array[i];
-          }
-        }
-
-        return null;
-      }
-
-      function init_emval() {
-        Module["count_emval_handles"] = count_emval_handles;
-        Module["get_first_emval"] = get_first_emval;
-      }
-
-      function __emval_register(value) {
-        switch (value) {
-          case undefined:
-            {
-              return 1;
-            }
-
-          case null:
-            {
-              return 2;
-            }
-
-          case true:
-            {
-              return 3;
-            }
-
-          case false:
-            {
-              return 4;
-            }
-
-          default:
-            {
-              var handle = emval_free_list.length ? emval_free_list.pop() : emval_handle_array.length;
-              emval_handle_array[handle] = {
-                refcount: 1,
-                value: value
-              };
-              return handle;
-            }
-        }
-      }
-
-      function extendError(baseErrorType, errorName) {
-        var errorClass = createNamedFunction(errorName, function (message) {
-          this.name = errorName;
-          this.message = message;
-          var stack = new Error(message).stack;
-
-          if (stack !== undefined) {
-            this.stack = this.toString() + "\n" + stack.replace(/^Error(:[^\n]*)?\n/, "");
-          }
-        });
-        errorClass.prototype = Object.create(baseErrorType.prototype);
-        errorClass.prototype.constructor = errorClass;
-
-        errorClass.prototype.toString = function () {
-          if (this.message === undefined) {
-            return this.name;
-          } else {
-            return this.name + ": " + this.message;
-          }
-        };
-
-        return errorClass;
-      }
-
-      var PureVirtualError = undefined;
-
-      function embind_init_charCodes() {
-        var codes = new Array(256);
-
-        for (var i = 0; i < 256; ++i) {
-          codes[i] = String.fromCharCode(i);
-        }
-
-        embind_charCodes = codes;
-      }
-
-      var embind_charCodes = undefined;
-
-      function readLatin1String(ptr) {
-        var ret = "";
-        var c = ptr;
-
-        while (HEAPU8[c]) {
-          ret += embind_charCodes[HEAPU8[c++]];
-        }
-
-        return ret;
-      }
-
-      function getInheritedInstanceCount() {
-        return Object.keys(registeredInstances).length;
-      }
-
-      function getLiveInheritedInstances() {
-        var rv = [];
-
-        for (var k in registeredInstances) {
-          if (registeredInstances.hasOwnProperty(k)) {
-            rv.push(registeredInstances[k]);
-          }
-        }
-
-        return rv;
-      }
-
-      var deletionQueue = [];
-
-      function flushPendingDeletes() {
-        while (deletionQueue.length) {
-          var obj = deletionQueue.pop();
-          obj.$$.deleteScheduled = false;
-          obj["delete"]();
-        }
-      }
-
-      var delayFunction = undefined;
-
-      function setDelayFunction(fn) {
-        delayFunction = fn;
-
-        if (deletionQueue.length && delayFunction) {
-          delayFunction(flushPendingDeletes);
-        }
-      }
-
-      function init_embind() {
-        Module["getInheritedInstanceCount"] = getInheritedInstanceCount;
-        Module["getLiveInheritedInstances"] = getLiveInheritedInstances;
-        Module["flushPendingDeletes"] = flushPendingDeletes;
-        Module["setDelayFunction"] = setDelayFunction;
-      }
-
-      var registeredInstances = {};
-      var BindingError = undefined;
-
-      function throwBindingError(message) {
-        throw new BindingError(message);
-      }
-
-      function getBasestPointer(class_, ptr) {
-        if (ptr === undefined) {
-          throwBindingError("ptr should not be undefined");
-        }
-
-        while (class_.baseClass) {
-          ptr = class_.upcast(ptr);
-          class_ = class_.baseClass;
-        }
-
-        return ptr;
-      }
-
-      function registerInheritedInstance(class_, ptr, instance) {
-        ptr = getBasestPointer(class_, ptr);
-
-        if (registeredInstances.hasOwnProperty(ptr)) {
-          throwBindingError("Tried to register registered instance: " + ptr);
-        } else {
-          registeredInstances[ptr] = instance;
-        }
-      }
-
-      function requireHandle(handle) {
-        if (!handle) {
-          throwBindingError("Cannot use deleted val. handle = " + handle);
-        }
-
-        return emval_handle_array[handle].value;
-      }
-
-      var registeredTypes = {};
-
-      function getTypeName(type) {
-        var ptr = ___getTypeName(type);
-
-        var rv = readLatin1String(ptr);
-
-        _free(ptr);
-
-        return rv;
-      }
-
-      function requireRegisteredType(rawType, humanName) {
-        var impl = registeredTypes[rawType];
-
-        if (undefined === impl) {
-          throwBindingError(humanName + " has unknown type " + getTypeName(rawType));
-        }
-
-        return impl;
-      }
-
-      function unregisterInheritedInstance(class_, ptr) {
-        ptr = getBasestPointer(class_, ptr);
-
-        if (registeredInstances.hasOwnProperty(ptr)) {
-          delete registeredInstances[ptr];
-        } else {
-          throwBindingError("Tried to unregister unregistered instance: " + ptr);
-        }
-      }
-
-      function detachFinalizer(handle) {}
-
-      var finalizationGroup = false;
-
-      function runDestructor($$) {
-        if ($$.smartPtr) {
-          $$.smartPtrType.rawDestructor($$.smartPtr);
-        } else {
-          $$.ptrType.registeredClass.rawDestructor($$.ptr);
-        }
-      }
-
-      function releaseClassHandle($$) {
-        $$.count.value -= 1;
-        var toDelete = 0 === $$.count.value;
-
-        if (toDelete) {
-          runDestructor($$);
-        }
-      }
-
-      function attachFinalizer(handle) {
-        if ("undefined" === typeof FinalizationGroup) {
-          attachFinalizer = function attachFinalizer(handle) {
-            return handle;
-          };
-
-          return handle;
-        }
-
-        finalizationGroup = new FinalizationGroup(function (iter) {
-          for (var result = iter.next(); !result.done; result = iter.next()) {
-            var $$ = result.value;
-
-            if (!$$.ptr) {
-              console.warn("object already deleted: " + $$.ptr);
-            } else {
-              releaseClassHandle($$);
-            }
-          }
-        });
-
-        attachFinalizer = function attachFinalizer(handle) {
-          finalizationGroup.register(handle, handle.$$, handle.$$);
-          return handle;
-        };
-
-        detachFinalizer = function detachFinalizer(handle) {
-          finalizationGroup.unregister(handle.$$);
-        };
-
-        return attachFinalizer(handle);
-      }
-
-      function __embind_create_inheriting_constructor(constructorName, wrapperType, properties) {
-        constructorName = readLatin1String(constructorName);
-        wrapperType = requireRegisteredType(wrapperType, "wrapper");
-        properties = requireHandle(properties);
-        var arraySlice = [].slice;
-        var registeredClass = wrapperType.registeredClass;
-        var wrapperPrototype = registeredClass.instancePrototype;
-        var baseClass = registeredClass.baseClass;
-        var baseClassPrototype = baseClass.instancePrototype;
-        var baseConstructor = registeredClass.baseClass.constructor;
-        var ctor = createNamedFunction(constructorName, function () {
-          registeredClass.baseClass.pureVirtualFunctions.forEach(function (name) {
-            if (this[name] === baseClassPrototype[name]) {
-              throw new PureVirtualError("Pure virtual function " + name + " must be implemented in JavaScript");
-            }
-          }.bind(this));
-          Object.defineProperty(this, "__parent", {
-            value: wrapperPrototype
-          });
-          this["__construct"].apply(this, arraySlice.call(arguments));
-        });
-
-        wrapperPrototype["__construct"] = function __construct() {
-          if (this === wrapperPrototype) {
-            throwBindingError("Pass correct 'this' to __construct");
-          }
-
-          var inner = baseConstructor["implement"].apply(undefined, [this].concat(arraySlice.call(arguments)));
-          detachFinalizer(inner);
-          var $$ = inner.$$;
-          inner["notifyOnDestruction"]();
-          $$.preservePointerOnDelete = true;
-          Object.defineProperties(this, {
-            $$: {
-              value: $$
-            }
-          });
-          attachFinalizer(this);
-          registerInheritedInstance(registeredClass, $$.ptr, this);
-        };
-
-        wrapperPrototype["__destruct"] = function __destruct() {
-          if (this === wrapperPrototype) {
-            throwBindingError("Pass correct 'this' to __destruct");
-          }
-
-          detachFinalizer(this);
-          unregisterInheritedInstance(registeredClass, this.$$.ptr);
-        };
-
-        ctor.prototype = Object.create(wrapperPrototype);
-
-        for (var p in properties) {
-          ctor.prototype[p] = properties[p];
-        }
-
-        return __emval_register(ctor);
-      }
-
-      var structRegistrations = {};
-
-      function runDestructors(destructors) {
-        while (destructors.length) {
-          var ptr = destructors.pop();
-          var del = destructors.pop();
-          del(ptr);
-        }
-      }
-
-      function simpleReadValueFromPointer(pointer) {
-        return this["fromWireType"](HEAPU32[pointer >> 2]);
-      }
-
-      var awaitingDependencies = {};
-      var typeDependencies = {};
-      var InternalError = undefined;
-
-      function throwInternalError(message) {
-        throw new InternalError(message);
-      }
-
-      function whenDependentTypesAreResolved(myTypes, dependentTypes, getTypeConverters) {
-        myTypes.forEach(function (type) {
-          typeDependencies[type] = dependentTypes;
-        });
-
-        function onComplete(typeConverters) {
-          var myTypeConverters = getTypeConverters(typeConverters);
-
-          if (myTypeConverters.length !== myTypes.length) {
-            throwInternalError("Mismatched type converter count");
-          }
-
-          for (var i = 0; i < myTypes.length; ++i) {
-            registerType(myTypes[i], myTypeConverters[i]);
-          }
-        }
-
-        var typeConverters = new Array(dependentTypes.length);
-        var unregisteredTypes = [];
-        var registered = 0;
-        dependentTypes.forEach(function (dt, i) {
-          if (registeredTypes.hasOwnProperty(dt)) {
-            typeConverters[i] = registeredTypes[dt];
-          } else {
-            unregisteredTypes.push(dt);
-
-            if (!awaitingDependencies.hasOwnProperty(dt)) {
-              awaitingDependencies[dt] = [];
-            }
-
-            awaitingDependencies[dt].push(function () {
-              typeConverters[i] = registeredTypes[dt];
-              ++registered;
-
-              if (registered === unregisteredTypes.length) {
-                onComplete(typeConverters);
-              }
-            });
-          }
-        });
-
-        if (0 === unregisteredTypes.length) {
-          onComplete(typeConverters);
-        }
-      }
-
-      function __embind_finalize_value_object(structType) {
-        var reg = structRegistrations[structType];
-        delete structRegistrations[structType];
-        var rawConstructor = reg.rawConstructor;
-        var rawDestructor = reg.rawDestructor;
-        var fieldRecords = reg.fields;
-        var fieldTypes = fieldRecords.map(function (field) {
-          return field.getterReturnType;
-        }).concat(fieldRecords.map(function (field) {
-          return field.setterArgumentType;
-        }));
-        whenDependentTypesAreResolved([structType], fieldTypes, function (fieldTypes) {
-          var fields = {};
-          fieldRecords.forEach(function (field, i) {
-            var fieldName = field.fieldName;
-            var getterReturnType = fieldTypes[i];
-            var getter = field.getter;
-            var getterContext = field.getterContext;
-            var setterArgumentType = fieldTypes[i + fieldRecords.length];
-            var setter = field.setter;
-            var setterContext = field.setterContext;
-            fields[fieldName] = {
-              read: function read(ptr) {
-                return getterReturnType["fromWireType"](getter(getterContext, ptr));
-              },
-              write: function write(ptr, o) {
-                var destructors = [];
-                setter(setterContext, ptr, setterArgumentType["toWireType"](destructors, o));
-                runDestructors(destructors);
-              }
-            };
-          });
-          return [{
-            name: reg.name,
-            "fromWireType": function fromWireType(ptr) {
-              var rv = {};
-
-              for (var i in fields) {
-                rv[i] = fields[i].read(ptr);
-              }
-
-              rawDestructor(ptr);
-              return rv;
-            },
-            "toWireType": function toWireType(destructors, o) {
-              for (var fieldName in fields) {
-                if (!(fieldName in o)) {
-                  throw new TypeError('Missing field:  "' + fieldName + '"');
-                }
-              }
-
-              var ptr = rawConstructor();
-
-              for (fieldName in fields) {
-                fields[fieldName].write(ptr, o[fieldName]);
-              }
-
-              if (destructors !== null) {
-                destructors.push(rawDestructor, ptr);
-              }
-
-              return ptr;
-            },
-            "argPackAdvance": 8,
-            "readValueFromPointer": simpleReadValueFromPointer,
-            destructorFunction: rawDestructor
-          }];
-        });
-      }
-
-      function getShiftFromSize(size) {
-        switch (size) {
-          case 1:
-            return 0;
-
-          case 2:
-            return 1;
-
-          case 4:
-            return 2;
-
-          case 8:
-            return 3;
-
-          default:
-            throw new TypeError("Unknown type size: " + size);
-        }
-      }
-
-      function registerType(rawType, registeredInstance, options) {
-        options = options || {};
-
-        if (!("argPackAdvance" in registeredInstance)) {
-          throw new TypeError("registerType registeredInstance requires argPackAdvance");
-        }
-
-        var name = registeredInstance.name;
-
-        if (!rawType) {
-          throwBindingError('type "' + name + '" must have a positive integer typeid pointer');
-        }
-
-        if (registeredTypes.hasOwnProperty(rawType)) {
-          if (options.ignoreDuplicateRegistrations) {
-            return;
-          } else {
-            throwBindingError("Cannot register type '" + name + "' twice");
-          }
-        }
-
-        registeredTypes[rawType] = registeredInstance;
-        delete typeDependencies[rawType];
-
-        if (awaitingDependencies.hasOwnProperty(rawType)) {
-          var callbacks = awaitingDependencies[rawType];
-          delete awaitingDependencies[rawType];
-          callbacks.forEach(function (cb) {
-            cb();
-          });
-        }
-      }
-
-      function __embind_register_bool(rawType, name, size, trueValue, falseValue) {
-        var shift = getShiftFromSize(size);
-        name = readLatin1String(name);
-        registerType(rawType, {
-          name: name,
-          "fromWireType": function fromWireType(wt) {
-            return !!wt;
-          },
-          "toWireType": function toWireType(destructors, o) {
-            return o ? trueValue : falseValue;
-          },
-          "argPackAdvance": 8,
-          "readValueFromPointer": function readValueFromPointer(pointer) {
-            var heap;
-
-            if (size === 1) {
-              heap = HEAP8;
-            } else if (size === 2) {
-              heap = HEAP16;
-            } else if (size === 4) {
-              heap = HEAP32;
-            } else {
-              throw new TypeError("Unknown boolean type size: " + name);
-            }
-
-            return this["fromWireType"](heap[pointer >> shift]);
-          },
-          destructorFunction: null
-        });
-      }
-
-      function ClassHandle_isAliasOf(other) {
-        if (!(this instanceof ClassHandle)) {
-          return false;
-        }
-
-        if (!(other instanceof ClassHandle)) {
-          return false;
-        }
-
-        var leftClass = this.$$.ptrType.registeredClass;
-        var left = this.$$.ptr;
-        var rightClass = other.$$.ptrType.registeredClass;
-        var right = other.$$.ptr;
-
-        while (leftClass.baseClass) {
-          left = leftClass.upcast(left);
-          leftClass = leftClass.baseClass;
-        }
-
-        while (rightClass.baseClass) {
-          right = rightClass.upcast(right);
-          rightClass = rightClass.baseClass;
-        }
-
-        return leftClass === rightClass && left === right;
-      }
-
-      function shallowCopyInternalPointer(o) {
-        return {
-          count: o.count,
-          deleteScheduled: o.deleteScheduled,
-          preservePointerOnDelete: o.preservePointerOnDelete,
-          ptr: o.ptr,
-          ptrType: o.ptrType,
-          smartPtr: o.smartPtr,
-          smartPtrType: o.smartPtrType
-        };
-      }
-
-      function throwInstanceAlreadyDeleted(obj) {
-        function getInstanceTypeName(handle) {
-          return handle.$$.ptrType.registeredClass.name;
-        }
-
-        throwBindingError(getInstanceTypeName(obj) + " instance already deleted");
-      }
-
-      function ClassHandle_clone() {
-        if (!this.$$.ptr) {
-          throwInstanceAlreadyDeleted(this);
-        }
-
-        if (this.$$.preservePointerOnDelete) {
-          this.$$.count.value += 1;
-          return this;
-        } else {
-          var clone = attachFinalizer(Object.create(Object.getPrototypeOf(this), {
-            $$: {
-              value: shallowCopyInternalPointer(this.$$)
-            }
-          }));
-          clone.$$.count.value += 1;
-          clone.$$.deleteScheduled = false;
-          return clone;
-        }
-      }
-
-      function ClassHandle_delete() {
-        if (!this.$$.ptr) {
-          throwInstanceAlreadyDeleted(this);
-        }
-
-        if (this.$$.deleteScheduled && !this.$$.preservePointerOnDelete) {
-          throwBindingError("Object already scheduled for deletion");
-        }
-
-        detachFinalizer(this);
-        releaseClassHandle(this.$$);
-
-        if (!this.$$.preservePointerOnDelete) {
-          this.$$.smartPtr = undefined;
-          this.$$.ptr = undefined;
-        }
-      }
-
-      function ClassHandle_isDeleted() {
-        return !this.$$.ptr;
-      }
-
-      function ClassHandle_deleteLater() {
-        if (!this.$$.ptr) {
-          throwInstanceAlreadyDeleted(this);
-        }
-
-        if (this.$$.deleteScheduled && !this.$$.preservePointerOnDelete) {
-          throwBindingError("Object already scheduled for deletion");
-        }
-
-        deletionQueue.push(this);
-
-        if (deletionQueue.length === 1 && delayFunction) {
-          delayFunction(flushPendingDeletes);
-        }
-
-        this.$$.deleteScheduled = true;
-        return this;
-      }
-
-      function init_ClassHandle() {
-        ClassHandle.prototype["isAliasOf"] = ClassHandle_isAliasOf;
-        ClassHandle.prototype["clone"] = ClassHandle_clone;
-        ClassHandle.prototype["delete"] = ClassHandle_delete;
-        ClassHandle.prototype["isDeleted"] = ClassHandle_isDeleted;
-        ClassHandle.prototype["deleteLater"] = ClassHandle_deleteLater;
-      }
-
-      function ClassHandle() {}
-
-      var registeredPointers = {};
-
-      function ensureOverloadTable(proto, methodName, humanName) {
-        if (undefined === proto[methodName].overloadTable) {
-          var prevFunc = proto[methodName];
-
-          proto[methodName] = function () {
-            if (!proto[methodName].overloadTable.hasOwnProperty(arguments.length)) {
-              throwBindingError("Function '" + humanName + "' called with an invalid number of arguments (" + arguments.length + ") - expects one of (" + proto[methodName].overloadTable + ")!");
-            }
-
-            return proto[methodName].overloadTable[arguments.length].apply(this, arguments);
-          };
-
-          proto[methodName].overloadTable = [];
-          proto[methodName].overloadTable[prevFunc.argCount] = prevFunc;
-        }
-      }
-
-      function exposePublicSymbol(name, value, numArguments) {
-        if (Module.hasOwnProperty(name)) {
-          if (undefined === numArguments || undefined !== Module[name].overloadTable && undefined !== Module[name].overloadTable[numArguments]) {
-            throwBindingError("Cannot register public name '" + name + "' twice");
-          }
-
-          ensureOverloadTable(Module, name, name);
-
-          if (Module.hasOwnProperty(numArguments)) {
-            throwBindingError("Cannot register multiple overloads of a function with the same number of arguments (" + numArguments + ")!");
-          }
-
-          Module[name].overloadTable[numArguments] = value;
-        } else {
-          Module[name] = value;
-
-          if (undefined !== numArguments) {
-            Module[name].numArguments = numArguments;
-          }
-        }
-      }
-
-      function RegisteredClass(name, constructor, instancePrototype, rawDestructor, baseClass, getActualType, upcast, downcast) {
-        this.name = name;
-        this.constructor = constructor;
-        this.instancePrototype = instancePrototype;
-        this.rawDestructor = rawDestructor;
-        this.baseClass = baseClass;
-        this.getActualType = getActualType;
-        this.upcast = upcast;
-        this.downcast = downcast;
-        this.pureVirtualFunctions = [];
-      }
-
-      function upcastPointer(ptr, ptrClass, desiredClass) {
-        while (ptrClass !== desiredClass) {
-          if (!ptrClass.upcast) {
-            throwBindingError("Expected null or instance of " + desiredClass.name + ", got an instance of " + ptrClass.name);
-          }
-
-          ptr = ptrClass.upcast(ptr);
-          ptrClass = ptrClass.baseClass;
-        }
-
-        return ptr;
-      }
-
-      function constNoSmartPtrRawPointerToWireType(destructors, handle) {
-        if (handle === null) {
-          if (this.isReference) {
-            throwBindingError("null is not a valid " + this.name);
-          }
-
-          return 0;
-        }
-
-        if (!handle.$$) {
-          throwBindingError('Cannot pass "' + _embind_repr(handle) + '" as a ' + this.name);
-        }
-
-        if (!handle.$$.ptr) {
-          throwBindingError("Cannot pass deleted object as a pointer of type " + this.name);
-        }
-
-        var handleClass = handle.$$.ptrType.registeredClass;
-        var ptr = upcastPointer(handle.$$.ptr, handleClass, this.registeredClass);
-        return ptr;
-      }
-
-      function genericPointerToWireType(destructors, handle) {
-        var ptr;
-
-        if (handle === null) {
-          if (this.isReference) {
-            throwBindingError("null is not a valid " + this.name);
-          }
-
-          if (this.isSmartPointer) {
-            ptr = this.rawConstructor();
-
-            if (destructors !== null) {
-              destructors.push(this.rawDestructor, ptr);
-            }
-
-            return ptr;
-          } else {
-            return 0;
-          }
-        }
-
-        if (!handle.$$) {
-          throwBindingError('Cannot pass "' + _embind_repr(handle) + '" as a ' + this.name);
-        }
-
-        if (!handle.$$.ptr) {
-          throwBindingError("Cannot pass deleted object as a pointer of type " + this.name);
-        }
-
-        if (!this.isConst && handle.$$.ptrType.isConst) {
-          throwBindingError("Cannot convert argument of type " + (handle.$$.smartPtrType ? handle.$$.smartPtrType.name : handle.$$.ptrType.name) + " to parameter type " + this.name);
-        }
-
-        var handleClass = handle.$$.ptrType.registeredClass;
-        ptr = upcastPointer(handle.$$.ptr, handleClass, this.registeredClass);
-
-        if (this.isSmartPointer) {
-          if (undefined === handle.$$.smartPtr) {
-            throwBindingError("Passing raw pointer to smart pointer is illegal");
-          }
-
-          switch (this.sharingPolicy) {
-            case 0:
-              if (handle.$$.smartPtrType === this) {
-                ptr = handle.$$.smartPtr;
-              } else {
-                throwBindingError("Cannot convert argument of type " + (handle.$$.smartPtrType ? handle.$$.smartPtrType.name : handle.$$.ptrType.name) + " to parameter type " + this.name);
-              }
-
-              break;
-
-            case 1:
-              ptr = handle.$$.smartPtr;
-              break;
-
-            case 2:
-              if (handle.$$.smartPtrType === this) {
-                ptr = handle.$$.smartPtr;
-              } else {
-                var clonedHandle = handle["clone"]();
-                ptr = this.rawShare(ptr, __emval_register(function () {
-                  clonedHandle["delete"]();
-                }));
-
-                if (destructors !== null) {
-                  destructors.push(this.rawDestructor, ptr);
-                }
-              }
-
-              break;
-
-            default:
-              throwBindingError("Unsupporting sharing policy");
-          }
-        }
-
-        return ptr;
-      }
-
-      function nonConstNoSmartPtrRawPointerToWireType(destructors, handle) {
-        if (handle === null) {
-          if (this.isReference) {
-            throwBindingError("null is not a valid " + this.name);
-          }
-
-          return 0;
-        }
-
-        if (!handle.$$) {
-          throwBindingError('Cannot pass "' + _embind_repr(handle) + '" as a ' + this.name);
-        }
-
-        if (!handle.$$.ptr) {
-          throwBindingError("Cannot pass deleted object as a pointer of type " + this.name);
-        }
-
-        if (handle.$$.ptrType.isConst) {
-          throwBindingError("Cannot convert argument of type " + handle.$$.ptrType.name + " to parameter type " + this.name);
-        }
-
-        var handleClass = handle.$$.ptrType.registeredClass;
-        var ptr = upcastPointer(handle.$$.ptr, handleClass, this.registeredClass);
-        return ptr;
-      }
-
-      function RegisteredPointer_getPointee(ptr) {
-        if (this.rawGetPointee) {
-          ptr = this.rawGetPointee(ptr);
-        }
-
-        return ptr;
-      }
-
-      function RegisteredPointer_destructor(ptr) {
-        if (this.rawDestructor) {
-          this.rawDestructor(ptr);
-        }
-      }
-
-      function RegisteredPointer_deleteObject(handle) {
-        if (handle !== null) {
-          handle["delete"]();
-        }
-      }
-
-      function downcastPointer(ptr, ptrClass, desiredClass) {
-        if (ptrClass === desiredClass) {
-          return ptr;
-        }
-
-        if (undefined === desiredClass.baseClass) {
-          return null;
-        }
-
-        var rv = downcastPointer(ptr, ptrClass, desiredClass.baseClass);
-
-        if (rv === null) {
-          return null;
-        }
-
-        return desiredClass.downcast(rv);
-      }
-
-      function getInheritedInstance(class_, ptr) {
-        ptr = getBasestPointer(class_, ptr);
-        return registeredInstances[ptr];
-      }
-
-      function makeClassHandle(prototype, record) {
-        if (!record.ptrType || !record.ptr) {
-          throwInternalError("makeClassHandle requires ptr and ptrType");
-        }
-
-        var hasSmartPtrType = !!record.smartPtrType;
-        var hasSmartPtr = !!record.smartPtr;
-
-        if (hasSmartPtrType !== hasSmartPtr) {
-          throwInternalError("Both smartPtrType and smartPtr must be specified");
-        }
-
-        record.count = {
-          value: 1
-        };
-        return attachFinalizer(Object.create(prototype, {
-          $$: {
-            value: record
-          }
-        }));
-      }
-
-      function RegisteredPointer_fromWireType(ptr) {
-        var rawPointer = this.getPointee(ptr);
-
-        if (!rawPointer) {
-          this.destructor(ptr);
-          return null;
-        }
-
-        var registeredInstance = getInheritedInstance(this.registeredClass, rawPointer);
-
-        if (undefined !== registeredInstance) {
-          if (0 === registeredInstance.$$.count.value) {
-            registeredInstance.$$.ptr = rawPointer;
-            registeredInstance.$$.smartPtr = ptr;
-            return registeredInstance["clone"]();
-          } else {
-            var rv = registeredInstance["clone"]();
-            this.destructor(ptr);
-            return rv;
-          }
-        }
-
-        function makeDefaultHandle() {
-          if (this.isSmartPointer) {
-            return makeClassHandle(this.registeredClass.instancePrototype, {
-              ptrType: this.pointeeType,
-              ptr: rawPointer,
-              smartPtrType: this,
-              smartPtr: ptr
-            });
-          } else {
-            return makeClassHandle(this.registeredClass.instancePrototype, {
-              ptrType: this,
-              ptr: ptr
-            });
-          }
-        }
-
-        var actualType = this.registeredClass.getActualType(rawPointer);
-        var registeredPointerRecord = registeredPointers[actualType];
-
-        if (!registeredPointerRecord) {
-          return makeDefaultHandle.call(this);
-        }
-
-        var toType;
-
-        if (this.isConst) {
-          toType = registeredPointerRecord.constPointerType;
-        } else {
-          toType = registeredPointerRecord.pointerType;
-        }
-
-        var dp = downcastPointer(rawPointer, this.registeredClass, toType.registeredClass);
-
-        if (dp === null) {
-          return makeDefaultHandle.call(this);
-        }
-
-        if (this.isSmartPointer) {
-          return makeClassHandle(toType.registeredClass.instancePrototype, {
-            ptrType: toType,
-            ptr: dp,
-            smartPtrType: this,
-            smartPtr: ptr
-          });
-        } else {
-          return makeClassHandle(toType.registeredClass.instancePrototype, {
-            ptrType: toType,
-            ptr: dp
-          });
-        }
-      }
-
-      function init_RegisteredPointer() {
-        RegisteredPointer.prototype.getPointee = RegisteredPointer_getPointee;
-        RegisteredPointer.prototype.destructor = RegisteredPointer_destructor;
-        RegisteredPointer.prototype["argPackAdvance"] = 8;
-        RegisteredPointer.prototype["readValueFromPointer"] = simpleReadValueFromPointer;
-        RegisteredPointer.prototype["deleteObject"] = RegisteredPointer_deleteObject;
-        RegisteredPointer.prototype["fromWireType"] = RegisteredPointer_fromWireType;
-      }
-
-      function RegisteredPointer(name, registeredClass, isReference, isConst, isSmartPointer, pointeeType, sharingPolicy, rawGetPointee, rawConstructor, rawShare, rawDestructor) {
-        this.name = name;
-        this.registeredClass = registeredClass;
-        this.isReference = isReference;
-        this.isConst = isConst;
-        this.isSmartPointer = isSmartPointer;
-        this.pointeeType = pointeeType;
-        this.sharingPolicy = sharingPolicy;
-        this.rawGetPointee = rawGetPointee;
-        this.rawConstructor = rawConstructor;
-        this.rawShare = rawShare;
-        this.rawDestructor = rawDestructor;
-
-        if (!isSmartPointer && registeredClass.baseClass === undefined) {
-          if (isConst) {
-            this["toWireType"] = constNoSmartPtrRawPointerToWireType;
-            this.destructorFunction = null;
-          } else {
-            this["toWireType"] = nonConstNoSmartPtrRawPointerToWireType;
-            this.destructorFunction = null;
-          }
-        } else {
-          this["toWireType"] = genericPointerToWireType;
-        }
-      }
-
-      function replacePublicSymbol(name, value, numArguments) {
-        if (!Module.hasOwnProperty(name)) {
-          throwInternalError("Replacing nonexistant public symbol");
-        }
-
-        if (undefined !== Module[name].overloadTable && undefined !== numArguments) {
-          Module[name].overloadTable[numArguments] = value;
-        } else {
-          Module[name] = value;
-          Module[name].argCount = numArguments;
-        }
-      }
-
-      function embind__requireFunction(signature, rawFunction) {
-        signature = readLatin1String(signature);
-
-        function makeDynCaller(dynCall) {
-          var args = [];
-
-          for (var i = 1; i < signature.length; ++i) {
-            args.push("a" + i);
-          }
-
-          var name = "dynCall_" + signature + "_" + rawFunction;
-          var body = "return function " + name + "(" + args.join(", ") + ") {\n";
-          body += "    return dynCall(rawFunction" + (args.length ? ", " : "") + args.join(", ") + ");\n";
-          body += "};\n";
-          return new Function("dynCall", "rawFunction", body)(dynCall, rawFunction);
-        }
-
-        var dc = Module["dynCall_" + signature];
-        var fp = makeDynCaller(dc);
-
-        if (typeof fp !== "function") {
-          throwBindingError("unknown function pointer with signature " + signature + ": " + rawFunction);
-        }
-
-        return fp;
-      }
-
-      var UnboundTypeError = undefined;
-
-      function throwUnboundTypeError(message, types) {
-        var unboundTypes = [];
-        var seen = {};
-
-        function visit(type) {
-          if (seen[type]) {
-            return;
-          }
-
-          if (registeredTypes[type]) {
-            return;
-          }
-
-          if (typeDependencies[type]) {
-            typeDependencies[type].forEach(visit);
-            return;
-          }
-
-          unboundTypes.push(type);
-          seen[type] = true;
-        }
-
-        types.forEach(visit);
-        throw new UnboundTypeError(message + ": " + unboundTypes.map(getTypeName).join([", "]));
-      }
-
-      function __embind_register_class(rawType, rawPointerType, rawConstPointerType, baseClassRawType, getActualTypeSignature, getActualType, upcastSignature, upcast, downcastSignature, downcast, name, destructorSignature, rawDestructor) {
-        name = readLatin1String(name);
-        getActualType = embind__requireFunction(getActualTypeSignature, getActualType);
-
-        if (upcast) {
-          upcast = embind__requireFunction(upcastSignature, upcast);
-        }
-
-        if (downcast) {
-          downcast = embind__requireFunction(downcastSignature, downcast);
-        }
-
-        rawDestructor = embind__requireFunction(destructorSignature, rawDestructor);
-        var legalFunctionName = makeLegalFunctionName(name);
-        exposePublicSymbol(legalFunctionName, function () {
-          throwUnboundTypeError("Cannot construct " + name + " due to unbound types", [baseClassRawType]);
-        });
-        whenDependentTypesAreResolved([rawType, rawPointerType, rawConstPointerType], baseClassRawType ? [baseClassRawType] : [], function (base) {
-          base = base[0];
-          var baseClass;
-          var basePrototype;
-
-          if (baseClassRawType) {
-            baseClass = base.registeredClass;
-            basePrototype = baseClass.instancePrototype;
-          } else {
-            basePrototype = ClassHandle.prototype;
-          }
-
-          var constructor = createNamedFunction(legalFunctionName, function () {
-            if (Object.getPrototypeOf(this) !== instancePrototype) {
-              throw new BindingError("Use 'new' to construct " + name);
-            }
-
-            if (undefined === registeredClass.constructor_body) {
-              throw new BindingError(name + " has no accessible constructor");
-            }
-
-            var body = registeredClass.constructor_body[arguments.length];
-
-            if (undefined === body) {
-              throw new BindingError("Tried to invoke ctor of " + name + " with invalid number of parameters (" + arguments.length + ") - expected (" + Object.keys(registeredClass.constructor_body).toString() + ") parameters instead!");
-            }
-
-            return body.apply(this, arguments);
-          });
-          var instancePrototype = Object.create(basePrototype, {
-            constructor: {
-              value: constructor
-            }
-          });
-          constructor.prototype = instancePrototype;
-          var registeredClass = new RegisteredClass(name, constructor, instancePrototype, rawDestructor, baseClass, getActualType, upcast, downcast);
-          var referenceConverter = new RegisteredPointer(name, registeredClass, true, false, false);
-          var pointerConverter = new RegisteredPointer(name + "*", registeredClass, false, false, false);
-          var constPointerConverter = new RegisteredPointer(name + " const*", registeredClass, false, true, false);
-          registeredPointers[rawType] = {
-            pointerType: pointerConverter,
-            constPointerType: constPointerConverter
-          };
-          replacePublicSymbol(legalFunctionName, constructor);
-          return [referenceConverter, pointerConverter, constPointerConverter];
-        });
-      }
-
-      function new_(constructor, argumentList) {
-        if (!(constructor instanceof Function)) {
-          throw new TypeError("new_ called with constructor type " + _typeof(constructor) + " which is not a function");
-        }
-
-        var dummy = createNamedFunction(constructor.name || "unknownFunctionName", function () {});
-        dummy.prototype = constructor.prototype;
-        var obj = new dummy();
-        var r = constructor.apply(obj, argumentList); // return r instanceof Object ? r : obj;
-
-        return Object.prototype.toString.call(r).slice(8, -1) === "Function" ? r : obj;
-      }
-
-      function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cppTargetFunc) {
-        var argCount = argTypes.length;
-
-        if (argCount < 2) {
-          throwBindingError("argTypes array size mismatch! Must at least get return value and 'this' types!");
-        }
-
-        var isClassMethodFunc = argTypes[1] !== null && classType !== null;
-        var needsDestructorStack = false;
-
-        for (var i = 1; i < argTypes.length; ++i) {
-          if (argTypes[i] !== null && argTypes[i].destructorFunction === undefined) {
-            needsDestructorStack = true;
-            break;
-          }
-        }
-
-        var returns = argTypes[0].name !== "void";
-        var argsList = "";
-        var argsListWired = "";
-
-        for (var i = 0; i < argCount - 2; ++i) {
-          argsList += (i !== 0 ? ", " : "") + "arg" + i;
-          argsListWired += (i !== 0 ? ", " : "") + "arg" + i + "Wired";
-        }
-
-        var invokerFnBody = "return function " + makeLegalFunctionName(humanName) + "(" + argsList + ") {\n" + "if (arguments.length !== " + (argCount - 2) + ") {\n" + "throwBindingError('function " + humanName + " called with ' + arguments.length + ' arguments, expected " + (argCount - 2) + " args!');\n" + "}\n";
-
-        if (needsDestructorStack) {
-          invokerFnBody += "var destructors = [];\n";
-        }
-
-        var dtorStack = needsDestructorStack ? "destructors" : "null";
-        var args1 = ["throwBindingError", "invoker", "fn", "runDestructors", "retType", "classParam"];
-        var args2 = [throwBindingError, cppInvokerFunc, cppTargetFunc, runDestructors, argTypes[0], argTypes[1]];
-
-        if (isClassMethodFunc) {
-          invokerFnBody += "var thisWired = classParam.toWireType(" + dtorStack + ", this);\n";
-        }
-
-        for (var i = 0; i < argCount - 2; ++i) {
-          invokerFnBody += "var arg" + i + "Wired = argType" + i + ".toWireType(" + dtorStack + ", arg" + i + "); // " + argTypes[i + 2].name + "\n";
-          args1.push("argType" + i);
-          args2.push(argTypes[i + 2]);
-        }
-
-        if (isClassMethodFunc) {
-          argsListWired = "thisWired" + (argsListWired.length > 0 ? ", " : "") + argsListWired;
-        }
-
-        invokerFnBody += (returns ? "var rv = " : "") + "invoker(fn" + (argsListWired.length > 0 ? ", " : "") + argsListWired + ");\n";
-
-        if (needsDestructorStack) {
-          invokerFnBody += "runDestructors(destructors);\n";
-        } else {
-          for (var i = isClassMethodFunc ? 1 : 2; i < argTypes.length; ++i) {
-            var paramName = i === 1 ? "thisWired" : "arg" + (i - 2) + "Wired";
-
-            if (argTypes[i].destructorFunction !== null) {
-              invokerFnBody += paramName + "_dtor(" + paramName + "); // " + argTypes[i].name + "\n";
-              args1.push(paramName + "_dtor");
-              args2.push(argTypes[i].destructorFunction);
-            }
-          }
-        }
-
-        if (returns) {
-          invokerFnBody += "var ret = retType.fromWireType(rv);\n" + "return ret;\n";
-        }
-
-        invokerFnBody += "}\n";
-        args1.push(invokerFnBody);
-        var invokerFunction = new_(Function, args1).apply(window, args2);
-        return invokerFunction;
-      }
-
-      function heap32VectorToArray(count, firstElement) {
-        var array = [];
-
-        for (var i = 0; i < count; i++) {
-          array.push(HEAP32[(firstElement >> 2) + i]);
-        }
-
-        return array;
-      }
-
-      function __embind_register_class_class_function(rawClassType, methodName, argCount, rawArgTypesAddr, invokerSignature, rawInvoker, fn) {
-        var rawArgTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
-        methodName = readLatin1String(methodName);
-        rawInvoker = embind__requireFunction(invokerSignature, rawInvoker);
-        whenDependentTypesAreResolved([], [rawClassType], function (classType) {
-          classType = classType[0];
-          var humanName = classType.name + "." + methodName;
-
-          function unboundTypesHandler() {
-            throwUnboundTypeError("Cannot call " + humanName + " due to unbound types", rawArgTypes);
-          }
-
-          var proto = classType.registeredClass.constructor;
-
-          if (undefined === proto[methodName]) {
-            unboundTypesHandler.argCount = argCount - 1;
-            proto[methodName] = unboundTypesHandler;
-          } else {
-            ensureOverloadTable(proto, methodName, humanName);
-            proto[methodName].overloadTable[argCount - 1] = unboundTypesHandler;
-          }
-
-          whenDependentTypesAreResolved([], rawArgTypes, function (argTypes) {
-            var invokerArgsArray = [argTypes[0], null].concat(argTypes.slice(1));
-            var func = craftInvokerFunction(humanName, invokerArgsArray, null, rawInvoker, fn);
-
-            if (undefined === proto[methodName].overloadTable) {
-              func.argCount = argCount - 1;
-              proto[methodName] = func;
-            } else {
-              proto[methodName].overloadTable[argCount - 1] = func;
-            }
-
-            return [];
-          });
-          return [];
-        });
-      }
-
-      function __embind_register_class_constructor(rawClassType, argCount, rawArgTypesAddr, invokerSignature, invoker, rawConstructor) {
-        assert(argCount > 0);
-        var rawArgTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
-        invoker = embind__requireFunction(invokerSignature, invoker);
-        var args = [rawConstructor];
-        var destructors = [];
-        whenDependentTypesAreResolved([], [rawClassType], function (classType) {
-          classType = classType[0];
-          var humanName = "constructor " + classType.name;
-
-          if (undefined === classType.registeredClass.constructor_body) {
-            classType.registeredClass.constructor_body = [];
-          }
-
-          if (undefined !== classType.registeredClass.constructor_body[argCount - 1]) {
-            throw new BindingError("Cannot register multiple constructors with identical number of parameters (" + (argCount - 1) + ") for class '" + classType.name + "'! Overload resolution is currently only performed using the parameter count, not actual type info!");
-          }
-
-          classType.registeredClass.constructor_body[argCount - 1] = function unboundTypeHandler() {
-            throwUnboundTypeError("Cannot construct " + classType.name + " due to unbound types", rawArgTypes);
-          };
-
-          whenDependentTypesAreResolved([], rawArgTypes, function (argTypes) {
-            classType.registeredClass.constructor_body[argCount - 1] = function constructor_body() {
-              if (arguments.length !== argCount - 1) {
-                throwBindingError(humanName + " called with " + arguments.length + " arguments, expected " + (argCount - 1));
-              }
-
-              destructors.length = 0;
-              args.length = argCount;
-
-              for (var i = 1; i < argCount; ++i) {
-                args[i] = argTypes[i]["toWireType"](destructors, arguments[i - 1]);
-              }
-
-              var ptr = invoker.apply(null, args);
-              runDestructors(destructors);
-              return argTypes[0]["fromWireType"](ptr);
-            };
-
-            return [];
-          });
-          return [];
-        });
-      }
-
-      function __embind_register_class_function(rawClassType, methodName, argCount, rawArgTypesAddr, invokerSignature, rawInvoker, context, isPureVirtual) {
-        var rawArgTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
-        methodName = readLatin1String(methodName);
-        rawInvoker = embind__requireFunction(invokerSignature, rawInvoker);
-        whenDependentTypesAreResolved([], [rawClassType], function (classType) {
-          classType = classType[0];
-          var humanName = classType.name + "." + methodName;
-
-          if (isPureVirtual) {
-            classType.registeredClass.pureVirtualFunctions.push(methodName);
-          }
-
-          function unboundTypesHandler() {
-            throwUnboundTypeError("Cannot call " + humanName + " due to unbound types", rawArgTypes);
-          }
-
-          var proto = classType.registeredClass.instancePrototype;
-          var method = proto[methodName];
-
-          if (undefined === method || undefined === method.overloadTable && method.className !== classType.name && method.argCount === argCount - 2) {
-            unboundTypesHandler.argCount = argCount - 2;
-            unboundTypesHandler.className = classType.name;
-            proto[methodName] = unboundTypesHandler;
-          } else {
-            ensureOverloadTable(proto, methodName, humanName);
-            proto[methodName].overloadTable[argCount - 2] = unboundTypesHandler;
-          }
-
-          whenDependentTypesAreResolved([], rawArgTypes, function (argTypes) {
-            var memberFunction = craftInvokerFunction(humanName, argTypes, classType, rawInvoker, context);
-
-            if (undefined === proto[methodName].overloadTable) {
-              memberFunction.argCount = argCount - 2;
-              proto[methodName] = memberFunction;
-            } else {
-              proto[methodName].overloadTable[argCount - 2] = memberFunction;
-            }
-
-            return [];
-          });
-          return [];
-        });
-      }
-
-      function __emval_decref(handle) {
-        if (handle > 4 && 0 === --emval_handle_array[handle].refcount) {
-          emval_handle_array[handle] = undefined;
-          emval_free_list.push(handle);
-        }
-      }
-
-      function __embind_register_emval(rawType, name) {
-        name = readLatin1String(name);
-        registerType(rawType, {
-          name: name,
-          "fromWireType": function fromWireType(handle) {
-            var rv = emval_handle_array[handle].value;
-
-            __emval_decref(handle);
-
-            return rv;
-          },
-          "toWireType": function toWireType(destructors, value) {
-            return __emval_register(value);
-          },
-          "argPackAdvance": 8,
-          "readValueFromPointer": simpleReadValueFromPointer,
-          destructorFunction: null
-        });
-      }
-
-      function _embind_repr(v) {
-        if (v === null) {
-          return "null";
-        }
-
-        var t = _typeof(v);
-
-        if (t === "object" || t === "array" || t === "function") {
-          return v.toString();
-        } else {
-          return "" + v;
-        }
-      }
-
-      function floatReadValueFromPointer(name, shift) {
-        switch (shift) {
-          case 2:
-            return function (pointer) {
-              return this["fromWireType"](HEAPF32[pointer >> 2]);
-            };
-
-          case 3:
-            return function (pointer) {
-              return this["fromWireType"](HEAPF64[pointer >> 3]);
-            };
-
-          default:
-            throw new TypeError("Unknown float type: " + name);
-        }
-      }
-
-      function __embind_register_float(rawType, name, size) {
-        var shift = getShiftFromSize(size);
-        name = readLatin1String(name);
-        registerType(rawType, {
-          name: name,
-          "fromWireType": function fromWireType(value) {
-            return value;
-          },
-          "toWireType": function toWireType(destructors, value) {
-            if (typeof value !== "number" && typeof value !== "boolean") {
-              throw new TypeError('Cannot convert "' + _embind_repr(value) + '" to ' + this.name);
-            }
-
-            return value;
-          },
-          "argPackAdvance": 8,
-          "readValueFromPointer": floatReadValueFromPointer(name, shift),
-          destructorFunction: null
-        });
-      }
-
-      function integerReadValueFromPointer(name, shift, signed) {
-        switch (shift) {
-          case 0:
-            return signed ? function readS8FromPointer(pointer) {
-              return HEAP8[pointer];
-            } : function readU8FromPointer(pointer) {
-              return HEAPU8[pointer];
-            };
-
-          case 1:
-            return signed ? function readS16FromPointer(pointer) {
-              return HEAP16[pointer >> 1];
-            } : function readU16FromPointer(pointer) {
-              return HEAPU16[pointer >> 1];
-            };
-
-          case 2:
-            return signed ? function readS32FromPointer(pointer) {
-              return HEAP32[pointer >> 2];
-            } : function readU32FromPointer(pointer) {
-              return HEAPU32[pointer >> 2];
-            };
-
-          default:
-            throw new TypeError("Unknown integer type: " + name);
-        }
-      }
-
-      function __embind_register_integer(primitiveType, name, size, minRange, maxRange) {
-        name = readLatin1String(name);
-
-        if (maxRange === -1) {
-          maxRange = 4294967295;
-        }
-
-        var shift = getShiftFromSize(size);
-
-        var fromWireType = function fromWireType(value) {
-          return value;
-        };
-
-        if (minRange === 0) {
-          var bitshift = 32 - 8 * size;
-
-          fromWireType = function fromWireType(value) {
-            return value << bitshift >>> bitshift;
-          };
-        }
-
-        var isUnsignedType = name.indexOf("unsigned") != -1;
-        registerType(primitiveType, {
-          name: name,
-          "fromWireType": fromWireType,
-          "toWireType": function toWireType(destructors, value) {
-            if (typeof value !== "number" && typeof value !== "boolean") {
-              throw new TypeError('Cannot convert "' + _embind_repr(value) + '" to ' + this.name);
-            }
-
-            if (value < minRange || value > maxRange) {
-              throw new TypeError('Passing a number "' + _embind_repr(value) + '" from JS side to C/C++ side to an argument of type "' + name + '", which is outside the valid range [' + minRange + ", " + maxRange + "]!");
-            }
-
-            return isUnsignedType ? value >>> 0 : value | 0;
-          },
-          "argPackAdvance": 8,
-          "readValueFromPointer": integerReadValueFromPointer(name, shift, minRange !== 0),
-          destructorFunction: null
-        });
-      }
-
-      function __embind_register_memory_view(rawType, dataTypeIndex, name) {
-        var typeMapping = [Int8Array, Uint8Array, Int16Array, Uint16Array, Int32Array, Uint32Array, Float32Array, Float64Array];
-        var TA = typeMapping[dataTypeIndex];
-
-        function decodeMemoryView(handle) {
-          handle = handle >> 2;
-          var heap = HEAPU32;
-          var size = heap[handle];
-          var data = heap[handle + 1];
-          return new TA(buffer, data, size);
-        }
-
-        name = readLatin1String(name);
-        registerType(rawType, {
-          name: name,
-          "fromWireType": decodeMemoryView,
-          "argPackAdvance": 8,
-          "readValueFromPointer": decodeMemoryView
-        }, {
-          ignoreDuplicateRegistrations: true
-        });
-      }
-
-      function __embind_register_std_string(rawType, name) {
-        name = readLatin1String(name);
-        var stdStringIsUTF8 = name === "std::string";
-        registerType(rawType, {
-          name: name,
-          "fromWireType": function fromWireType(value) {
-            var length = HEAPU32[value >> 2];
-            var str;
-
-            if (stdStringIsUTF8) {
-              var decodeStartPtr = value + 4;
-
-              for (var i = 0; i <= length; ++i) {
-                var currentBytePtr = value + 4 + i;
-
-                if (i == length || HEAPU8[currentBytePtr] == 0) {
-                  var maxRead = currentBytePtr - decodeStartPtr;
-                  var stringSegment = UTF8ToString(decodeStartPtr, maxRead);
-
-                  if (str === undefined) {
-                    str = stringSegment;
-                  } else {
-                    str += String.fromCharCode(0);
-                    str += stringSegment;
-                  }
-
-                  decodeStartPtr = currentBytePtr + 1;
-                }
-              }
-            } else {
-              var a = new Array(length);
-
-              for (var i = 0; i < length; ++i) {
-                a[i] = String.fromCharCode(HEAPU8[value + 4 + i]);
-              }
-
-              str = a.join("");
-            }
-
-            _free(value);
-
-            return str;
-          },
-          "toWireType": function toWireType(destructors, value) {
-            if (value instanceof ArrayBuffer) {
-              value = new Uint8Array(value);
-            }
-
-            var getLength;
-            var valueIsOfTypeString = typeof value === "string";
-
-            if (!(valueIsOfTypeString || value instanceof Uint8Array || value instanceof Uint8ClampedArray || value instanceof Int8Array)) {
-              throwBindingError("Cannot pass non-string to std::string");
-            }
-
-            if (stdStringIsUTF8 && valueIsOfTypeString) {
-              getLength = function getLength() {
-                return lengthBytesUTF8(value);
-              };
-            } else {
-              getLength = function getLength() {
-                return value.length;
-              };
-            }
-
-            var length = getLength();
-
-            var ptr = _malloc(4 + length + 1);
-
-            HEAPU32[ptr >> 2] = length;
-
-            if (stdStringIsUTF8 && valueIsOfTypeString) {
-              stringToUTF8(value, ptr + 4, length + 1);
-            } else {
-              if (valueIsOfTypeString) {
-                for (var i = 0; i < length; ++i) {
-                  var charCode = value.charCodeAt(i);
-
-                  if (charCode > 255) {
-                    _free(ptr);
-
-                    throwBindingError("String has UTF-16 code units that do not fit in 8 bits");
-                  }
-
-                  HEAPU8[ptr + 4 + i] = charCode;
-                }
-              } else {
-                for (var i = 0; i < length; ++i) {
-                  HEAPU8[ptr + 4 + i] = value[i];
-                }
-              }
-            }
-
-            if (destructors !== null) {
-              destructors.push(_free, ptr);
-            }
-
-            return ptr;
-          },
-          "argPackAdvance": 8,
-          "readValueFromPointer": simpleReadValueFromPointer,
-          destructorFunction: function destructorFunction(ptr) {
-            _free(ptr);
-          }
-        });
-      }
-
-      function __embind_register_std_wstring(rawType, charSize, name) {
-        name = readLatin1String(name);
-        var decodeString, encodeString, getHeap, lengthBytesUTF, shift;
-
-        if (charSize === 2) {
-          decodeString = UTF16ToString;
-          encodeString = stringToUTF16;
-          lengthBytesUTF = lengthBytesUTF16;
-
-          getHeap = function getHeap() {
-            return HEAPU16;
-          };
-
-          shift = 1;
-        } else if (charSize === 4) {
-          decodeString = UTF32ToString;
-          encodeString = stringToUTF32;
-          lengthBytesUTF = lengthBytesUTF32;
-
-          getHeap = function getHeap() {
-            return HEAPU32;
-          };
-
-          shift = 2;
-        }
-
-        registerType(rawType, {
-          name: name,
-          "fromWireType": function fromWireType(value) {
-            var length = HEAPU32[value >> 2];
-            var HEAP = getHeap();
-            var str;
-            var decodeStartPtr = value + 4;
-
-            for (var i = 0; i <= length; ++i) {
-              var currentBytePtr = value + 4 + i * charSize;
-
-              if (i == length || HEAP[currentBytePtr >> shift] == 0) {
-                var maxReadBytes = currentBytePtr - decodeStartPtr;
-                var stringSegment = decodeString(decodeStartPtr, maxReadBytes);
-
-                if (str === undefined) {
-                  str = stringSegment;
-                } else {
-                  str += String.fromCharCode(0);
-                  str += stringSegment;
-                }
-
-                decodeStartPtr = currentBytePtr + charSize;
-              }
-            }
-
-            _free(value);
-
-            return str;
-          },
-          "toWireType": function toWireType(destructors, value) {
-            if (!(typeof value === "string")) {
-              throwBindingError("Cannot pass non-string to C++ string type " + name);
-            }
-
-            var length = lengthBytesUTF(value);
-
-            var ptr = _malloc(4 + length + charSize);
-
-            HEAPU32[ptr >> 2] = length >> shift;
-            encodeString(value, ptr + 4, length + charSize);
-
-            if (destructors !== null) {
-              destructors.push(_free, ptr);
-            }
-
-            return ptr;
-          },
-          "argPackAdvance": 8,
-          "readValueFromPointer": simpleReadValueFromPointer,
-          destructorFunction: function destructorFunction(ptr) {
-            _free(ptr);
-          }
-        });
-      }
-
-      function __embind_register_value_object(rawType, name, constructorSignature, rawConstructor, destructorSignature, rawDestructor) {
-        structRegistrations[rawType] = {
-          name: readLatin1String(name),
-          rawConstructor: embind__requireFunction(constructorSignature, rawConstructor),
-          rawDestructor: embind__requireFunction(destructorSignature, rawDestructor),
-          fields: []
-        };
-      }
-
-      function __embind_register_value_object_field(structType, fieldName, getterReturnType, getterSignature, getter, getterContext, setterArgumentType, setterSignature, setter, setterContext) {
-        structRegistrations[structType].fields.push({
-          fieldName: readLatin1String(fieldName),
-          getterReturnType: getterReturnType,
-          getter: embind__requireFunction(getterSignature, getter),
-          getterContext: getterContext,
-          setterArgumentType: setterArgumentType,
-          setter: embind__requireFunction(setterSignature, setter),
-          setterContext: setterContext
-        });
-      }
-
-      function __embind_register_void(rawType, name) {
-        name = readLatin1String(name);
-        registerType(rawType, {
-          isVoid: true,
-          name: name,
-          "argPackAdvance": 0,
-          "fromWireType": function fromWireType() {
-            return undefined;
-          },
-          "toWireType": function toWireType(destructors, o) {
-            return undefined;
-          }
-        });
-      }
-
-      function __emval_allocateDestructors(destructorsRef) {
-        var destructors = [];
-        HEAP32[destructorsRef >> 2] = __emval_register(destructors);
-        return destructors;
-      }
-
-      var emval_symbols = {};
-
-      function getStringOrSymbol(address) {
-        var symbol = emval_symbols[address];
-
-        if (symbol === undefined) {
-          return readLatin1String(address);
-        } else {
-          return symbol;
-        }
-      }
-
-      var emval_methodCallers = [];
-
-      function __emval_call_method(caller, handle, methodName, destructorsRef, args) {
-        caller = emval_methodCallers[caller];
-        handle = requireHandle(handle);
-        methodName = getStringOrSymbol(methodName);
-        return caller(handle, methodName, __emval_allocateDestructors(destructorsRef), args);
-      }
-
-      function __emval_call_void_method(caller, handle, methodName, args) {
-        caller = emval_methodCallers[caller];
-        handle = requireHandle(handle);
-        methodName = getStringOrSymbol(methodName);
-        caller(handle, methodName, null, args);
-      }
-
-      function __emval_addMethodCaller(caller) {
-        var id = emval_methodCallers.length;
-        emval_methodCallers.push(caller);
-        return id;
-      }
-
-      function __emval_lookupTypes(argCount, argTypes) {
-        var a = new Array(argCount);
-
-        for (var i = 0; i < argCount; ++i) {
-          a[i] = requireRegisteredType(HEAP32[(argTypes >> 2) + i], "parameter " + i);
-        }
-
-        return a;
-      }
-
-      function __emval_get_method_caller(argCount, argTypes) {
-        var types = __emval_lookupTypes(argCount, argTypes);
-
-        var retType = types[0];
-        var signatureName = retType.name + "_$" + types.slice(1).map(function (t) {
-          return t.name;
-        }).join("_") + "$";
-        var params = ["retType"];
-        var args = [retType];
-        var argsList = "";
-
-        for (var i = 0; i < argCount - 1; ++i) {
-          argsList += (i !== 0 ? ", " : "") + "arg" + i;
-          params.push("argType" + i);
-          args.push(types[1 + i]);
-        }
-
-        var functionName = makeLegalFunctionName("methodCaller_" + signatureName);
-        var functionBody = "return function " + functionName + "(handle, name, destructors, args) {\n";
-        var offset = 0;
-
-        for (var i = 0; i < argCount - 1; ++i) {
-          functionBody += "    var arg" + i + " = argType" + i + ".readValueFromPointer(args" + (offset ? "+" + offset : "") + ");\n";
-          offset += types[i + 1]["argPackAdvance"];
-        }
-
-        functionBody += "    var rv = handle[name](" + argsList + ");\n";
-
-        for (var i = 0; i < argCount - 1; ++i) {
-          if (types[i + 1]["deleteObject"]) {
-            functionBody += "    argType" + i + ".deleteObject(arg" + i + ");\n";
-          }
-        }
-
-        if (!retType.isVoid) {
-          functionBody += "    return retType.toWireType(destructors, rv);\n";
-        }
-
-        functionBody += "};\n";
-        params.push(functionBody);
-        var invokerFunction = new_(Function, params).apply(null, args);
-        return __emval_addMethodCaller(invokerFunction);
-      }
-
-      function __emval_incref(handle) {
-        if (handle > 4) {
-          emval_handle_array[handle].refcount += 1;
-        }
-      }
-
-      function __emval_run_destructors(handle) {
-        var destructors = emval_handle_array[handle].value;
-        runDestructors(destructors);
-
-        __emval_decref(handle);
-      }
-
-      function _abort() {
-        abort();
-      }
-
-      function _emscripten_memcpy_big(dest, src, num) {
-        HEAPU8.copyWithin(dest, src, src + num);
-      }
-
-      function _emscripten_get_heap_size() {
-        return HEAPU8.length;
-      }
-
-      function emscripten_realloc_buffer(size) {
-        try {
-          wasmMemory.grow(size - buffer.byteLength + 65535 >>> 16);
-          updateGlobalBufferAndViews(wasmMemory.buffer);
-          return 1;
-        } catch (e) {}
-      }
-
-      function _emscripten_resize_heap(requestedSize) {
-        requestedSize = requestedSize >>> 0;
-
-        var oldSize = _emscripten_get_heap_size();
-
-        var PAGE_MULTIPLE = 65536;
-        var maxHeapSize = 2147483648;
-
-        if (requestedSize > maxHeapSize) {
-          return false;
-        }
-
-        var minHeapSize = 16777216;
-
-        for (var cutDown = 1; cutDown <= 4; cutDown *= 2) {
-          var overGrownHeapSize = oldSize * (1 + .2 / cutDown);
-          overGrownHeapSize = Math.min(overGrownHeapSize, requestedSize + 100663296);
-          var newSize = Math.min(maxHeapSize, alignUp(Math.max(minHeapSize, requestedSize, overGrownHeapSize), PAGE_MULTIPLE));
-          var replacement = emscripten_realloc_buffer(newSize);
-
-          if (replacement) {
-            return true;
-          }
-        }
-
-        return false;
-      }
-
-      var SYSCALLS = {
-        mappings: {},
-        buffers: [null, [], []],
-        printChar: function printChar(stream, curr) {
-          var buffer = SYSCALLS.buffers[stream];
-
-          if (curr === 0 || curr === 10) {
-            (stream === 1 ? out : err)(UTF8ArrayToString(buffer, 0));
-            buffer.length = 0;
-          } else {
-            buffer.push(curr);
-          }
-        },
-        varargs: undefined,
-        get: function get() {
-          SYSCALLS.varargs += 4;
-          var ret = HEAP32[SYSCALLS.varargs - 4 >> 2];
-          return ret;
-        },
-        getStr: function getStr(ptr) {
-          var ret = UTF8ToString(ptr);
-          return ret;
-        },
-        get64: function get64(low, high) {
-          return low;
-        }
-      };
-
-      function _fd_close(fd) {
-        return 0;
-      }
-
-      function _fd_seek(fd, offset_low, offset_high, whence, newOffset) {}
-
-      function _fd_write(fd, iov, iovcnt, pnum) {
-        var num = 0;
-
-        for (var i = 0; i < iovcnt; i++) {
-          var ptr = HEAP32[iov + i * 8 >> 2];
-          var len = HEAP32[iov + (i * 8 + 4) >> 2];
-
-          for (var j = 0; j < len; j++) {
-            SYSCALLS.printChar(fd, HEAPU8[ptr + j]);
-          }
-
-          num += len;
-        }
-
-        HEAP32[pnum >> 2] = num;
-        return 0;
-      }
-
-      function _setTempRet0($i) {}
-
-      init_emval();
-      PureVirtualError = Module["PureVirtualError"] = extendError(Error, "PureVirtualError");
-      embind_init_charCodes();
-      init_embind();
-      BindingError = Module["BindingError"] = extendError(Error, "BindingError");
-      InternalError = Module["InternalError"] = extendError(Error, "InternalError");
-      init_ClassHandle();
-      init_RegisteredPointer();
-      UnboundTypeError = Module["UnboundTypeError"] = extendError(Error, "UnboundTypeError");
-      var asmLibraryArg = {
-        "j": __ZN8facebook4yoga24LayoutPassReasonToStringENS0_16LayoutPassReasonE,
-        "s": ___cxa_allocate_exception,
-        "r": ___cxa_throw,
-        "q": __embind_create_inheriting_constructor,
-        "g": __embind_finalize_value_object,
-        "z": __embind_register_bool,
-        "e": __embind_register_class,
-        "d": __embind_register_class_class_function,
-        "k": __embind_register_class_constructor,
-        "a": __embind_register_class_function,
-        "y": __embind_register_emval,
-        "n": __embind_register_float,
-        "c": __embind_register_integer,
-        "b": __embind_register_memory_view,
-        "o": __embind_register_std_string,
-        "i": __embind_register_std_wstring,
-        "h": __embind_register_value_object,
-        "f": __embind_register_value_object_field,
-        "A": __embind_register_void,
-        "D": __emval_call_method,
-        "E": __emval_call_void_method,
-        "F": __emval_decref,
-        "p": __emval_get_method_caller,
-        "B": __emval_incref,
-        "C": __emval_run_destructors,
-        "l": _abort,
-        "v": _emscripten_memcpy_big,
-        "w": _emscripten_resize_heap,
-        "x": _fd_close,
-        "t": _fd_seek,
-        "m": _fd_write,
-        "memory": wasmMemory,
-        "u": _setTempRet0,
-        "table": wasmTable
-      };
-      Module.sync = false;
-
-      if (!Module.sync) {
-        var asm = createWasm();
-      } else {
-        var asm = createWasmSync();
-      }
-
-      var ___wasm_call_ctors = Module["___wasm_call_ctors"] = function () {
-        return (___wasm_call_ctors = Module["___wasm_call_ctors"] = Module["asm"]["G"]).apply(null, arguments);
-      };
-
-      var ___getTypeName = Module["___getTypeName"] = function () {
-        return (___getTypeName = Module["___getTypeName"] = Module["asm"]["H"]).apply(null, arguments);
-      };
-
-      var ___embind_register_native_and_builtin_types = Module["___embind_register_native_and_builtin_types"] = function () {
-        return (___embind_register_native_and_builtin_types = Module["___embind_register_native_and_builtin_types"] = Module["asm"]["I"]).apply(null, arguments);
-      };
-
-      var _malloc = Module["_malloc"] = function () {
-        return (_malloc = Module["_malloc"] = Module["asm"]["J"]).apply(null, arguments);
-      };
-
-      var _free = Module["_free"] = function () {
-        return (_free = Module["_free"] = Module["asm"]["K"]).apply(null, arguments);
-      };
-
-      var dynCall_ii = Module["dynCall_ii"] = function () {
-        return (dynCall_ii = Module["dynCall_ii"] = Module["asm"]["L"]).apply(null, arguments);
-      };
-
-      var dynCall_iiiiii = Module["dynCall_iiiiii"] = function () {
-        return (dynCall_iiiiii = Module["dynCall_iiiiii"] = Module["asm"]["M"]).apply(null, arguments);
-      };
-
-      var dynCall_vii = Module["dynCall_vii"] = function () {
-        return (dynCall_vii = Module["dynCall_vii"] = Module["asm"]["N"]).apply(null, arguments);
-      };
-
-      var dynCall_viififi = Module["dynCall_viififi"] = function () {
-        return (dynCall_viififi = Module["dynCall_viififi"] = Module["asm"]["O"]).apply(null, arguments);
-      };
-
-      var dynCall_vi = Module["dynCall_vi"] = function () {
-        return (dynCall_vi = Module["dynCall_vi"] = Module["asm"]["P"]).apply(null, arguments);
-      };
-
-      var dynCall_i = Module["dynCall_i"] = function () {
-        return (dynCall_i = Module["dynCall_i"] = Module["asm"]["Q"]).apply(null, arguments);
-      };
-
-      var dynCall_viii = Module["dynCall_viii"] = function () {
-        return (dynCall_viii = Module["dynCall_viii"] = Module["asm"]["R"]).apply(null, arguments);
-      };
-
-      var dynCall_vif = Module["dynCall_vif"] = function () {
-        return (dynCall_vif = Module["dynCall_vif"] = Module["asm"]["S"]).apply(null, arguments);
-      };
-
-      var dynCall_iii = Module["dynCall_iii"] = function () {
-        return (dynCall_iii = Module["dynCall_iii"] = Module["asm"]["T"]).apply(null, arguments);
-      };
-
-      var dynCall_viiii = Module["dynCall_viiii"] = function () {
-        return (dynCall_viiii = Module["dynCall_viiii"] = Module["asm"]["U"]).apply(null, arguments);
-      };
-
-      var dynCall_viif = Module["dynCall_viif"] = function () {
-        return (dynCall_viif = Module["dynCall_viif"] = Module["asm"]["V"]).apply(null, arguments);
-      };
-
-      var dynCall_iiii = Module["dynCall_iiii"] = function () {
-        return (dynCall_iiii = Module["dynCall_iiii"] = Module["asm"]["W"]).apply(null, arguments);
-      };
-
-      var dynCall_dii = Module["dynCall_dii"] = function () {
-        return (dynCall_dii = Module["dynCall_dii"] = Module["asm"]["X"]).apply(null, arguments);
-      };
-
-      var dynCall_viid = Module["dynCall_viid"] = function () {
-        return (dynCall_viid = Module["dynCall_viid"] = Module["asm"]["Y"]).apply(null, arguments);
-      };
-
-      var dynCall_vid = Module["dynCall_vid"] = function () {
-        return (dynCall_vid = Module["dynCall_vid"] = Module["asm"]["Z"]).apply(null, arguments);
-      };
-
-      var dynCall_di = Module["dynCall_di"] = function () {
-        return (dynCall_di = Module["dynCall_di"] = Module["asm"]["_"]).apply(null, arguments);
-      };
-
-      var dynCall_viddi = Module["dynCall_viddi"] = function () {
-        return (dynCall_viddi = Module["dynCall_viddi"] = Module["asm"]["$"]).apply(null, arguments);
-      };
-
-      var dynCall_iiififi = Module["dynCall_iiififi"] = function () {
-        return (dynCall_iiififi = Module["dynCall_iiififi"] = Module["asm"]["aa"]).apply(null, arguments);
-      };
-
-      var dynCall_fii = Module["dynCall_fii"] = function () {
-        return (dynCall_fii = Module["dynCall_fii"] = Module["asm"]["ba"]).apply(null, arguments);
-      };
-
-      var dynCall_viiid = Module["dynCall_viiid"] = function () {
-        return (dynCall_viiid = Module["dynCall_viiid"] = Module["asm"]["ca"]).apply(null, arguments);
-      };
-
-      var dynCall_diii = Module["dynCall_diii"] = function () {
-        return (dynCall_diii = Module["dynCall_diii"] = Module["asm"]["da"]).apply(null, arguments);
-      };
-
-      var dynCall_viiddi = Module["dynCall_viiddi"] = function () {
-        return (dynCall_viiddi = Module["dynCall_viiddi"] = Module["asm"]["ea"]).apply(null, arguments);
-      };
-
-      var dynCall_v = Module["dynCall_v"] = function () {
-        return (dynCall_v = Module["dynCall_v"] = Module["asm"]["fa"]).apply(null, arguments);
-      };
-
-      var dynCall_jiji = Module["dynCall_jiji"] = function () {
-        return (dynCall_jiji = Module["dynCall_jiji"] = Module["asm"]["ga"]).apply(null, arguments);
-      };
-
-      var dynCall_iidiiii = Module["dynCall_iidiiii"] = function () {
-        return (dynCall_iidiiii = Module["dynCall_iidiiii"] = Module["asm"]["ha"]).apply(null, arguments);
-      };
-
-      var dynCall_viiiiii = Module["dynCall_viiiiii"] = function () {
-        return (dynCall_viiiiii = Module["dynCall_viiiiii"] = Module["asm"]["ia"]).apply(null, arguments);
-      };
-
-      var dynCall_viiiii = Module["dynCall_viiiii"] = function () {
-        return (dynCall_viiiii = Module["dynCall_viiiii"] = Module["asm"]["ja"]).apply(null, arguments);
-      };
-
-      var calledRun;
-
-      function ExitStatus(status) {
-        this.name = "ExitStatus";
-        this.message = "Program terminated with exit(" + status + ")";
-        this.status = status;
-      }
-
-      dependenciesFulfilled = function runCaller() {
-        if (!calledRun) run();
-        if (!calledRun) dependenciesFulfilled = runCaller;
-      };
-
-      function run(args) {
-        if (runDependencies > 0) {
-          return;
-        }
-
-        preRun();
-        if (runDependencies > 0) return;
-
-        function doRun() {
-          if (calledRun) return;
-          calledRun = true;
-          Module["calledRun"] = true;
-          if (ABORT) return;
-          initRuntime();
-          preMain();
-          readyPromiseResolve(Module);
-          if (Module["onRuntimeInitialized"]) Module["onRuntimeInitialized"]();
-          postRun();
-        }
-
-        if (Module["setStatus"]) {
-          Module["setStatus"]("Running...");
-          setTimeout(function () {
-            setTimeout(function () {
-              Module["setStatus"]("");
-            }, 1);
-            doRun();
-          }, 1);
-        } else {
-          doRun();
-        }
-      }
-
-      Module["run"] = run;
-
-      if (Module["preInit"]) {
-        if (typeof Module["preInit"] == "function") Module["preInit"] = [Module["preInit"]];
-
-        while (Module["preInit"].length > 0) {
-          Module["preInit"].pop()();
-        }
-      }
-
-      noExitRuntime = true;
-      run();
-
-      if (!Module.sync) {
-        return Module.ready;
-      } else {
-        return Module;
-      }
-    };
-  }();
-
-  function bind(name, proto) {
-    return proto;
-  }
-
-  function initConfig(filepath) {
-    return filepath ? function locateFile() {
-      return filepath;
-    } : void 0;
-  }
-
-  function init(opt) {
-    // var task = Module({
-    //   locateFile: initConfig(opt.filepath)
-    // }).then(function (raw) {
-    //   console.log('raw', raw);
-    //   return Object.assign(mod, entryCommon(bind, raw));
-    // });
-    if (opt.sync) {
-      var syncMod = Module({
-        sync: true
-      });
-      return syncMod.then(function (res) {
-        return Object.assign(mod, entryCommon(bind, res));
-      });
-    } else {
-      return task;
-    }
-  }
-
-  var mod = {
-    init: init
-  };
-  return mod;
-}();
-
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(13)))
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -6267,9 +2416,9 @@ function changeStateTrans(item, activeStyle) {
   item.root.forceUpdate();
 
   if (activeStyle.backgroundColor && !(activeStyle.backgroundColor.indexOf('rgba') > -1 && getAlpha(activeStyle.backgroundColor) !== 1)) {
-    if (item.childNodes) {
-      for (var i = 0; i < item.childNodes.length; i++) {
-        item.childNodes[i].repaint();
+    if (item.children) {
+      for (var i = 0; i < item.children.length; i++) {
+        item.children[i].repaint();
       }
     }
   }
@@ -6298,9 +2447,7 @@ function getNodeAll(node) {
  */
 
 
-var PseudoClassManager =
-/*#__PURE__*/
-function () {
+var PseudoClassManager = /*#__PURE__*/function () {
   function PseudoClassManager(layout) {
     _classCallCheck(this, PseudoClassManager);
 
@@ -6382,7 +2529,7 @@ function () {
 /* harmony default export */ __webpack_exports__["default"] = (PseudoClassManager);
 
 /***/ }),
-/* 15 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6426,9 +2573,7 @@ var finder = function finder(t, w, arr, measure) {
   return mid;
 };
 
-var TextManager =
-/*#__PURE__*/
-function () {
+var TextManager = /*#__PURE__*/function () {
   function TextManager(layout) {
     _classCallCheck(this, TextManager);
 
@@ -6476,7 +2621,7 @@ function () {
             fontWeight: style.fontWeight || null,
             fontSize: style.fontSize || null,
             fontFamily: style.fontFamily || null
-          }, node.root.getFontSize());
+          }, node.root.getFontSize()); // console.log(nodeTextArray)
 
           if (style.textOverflow === 'ellipsis' && style.whiteSpace === 'nowrap') {
             // 单行溢出...
@@ -6552,7 +2697,8 @@ function () {
 
       while ((m = finder(_text, width, textArray, measure)) > -1) {
         _text = _text.substring(m, _text.length);
-      }
+      } // console.log(textArray)
+
 
       return textArray;
     }
@@ -6564,15 +2710,16 @@ function () {
 /* harmony default export */ __webpack_exports__["default"] = (TextManager);
 
 /***/ }),
-/* 16 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RenderContextManager; });
-/* harmony import */ var _renderer_gl_rect_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(17);
-/* harmony import */ var _renderer_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
-/* harmony import */ var _renderContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var _renderer_gl_rect_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+/* harmony import */ var _renderer_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
+/* harmony import */ var _renderContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -6580,49 +2727,72 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
- // const {WXWebAssembly, wx} = pluginEnv.customEnv;
 
+
+var wx = pluginEnv.customEnv.wx;
 /**
  * @description 逻辑线程渲染管理器，用于搜集每个节点需要的渲染数据
  */
 
 
 
-function createImage() {
-  /* istanbul ignore if*/
-  if (typeof wx !== "undefined") {
-    return wx.createImage();
-  } else {
-    return document.createElement('img');
-  }
-}
-
 function createCanvas() {
   return wx.createCanvas();
 }
 
-var info = wx.getSystemInfoSync();
-var dpr = info.devicePixelRatio;
-var renderer = Object(_renderer_util_js__WEBPACK_IMPORTED_MODULE_1__["createRender"])({
-  dpr: dpr,
-  createImage: createImage,
-  createCanvas: createCanvas
-});
+var canvasPool = [];
+var renderer;
 
-var RenderContextManager =
-/*#__PURE__*/
-function () {
+var RenderContextManager = /*#__PURE__*/function () {
   function RenderContextManager(canvasContext) {
+    var scale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
     _classCallCheck(this, RenderContextManager);
 
     this.canvasContext = canvasContext;
     this.glRects = [];
+    this.scale = scale;
+    this.width = 0;
+    this.height = 0;
+    renderer = Object(_renderer_util_js__WEBPACK_IMPORTED_MODULE_1__["createRender"])({
+      dpr: scale,
+      createImage: _common_util__WEBPACK_IMPORTED_MODULE_2__["createImage"],
+      createCanvas: createCanvas
+    });
+    this.layout = null;
+    this.scrollRenderer = Object(_renderer_util_js__WEBPACK_IMPORTED_MODULE_1__["createRender"])({
+      dpr: scale,
+      createCanvas: createCanvas,
+      createImage: _common_util__WEBPACK_IMPORTED_MODULE_2__["createImage"]
+    });
+    var canvas = canvasPool.pop() || createCanvas();
+    this.scrollCanvas = canvas;
+    console.log('scrollcanvas', canvas);
+    this.hasSetup = false;
+    this.gl = null;
+    this.scrollGl = null;
+    this.hasScroll = false;
   }
 
   _createClass(RenderContextManager, [{
+    key: "setupScrollGl",
+    value: function setupScrollGl() {
+      if (!this.scrollCanvas) {
+        this.scrollCanvas = canvasPool.pop() || createCanvas();
+      }
+
+      var gl = Object(_renderer_gl_rect_js__WEBPACK_IMPORTED_MODULE_0__["setupGl"])(this.scrollCanvas, false);
+      gl.canvas.height = this.height;
+      gl.canvas.width = this.width;
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+      this.scrollGl = gl;
+      this.layout.scrollview.glRect.glTexture = this.scrollCanvas;
+    }
+  }, {
     key: "createRoundRect",
     value: function createRoundRect(id, type) {
-      var glRect = new _renderContext__WEBPACK_IMPORTED_MODULE_2__["default"](id, type);
+      var glRect = new _renderContext__WEBPACK_IMPORTED_MODULE_3__["default"](id, type);
       this.glRects.push(glRect);
       return glRect;
     }
@@ -6633,8 +2803,33 @@ function () {
   }, {
     key: "clear",
     value: function clear() {
-      console.log('clear call');
+      // console.log('clear call');
       this.glRects = this.glRects.slice(0, 0);
+    }
+  }, {
+    key: "release",
+    value: function release() {
+      canvasPool.push(this.scrollCanvas);
+      this.scrollCanvas = null;
+      console.log('renderContext release call');
+    }
+  }, {
+    key: "getChildrenGlRects",
+    value: function getChildrenGlRects(node) {
+      var _this = this;
+
+      var res = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+      if (node !== this.layout.scrollview && node.glRect) {
+        var index = this.glRects.indexOf(node.glRect);
+        this.glRects.splice(index, 1);
+        res.push(node.glRect);
+      }
+
+      node.children.forEach(function (child) {
+        _this.getChildrenGlRects(child, res);
+      });
+      return res;
     }
     /**
      * @description 传递数据给渲染线程
@@ -6643,25 +2838,31 @@ function () {
   }, {
     key: "draw",
     value: function draw() {
-      this.testRun({
-        noRepaint: !!this.noRepaint,
-        width: this.width,
-        height: this.height,
-        glRects: this.glRects
-      }, this.canvasContext.canvas);
-    }
-  }, {
-    key: "testRun",
-    value: function testRun(data, canvas) {
-      console.log('data', data);
-      var gl = Object(_renderer_gl_rect_js__WEBPACK_IMPORTED_MODULE_0__["setupGl"])(canvas);
-      gl.canvas.height = data.height * dpr;
-      gl.canvas.width = data.width * dpr;
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-      renderer.repaint(gl, data.glRects);
-      var result = Object(_renderer_util_js__WEBPACK_IMPORTED_MODULE_1__["renderDetection"])(gl, 30);
-      console.log("render detection ".concat(result));
+      var needInit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      if (!this.hasSetup || needInit) {
+        this.hasSetup = true;
+        var gl = Object(_renderer_gl_rect_js__WEBPACK_IMPORTED_MODULE_0__["setupGl"])(this.canvasContext.canvas, false);
+        gl.canvas.height = this.height;
+        gl.canvas.width = this.width;
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        this.gl = gl;
+
+        if (this.layout.scrollview) {
+          this.hasScroll = true; // this.setupScrollGl();
+
+          this.scrollGlrects = [];
+          this.getChildrenGlRects(this.layout.scrollview, this.scrollGlrects);
+        }
+      } // if (this.hasScroll) {
+      //   // scrollview重绘
+      //   renderer.repaint(this.gl, this.scrollGlrects);
+      // }
+
+
+      renderer.resetGl(this.gl); // 除了scrollview之外的glRects重绘
+
+      renderer.repaint(this.gl, this.glRects, this.scrollGlrects); // renderer.repaint(this.gl, this.scrollGlrects);
     }
   }]);
 
@@ -6671,52 +2872,45 @@ function () {
 
 
 /***/ }),
-/* 17 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setupGl", function() { return setupGl; });
-/* harmony import */ var _m4_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
-/* harmony import */ var _roundedRect_vert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(19);
-/* harmony import */ var _roundedRect_frag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+/* harmony import */ var _m4_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
+/* harmony import */ var _roundedRect_vert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(16);
+/* harmony import */ var _roundedRect_frag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-// import rgba from 'color-rgba';
 
 
- // function cached(fn) {
-//   const cache = Object.create(null);
-//   return (function cachedFn(str) {
-//     const hit = cache[str];
-//     return hit || (cache[str] = fn(str));
-//   });
-// }
-// const normalizeColor = cached(color => rgba(color).map((c, i) => {
-//   if (i === 3) {
-//     return c;
-//   }
-//   return c / 255;
-// }));
+ // 创建纹理
+
+function createTexture(gl) {
+  var texId = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texId); // 设置参数，让我们可以绘制任何尺寸的图像
+
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  return texId;
+}
 
 var positions = new Float32Array([0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]);
-console.log('gl_rect init');
 
 function createProgram(gl) {
+  var needFlipY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   var textureMap = new WeakMap();
   var program;
   var bufferId;
@@ -6733,9 +2927,11 @@ function createProgram(gl) {
   var uTex;
   var vPosition;
   var textureMatrixLocation;
+  var uOpacity;
   {
     gl.enable(gl.BLEND);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, needFlipY); // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     // gl.blendEquation(gl.FUNC_ADD);
     // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
@@ -6759,6 +2955,7 @@ function createProgram(gl) {
     uRadius = gl.getUniformLocation(program, 'u_radius');
     uBorderWidth = gl.getUniformLocation(program, 'u_border_width');
     uBorderColor = gl.getUniformLocation(program, 'u_border_color');
+    uOpacity = gl.getUniformLocation(program, 'u_opacity');
     uColor = gl.getUniformLocation(program, 'u_color');
     uMatrix = gl.getUniformLocation(program, 'u_matrix');
     uRect = gl.getUniformLocation(program, 'u_rect');
@@ -6773,16 +2970,17 @@ function createProgram(gl) {
     // VBO
     bufferId = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
-    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // vertexAttribPointer几个参数解释：
+    // 每次迭代运行提取两个单位数据
+    // 每个单位的数据类型是32位浮点型
+    // 不需要归一化数据
+    // 0 = 移动单位数量 * 每个单位占用内存（sizeof(type)）
+    // 每次迭代运行运动多少内存到下一个数据开始点
+    // 从缓冲起始位置开始读取
+
     gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
-  } // { //空白纹理
-  //   blankTexId = gl.createTexture();
-  //   gl.bindTexture(gl.TEXTURE_2D, blankTexId);
-  //   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-  //   // gl.bindTexture(gl.TEXTURE_2D, null);
-  // }
-
+  }
   gl.useProgram(program);
   return {
     program: program,
@@ -6800,15 +2998,18 @@ function createProgram(gl) {
     uTex: uTex,
     vPosition: vPosition,
     textureMatrixLocation: textureMatrixLocation,
-    textureMap: textureMap
+    textureMap: textureMap,
+    positions: positions,
+    uOpacity: uOpacity
   };
 }
 
 function useProgram(gl) {
-  console.log('useProgram');
+  var needFlipY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var hasSetuResolution = false;
 
   if (!gl.program) {
-    gl.program = createProgram(gl); // eslint-disable-line
+    gl.program = createProgram(gl, needFlipY); // eslint-disable-line
   }
 
   var _gl$program = gl.program,
@@ -6823,7 +3024,8 @@ function useProgram(gl) {
       uBitset = _gl$program.uBitset,
       uTex = _gl$program.uTex,
       textureMatrixLocation = _gl$program.textureMatrixLocation,
-      textureMap = _gl$program.textureMap;
+      textureMap = _gl$program.textureMap,
+      uOpacity = _gl$program.uOpacity;
   return function createRoundRect() {
     var x = 0;
     var y = 0;
@@ -6839,11 +3041,29 @@ function useProgram(gl) {
     var borderColor = [0, 0, 0, 0];
     var imageWidth = 1;
     var imageHeight = 1;
+    var opacity = 1;
     var canvasWidth;
     var canvasHeight;
-    var matrix;
+    var matrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["identity"])();
     var texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
     var result = {
+      reset: function reset() {
+        x = 0;
+        y = 0;
+        width = 1;
+        height = 1;
+        radius = [0, 0, 0, 0];
+        backgroundColor = [0, 0, 0, 0];
+        backgroundImage = undefined;
+        backgroundImageData = undefined;
+        imageRect = [];
+        imageSrcRect = [];
+        borderWidth = 0;
+        borderColor = [0, 0, 0, 0];
+        imageWidth = 1;
+        imageHeight = 1;
+        texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
+      },
       updateContours: function updateContours(dimension) {
         var _dimension = _slicedToArray(dimension, 4);
 
@@ -6856,9 +3076,11 @@ function useProgram(gl) {
         if (canvasWidth !== gl.canvas.width || canvasHeight !== gl.canvas.height) {
           canvasWidth !== gl.canvas.width && (canvasWidth = gl.canvas.width);
           canvasHeight !== gl.canvas.height && (canvasHeight = gl.canvas.height);
-          matrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["orthographic"])(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
-          matrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translate"])(matrix, x, y, 0);
-          matrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(matrix, width, height, 1);
+          Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["orthographic"])(0, gl.canvas.width, gl.canvas.height, 0, -1, 1, matrix);
+          Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translate"])(matrix, x, y, 0, matrix);
+          Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(matrix, width, height, 1, matrix);
+          canvasWidth = gl.canvas.width;
+          canvasHeight = gl.canvas.height;
         }
       },
       setRadius: function setRadius(r) {
@@ -6869,12 +3091,15 @@ function useProgram(gl) {
         }
       },
       setBorder: function setBorder(width, color) {
-        borderWidth = width; // borderColor = normalizeColor(color);
-
+        borderWidth = width;
         borderColor = color;
       },
       setBackgroundColor: function setBackgroundColor(color) {
         backgroundColor = color;
+      },
+      setOpacity: function setOpacity() {
+        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+        opacity = value;
       },
       setTexture: function setTexture() {
         var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -6911,68 +3136,89 @@ function useProgram(gl) {
         var srcY = imageSrcRect[1] || 0;
         var srcWidth = imageSrcRect[2] || imageWidth;
         var srcHeight = imageSrcRect[3] || imageHeight;
-        texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(srcX / imageWidth, srcY / imageHeight, 0);
-        texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(texMatrix, srcWidth / imageWidth, srcHeight / imageHeight, 1);
+        Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(srcX / imageWidth, srcY / imageHeight, texMatrix);
+        Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(texMatrix, srcWidth / imageWidth, srcHeight / imageHeight, 1, texMatrix);
       },
       draw: function draw() {
+        var needUpdateTexture = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         var dstX = (imageRect[0] || 0) + x + borderWidth;
         var dstY = (imageRect[1] || 0) + y + borderWidth;
         var dstWidth = imageRect[2] || width;
         var dstHeight = imageRect[3] || height;
-
-        function createTexture() {
-          var texId = gl.createTexture();
-          gl.bindTexture(gl.TEXTURE_2D, texId);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-          return texId;
-        }
-
         var hasTexture = false;
 
         if (typeof backgroundImage !== 'undefined') {
           var texId = textureMap.get(backgroundImage);
 
           if (!texId) {
-            texId = createTexture(); // 首屏只绘制一次
+            texId = createTexture(gl); // 将图像上传到纹理
 
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
             textureMap.set(backgroundImage, texId);
           }
 
-          gl.bindTexture(gl.TEXTURE_2D, texId);
+          gl.bindTexture(gl.TEXTURE_2D, texId); // // scrollview每次重绘都需要更新纹理
+          // if(needUpdateTexture) {
+          //   // 将图像上传到纹理
+          //   // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
+          //   gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage)
+          // }
+
           hasTexture = true;
         } else if (typeof backgroundImageData !== 'undefined') {
           var _texId = textureMap.get(ArrayBuffer);
 
           if (!_texId) {
-            _texId = createTexture();
+            _texId = createTexture(gl);
             textureMap.set(ArrayBuffer, _texId);
           }
 
           gl.bindTexture(gl.TEXTURE_2D, _texId);
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, imageWidth, imageHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImageData);
           hasTexture = true;
-        } else {// gl.bindTexture(gl.TEXTURE_2D, blankTexId);
+        } else {} // gl.bindTexture(gl.TEXTURE_2D, blankTexId);
+        // // needUpdateTexture代表为scrollview
+        // if (needUpdateTexture) {
+        //   // 清除模板缓存
+        //   gl.clear(gl.STENCIL_BUFFER_BIT);
+        //   // 开启模板测试
+        //   gl.enable(gl.STENCIL_TEST);
+        //   // 设置模板测试参数
+        //   gl.stencilFunc(gl.ALWAYS, 1, 1);
+        //   // 设置模板值操作
+        //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        // } else {
+        //   gl.stencilFunc(gl.EQUAL, 1, 1);
+        //   //设置模板测试后的操作
+        //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        // }
+        // 所有绘制共用一个就行
+
+
+        if (!hasSetuResolution) {
+          gl.uniform2f(uResolution, gl.canvas.width, gl.canvas.height);
+          hasSetuResolution = true;
         }
 
-        gl.uniformMatrix4fv(uMatrix, false, matrix);
-        gl.uniform4f(uTexRect, dstX, dstY + dstHeight, dstX + dstWidth, dstY);
-        gl.uniform4f(uRect, x, y + height, x + width, y);
+        gl.uniformMatrix4fv(uMatrix, false, matrix); // 设置矩形除去border左下角和右上角位置
+
+        gl.uniform4f(uTexRect, dstX, dstY + dstHeight, dstX + dstWidth, dstY); // 设置完整矩形的位置
+
+        gl.uniform4f(uRect, x, y + height, x + width, y); // 纹理设置
+
         gl.uniform4f(uBitset, hasTexture ? 1 : 0, 0, 0, 0);
         gl.uniformMatrix4fv(textureMatrixLocation, false, texMatrix);
-        gl.uniform1i(uTex, 0);
-        gl.uniform4f.apply(gl, [uColor].concat(_toConsumableArray(backgroundColor)));
-        gl.uniform2f(uResolution, gl.canvas.width, gl.canvas.height);
-        gl.uniform4f.apply(gl, [uRadius].concat(_toConsumableArray(radius)));
-        gl.uniform4f.apply(gl, [uBorderColor].concat(_toConsumableArray(borderColor)));
-        gl.uniform1f(uBorderWidth, borderWidth);
-        gl.drawArrays(gl.TRIANGLES, 0, 6); // 非常耗时
-        // const err = gl.getError();
-        // if (err) {
-        //   console.error('gl draw err', err);
-        // }
+        gl.uniform1i(uTex, 0); // gl.uniform4f(uColor, ...backgroundColor);
+
+        gl.uniform4f(uColor, backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]); // gl.uniform4f(uRadius, ...radius);
+
+        gl.uniform4f(uRadius, radius[0], radius[1], radius[2], radius[3]); // gl.uniform4f(uBorderColor, ...borderColor);
+
+        gl.uniform4f(uBorderColor, borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
+        gl.uniform1f(uOpacity, opacity);
+        gl.uniform1f(uBorderWidth, borderWidth); // 因为count = 6，所以顶点着色器将运行6次
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
     };
     return result;
@@ -6980,6 +3226,8 @@ function useProgram(gl) {
 }
 
 function setupGl(canvas) {
+  var needFlipY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
   if (!canvas.webgl) {
     var _gl = canvas.getContext('webgl', {
       preserveDrawingBuffer: true,
@@ -6987,10 +3235,10 @@ function setupGl(canvas) {
       antialias: true,
       premultipliedAlpha: true,
       depth: false,
-      stencil: false
+      stencil: true
     });
 
-    _gl.createRoundRect = useProgram(_gl);
+    _gl.createRoundRect = useProgram(_gl, needFlipY);
     canvas.webgl = _gl; // eslint-disable-line
   }
 
@@ -6999,7 +3247,7 @@ function setupGl(canvas) {
 }
 
 /***/ }),
-/* 18 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8408,23 +4656,23 @@ function copy(src, dst) {
 
 
 /***/ }),
-/* 19 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("attribute vec4 a_position;\nuniform vec2 u_resolution;\nuniform mat4 u_matrix;\nuniform mat4 u_textureMatrix;\nuniform vec4 u_tex_rect;\nvarying vec2 v_resolution;\nvarying vec2 v_texcoord;\nvarying vec4 v_tex_rect;\n\nvec2 pixel2coord(vec2 a, vec2 resolution) {\n    vec2 zeroToOne = a / resolution;\n    vec2 zeroTwo = zeroToOne * 2.0;\n    vec2 clipSpace = zeroTwo - 1.0;\n    return clipSpace * vec2(1, -1);\n}\n\nvoid main() {\n    gl_Position = u_matrix * a_position;\n\n    vec2 texRectBl = pixel2coord(u_tex_rect.xy, u_resolution);\n    vec2 texRectTr = pixel2coord(u_tex_rect.zw, u_resolution);\n    float texRectWidth = texRectTr.x - texRectBl.x;\n    float texRectHeight = texRectTr.y - texRectBl.y;\n\n    vec4 tex_position = vec4(vec2((gl_Position.x - texRectBl.x) / texRectWidth, (texRectTr.y - gl_Position.y) / texRectHeight), 0, 1);\n\n    v_resolution = u_resolution;\n    v_texcoord = (u_textureMatrix * tex_position).xy;\n    v_tex_rect = u_tex_rect;\n}");
+/* harmony default export */ __webpack_exports__["default"] = ("attribute vec4 a_position;\nuniform vec2 u_resolution;\nuniform mat4 u_matrix;\nuniform mat4 u_textureMatrix;\nuniform vec4 u_tex_rect;\nvarying vec2 v_resolution;\nvarying vec2 v_texcoord;\nvarying vec4 v_tex_rect;\n\n/**\n * 屏幕像素坐标转换成裁剪空间坐标并且将坐标系的原点定位左上角\n */\nvec2 pixel2coord(vec2 a, vec2 resolution) {\n    // 从像素坐标转换到 0.0 到 1.0\n    vec2 zeroToOne = a / resolution;\n\n     // 再把 0->1 转换 0->2\n    vec2 zeroTwo = zeroToOne * 2.0;\n\n    // 把 0->2 转换到 -1->+1 (裁剪空间)\n    vec2 clipSpace = zeroTwo - 1.0;\n\n    // WebGL认为左下角是 0，0 。 想要像传统二维API那样起点在左上角，我们只需翻转y轴即可。\n    return clipSpace * vec2(1, -1);\n}\n\nvoid main() {\n    gl_Position = u_matrix * a_position;\n\n    // 矩形左下角位置\n    vec2 texRectBl = pixel2coord(u_tex_rect.xy, u_resolution);\n    // 矩形右上角位置\n    vec2 texRectTr = pixel2coord(u_tex_rect.zw, u_resolution);\n\n    // 计算矩形的宽度\n    float texRectWidth = texRectTr.x - texRectBl.x;\n    // 计算矩形的高度\n    float texRectHeight = texRectTr.y - texRectBl.y;\n\n    vec4 tex_position = vec4(vec2((gl_Position.x - texRectBl.x) / texRectWidth, (texRectTr.y - gl_Position.y) / texRectHeight), 0, 1);\n\n    v_resolution = u_resolution;\n    v_texcoord = (u_textureMatrix * tex_position).xy;\n    v_tex_rect = u_tex_rect;\n}");
 
 /***/ }),
-/* 20 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("precision mediump float;\nuniform sampler2D u_texture;\nuniform vec4 u_rect;\nuniform vec4 u_color;\nuniform vec4 u_radius;\nuniform vec4 u_border_color;\nuniform float u_border_width;\nuniform vec4 u_bitset; //texture[, context, border, radius]\nvarying vec2 v_resolution;\nvarying vec2 v_texcoord;\nvarying vec4 v_tex_rect;\n\n// float sdfBox(vec2 coord, vec2 center, vec2 rect) {\n//   vec2 d = abs(coord - center) - rect;\n//   return min(max(d.x,d.y),0.0) + length(max(d,0.0));\n// }\n// float sdfCircle(vec2 coord, vec2 center, float radius) {\n//   return length(coord - center) - radius;\n// }\n// vec3 createCorner(vec2 dir, float raidus, float sign, float stroke) {\n//   return vec3(dir + sign * raidus, raidus - stroke);\n// }\n// float getCorner(vec2 p, vec3 corner) {\n//   return sdfCircle(p, corner.xy, corner.z);\n// }\n// float getCenter(vec2 p, vec3 from, vec3 to, vec2 r) {\n//   return sdfBox(p, (from + to).xy / 2., r - abs(from + to).z/2.);\n// }\n// float getHEdge(vec2 p, vec3 from, vec3 to) {\n//   return sdfBox(p,\n//   vec2((from.x + to.x)/2., sign(from.y) * min(abs(from.y), abs(to.y))),\n//   vec2(abs(from.x - to.x)/2., max(from.z, to.z)));\n// }\n// float getVEdge(vec2 p, vec3 from, vec3 to) {\n//   return sdfBox(p,\n//   vec2(sign(from.x) * min(abs(from.x), abs(to.x)), (from.y + to.y)/2.),\n//   vec2(max(from.z, to.z), abs(from.y - to.y)/2.));\n// }\n// float drawRect(vec2 p, vec2 lt, vec2 rt, vec2 rb, vec2 lb, vec4 corners, float stroke) {\n//   vec3 cLt = vec3(vec2(lt.x + corners.x, lt.y - corners.x), corners.x - stroke);\n//   vec3 cRt = vec3(vec2(rt.x - corners.y, rt.y - corners.y), corners.y - stroke);\n//   vec3 cRb = vec3(vec2(rb.x - corners.z, rb.y + corners.z), corners.z - stroke);\n//   vec3 cLb = vec3(vec2(lb.x + corners.w, lb.y + corners.w), corners.w - stroke);\n\n//   float circle = getCorner(p, cLt);\n//   circle = min(circle, getCorner(p, cRt));\n//   circle = min(circle, getCorner(p, cRb));\n//   circle = min(circle, getCorner(p, cLb));\n\n//   float box = getHEdge(p, cLt, cRt);\n//   box = min(box, getHEdge(p, cLb, cRb));\n//   box = min(box, getVEdge(p, cLt, cLb));\n//   box = min(box, getVEdge(p, cRt, cRb));\n//   float center = sdfBox(p, (cRt + cLb).xy / 2., vec2((cRt.x - cLb.x) / 2., (cRt.y - cLb.y) / 2.));\n//   center = max(center, sdfBox(p, (cRb + cLt).xy / 2., vec2((cRb.x - cLt.x) / 2., (cLt.y - cRb.y) / 2.)));\n//   box = min(box, center);\n\n//   return min(circle, box);\n// }\n\n// https://www.shadertoy.com/view/4llXD7\nfloat sdfRoundedRect(vec2 uv, vec2 center, vec2 size, vec4 r) {\n  vec2 p = uv - center;\n  // r.xy = (p.x > 0.0) ? r.xy : r.zw;\n  r.xy = mix(r.xy, r.zw, step(p.x, 0.0));\n  // r.x  = (p.y > 0.0) ? r.x  : r.y;\n  r.x  = mix(r.x, r.y, step(p.y, 0.0));\n\n  vec2 d = abs(p) - size + r.x;\n  // return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - r.x;\n  return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - r.x;\n}\n\nvec2 pixel2coord (vec2 p) {\n  return (2.0 * vec2(p.x, v_resolution.y - p.y) - v_resolution) / v_resolution.y;\n}\n\nvec4 blend(vec4 cb, vec4 ca) {\n  float alpha = ca.a + cb.a * (1.0 - ca.a);\n  return mix(vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha), vec4(0.0), step(abs(alpha), 0.0));\n  // return alpha == 0.0 ? vec4(0.0) : vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha);\n}\n\nvoid main() {\n    float anti = 0.003;\n    vec2 p = (2.0 * gl_FragCoord.xy - v_resolution) / v_resolution.y;\n    vec4 radius = u_radius * 2.0 / v_resolution.y;\n    float borderWidth = u_border_width * 2.0 / v_resolution.y;\n\n    vec2 lt = pixel2coord(u_rect.xw);\n    vec2 rb = pixel2coord(u_rect.zy);\n    vec2 center = (rb + lt) / 2.;\n    vec2 size = abs(rb - lt) / 2.;\n    vec4 corners = vec4(radius.y, radius.z, radius.x, radius.w);\n    float border = sdfRoundedRect(p, center, size, corners);\n    float content = sdfRoundedRect(p, center, size - borderWidth, corners - borderWidth);\n\n    vec2 texLt = pixel2coord(v_tex_rect.xw);\n    vec2 texRb = pixel2coord(v_tex_rect.zy);\n    vec2 texCenter = (texRb + texLt) / 2.;\n    vec2 texSize = abs(texRb - texLt) / 2.;\n    float texContent = sdfRoundedRect(p, texCenter, texSize, vec4(0.));\n\n    vec4 borderColor = u_border_color;\n    borderColor.a *= smoothstep(-anti, anti, -max(border, -content));\n    vec4 contentColor = u_color;\n    contentColor.a *= smoothstep(-anti, anti, -content);\n    vec4 textureColor = mix(texture2D(u_texture, v_texcoord), vec4(0.0), step(abs(u_bitset.x), 0.0));\n    textureColor.rgb /= mix(textureColor.a, 1.0, step(textureColor.a, 0.0));\n    textureColor.a *= sign(-texContent) * smoothstep(-anti, anti, -content);\n    gl_FragColor = blend(blend(contentColor, textureColor), borderColor);\n}\n");
+/* harmony default export */ __webpack_exports__["default"] = ("precision mediump float;\nuniform sampler2D u_texture;\nuniform vec4 u_rect;\nuniform vec4 u_color;\nuniform vec4 u_radius;\nuniform vec4 u_border_color;\nuniform float u_border_width;\nuniform float u_opacity;\nuniform vec4 u_bitset; //texture[, context, border, radius]\nvarying vec2 v_resolution;\nvarying vec2 v_texcoord;\nvarying vec4 v_tex_rect;\n\n\n// float sdfBox(vec2 coord, vec2 center, vec2 rect) {\n//   vec2 d = abs(coord - center) - rect;\n//   return min(max(d.x,d.y),0.0) + length(max(d,0.0));\n// }\n// float sdfCircle(vec2 coord, vec2 center, float radius) {\n//   return length(coord - center) - radius;\n// }\n// vec3 createCorner(vec2 dir, float raidus, float sign, float stroke) {\n//   return vec3(dir + sign * raidus, raidus - stroke);\n// }\n// float getCorner(vec2 p, vec3 corner) {\n//   return sdfCircle(p, corner.xy, corner.z);\n// }\n// float getCenter(vec2 p, vec3 from, vec3 to, vec2 r) {\n//   return sdfBox(p, (from + to).xy / 2., r - abs(from + to).z/2.);\n// }\n// float getHEdge(vec2 p, vec3 from, vec3 to) {\n//   return sdfBox(p,\n//   vec2((from.x + to.x)/2., sign(from.y) * min(abs(from.y), abs(to.y))),\n//   vec2(abs(from.x - to.x)/2., max(from.z, to.z)));\n// }\n// float getVEdge(vec2 p, vec3 from, vec3 to) {\n//   return sdfBox(p,\n//   vec2(sign(from.x) * min(abs(from.x), abs(to.x)), (from.y + to.y)/2.),\n//   vec2(max(from.z, to.z), abs(from.y - to.y)/2.));\n// }\n// float drawRect(vec2 p, vec2 lt, vec2 rt, vec2 rb, vec2 lb, vec4 corners, float stroke) {\n//   vec3 cLt = vec3(vec2(lt.x + corners.x, lt.y - corners.x), corners.x - stroke);\n//   vec3 cRt = vec3(vec2(rt.x - corners.y, rt.y - corners.y), corners.y - stroke);\n//   vec3 cRb = vec3(vec2(rb.x - corners.z, rb.y + corners.z), corners.z - stroke);\n//   vec3 cLb = vec3(vec2(lb.x + corners.w, lb.y + corners.w), corners.w - stroke);\n\n//   float circle = getCorner(p, cLt);\n//   circle = min(circle, getCorner(p, cRt));\n//   circle = min(circle, getCorner(p, cRb));\n//   circle = min(circle, getCorner(p, cLb));\n\n//   float box = getHEdge(p, cLt, cRt);\n//   box = min(box, getHEdge(p, cLb, cRb));\n//   box = min(box, getVEdge(p, cLt, cLb));\n//   box = min(box, getVEdge(p, cRt, cRb));\n//   float center = sdfBox(p, (cRt + cLb).xy / 2., vec2((cRt.x - cLb.x) / 2., (cRt.y - cLb.y) / 2.));\n//   center = max(center, sdfBox(p, (cRb + cLt).xy / 2., vec2((cRb.x - cLt.x) / 2., (cLt.y - cRb.y) / 2.)));\n//   box = min(box, center);\n\n//   return min(circle, box);\n// }\n\n// https://www.shadertoy.com/view/4llXD7\n/**\n * function length — calculate the length of a vector\n * function normalize — calculates the unit vector in the same direction as the original vector\n */\nfloat sdfRoundedRect(vec2 uv, vec2 center, vec2 size, vec4 r) {\n  vec2 p = uv - center;\n  // r.xy = (p.x > 0.0) ? r.xy : r.zw;\n  r.xy = mix(r.xy, r.zw, step(p.x, 0.0));\n  // r.x  = (p.y > 0.0) ? r.x  : r.y;\n  r.x  = mix(r.x, r.y, step(p.y, 0.0));\n\n  vec2 d = abs(p) - size + r.x;\n  // return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - r.x;\n  return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - r.x;\n}\n\n/**\n * 屏幕像素坐标转换成裁剪空间坐标\n */\nvec2 pixel2coord (vec2 p) {\n  return (2.0 * vec2(p.x, v_resolution.y - p.y) - v_resolution) / v_resolution.y;\n}\n\nvec4 blend(vec4 cb, vec4 ca) {\n  float alpha = ca.a + cb.a * (1.0 - ca.a);\n  return mix(vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha), vec4(0.0), step(abs(alpha), 0.0));\n  // return alpha == 0.0 ? vec4(0.0) : vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha);\n}\n\nvoid main() {\n    float anti = 0.003;\n    // 归一化坐标\n    vec2 p = (2.0 * gl_FragCoord.xy - v_resolution) / v_resolution.y;\n    vec4 radius = u_radius * 2.0 / v_resolution.y;\n    float borderWidth = u_border_width * 2.0 / v_resolution.y;\n\n    // 矩形左上角\n    vec2 lt = pixel2coord(u_rect.xw);\n    // 矩形右下角\n    vec2 rb = pixel2coord(u_rect.zy);\n    // 矩形中心\n    vec2 center = (rb + lt) / 2.;\n    // 矩形尺寸\n    vec2 size = abs(rb - lt) / 2.;\n    // 矩形的radius\n    vec4 corners = vec4(radius.y, radius.z, radius.x, radius.w);\n\n    float border = sdfRoundedRect(p, center, size, corners);\n\n    float content = sdfRoundedRect(p, center, size - borderWidth, corners - borderWidth);\n\n    // 纹理左上角\n    vec2 texLt = pixel2coord(v_tex_rect.xw);\n    // 纹理右下角\n    vec2 texRb = pixel2coord(v_tex_rect.zy);\n    // 纹理中心    \n    vec2 texCenter = (texRb + texLt) / 2.;\n    // 纹理尺寸\n    vec2 texSize = abs(texRb - texLt) / 2.;\n    \n    float texContent = sdfRoundedRect(p, texCenter, texSize, vec4(0.));\n\n    vec4 borderColor = u_border_color;\n    borderColor.a *= smoothstep(-anti, anti, -max(border, -content));\n    vec4 contentColor = u_color;\n    contentColor.a *= smoothstep(-anti, anti, -content);\n    vec4 textureColor = mix(texture2D(u_texture, v_texcoord), vec4(0.0), step(abs(u_bitset.x), 0.0));\n    textureColor.rgb /= mix(textureColor.a, 1.0, step(textureColor.a, 0.0));\n    textureColor.a *= sign(-texContent) * smoothstep(-anti, anti, -content);\n    \n    vec4 temp = blend(blend(contentColor, textureColor), borderColor);\n    temp.a *= u_opacity;\n\n    gl_FragColor = temp;\n}\n");
 
 /***/ }),
-/* 21 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8434,15 +4682,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VIDEOS", function() { return VIDEOS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createRender", function() { return createRender; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderDetection", function() { return renderDetection; });
-/* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+/* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(19);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+
+
+function none() {}
+
+function uid() {
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
 
 var IMAGE_POOL = Object.create(null);
 function createImageLoader(createImage) {
@@ -8610,8 +4869,9 @@ function createTextTexture(createCanvas) {
     var valueShow = _ref5.valueShow,
         valueBreak = _ref5.valueBreak;
     var dpr = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 2;
-    style.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize * dpr, "px ").concat(style.fontFamily);
-    var key = "".concat(x, "_").concat(y, "_").concat(width, "_").concat(height, "_").concat(valueShow, "_").concat(style.font, "_").concat(style.lineHeight, "_").concat(style.textAlign, "_").concat(style.textShadow, "_").concat(style.whiteSpace, "_").concat(style.textOverflow, "_").concat(style.color);
+    style.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize * dpr, "px ").concat(style.fontFamily); // const key = `${x}_${y}_${width}_${height}_${valueShow}_${style.font}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
+
+    var key = "".concat(width, "_").concat(height, "_").concat(valueShow, "_").concat(style.font || '_', "_").concat(style.lineHeight, "_").concat(style.textAlign, "_").concat(style.textShadow, "_").concat(style.whiteSpace, "_").concat(style.textOverflow, "_").concat(style.color);
 
     if (TEXT_TEXTURE[key]) {
       return TEXT_TEXTURE[key];
@@ -8672,7 +4932,8 @@ function createTextTexture(createCanvas) {
       }
     }
 
-    ctx.restore();
+    ctx.restore(); // console.log(key, drawX, drawY, canvas.toDataURL('image/png'))
+
     TEXT_TEXTURE[key] = canvas;
     return TEXT_TEXTURE[key];
   };
@@ -8698,84 +4959,167 @@ function scaleData(data, dpr) {
 }
 
 var VIDEOS = Object.create(null);
+var glPool = Object.create(null);
+/**
+ *
+ * @param {CanvasContext} gl
+ */
+
+function resetGl(gl) {
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+  {
+    gl.enable(gl.BLEND);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    // gl.blendEquation(gl.FUNC_ADD);
+    // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE); // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+  }
+  {
+    // VBO
+    // bufferId = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.program.bufferId);
+    gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(gl.program.vPosition);
+  } // gl.useProgram(gl.program.program);
+}
+
 function createRender(_ref7) {
   var dpr = _ref7.dpr,
       createImage = _ref7.createImage,
       createCanvas = _ref7.createCanvas;
   var loadImage = createImageLoader(createImage);
   var getTextTexture = createTextTexture(createCanvas);
+
+  function drawOneGlRect(gl, rect) {
+    var repaintCbk = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : none;
+    var glRectData = scaleData(rect, dpr);
+
+    if (!rect.uid) {
+      rect.uid = uid();
+    }
+
+    var dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
+    var glRect = glPool[rect.uid];
+
+    if (!glRect) {
+      glRect = gl.createRoundRect(); // glPool[rect.uid] = glRect;
+    } else {
+      // scrollview每一项会更新，存在glRect直接绘制
+      glRect.updateContours(dimension);
+      glRect.draw();
+      return;
+    }
+
+    glRect.reset();
+    glRectData.radius && glRect.setRadius(glRectData.radius);
+    glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
+    glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
+    glRectData.opacity && glRect.setOpacity(glRectData.opacity);
+    glRect.updateContours(dimension);
+
+    if (glRectData.image) {
+      var src = glRectData.image.src;
+      loadImage(src, function (image, lazy) {
+        glRect.setTexture({
+          image: image
+        });
+
+        if (lazy) {
+          repaintCbk();
+        }
+      });
+    }
+
+    if (glRectData.backgroundImage) {
+      var _glRectData$backgroun = glRectData.backgroundImage,
+          _src = _glRectData$backgroun.src,
+          size = _glRectData$backgroun.size,
+          position = _glRectData$backgroun.position;
+      loadImage(_src, function (image, lazy) {
+        var rect = getBgImageRect(image, size, position, glRectData.borderWidth || 0, dimension, dpr);
+        glRect.setTexture({
+          image: image,
+          rect: rect
+        });
+
+        if (lazy) {
+          repaintCbk();
+        }
+      });
+    }
+
+    if (glRectData.text) {
+      glRect.setTexture({
+        image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr)
+      });
+    } // if (glRectData.type === 'ScrollView' && glRectData.glTexture) {
+    //   // console.log(glRectData.glTexture.toDataURL('image/png'))
+    //   glRect.setTexture({ image: glRectData.glTexture, srcRect: [glRectData.x, glRectData.y, glRectData.width, glRectData.height]});
+    // }
+
+
+    if (glRectData.type === 'Video') {
+      var video = VIDEOS["".concat(gl.canvas.id, "-").concat(glRectData.id)];
+
+      if (video) {
+        video.repaint = function () {
+          return repaintCbk();
+        };
+
+        if (video.iData) {
+          glRect.setTextureData({
+            imageData: video.iData,
+            width: video.vWidth,
+            height: video.vHeight
+          });
+        }
+      }
+    }
+
+    glRect.updateViewPort(); // const needUpdateTexture = !!(glRectData.type === 'ScrollView');
+
+    glRect.draw();
+  }
+
   return {
     loadImage: loadImage,
-    repaint: function drawRects(gl, glRects) {
-      // console.log('createRender repaint call');
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-      glRects.forEach(function (d, idx) {
-        var glRectData = scaleData(d, dpr); // console.log(JSON.stringify(glRectData));
+    resetGl: resetGl,
+    repaint: function drawRects(gl, glRects, scrollGlrects) {
+      // resetGl(gl);
+      glRects.forEach(function (item, idx) {
+        // scrollview开启模板测试
+        if (item.type === 'ScrollView') {
+          // 清除模板缓存
+          gl.clear(gl.STENCIL_BUFFER_BIT); // 开启模板测试
 
-        var glRect = gl.createRoundRect(idx);
-        var dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
-        glRect.updateContours(dimension);
-        glRectData.radius && glRect.setRadius(glRectData.radius);
-        glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
-        glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
+          gl.enable(gl.STENCIL_TEST); // 设置模板测试参数
 
-        if (glRectData.image) {
-          var src = glRectData.image.src;
-          loadImage(src, function (image, lazy) {
-            glRect.setTexture({
-              image: image
-            });
+          gl.stencilFunc(gl.ALWAYS, 1, 1); // 设置模板值操作
 
-            if (lazy) {
-              drawRects(gl, glRects);
-            }
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE); // 绘制scrollview
+
+          drawOneGlRect(gl, item); // 设置模板测试参数，只有滚动窗口内的才进行绘制
+
+          gl.stencilFunc(gl.EQUAL, 1, 1); //设置模板测试后的操作
+
+          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+          scrollGlrects.forEach(function (scrollItem) {
+            // if (scrollItem.y + scrollItem.height >= item.y && scrollItem.y <= item.y + item.height) {
+            drawOneGlRect(gl, scrollItem, function () {
+              resetGl(gl);
+              drawRects(gl, glRects, scrollGlrects);
+            }); // }
+          }); // 关闭模板测试
+
+          gl.disable(gl.STENCIL_TEST);
+        } else {
+          drawOneGlRect(gl, item, function () {
+            resetGl(gl);
+            drawRects(gl, glRects, scrollGlrects);
           });
         }
-
-        if (glRectData.backgroundImage) {
-          var _glRectData$backgroun = glRectData.backgroundImage,
-              _src = _glRectData$backgroun.src,
-              size = _glRectData$backgroun.size,
-              position = _glRectData$backgroun.position;
-          loadImage(_src, function (image, lazy) {
-            var rect = getBgImageRect(image, size, position, glRectData.borderWidth || 0, dimension, dpr);
-            glRect.setTexture({
-              image: image,
-              rect: rect
-            });
-
-            if (lazy) {
-              drawRects(gl, glRects);
-            }
-          });
-        }
-
-        if (glRectData.text) {
-          glRect.setTexture({
-            image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr)
-          });
-        }
-
-        if (glRectData.type === 'Video') {
-          var video = VIDEOS["".concat(gl.canvas.id, "-").concat(glRectData.id)];
-
-          if (video) {
-            video.repaint = function () {
-              return drawRects(gl, glRects);
-            };
-
-            if (video.iData) {
-              glRect.setTextureData({
-                imageData: video.iData,
-                width: video.vWidth,
-                height: video.vHeight
-              });
-            }
-          }
-        }
-
-        glRect.updateViewPort();
-        glRect.draw();
       });
     }
   };
@@ -8801,7 +5145,7 @@ function renderDetection(gl, count) {
     var column = Math.random() * height; // 取一列
 
     var p = 3 * row * width + 3 * column;
-    var key = "".concat(pixels[p], "_").concat(pixels[p + 1], "_").concat(pixels[p + 2]); // result.push(mapData);
+    var key = "".concat(pixels[p], "_").concat(pixels[p + 1], "_").concat(pixels[p + 2]);
 
     if (map[key]) {
       map[key] += 1;
@@ -8824,7 +5168,7 @@ function renderDetection(gl, count) {
 }
 
 /***/ }),
-/* 22 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8834,19 +5178,23 @@ var SCALE_KEY = ['width', 'height', 'x', 'y', 'radius', 'borderWidth'];
 
 
 /***/ }),
-/* 23 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RenderContext; });
-/* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(24);
+/* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(color_rgba__WEBPACK_IMPORTED_MODULE_0__);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -8880,14 +5228,13 @@ var normalizeColor = cached(function (color) {
  * @description 每个组件对应的渲染数据
  */
 
-var RenderContext =
-/*#__PURE__*/
-function () {
+var RenderContext = /*#__PURE__*/function () {
   function RenderContext(id, type) {
     _classCallCheck(this, RenderContext);
 
     this.id = id;
     this.type = type;
+    this.opacity = 1;
   }
 
   _createClass(RenderContext, [{
@@ -8903,6 +5250,13 @@ function () {
       this.y = y;
       this.width = width;
       this.height = height;
+      this.originX = x;
+      this.originY = y;
+    }
+  }, {
+    key: "setOpacity",
+    value: function setOpacity(v) {
+      this.opacity = v;
     }
   }, {
     key: "setRadius",
@@ -8977,7 +5331,7 @@ function () {
 
 
 /***/ }),
-/* 24 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8985,8 +5339,8 @@ function () {
 
 
 
-var parse = __webpack_require__(25)
-var hsl = __webpack_require__(27)
+var parse = __webpack_require__(22)
+var hsl = __webpack_require__(24)
 
 module.exports = function rgba (color) {
 	// template literals
@@ -9015,7 +5369,7 @@ module.exports = function rgba (color) {
 
 
 /***/ }),
-/* 25 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9025,7 +5379,7 @@ module.exports = function rgba (color) {
 
 
 
-var names = __webpack_require__(26)
+var names = __webpack_require__(23)
 
 module.exports = parse
 
@@ -9193,7 +5547,7 @@ function parse (cstr) {
 
 
 /***/ }),
-/* 26 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9352,7 +5706,7 @@ module.exports = {
 
 
 /***/ }),
-/* 27 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9361,7 +5715,7 @@ module.exports = {
  */
 
 
-var rgb = __webpack_require__(28);
+var rgb = __webpack_require__(25);
 
 module.exports = {
 	name: 'hsl',
@@ -9466,7 +5820,7 @@ rgb.hsl = function(rgb) {
 
 
 /***/ }),
-/* 28 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9487,1267 +5841,31 @@ module.exports = {
 
 
 /***/ }),
-/* 29 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(30);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "View", function() { return _view_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
-
-/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(32);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
-
-/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(33);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Text", function() { return _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
-
-/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(34);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
-
-
-
- // import Video from './video.js';
-
-
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return View; });
-/* harmony import */ var _block_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(31);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-
-
-var View =
-/*#__PURE__*/
-function (_Block) {
-  _inherits(View, _Block);
-
-  function View(_ref) {
-    var _this;
-
-    var _ref$styleInit = _ref.styleInit,
-        styleInit = _ref$styleInit === void 0 ? {} : _ref$styleInit,
-        _ref$styleActive = _ref.styleActive,
-        styleActive = _ref$styleActive === void 0 ? {} : _ref$styleActive,
-        _ref$styleDarkInit = _ref.styleDarkInit,
-        styleDarkInit = _ref$styleDarkInit === void 0 ? {} : _ref$styleDarkInit,
-        _ref$styleDarkActive = _ref.styleDarkActive,
-        styleDarkActive = _ref$styleDarkActive === void 0 ? {} : _ref$styleDarkActive,
-        _ref$props = _ref.props,
-        props = _ref$props === void 0 ? {} : _ref$props,
-        _ref$dataset = _ref.dataset,
-        dataset = _ref$dataset === void 0 ? {} : _ref$dataset,
-        _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? '' : _ref$idName,
-        _ref$className = _ref.className,
-        className = _ref$className === void 0 ? '' : _ref$className;
-
-    _classCallCheck(this, View);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(View).call(this, {
-      props: props,
-      dataset: dataset,
-      idName: idName,
-      className: className,
-      styleInit: styleInit,
-      styleActive: styleActive,
-      styleDarkInit: styleDarkInit,
-      styleDarkActive: styleDarkActive
-    }));
-    _this.type = 'View';
-    _this.renderBoxes = [];
-    Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["nextTick"])(function () {
-      var style = _this.root.isDarkMode() ? _this.styleInit : _this.styleDarkInit;
-
-      if (style.backgroundImage && _this.root && _this.root.canvasContext) {
-        _this.root.canvasContext.postMessage({
-          type: 'preload-image',
-          data: {
-            src: style.backgroundImage
-          }
-        });
-      }
-    });
-    return _this;
-  }
-
-  _createClass(View, [{
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.isDestroyed = true;
-      this.children = null;
-    } // 有些节点仅仅作为容器，实际上不需要任何渲染逻辑，这里加个判断可以提高性能
-
-  }, {
-    key: "checkNeedRender",
-    value: function checkNeedRender() {
-      return true;
-    } // 废弃
-
-  }, {
-    key: "render",
-    value: function render(img) {} // 废弃
-
-  }, {
-    key: "loadImg",
-    value: function loadImg(src) {
-      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _common_util_js__WEBPACK_IMPORTED_MODULE_1__["none"];
-    } // 废弃
-
-  }, {
-    key: "insert",
-    value: function insert(isDarkMode) {}
-  }, {
-    key: "updateRenderData",
-    value: function updateRenderData(computedStyle) {
-      if (!this.layoutBox) {
-        return;
-      }
-
-      var renderer = this.root ? this.root.renderContext : this.renderContext;
-
-      if (!this.glRect) {
-        this.glRect = renderer.createRoundRect(this.id, this.type);
-      }
-
-      this.glRect.reset();
-      var _this$layoutBox = this.layoutBox,
-          width = _this$layoutBox.width,
-          height = _this$layoutBox.height,
-          absoluteX = _this$layoutBox.absoluteX,
-          absoluteY = _this$layoutBox.absoluteY; // 设置渲染区域数据
-
-      this.glRect.updateContours([absoluteX, absoluteY, width, height]); // 设置背景色数据
-
-      if (computedStyle.backgroundColor) {
-        this.glRect.setBackgroundColor(computedStyle.backgroundColor);
-      } // 设置边框数据
-
-
-      if (computedStyle.borderWidth) {
-        this.glRect.setBorder(computedStyle.borderWidth, computedStyle.borderColor);
-      } // 设置圆角数据
-
-
-      var radius = this.getRadius(computedStyle);
-      this.glRect.setRadius(radius);
-
-      if (computedStyle.backgroundImage) {
-        // 设置背景图片
-        this.glRect.setBackgroundImage(computedStyle.backgroundImage, computedStyle.backgroundSize, computedStyle.backgroundPosition);
-      }
-    }
-  }]);
-
-  return View;
-}(_block_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-
-
-var Block =
-/*#__PURE__*/
-function (_Element) {
-  _inherits(Block, _Element);
-
-  function Block() {
-    _classCallCheck(this, Block);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Block).apply(this, arguments));
-  }
-
-  _createClass(Block, [{
-    key: "getRadius",
-    value: function getRadius(computedStyle) {
-      var borderRadius = computedStyle.borderRadius || 0;
-      var borderLeftTopRadius = computedStyle.borderLeftTopRadius || 0;
-      var borderRightTopRadius = computedStyle.borderRightTopRadius || 0;
-      var borderLeftBottomRadius = computedStyle.borderLeftBottomRadius || 0;
-      var borderRightBottomRadius = computedStyle.borderRightBottomRadius || 0;
-      var tl = borderLeftTopRadius || borderRadius;
-      var tr = borderRightTopRadius || borderRadius;
-      var bl = borderLeftBottomRadius || borderRadius;
-      var br = borderRightBottomRadius || borderRadius;
-      return [tl, tr, br, bl];
-    }
-  }, {
-    key: "updateContours",
-    value: function updateContours() {
-      var renderer = this.root.renderContext;
-      var _this$layoutBox = this.layoutBox,
-          width = _this$layoutBox.width,
-          height = _this$layoutBox.height,
-          absoluteX = _this$layoutBox.absoluteX,
-          absoluteY = _this$layoutBox.absoluteY;
-
-      if (!this.glRect) {
-        this.glRect = renderer.createRoundRect(this.id);
-      }
-
-      this.glRect.updateContours([absoluteX, absoluteY, width, height]);
-    }
-  }, {
-    key: "updateRenderData",
-    value: function updateRenderData() {// 子组件自己实现
-    }
-  }, {
-    key: "insert",
-    value: function insert(isDarkMode) {
-      var rect = this.glRect;
-      var style = _common_util__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
-
-      if (style.backgroundColor) {
-        rect.setBackgroundColor(style.backgroundColor);
-      }
-
-      var radius = this.getRadius(isDarkMode);
-      rect.setRadius(radius);
-
-      if (style.borderWidth) {
-        rect.setBorder(style.borderWidth, style.borderColor);
-      }
-    }
-  }, {
-    key: "radius",
-    get: function get() {
-      var _this$computedStyle = this.computedStyle,
-          _this$computedStyle$b = _this$computedStyle.borderRadius,
-          borderRadius = _this$computedStyle$b === void 0 ? 0 : _this$computedStyle$b,
-          _this$computedStyle$b2 = _this$computedStyle.borderLeftTopRadius,
-          borderLeftTopRadius = _this$computedStyle$b2 === void 0 ? 0 : _this$computedStyle$b2,
-          _this$computedStyle$b3 = _this$computedStyle.borderRightTopRadius,
-          borderRightTopRadius = _this$computedStyle$b3 === void 0 ? 0 : _this$computedStyle$b3,
-          _this$computedStyle$b4 = _this$computedStyle.borderLeftBottomRadius,
-          borderLeftBottomRadius = _this$computedStyle$b4 === void 0 ? 0 : _this$computedStyle$b4,
-          _this$computedStyle$b5 = _this$computedStyle.borderRightBottomRadius,
-          borderRightBottomRadius = _this$computedStyle$b5 === void 0 ? 0 : _this$computedStyle$b5;
-      var tl = borderLeftTopRadius || borderRadius;
-      var tr = borderRightTopRadius || borderRadius;
-      var bl = borderLeftBottomRadius || borderRadius;
-      var br = borderRightBottomRadius || borderRadius;
-      return [tl, tr, br, bl];
-    }
-  }]);
-
-  return Block;
-}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Image; });
-/* harmony import */ var _block_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(31);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-
-
-var Image =
-/*#__PURE__*/
-function (_Block) {
-  _inherits(Image, _Block);
-
-  function Image(opts) {
-    var _this;
-
-    _classCallCheck(this, Image);
-
-    var _opts$styleInit = opts.styleInit,
-        styleInit = _opts$styleInit === void 0 ? {} : _opts$styleInit,
-        _opts$styleActive = opts.styleActive,
-        styleActive = _opts$styleActive === void 0 ? {} : _opts$styleActive,
-        _opts$styleDarkInit = opts.styleDarkInit,
-        styleDarkInit = _opts$styleDarkInit === void 0 ? {} : _opts$styleDarkInit,
-        _opts$styleDarkActive = opts.styleDarkActive,
-        styleDarkActive = _opts$styleDarkActive === void 0 ? {} : _opts$styleDarkActive,
-        _opts$props = opts.props,
-        props = _opts$props === void 0 ? {} : _opts$props,
-        _opts$dataset = opts.dataset,
-        dataset = _opts$dataset === void 0 ? {} : _opts$dataset,
-        _opts$idName = opts.idName,
-        idName = _opts$idName === void 0 ? '' : _opts$idName,
-        _opts$className = opts.className,
-        className = _opts$className === void 0 ? '' : _opts$className,
-        _opts$src = opts.src,
-        src = _opts$src === void 0 ? '' : _opts$src;
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Image).call(this, {
-      props: props,
-      dataset: dataset,
-      idName: idName,
-      className: className,
-      styleInit: styleInit,
-      styleActive: styleActive,
-      styleDarkInit: styleDarkInit,
-      styleDarkActive: styleDarkActive
-    }));
-    _this.imgsrc = src;
-    Object.defineProperty(_assertThisInitialized(_this), "src", {
-      get: function get() {
-        return this.imgsrc;
-      },
-      set: function set(newValue) {
-        if (newValue !== this.imgsrc) {
-          this.imgsrc = newValue;
-          this.glRect.setImage(newValue);
-        }
-      },
-      enumerable: true,
-      configurable: true
-    });
-    _this.type = 'Image';
-    _this.renderBoxes = [];
-    Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["nextTick"])(function () {
-      if (_this.root && _this.root.canvasContext) {
-        _this.root.canvasContext.postMessage({
-          type: 'preload-image',
-          data: {
-            src: _this.src
-          }
-        });
-      }
-    });
-    return _this;
-  } // 子类填充实现
-
-
-  _createClass(Image, [{
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.isDestroyed = true;
-
-      if (this.img) {
-        this.img.onloadcbks = [];
-        this.img.onload = null;
-        this.img.onerror = null;
-      }
-
-      this.img = null;
-      delete this.src;
-    } // 废弃
-
-  }, {
-    key: "initImg",
-    value: function initImg() {
-      var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _common_util_js__WEBPACK_IMPORTED_MODULE_1__["none"];
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var needEmitEvent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-
-      if (!this.img) {
-        return;
-      }
-    }
-  }, {
-    key: "insert",
-    value: function insert(isDarkMode) {
-      var _this2 = this;
-
-      _get(_getPrototypeOf(Image.prototype), "insert", this).call(this, isDarkMode);
-
-      this.glRect.setTexture({
-        type: 'image',
-        src: this.src
-      });
-      this.initImg(function () {
-        _this2.render();
-      });
-    }
-  }, {
-    key: "updateRenderData",
-    value: function updateRenderData(computedStyle) {
-      if (!this.layoutBox) {
-        return;
-      }
-
-      var renderer = this.root ? this.root.renderContext : this.renderContext;
-
-      if (!this.glRect) {
-        this.glRect = renderer.createRoundRect(this.id, this.type);
-      }
-
-      this.glRect.reset();
-      var _this$layoutBox = this.layoutBox,
-          width = _this$layoutBox.width,
-          height = _this$layoutBox.height,
-          absoluteX = _this$layoutBox.absoluteX,
-          absoluteY = _this$layoutBox.absoluteY; // 设置渲染区域数据
-
-      this.glRect.updateContours([absoluteX, absoluteY, width, height]); // 设置背景色数据
-
-      if (computedStyle.backgroundColor) {
-        this.glRect.setBackgroundColor(computedStyle.backgroundColor);
-      } // 设置边框数据
-
-
-      if (computedStyle.borderWidth) {
-        this.glRect.setBorder(computedStyle.borderWidth, computedStyle.borderColor);
-      } // 设置圆角数据
-
-
-      var radius = this.getRadius(computedStyle);
-      this.glRect.setRadius(radius); // 设置图片
-
-      this.glRect.setImage(this.src);
-    }
-  }]);
-
-  return Image;
-}(_block_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Text; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-
-
-var Text =
-/*#__PURE__*/
-function (_Element) {
-  _inherits(Text, _Element);
-
-  function Text(_ref) {
-    var _this;
-
-    var _ref$styleInit = _ref.styleInit,
-        styleInit = _ref$styleInit === void 0 ? {} : _ref$styleInit,
-        _ref$styleActive = _ref.styleActive,
-        styleActive = _ref$styleActive === void 0 ? {} : _ref$styleActive,
-        _ref$styleDarkInit = _ref.styleDarkInit,
-        styleDarkInit = _ref$styleDarkInit === void 0 ? {} : _ref$styleDarkInit,
-        _ref$styleDarkActive = _ref.styleDarkActive,
-        styleDarkActive = _ref$styleDarkActive === void 0 ? {} : _ref$styleDarkActive,
-        _ref$dataset = _ref.dataset,
-        dataset = _ref$dataset === void 0 ? {} : _ref$dataset,
-        _ref$props = _ref.props,
-        props = _ref$props === void 0 ? {} : _ref$props,
-        _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? '' : _ref$idName,
-        _ref$className = _ref.className,
-        className = _ref$className === void 0 ? '' : _ref$className,
-        _ref$value = _ref.value,
-        value = _ref$value === void 0 ? '' : _ref$value;
-
-    _classCallCheck(this, Text);
-
-    var valueInit = value; // 先存下初始化时的value
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Text).call(this, {
-      props: props,
-      idName: idName,
-      className: className,
-      styleInit: styleInit,
-      styleActive: styleActive,
-      styleDarkInit: styleDarkInit,
-      styleDarkActive: styleDarkActive,
-      dataset: dataset
-    }));
-    _this.type = 'Text';
-    _this.valueShow = value; // 显示的时候的value
-
-    _this.valueInit = valueInit;
-    _this.renderBoxes = [];
-    Object.defineProperty(_assertThisInitialized(_this), 'value', {
-      get: function get() {
-        return this.valueInit; // 初始化是的value
-      },
-      set: function set(newValue) {
-        console.log('set text value 1 ', newValue, this.valueInit);
-
-        if (newValue !== this.valueInit) {
-          console.log('set text value 2 ', newValue, this.valueInit);
-          this.valueInit = newValue;
-          this.valueShow = newValue;
-          this.computedStyle.width = this.root._getTextWidth(this.style, newValue, this.root.getFontSize());
-          this.noWrapWidth = this.computedStyle.width;
-
-          if (this.layoutBox.width > 0 && this.layoutBox.height > 0) {
-            // 不显示的节点，改了wording也不reflow
-            this.root.emit('reflow');
-          }
-        }
-      },
-      enumerable: true,
-      configurable: true
-    });
-    return _this;
-  }
-
-  _createClass(Text, [{
-    key: "beforeReflow",
-    value: function beforeReflow() {
-      this.computedStyle.width = this.noWrapWidth;
-      this.computedStyle.height = this.noWrapHeight;
-    }
-  }, {
-    key: "insert",
-    value: function insert() {// this.render(isDarkMode)
-    }
-  }, {
-    key: "updateContours",
-    value: function updateContours() {
-      if (!this.layoutBox) {
-        return;
-      }
-
-      var box = this.layoutBox;
-      var isDarkMode = this.root.isDarkMode();
-      var style = _common_util_js__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
-
-      if (box.width * 1 === 0 || box.height * 1 === 0) {
-        // 宽度或者高度等于0，直接不画
-        return;
-      }
-
-      var parent = this.parent;
-
-      while (parent && parent.parent) {
-        if (parent.styleInit.display === 'none') {
-          return;
-        }
-
-        parent = parent.parent;
-      }
-
-      var boxWidth = box.width;
-      var boxHeight = box.height;
-      var styleNoWrap = style.whiteSpace === 'nowrap' && style.textOverflow !== 'ellipsis';
-
-      if (!styleNoWrap && this.valueBreak && this.valueBreak.length) {
-        boxWidth = this.parent.layoutBox.width - (this.parent.style.paddingLeft || 0) - (this.parent.style.paddingRight || 0);
-        boxHeight = box.height;
-      }
-
-      var renderer = this.root.renderContext;
-      this.glRect = renderer.createRoundRect(this.id, this.renderer, [box.absoluteX, box.absoluteY, boxWidth, boxHeight]);
-      this.glRect.setTexture({
-        type: 'text',
-        value: this.valueShow,
-        fontSize: style.fontSize || 12,
-        textBaseline: 'top',
-        font: "".concat(style.fontWeight || '', " ").concat((style.fontSize || 12) * this.root.getFontSize(), "px ").concat(style.fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_1__["DEFAULT_FONT_FAMILY"]),
-        textAlign: style.textAlign || 'left',
-        fillStyle: style.color || '#000'
-      });
-    }
-  }, {
-    key: "render",
-    value: function render(isDarkMode) {}
-  }, {
-    key: "updateRenderData",
-    value: function updateRenderData(computedStyle) {
-      var box = this.layoutBox;
-
-      if (box.width * 1 === 0 || box.height * 1 === 0) {
-        // 宽度或者高度等于0，直接不画
-        return;
-      }
-
-      var parent = this.parent;
-
-      while (parent && parent.parent) {
-        if (parent.styleInit.display === 'none') {
-          return;
-        }
-
-        parent = parent.parent;
-      }
-
-      var boxWidth = box.width;
-      var boxHeight = box.height;
-      var styleNoWrap = computedStyle.whiteSpace === 'nowrap' && computedStyle.textOverflow !== 'ellipsis';
-
-      if (!styleNoWrap && this.valueBreak && this.valueBreak.length) {
-        boxWidth = this.parent.layoutBox.width - (this.parent.style.paddingLeft || 0) - (this.parent.style.paddingRight || 0);
-        boxHeight = box.height;
-      }
-
-      var renderer = this.root.renderContext;
-
-      if (!this.glRect) {
-        this.glRect = renderer.createRoundRect(this.id, this.type);
-      }
-
-      this.glRect.reset();
-      this.glRect.updateContours([box.absoluteX, box.absoluteY - 4, boxWidth, boxHeight + 8]);
-      this.glRect.setText({
-        value: {
-          valueShow: this.valueShow,
-          valueBreak: this.valueBreak
-        },
-        style: {
-          drawX: box.absoluteX,
-          drawY: box.absoluteY,
-          fontSize: (computedStyle.fontSize || 12) * this.root.getFontSize(),
-          fontWeight: computedStyle.fontWeight || '',
-          fontFamily: computedStyle.fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_1__["DEFAULT_FONT_FAMILY"],
-          lineHeight: computedStyle.lineHeight || computedStyle.fontSize || 12,
-          textAlign: computedStyle.textAlign || 'left',
-          textShadow: computedStyle.textShadow,
-          whiteSpace: computedStyle.whiteSpace,
-          textOverflow: computedStyle.textOverflow,
-          color: computedStyle.color || '#000'
-        }
-      });
-    }
-  }]);
-
-  return Text;
-}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(30);
-/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
-/* harmony import */ var _common_touch_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(35);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(3);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-
-
-
-var id = 0;
-
-var ScrollView =
-/*#__PURE__*/
-function (_View) {
-  _inherits(ScrollView, _View);
-
-  function ScrollView(_ref) {
-    var _this;
-
-    var _ref$style = _ref.style,
-        style = _ref$style === void 0 ? {} : _ref$style,
-        _ref$props = _ref.props,
-        props = _ref$props === void 0 ? {} : _ref$props,
-        _ref$name = _ref.name,
-        name = _ref$name === void 0 ? '' : _ref$name;
-
-    _classCallCheck(this, ScrollView);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(ScrollView).call(this, {
-      props: props,
-      name: name,
-      style: style
-    }));
-    _this.type = 'ScrollView'; // 当前列表滚动的值
-
-    _this.top = 0; // 滚动处理器
-
-    _this.touch = new _common_touch_js__WEBPACK_IMPORTED_MODULE_2__["default"](); // canvas高度不能过高，在小游戏里面，对canvas尺寸是有限制的
-
-    _this.pageHeight = 2000; // 根据列表总高度和单页高度计算的分页数量
-
-    _this.pageCount = 1;
-    _this.canvasMap = {}; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
-
-    _this.throttleRepaint = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.clipRepaint, 16, _assertThisInitialized(_this));
-    _this.renderTimers = [];
-    return _this;
-  }
-  /**
-   * 获取滚动列表内所有元素的高度和
-   * 这里不能简单将所有子元素的高度累加，因为每个元素之间可能是有空隙的
-   */
-
-
-  _createClass(ScrollView, [{
-    key: "initRepaint",
-    // 重写基类的initRepaint方法，因为scrollView比较特殊，他有自己的绘制函数，因此repaint不需要上升到parent
-    value: function initRepaint() {
-      var _this2 = this;
-
-      this.on('repaint', function () {
-        _this2.clear();
-
-        _this2.repaint();
-
-        _this2.clipRepaint(-_this2.top);
-      });
-    }
-    /**
-     * 列表子元素重绘之前先将所有的canvas擦除
-     */
-
-  }, {
-    key: "clear",
-    value: function clear() {
-      var _this3 = this;
-
-      Object.keys(this.canvasMap).forEach(function (key) {
-        var item = _this3.canvasMap[key];
-        item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
-      });
-    }
-    /**
-     * 递归将整颗树的节点repaint一次
-     * 由于renderChildren阶段已经计算过每个元素会在哪一个canvas绘制，并且子元素会保留这些绘制信息
-     * 因为仅仅需要repaint而不需要重新renderChildren，以提升性能
-     */
-
-  }, {
-    key: "repaint",
-    value: function repaint(tree) {
-      var _this4 = this;
-
-      if (!tree) {
-        tree = this;
-      }
-
-      var children = tree.children;
-      Object.keys(children).forEach(function (id) {
-        var child = children[id];
-        child.repaint();
-
-        _this4.repaint(child);
-      });
-    } // 与主canvas的尺寸保持一致
-
-  }, {
-    key: "updateRenderPort",
-    value: function updateRenderPort(renderport) {
-      this.renderport = renderport;
-    }
-    /**
-     * 计算分页数据
-     * 小游戏的canvas对尺寸有要求，如果如果高度过高，可能出现渲染不出来的情况
-     * 因此需要手动分页，列表过长的时候将数据绘制到几个canvas上面，这里预创建几个canvas
-     */
-
-  }, {
-    key: "calPageData",
-    value: function calPageData() {
-      this.pageCount = Math.ceil((this.scrollHeight + this.layoutBox.absoluteY) / this.pageHeight);
-
-      for (var i = 0; i < this.pageCount; i++) {
-        var cache = this.root.canvasPool.get(i);
-
-        if (cache) {
-          cache.context && cache.context.clearRect(0, 0, cache.canvas.width, cache.canvas.height);
-          cache.elements = [];
-          this.canvasMap[i] = cache;
-        } else {
-          this.canvasMap[i] = {
-            elements: []
-          };
-          this.root.canvasPool.set(i, this.canvasMap[i]);
-        }
-      }
-    }
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.touch = null;
-      this.isDestroyed = true;
-      this.throttleRepaint = null;
-      this.renderTimers.forEach(function (timer) {
-        clearTimeout(timer);
-      });
-      this.renderTimers = [];
-      this.canvasMap = {};
-      this.ctx = null;
-      this.children = null;
-    }
-    /**
-     * 滚动列表重绘逻辑
-     * 将分页canvas按照滚动裁剪绘制到主canvas上面
-     */
-
-  }, {
-    key: "clipRepaint",
-    value: function clipRepaint(top) {
-      if (this.isDestroyed) {
-        return;
-      }
-
-      top = -top;
-      this.top = top;
-      var box = this.layoutBox;
-      var abY = box.absoluteY;
-
-      if (this.isDestroyed || this.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
-        return;
-      } // 在主canvas上面将滚动列表区域擦除
-
-
-      this.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
-
-      this.ctx.fillStyle = this.parent.style.backgroundColor || '#ffffff';
-      this.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
-
-      for (var i = 0; i < this.pageCount; i++) {
-        var canvas = this.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
-
-        var startY = abY + top;
-        var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
-
-        if (startY < this.pageHeight * (i + 1) && endY > this.pageHeight * i) {
-          /**
-           * 这里不能按照box.width * box.height的区域去裁剪
-           * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
-           */
-          var clipY = abY + top - this.pageHeight * i;
-          var clipH = box.height;
-          var renderY = abY;
-
-          if (clipY > 0 && this.pageHeight - clipY < box.height) {
-            clipH = this.pageHeight - clipY;
-          } else if (clipY < 0) {
-            clipH = clipY + box.height;
-            renderY = renderY - clipY;
-            clipY = 0;
-          }
-
-          this.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
-        }
-      }
-    }
-  }, {
-    key: "renderChildren",
-    value: function renderChildren(tree) {
-      var _this5 = this;
-
-      var children = tree.children;
-      var height = this.pageHeight;
-      Object.keys(children).forEach(function (id) {
-        var child = children[id];
-        var originY = child.layoutBox.originalAbsoluteY;
-        var pageIndex = Math.floor(originY / height);
-        var nextPage = pageIndex + 1;
-        child.layoutBox.absoluteY -= _this5.pageHeight * pageIndex;
-
-        if (child.checkNeedRender()) {
-          _this5.canvasMap[pageIndex].elements.push({
-            element: child,
-            box: child.layoutBox
-          });
-        } // 对于跨界的元素，两边都绘制下
-
-
-        if (originY + child.layoutBox.height > height * nextPage) {
-          var tmpBox = Object.assign({}, child.layoutBox);
-          tmpBox.absoluteY = originY - _this5.pageHeight * nextPage;
-
-          if (child.checkNeedRender()) {
-            _this5.canvasMap[nextPage].elements.push({
-              element: child,
-              box: tmpBox
-            });
-          }
-        }
-
-        _this5.renderChildren(child);
-      });
-    }
-  }, {
-    key: "insertElements",
-    value: function insertElements(pageIndex) {
-      var _this6 = this;
-
-      var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
-      var ctx = can.getContext('2d', {
-        alpha: true
-      });
-      can.width = this.renderport.width;
-      can.height = this.pageHeight;
-      ctx.id = ++id;
-      this.canvasMap[pageIndex].canvas = can;
-      this.canvasMap[pageIndex].context = ctx;
-      this.canvasMap[pageIndex].elements.forEach(function (ele) {
-        ele.element.insert(ctx, ele.box);
-      });
-
-      if (pageIndex < this.pageCount - 1) {
-        var timer = setTimeout(function () {
-          _this6.insertElements(++pageIndex);
-        }, 250);
-        this.renderTimers.push(timer);
-      }
-    }
-  }, {
-    key: "insertScrollView",
-    value: function insertScrollView(context) {
-      var _this7 = this;
-
-      // 绘制容器
-      this.insert(context); // 计算列表应该分割成几页
-
-      this.calPageData(); // 计算分页数据：每个元素应该坐落在哪个canvas
-
-      this.renderChildren(this);
-      this.insertElements(0);
-      this.clipRepaint(-this.top); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-
-      this.EE.on('image__render__done', function () {
-        _this7.throttleRepaint(-_this7.top || 0);
-      });
-
-      if (this.scrollHeight > this.layoutBox.height) {
-        this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0,
-        /*this.throttleRepaint,*/
-        this.clipRepaint.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
-
-        this.on('touchstart', this.touch.startFunc);
-        this.on('touchmove', this.touch.moveFunc);
-        this.on('touchend', this.touch.endFunc);
-      }
-    }
-  }, {
-    key: "scrollHeight",
-    get: function get() {
-      var ids = Object.keys(this.children);
-      var last = this.children[ids[ids.length - 1]];
-      return last.layoutBox.top + last.layoutBox.height;
-    }
-  }]);
-
-  return ScrollView;
-}(_view_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Touch; });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-// import { getDpr } from './util.js';
-var Touch =
-/*#__PURE__*/
-function () {
-  function Touch() {
-    _classCallCheck(this, Touch);
-
-    this.needProcess = false;
-    this.startFunc = this.touchStartHandler.bind(this);
-    this.endFunc = this.touchEndHandler.bind(this);
-    this.moveFunc = this.touchMoveHandler.bind(this);
-  }
-
-  _createClass(Touch, [{
-    key: "reset",
-    value: function reset() {
-      this.touchTime = new Date();
-      this.touchStartX = 0;
-      this.touchStartY = 0; // 滚动区间
-
-      this.start = 0;
-      this.end = 0; // 当前位置
-
-      this.move = 0; // 目标位置
-
-      this.target = 0; // 滚动回调函数
-
-      this.scroll = null; // for istanbul
-
-      /* istanbul ignore if*/
-
-      if (typeof cancelAnimationFrame !== 'undefined') {
-        cancelAnimationFrame(this.animate);
-      }
-    }
-  }, {
-    key: "enable",
-    value: function enable() {
-      this.reset();
-      this.needProcess = true;
-    }
-  }, {
-    key: "disable",
-    value: function disable() {
-      this.needProcess = false;
-    } // 设置滚动区间，比如一个排行榜的滚动区间可能是[-300, 0]
-
-  }, {
-    key: "setTouchRange",
-    value: function setTouchRange(start, end, scroll) {
-      // 考虑到切换游戏的场景，每次设置的时候重置所有变量
-      this.enable();
-      this.start = start;
-      this.end = end;
-
-      if (start === 0 && end === 0) {
-        return;
-      }
-
-      this.scroll = scroll; // this.animate = requestAnimationFrame(this.loop.bind(this));
-    } // 保证滚动目标位置在滚动区间内
-
-  }, {
-    key: "limitTarget",
-    value: function limitTarget(target) {
-      var result = target;
-
-      if (target > this.end) {
-        result = this.end;
-      } else if (target < this.start) {
-        result = this.start;
-      }
-
-      return result;
-    }
-  }, {
-    key: "touchStartHandler",
-    value: function touchStartHandler(e) {
-      var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
-
-      if (!touch || !touch.pageX || !touch.pageY) {
-        return;
-      } // this.touchStartX = touch.clientX * getDpr();
-      // this.touchStartY = touch.clientY * getDpr();
-
-
-      this.touchStartX = touch.clientX;
-      this.touchStartY = touch.clientY;
-      this.touchTime = new Date();
-      this.isMoving = true;
-      this.needProcess = true;
-      this.animate = requestAnimationFrame(this.loop.bind(this));
-    }
-  }, {
-    key: "touchMoveHandler",
-    value: function touchMoveHandler(e) {
-      if (!this.isMoving) {
-        return;
-      }
-
-      var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
-
-      if (!touch || !touch.pageX || !touch.pageY) {
-        return;
-      }
-
-      var currY = touch.clientY;
-
-      if (this.touchStartY - currY > 2 || this.touchStartY - currY < -2) {
-        this.target -= this.touchStartY - currY;
-      }
-
-      this.target = this.limitTarget(this.target);
-      this.touchStartY = currY;
-    }
-  }, {
-    key: "touchEndHandler",
-    value: function touchEndHandler() {
-      this.isMoving = false;
-      var timeInS = (Date.now() - this.touchTime) / 1000;
-      /* console.log(Date.now(), this.touchTime.getTime(), Date.now() - this.touchTime);*/
-
-      if (timeInS < 0.9) {
-        /* console.log(1, timeInS, this.target, this.move);*/
-        this.target += (this.target - this.move) * 0.6 / (timeInS * 5);
-        /* console.log(2, this.target)*/
-
-        this.target = this.limitTarget(this.target);
-        /* console.log(3, this.target)*/
-      }
-    }
-  }, {
-    key: "loop",
-    value: function loop() {
-      if (this.needProcess) {
-        if (this.isMoving) {
-          if (this.move !== this.target) {
-            // 手指移动可能过快，切片以使得滑动流畅
-            if (Math.abs(this.target - this.move) > 1) {
-              this.move += (this.target - this.move) * 0.4;
-            } else {
-              this.move = this.target;
-            }
-
-            this.scroll && this.scroll(this.move);
-          }
-        } else {
-          if (this.move !== this.target) {
-            /**
-                       * 如果滑动很快，为了滚动流畅，需要将滑动过程切片
-                       */
-            if (Math.abs(this.target - this.move) > 1) {
-              this.move += (this.target - this.move) * 0.3;
-            } else {
-              this.move = this.target;
-            }
-
-            this.scroll && this.scroll(this.move);
-          } else {
-            // 滑动结束，停止动画
-            this.needProcess = false;
-          }
-        }
-
-        this.animate = requestAnimationFrame(this.loop.bind(this));
-      } else if (typeof cancelAnimationFrame !== 'undefined') {
-        cancelAnimationFrame(this.animate);
-      }
-    }
-  }]);
-
-  return Touch;
-}();
-
-
-
-/***/ }),
-/* 36 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layoutChildren", function() { return layoutChildren; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateRealLayout", function() { return updateRealLayout; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restoreLayoutTree", function() { return restoreLayoutTree; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_getElementById", function() { return _getElementById; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_getElementsByClassName", function() { return _getElementsByClassName; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_getChildsByPos", function() { return _getChildsByPos; });
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(29);
+/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(27);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 // components
 
 
+
 var constructorMap = {
   view: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["View"],
   text: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Text"],
-  image: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"] // video: Video
+  image: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"],
+  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["ScrollView"] // video: Video
 
 };
 /**
@@ -10820,7 +5938,7 @@ function create(node, style) {
     }
 
     if (/^data-/.test(key)) {
-      var datakey = dash2camel(key.substring(5));
+      var datakey = Object(_util__WEBPACK_IMPORTED_MODULE_1__["dash2camel"])(key.substring(5));
       !obj.dataset ? obj.dataset = _defineProperty({}, datakey, value) : obj.dataset[datakey] = value;
     }
 
@@ -10975,16 +6093,19 @@ function create(node, style) {
  * @param {Array} children 子节点
  * @param {Boolean} isDarkMode 是否暗黑模式
  * @param {Number} fontSize 字体大小
- * @param {Array} webGLRenderData
  */
 
-function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
+function layoutChildren(children, isDarkMode, fontSize) {
   var _this2 = this;
 
   var _loop = function _loop(i) {
     var child = children[i];
     var style = _util__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(child, isDarkMode);
     var computedStyle = _util__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(child, isDarkMode);
+    child.layoutBox = child.layoutBox || {};
+    ['left', 'top', 'width', 'height'].forEach(function (prop) {
+      child.layoutBox[prop] = child.layout[prop];
+    });
     child.realLayoutBox = child.realLayoutBox || {};
     ['left', 'top', 'width', 'height'].forEach(function (prop) {
       child.realLayoutBox[prop] = child.layoutBox[prop];
@@ -10992,21 +6113,21 @@ function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
 
     if (child.parent) {
       child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
-      child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
-      child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
-      child.realLayoutBox.realY = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
+      child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top; // child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+      // child.realLayoutBox.realY = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
     } else {
       child.layoutBox.absoluteX = child.layoutBox.left;
-      child.layoutBox.absoluteY = child.layoutBox.top;
-      child.realLayoutBox.realX = child.realLayoutBox.left;
-      child.realLayoutBox.realY = child.realLayoutBox.top;
+      child.layoutBox.absoluteY = child.layoutBox.top; // child.realLayoutBox.realX = child.realLayoutBox.left;
+      // child.realLayoutBox.realY = child.realLayoutBox.top;
     }
 
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
 
     if (child.type === 'ScrollView') {
       // 滚动列表的画板尺寸和主画板保持一致
-      child.updateRenderPort(_this2.renderport);
+      Object(_util__WEBPACK_IMPORTED_MODULE_1__["nextTick"])(function () {
+        child.updateRenderPort(_this2.renderport);
+      });
     } else if (child.type === 'Text') {
       // 文本节点处理下ellipsis
       var width = child.layoutBox.width > child.parent.layoutBox.width ? child.parent.layoutBox.width : child.layoutBox.width;
@@ -11031,7 +6152,7 @@ function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
 
 
     child.updateRenderData && child.updateRenderData(computedStyle);
-    layoutChildren.call(_this2, child.childNodes, isDarkMode, fontSize, webGLRenderData);
+    layoutChildren.call(_this2, child.children, isDarkMode, fontSize);
   };
 
   for (var i = 0; i < children.length; i++) {
@@ -11040,16 +6161,66 @@ function layoutChildren(children, isDarkMode, fontSize, webGLRenderData) {
     if (_ret === "continue") continue;
   }
 }
+function updateRealLayout(children, scale) {
+  children.forEach(function (child) {
+    child.realLayoutBox = child.realLayoutBox || {};
+    ['left', 'top', 'width', 'height'].forEach(function (prop) {
+      // child.realLayoutBox[prop] = data.layout[prop] * scale;
+      child.realLayoutBox[prop] = child.layoutBox[prop] * scale;
+    });
+
+    if (child.parent) {
+      // child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+      Object.defineProperty(child.realLayoutBox, 'realX', {
+        configurable: true,
+        enumerable: true,
+        get: function get() {
+          var res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+          /**
+           * 滚动列表事件处理
+           */
+
+          if (child.parent && child.parent.type === 'ScrollView') {
+            res -= child.parent.scrollLeft * scale;
+          }
+
+          return res;
+        }
+      });
+      Object.defineProperty(child.realLayoutBox, 'realY', {
+        configurable: true,
+        enumerable: true,
+        get: function get() {
+          var res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
+          /**
+           * 滚动列表事件处理
+           */
+
+          if (child.parent && child.parent.type === 'ScrollView') {
+            res -= child.parent.scrollTop * scale;
+          }
+
+          return res;
+        }
+      });
+    } else {
+      child.realLayoutBox.realX = child.realLayoutBox.left;
+      child.realLayoutBox.realY = child.realLayoutBox.top;
+    }
+
+    updateRealLayout(child.children, scale);
+  });
+}
 /**
  * 获取节点需要缓存的数据
- * @param {Array} childNodes
+ * @param {Array} children
  */
 
-function getNodeData(childNodes) {
+function getNodeData(children) {
   var layoutData = [];
 
-  for (var i = 0; i < childNodes.length; i++) {
-    var child = childNodes[i];
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i];
     layoutData[i] = {
       layoutBox: child.layoutBox,
       // 布局信息
@@ -11069,10 +6240,10 @@ function getNodeData(childNodes) {
       layoutData[i]['valueBreak'] = child.valueBreak;
     }
 
-    if (child.childNodes && child.childNodes.length) {
-      layoutData[i].childNodes = getNodeData(child.childNodes);
+    if (child.children && child.children.length) {
+      layoutData[i].children = getNodeData(child.children);
     } else {
-      layoutData[i].childNodes = [];
+      layoutData[i].children = [];
     }
   }
 
@@ -11080,11 +6251,11 @@ function getNodeData(childNodes) {
 } // 恢复布局数据，需要保证节点树、节点样式完全一致
 
 
-function restoreLayoutTree(childNodes, layoutNodes) {
+function restoreLayoutTree(children, layoutNodes) {
   var ret = true;
 
-  for (var i = 0; i < childNodes.length; i++) {
-    var child = childNodes[i];
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i];
     var node = layoutNodes[i];
 
     if (child.type === node.type && JSON.stringify(child.styleInit) === JSON.stringify(node.styleInit) && JSON.stringify(child.styleProp) === JSON.stringify(node.styleProp) && JSON.stringify(child.styleDarkInit) === JSON.stringify(node.styleDarkInit)) {
@@ -11094,10 +6265,10 @@ function restoreLayoutTree(childNodes, layoutNodes) {
         child.valueBreak = node.valueBreak;
       }
 
-      if (child.childNodes.length !== node.childNodes.length) {
+      if (child.children.length !== node.children.length) {
         ret = false;
       } else {
-        ret = restoreLayoutTree(child.childNodes, node.childNodes);
+        ret = restoreLayoutTree(child.children, node.children);
       }
 
       if (!ret) break;
@@ -11112,13 +6283,13 @@ function restoreLayoutTree(childNodes, layoutNodes) {
 function _getElementById(tree, id) {
   var result = null;
 
-  for (var i = 0; i < tree.childNodes.length; i++) {
-    var child = tree.childNodes[i];
+  for (var i = 0; i < tree.children.length; i++) {
+    var child = tree.children[i];
 
     if (child.idName === id) {
       result = child;
       break;
-    } else if (child.childNodes.length) {
+    } else if (child.children.length) {
       result = _getElementById(child, id);
       if (result) break;
     }
@@ -11130,14 +6301,14 @@ function _getElementsByClassName(tree) {
   var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
   var className = arguments.length > 2 ? arguments[2] : undefined;
 
-  for (var i = 0; i < tree.childNodes.length; i++) {
-    var child = tree.childNodes[i];
+  for (var i = 0; i < tree.children.length; i++) {
+    var child = tree.children[i];
 
     if (child.className.split(/\s+/).indexOf(className) > -1) {
       list.push(child);
     }
 
-    if (child.childNodes.length) {
+    if (child.children.length) {
       _getElementsByClassName(child, list, className);
     }
   }
@@ -11148,12 +6319,12 @@ function _getChildsByPos(tree, x, y) {
   var list = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
   var ret = [];
 
-  for (var i = 0; i < tree.childNodes.length; i++) {
-    var child = tree.childNodes[i];
+  for (var i = 0; i < tree.children.length; i++) {
+    var child = tree.children[i];
     var box = child.realLayoutBox;
 
     if (box.realX <= x && x <= box.realX + box.width && box.realY <= y && y <= box.realY + box.height && child.computedStyle.display !== 'none') {
-      if (child.childNodes.length) {
+      if (child.children.length) {
         ret = _getChildsByPos(child, x, y, list);
       } else {
         list.push(child);
@@ -11170,6 +6341,3683 @@ function _getChildsByPos(tree, x, y) {
 
   return list;
 }
+
+/***/ }),
+/* 27 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(28);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "View", function() { return _view_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(30);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+
+/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(31);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Text", function() { return _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+
+/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(32);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
+
+
+
+ // import Video from './video.js';
+
+
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return View; });
+/* harmony import */ var _block_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(29);
+/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var View = /*#__PURE__*/function (_Block) {
+  _inherits(View, _Block);
+
+  var _super = _createSuper(View);
+
+  function View(_ref) {
+    var _this;
+
+    var _ref$styleInit = _ref.styleInit,
+        styleInit = _ref$styleInit === void 0 ? {} : _ref$styleInit,
+        _ref$styleActive = _ref.styleActive,
+        styleActive = _ref$styleActive === void 0 ? {} : _ref$styleActive,
+        _ref$styleDarkInit = _ref.styleDarkInit,
+        styleDarkInit = _ref$styleDarkInit === void 0 ? {} : _ref$styleDarkInit,
+        _ref$styleDarkActive = _ref.styleDarkActive,
+        styleDarkActive = _ref$styleDarkActive === void 0 ? {} : _ref$styleDarkActive,
+        _ref$props = _ref.props,
+        props = _ref$props === void 0 ? {} : _ref$props,
+        _ref$dataset = _ref.dataset,
+        dataset = _ref$dataset === void 0 ? {} : _ref$dataset,
+        _ref$idName = _ref.idName,
+        idName = _ref$idName === void 0 ? '' : _ref$idName,
+        _ref$className = _ref.className,
+        className = _ref$className === void 0 ? '' : _ref$className;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this, {
+      props: props,
+      dataset: dataset,
+      idName: idName,
+      className: className,
+      styleInit: styleInit,
+      styleActive: styleActive,
+      styleDarkInit: styleDarkInit,
+      styleDarkActive: styleDarkActive
+    });
+    _this.type = 'View';
+    Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["nextTick"])(function () {
+      var style = _this.root.isDarkMode() ? _this.styleInit : _this.styleDarkInit;
+
+      if (style.backgroundImage && _this.root && _this.root.canvasContext) {
+        _this.root.canvasContext.postMessage && _this.root.canvasContext.postMessage({
+          type: 'preload-image',
+          data: {
+            src: style.backgroundImage
+          }
+        });
+      }
+    });
+    return _this;
+  }
+
+  _createClass(View, [{
+    key: "destroySelf",
+    value: function destroySelf() {
+      this.isDestroyed = true;
+      this.children = null;
+    } // 有些节点仅仅作为容器，实际上不需要任何渲染逻辑，这里加个判断可以提高性能
+
+  }, {
+    key: "checkNeedRender",
+    value: function checkNeedRender() {
+      return true;
+    } // 废弃
+
+  }, {
+    key: "render",
+    value: function render(img) {} // 废弃
+
+  }, {
+    key: "loadImg",
+    value: function loadImg(src) {
+      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _common_util_js__WEBPACK_IMPORTED_MODULE_1__["none"];
+    } // 废弃
+
+  }, {
+    key: "insert",
+    value: function insert(isDarkMode) {}
+  }, {
+    key: "updateRenderData",
+    value: function updateRenderData(computedStyle) {
+      if (!this.layoutBox) {
+        return;
+      }
+
+      var renderer = this.root ? this.root.renderContext : this.renderContext;
+
+      if (!this.glRect) {
+        this.glRect = renderer.createRoundRect(this.id, this.type);
+      }
+
+      this.glRect.reset();
+      var _this$layoutBox = this.layoutBox,
+          width = _this$layoutBox.width,
+          height = _this$layoutBox.height,
+          absoluteX = _this$layoutBox.absoluteX,
+          absoluteY = _this$layoutBox.absoluteY; // 设置渲染区域数据
+
+      this.glRect.updateContours([absoluteX, absoluteY, width, height]); // 设置背景色数据
+
+      if (computedStyle.backgroundColor) {
+        this.glRect.setBackgroundColor(computedStyle.backgroundColor);
+      } // 设置边框数据
+
+
+      if (computedStyle.borderWidth) {
+        this.glRect.setBorder(computedStyle.borderWidth, computedStyle.borderColor);
+      } // 设置圆角数据
+
+
+      var radius = this.getRadius(computedStyle);
+      this.glRect.setRadius(radius);
+      this.glRect.setOpacity(this.opacity);
+
+      if (computedStyle.backgroundImage) {
+        // 设置背景图片
+        this.glRect.setBackgroundImage(computedStyle.backgroundImage, computedStyle.backgroundSize, computedStyle.backgroundPosition);
+      }
+    }
+  }]);
+
+  return View;
+}(_block_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var Block = /*#__PURE__*/function (_Element) {
+  _inherits(Block, _Element);
+
+  var _super = _createSuper(Block);
+
+  function Block() {
+    _classCallCheck(this, Block);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Block, [{
+    key: "getRadius",
+    value: function getRadius(computedStyle) {
+      var borderRadius = computedStyle.borderRadius || 0;
+      var borderLeftTopRadius = computedStyle.borderLeftTopRadius || 0;
+      var borderRightTopRadius = computedStyle.borderRightTopRadius || 0;
+      var borderLeftBottomRadius = computedStyle.borderLeftBottomRadius || 0;
+      var borderRightBottomRadius = computedStyle.borderRightBottomRadius || 0;
+      var tl = borderLeftTopRadius || borderRadius;
+      var tr = borderRightTopRadius || borderRadius;
+      var bl = borderLeftBottomRadius || borderRadius;
+      var br = borderRightBottomRadius || borderRadius;
+      return [tl, tr, br, bl];
+    }
+  }, {
+    key: "updateContours",
+    value: function updateContours() {
+      var renderer = this.root.renderContext;
+      var _this$layoutBox = this.layoutBox,
+          width = _this$layoutBox.width,
+          height = _this$layoutBox.height,
+          absoluteX = _this$layoutBox.absoluteX,
+          absoluteY = _this$layoutBox.absoluteY;
+
+      if (!this.glRect) {
+        this.glRect = renderer.createRoundRect(this.id);
+      }
+
+      this.glRect.updateContours([absoluteX, absoluteY, width, height]);
+    }
+  }, {
+    key: "updateRenderData",
+    value: function updateRenderData() {// 子组件自己实现
+    }
+  }, {
+    key: "insert",
+    value: function insert(isDarkMode) {
+      var rect = this.glRect;
+      var style = _common_util__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
+
+      if (style.backgroundColor) {
+        rect.setBackgroundColor(style.backgroundColor);
+      }
+
+      var radius = this.getRadius(isDarkMode);
+      rect.setRadius(radius);
+
+      if (style.borderWidth) {
+        rect.setBorder(style.borderWidth, style.borderColor);
+      }
+    }
+  }, {
+    key: "radius",
+    get: function get() {
+      var _this$computedStyle = this.computedStyle,
+          _this$computedStyle$b = _this$computedStyle.borderRadius,
+          borderRadius = _this$computedStyle$b === void 0 ? 0 : _this$computedStyle$b,
+          _this$computedStyle$b2 = _this$computedStyle.borderLeftTopRadius,
+          borderLeftTopRadius = _this$computedStyle$b2 === void 0 ? 0 : _this$computedStyle$b2,
+          _this$computedStyle$b3 = _this$computedStyle.borderRightTopRadius,
+          borderRightTopRadius = _this$computedStyle$b3 === void 0 ? 0 : _this$computedStyle$b3,
+          _this$computedStyle$b4 = _this$computedStyle.borderLeftBottomRadius,
+          borderLeftBottomRadius = _this$computedStyle$b4 === void 0 ? 0 : _this$computedStyle$b4,
+          _this$computedStyle$b5 = _this$computedStyle.borderRightBottomRadius,
+          borderRightBottomRadius = _this$computedStyle$b5 === void 0 ? 0 : _this$computedStyle$b5;
+      var tl = borderLeftTopRadius || borderRadius;
+      var tr = borderRightTopRadius || borderRadius;
+      var bl = borderLeftBottomRadius || borderRadius;
+      var br = borderRightBottomRadius || borderRadius;
+      return [tl, tr, br, bl];
+    }
+  }]);
+
+  return Block;
+}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Image; });
+/* harmony import */ var _block_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(29);
+/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var Image = /*#__PURE__*/function (_Block) {
+  _inherits(Image, _Block);
+
+  var _super = _createSuper(Image);
+
+  function Image(opts) {
+    var _this;
+
+    _classCallCheck(this, Image);
+
+    var _opts$styleInit = opts.styleInit,
+        styleInit = _opts$styleInit === void 0 ? {} : _opts$styleInit,
+        _opts$styleActive = opts.styleActive,
+        styleActive = _opts$styleActive === void 0 ? {} : _opts$styleActive,
+        _opts$styleDarkInit = opts.styleDarkInit,
+        styleDarkInit = _opts$styleDarkInit === void 0 ? {} : _opts$styleDarkInit,
+        _opts$styleDarkActive = opts.styleDarkActive,
+        styleDarkActive = _opts$styleDarkActive === void 0 ? {} : _opts$styleDarkActive,
+        _opts$props = opts.props,
+        props = _opts$props === void 0 ? {} : _opts$props,
+        _opts$dataset = opts.dataset,
+        dataset = _opts$dataset === void 0 ? {} : _opts$dataset,
+        _opts$idName = opts.idName,
+        idName = _opts$idName === void 0 ? '' : _opts$idName,
+        _opts$className = opts.className,
+        className = _opts$className === void 0 ? '' : _opts$className,
+        _opts$src = opts.src,
+        src = _opts$src === void 0 ? '' : _opts$src;
+    _this = _super.call(this, {
+      props: props,
+      dataset: dataset,
+      idName: idName,
+      className: className,
+      styleInit: styleInit,
+      styleActive: styleActive,
+      styleDarkInit: styleDarkInit,
+      styleDarkActive: styleDarkActive
+    });
+    _this.imgsrc = src;
+    Object.defineProperty(_assertThisInitialized(_this), "src", {
+      get: function get() {
+        return this.imgsrc;
+      },
+      set: function set(newValue) {
+        if (newValue !== this.imgsrc) {
+          this.imgsrc = newValue;
+          this.glRect.setImage(newValue);
+        }
+      },
+      enumerable: true,
+      configurable: true
+    });
+    _this.type = 'Image';
+    _this.renderBoxes = [];
+    Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["nextTick"])(function () {
+      if (_this.root && _this.root.canvasContext) {
+        _this.root.canvasContext.postMessage && _this.root.canvasContext.postMessage({
+          type: 'preload-image',
+          data: {
+            src: _this.src
+          }
+        });
+      }
+    });
+    return _this;
+  } // 子类填充实现
+
+
+  _createClass(Image, [{
+    key: "destroySelf",
+    value: function destroySelf() {
+      this.isDestroyed = true;
+
+      if (this.img) {
+        this.img.onloadcbks = [];
+        this.img.onload = null;
+        this.img.onerror = null;
+      }
+
+      this.img = null;
+      delete this.src;
+    } // 废弃
+
+  }, {
+    key: "initImg",
+    value: function initImg() {
+      var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _common_util_js__WEBPACK_IMPORTED_MODULE_1__["none"];
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var needEmitEvent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+      if (!this.img) {
+        return;
+      }
+    }
+  }, {
+    key: "insert",
+    value: function insert(isDarkMode) {
+      var _this2 = this;
+
+      _get(_getPrototypeOf(Image.prototype), "insert", this).call(this, isDarkMode);
+
+      this.glRect.setTexture({
+        type: 'image',
+        src: this.src
+      });
+      this.initImg(function () {
+        _this2.render();
+      });
+    }
+  }, {
+    key: "updateRenderData",
+    value: function updateRenderData(computedStyle) {
+      if (!this.layoutBox) {
+        return;
+      }
+
+      var renderer = this.root ? this.root.renderContext : this.renderContext;
+
+      if (!this.glRect) {
+        this.glRect = renderer.createRoundRect(this.id, this.type);
+      }
+
+      this.glRect.reset();
+      var _this$layoutBox = this.layoutBox,
+          width = _this$layoutBox.width,
+          height = _this$layoutBox.height,
+          absoluteX = _this$layoutBox.absoluteX,
+          absoluteY = _this$layoutBox.absoluteY; // 设置渲染区域数据
+
+      this.glRect.updateContours([absoluteX, absoluteY, width, height]); // 设置背景色数据
+
+      if (computedStyle.backgroundColor) {
+        this.glRect.setBackgroundColor(computedStyle.backgroundColor);
+      } // 设置边框数据
+
+
+      if (computedStyle.borderWidth) {
+        this.glRect.setBorder(computedStyle.borderWidth, computedStyle.borderColor);
+      }
+
+      this.glRect.setOpacity(this.opacity); // 设置圆角数据
+
+      var radius = this.getRadius(computedStyle);
+      this.glRect.setRadius(radius); // 设置图片
+
+      this.glRect.setImage(this.src);
+    }
+  }]);
+
+  return Image;
+}(_block_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Text; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+var Text = /*#__PURE__*/function (_Element) {
+  _inherits(Text, _Element);
+
+  var _super = _createSuper(Text);
+
+  function Text(_ref) {
+    var _this;
+
+    var _ref$styleInit = _ref.styleInit,
+        styleInit = _ref$styleInit === void 0 ? {} : _ref$styleInit,
+        _ref$styleActive = _ref.styleActive,
+        styleActive = _ref$styleActive === void 0 ? {} : _ref$styleActive,
+        _ref$styleDarkInit = _ref.styleDarkInit,
+        styleDarkInit = _ref$styleDarkInit === void 0 ? {} : _ref$styleDarkInit,
+        _ref$styleDarkActive = _ref.styleDarkActive,
+        styleDarkActive = _ref$styleDarkActive === void 0 ? {} : _ref$styleDarkActive,
+        _ref$dataset = _ref.dataset,
+        dataset = _ref$dataset === void 0 ? {} : _ref$dataset,
+        _ref$props = _ref.props,
+        props = _ref$props === void 0 ? {} : _ref$props,
+        _ref$idName = _ref.idName,
+        idName = _ref$idName === void 0 ? '' : _ref$idName,
+        _ref$className = _ref.className,
+        className = _ref$className === void 0 ? '' : _ref$className,
+        _ref$value = _ref.value,
+        value = _ref$value === void 0 ? '' : _ref$value;
+
+    _classCallCheck(this, Text);
+
+    var valueInit = value; // 先存下初始化时的value
+
+    _this = _super.call(this, {
+      props: props,
+      idName: idName,
+      className: className,
+      styleInit: styleInit,
+      styleActive: styleActive,
+      styleDarkInit: styleDarkInit,
+      styleDarkActive: styleDarkActive,
+      dataset: dataset
+    });
+    _this.type = 'Text';
+    _this.valueShow = value; // 显示的时候的value
+
+    _this.valueInit = valueInit;
+    _this.renderBoxes = [];
+    Object.defineProperty(_assertThisInitialized(_this), 'value', {
+      get: function get() {
+        return this.valueInit; // 初始化是的value
+      },
+      set: function set(newValue) {
+        // console.log('set text value 1 ', newValue, this.valueInit);
+        if (newValue !== this.valueInit) {
+          // console.log('set text value 2 ', newValue, this.valueInit);
+          this.valueInit = newValue;
+          this.valueShow = newValue;
+          this.computedStyle.width = this.root._getTextWidth(this.style, newValue, this.root.getFontSize());
+          this.noWrapWidth = this.computedStyle.width;
+
+          if (this.layoutBox.width > 0 && this.layoutBox.height > 0) {
+            // 不显示的节点，改了wording也不reflow
+            this.root.emit('reflow');
+          }
+        }
+      },
+      enumerable: true,
+      configurable: true
+    });
+    return _this;
+  }
+
+  _createClass(Text, [{
+    key: "beforeReflow",
+    value: function beforeReflow() {
+      this.computedStyle.width = this.noWrapWidth;
+      this.computedStyle.height = this.noWrapHeight;
+    }
+  }, {
+    key: "insert",
+    value: function insert() {// this.render(isDarkMode)
+    }
+  }, {
+    key: "updateContours",
+    value: function updateContours() {
+      if (!this.layoutBox) {
+        return;
+      }
+
+      var box = this.layoutBox;
+      var isDarkMode = this.root.isDarkMode();
+      var style = _common_util_js__WEBPACK_IMPORTED_MODULE_1__["getElementStyle"].call(this, isDarkMode);
+
+      if (box.width * 1 === 0 || box.height * 1 === 0) {
+        // 宽度或者高度等于0，直接不画
+        return;
+      }
+
+      var parent = this.parent;
+
+      while (parent && parent.parent) {
+        if (parent.styleInit.display === 'none') {
+          return;
+        }
+
+        parent = parent.parent;
+      }
+
+      var boxWidth = box.width;
+      var boxHeight = box.height;
+      var styleNoWrap = style.whiteSpace === 'nowrap' && style.textOverflow !== 'ellipsis';
+
+      if (!styleNoWrap && this.valueBreak && this.valueBreak.length) {
+        boxWidth = this.parent.layoutBox.width - (this.parent.style.paddingLeft || 0) - (this.parent.style.paddingRight || 0);
+        boxHeight = box.height;
+      }
+
+      var renderer = this.root.renderContext;
+      this.glRect = renderer.createRoundRect(this.id, this.renderer, [box.absoluteX, box.absoluteY, boxWidth, boxHeight]);
+      this.glRect.setTexture({
+        type: 'text',
+        value: this.valueShow,
+        fontSize: style.fontSize || 12,
+        textBaseline: 'top',
+        font: "".concat(style.fontWeight || '', " ").concat((style.fontSize || 12) * this.root.getFontSize(), "px ").concat(style.fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_1__["DEFAULT_FONT_FAMILY"]),
+        textAlign: style.textAlign || 'left',
+        fillStyle: style.color || '#000'
+      });
+    }
+  }, {
+    key: "render",
+    value: function render(isDarkMode) {}
+  }, {
+    key: "updateRenderData",
+    value: function updateRenderData(computedStyle) {
+      var box = this.layoutBox;
+
+      if (box.width * 1 === 0 || box.height * 1 === 0) {
+        // 宽度或者高度等于0，直接不画
+        return;
+      }
+
+      var parent = this.parent;
+
+      while (parent && parent.parent) {
+        if (parent.styleInit.display === 'none') {
+          return;
+        }
+
+        parent = parent.parent;
+      }
+
+      var boxWidth = box.width;
+      var boxHeight = box.height;
+      var styleNoWrap = computedStyle.whiteSpace === 'nowrap' && computedStyle.textOverflow !== 'ellipsis';
+
+      if (!styleNoWrap && this.valueBreak && this.valueBreak.length) {
+        boxWidth = this.parent.layoutBox.width - (this.parent.style.paddingLeft || 0) - (this.parent.style.paddingRight || 0);
+        boxHeight = box.height;
+      }
+
+      var renderer = this.root.renderContext;
+
+      if (!this.glRect) {
+        this.glRect = renderer.createRoundRect(this.id, this.type);
+      }
+
+      this.glRect.reset();
+      this.glRect.updateContours([box.absoluteX, box.absoluteY - 4, boxWidth, boxHeight + 8]);
+      this.glRect.setText({
+        value: {
+          valueShow: this.valueShow,
+          valueBreak: this.valueBreak
+        },
+        style: {
+          drawX: box.absoluteX,
+          drawY: box.absoluteY,
+          fontSize: (computedStyle.fontSize || 12) * this.root.getFontSize(),
+          fontWeight: computedStyle.fontWeight || '',
+          fontFamily: computedStyle.fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_1__["DEFAULT_FONT_FAMILY"],
+          lineHeight: computedStyle.lineHeight || computedStyle.fontSize || 12,
+          textAlign: computedStyle.textAlign || 'left',
+          textShadow: computedStyle.textShadow,
+          whiteSpace: computedStyle.whiteSpace,
+          textOverflow: computedStyle.textOverflow,
+          color: computedStyle.color || '#000'
+        }
+      });
+      this.glRect.setOpacity(this.opacity);
+    }
+  }]);
+
+  return Text;
+}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(28);
+/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(34);
+/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+var ScrollView = /*#__PURE__*/function (_View) {
+  _inherits(ScrollView, _View);
+
+  var _super = _createSuper(ScrollView);
+
+  function ScrollView(_ref) {
+    var _this;
+
+    var _ref$styleInit = _ref.styleInit,
+        styleInit = _ref$styleInit === void 0 ? {} : _ref$styleInit,
+        _ref$styleActive = _ref.styleActive,
+        styleActive = _ref$styleActive === void 0 ? {} : _ref$styleActive,
+        _ref$styleDarkInit = _ref.styleDarkInit,
+        styleDarkInit = _ref$styleDarkInit === void 0 ? {} : _ref$styleDarkInit,
+        _ref$styleDarkActive = _ref.styleDarkActive,
+        styleDarkActive = _ref$styleDarkActive === void 0 ? {} : _ref$styleDarkActive,
+        _ref$props = _ref.props,
+        props = _ref$props === void 0 ? {} : _ref$props,
+        _ref$dataset = _ref.dataset,
+        dataset = _ref$dataset === void 0 ? {} : _ref$dataset,
+        _ref$idName = _ref.idName,
+        idName = _ref$idName === void 0 ? '' : _ref$idName,
+        _ref$className = _ref.className,
+        className = _ref$className === void 0 ? '' : _ref$className;
+
+    _classCallCheck(this, ScrollView);
+
+    _this = _super.call(this, {
+      props: props,
+      dataset: dataset,
+      idName: idName,
+      className: className,
+      styleInit: styleInit,
+      styleActive: styleActive,
+      styleDarkInit: styleDarkInit,
+      styleDarkActive: styleDarkActive
+    });
+    _this.type = 'ScrollView'; // 当前列表滚动的值
+
+    _this.scrollTop = 0;
+    _this.scrollLeft = 0; // 滚动处理器
+
+    /*this.touch           = new Touch();*/
+
+    _this.hasEventBind = false;
+    _this.currentEvent = null;
+    return _this;
+  }
+
+  _createClass(ScrollView, [{
+    key: "_active",
+    value: function _active() {
+      if (this.scrollerObj) {
+        this.scrollActive = true;
+      }
+    }
+  }, {
+    key: "_deactive",
+    value: function _deactive() {
+      if (this.scrollerObj) {
+        this.scrollActive = false;
+      }
+    }
+  }, {
+    key: "destroySelf",
+    value: function destroySelf() {
+      this.isDestroyed = true;
+      this.children = null;
+      this.currentEvent = null;
+      this.off('touchstart');
+      this.off('touchmove');
+      this.root && this.root.off('touchend');
+      this.scrollerObj = null;
+    }
+    /**
+     * 获取滚动列表内所有元素的高度和
+     * 这里不能简单将所有子元素的高度累加，因为每个元素之间可能是有空隙的
+     */
+
+  }, {
+    key: "updateRenderPort",
+    value: function updateRenderPort(renderport) {
+      var _this2 = this;
+
+      if (this.hasEventBind) {
+        return;
+      }
+
+      this.hasEventBind = true;
+      this.root.scrollview = this;
+      this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top, zoom) {
+        // 可能被销毁了或者节点树还没准备好
+        if (_this2.scrollActive && !_this2.isDestroyed) {
+          _this2.traverseToChangeGlRect(_this2, left, top);
+
+          _this2.root.repaint(false);
+
+          _this2.currentEvent.type = 'scroll';
+          _this2.currentEvent.currentTarget = _this2;
+
+          _this2.emit('scroll', _this2.currentEvent);
+        }
+      }, {
+        scrollingY: !!(this.scrollHeight > this.layoutBox.height),
+        scrollingX: !!(this.scrollWidth > this.layoutBox.width)
+      });
+      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+      this.scrollActive = false;
+      this.on('touchstart', function (e) {
+        _this2.scrollActive = true;
+
+        _this2.scrollerObj.doTouchStart(e.touches, e.timeStamp);
+
+        _this2.currentEvent = e;
+      });
+      this.on('touchmove', function (e) {
+        _this2.scrollerObj.doTouchMove(e.touches, e.timeStamp);
+
+        _this2.currentEvent = e;
+      }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
+
+      this.root.on('touchend', function (e) {
+        _this2.scrollerObj.doTouchEnd(e.timeStamp);
+
+        _this2.currentEvent = e;
+      });
+    }
+    /**
+     *
+     * @param {*} node
+     * @param {*} x
+     * @param {*} y
+     */
+
+  }, {
+    key: "traverseToChangeGlRect",
+    value: function traverseToChangeGlRect(node) {
+      var _this3 = this;
+
+      var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+      var glRect = node.glRect;
+
+      if (node.type !== "ScrollView" && glRect) {
+        glRect.x = glRect.originX - x;
+        glRect.y = glRect.originY - y;
+
+        if (node.type === 'Text') {
+          glRect.text.style.drawX -= x;
+          glRect.text.style.drawY -= y;
+        }
+      } else {
+        this.scrollTop = y;
+        this.scrollLeft = x;
+      } // @TODO: 多个scrollview嵌套的情况
+
+
+      node.children.forEach(function (child) {
+        _this3.traverseToChangeGlRect(child, x, y);
+      });
+    }
+  }, {
+    key: "scrollHeight",
+    get: function get() {
+      // scrollview为空的情况
+      if (!this.children.length) {
+        return 0;
+      }
+
+      var last = this.children[this.children.length - 1];
+      return last.layoutBox.top + last.layoutBox.height;
+    }
+  }, {
+    key: "scrollWidth",
+    get: function get() {
+      // scrollview为空的情况
+      if (!this.children.length) {
+        return 0;
+      }
+
+      var last = this.children[this.children.length - 1];
+      return last.layoutBox.left + last.layoutBox.width;
+    }
+  }]);
+
+  return ScrollView;
+}(_view_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+/* 33 */,
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
+    if (true) {
+        // AMD
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(35), __webpack_require__(36)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+}(this, function (exports, animate, Scroller) {
+    exports.animate = animate;
+    exports.Scroller = Scroller;
+}));
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+ * Scroller
+ * http://github.com/zynga/scroller
+ *
+ * Copyright 2011, Zynga Inc.
+ * Licensed under the MIT License.
+ * https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
+ *
+ * Based on the work of: Unify Project (unify-project.org)
+ * http://unify-project.org
+ * Copyright 2011, Deutsche Telekom AG
+ * License: MIT + Apache (V2)
+ */
+
+/**
+ * Generic animation class with support for dropped frames both optional easing and duration.
+ *
+ * Optional duration is useful when the lifetime is defined by another condition than time
+ * e.g. speed of an animating object, etc.
+ *
+ * Dropped frame logic allows to keep using the same updater logic independent from the actual
+ * rendering. This eases a lot of cases where it might be pretty complex to break down a state
+ * based on the pure time difference.
+ */
+(function (root, factory) {
+    if (true) {
+        // AMD. Register as an anonymous module.
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+}(this, function (exports) {
+    var global = typeof window === 'undefined' ? this : window
+    var time = Date.now || function () {
+        return +new Date();
+    };
+    var desiredFrames = 60;
+    var millisecondsPerSecond = 1000;
+    var running = {};
+    var counter = 1;
+
+    /**
+     * A requestAnimationFrame wrapper / polyfill.
+     *
+     * @param callback {Function} The callback to be invoked before the next repaint.
+     * @param root {HTMLElement} The root element for the repaint
+     */
+    exports.requestAnimationFrame = (function () {
+        // Check for request animation Frame support
+        var requestFrame = global.requestAnimationFrame || global.webkitRequestAnimationFrame || global.mozRequestAnimationFrame || global.oRequestAnimationFrame;
+        var isNative = !!requestFrame;
+
+        if (requestFrame && !/requestAnimationFrame\(\)\s*\{\s*\[native code\]\s*\}/i.test(requestFrame.toString())) {
+            isNative = false;
+        }
+
+        if (isNative) {
+            return function (callback, root) {
+                requestFrame(callback, root);
+            };
+        }
+
+        var TARGET_FPS = 60;
+        var requests = {};
+        var requestCount = 0;
+        var rafHandle = 1;
+        var intervalHandle = null;
+        var lastActive = +new Date();
+
+        return function (callback, root) {
+            var callbackHandle = rafHandle++;
+
+            // Store callback
+            requests[callbackHandle] = callback;
+            requestCount++;
+
+            // Create timeout at first request
+            if (intervalHandle === null) {
+
+                intervalHandle = setInterval(function () {
+
+                    var time = +new Date();
+                    var currentRequests = requests;
+
+                    // Reset data structure before executing callbacks
+                    requests = {};
+                    requestCount = 0;
+
+                    for(var key in currentRequests) {
+                        if (currentRequests.hasOwnProperty(key)) {
+                            currentRequests[key](time);
+                            lastActive = time;
+                        }
+                    }
+
+                    // Disable the timeout when nothing happens for a certain
+                    // period of time
+                    if (time - lastActive > 2500) {
+                        clearInterval(intervalHandle);
+                        intervalHandle = null;
+                    }
+
+                }, 1000 / TARGET_FPS);
+            }
+
+            return callbackHandle;
+        };
+
+    })();
+
+    /**
+     * Stops the given animation.
+     *
+     * @param id {Integer} Unique animation ID
+     * @return {Boolean} Whether the animation was stopped (aka, was running before)
+     */
+    exports.stop = function (id) {
+        var cleared = (running[id] !== null);
+        if (cleared) {
+            running[id] = null;
+        }
+
+        return cleared;
+    };
+
+
+    /**
+     * Whether the given animation is still running.
+     *
+     * @param id {Integer} Unique animation ID
+     * @return {Boolean} Whether the animation is still running
+     */
+    exports.isRunning = function (id) {
+        return running[id] !== null;
+    };
+
+
+    /**
+     * Start the animation.
+     *
+     * @param stepCallback {Function} Pointer to function which is executed on every step.
+     *   Signature of the method should be `function(percent, now, virtual) { return continueWithAnimation; }`
+     * @param verifyCallback {Function} Executed before every animation step.
+     *   Signature of the method should be `function() { return continueWithAnimation; }`
+     * @param completedCallback {Function}
+     *   Signature of the method should be `function(droppedFrames, finishedAnimation, optional wasFinished) {}`
+     * @param duration {Integer} Milliseconds to run the animation
+     * @param easingMethod {Function} Pointer to easing function
+     *   Signature of the method should be `function(percent) { return modifiedValue; }`
+     * @param root {Element} Render root. Used for internal usage of requestAnimationFrame.
+     * @return {Integer} Identifier of animation. Can be used to stop it any time.
+     */
+    exports.start = function (stepCallback, verifyCallback, completedCallback, duration, easingMethod, root) {
+        var start = time();
+        var lastFrame = start;
+        var percent = 0;
+        var dropCounter = 0;
+        var id = counter++;
+
+        // Compacting running db automatically every few new animations
+        if (id % 20 === 0) {
+            var newRunning = {};
+            for (var usedId in running) {
+                newRunning[usedId] = true;
+            }
+            running = newRunning;
+        }
+
+        // This is the internal step method which is called every few milliseconds
+        var step = function (virtual) {
+
+            // Normalize virtual value
+            var render = virtual !== true;
+
+            // Get current time
+            var now = time();
+
+            // Verification is executed before next animation step
+            if (!running[id] || (verifyCallback && !verifyCallback(id))) {
+
+                running[id] = null;
+                completedCallback(desiredFrames - (dropCounter / ((now - start) / millisecondsPerSecond)), id, false);
+                return;
+
+            }
+
+            // For the current rendering to apply let's update omitted steps in memory.
+            // This is important to bring internal state variables up-to-date with progress in time.
+            if (render) {
+
+                var droppedFrames = Math.round((now - lastFrame) / (millisecondsPerSecond / desiredFrames)) - 1;
+                for (var j = 0; j < Math.min(droppedFrames, 4); j++) {
+                    step(true);
+                    dropCounter++;
+                }
+
+            }
+
+            // Compute percent value
+            if (duration) {
+                percent = (now - start) / duration;
+                if (percent > 1) {
+                    percent = 1;
+                }
+            }
+
+            // Execute step callback, then...
+            var value = easingMethod ? easingMethod(percent) : percent;
+            if ((stepCallback(value, now, render) === false || percent === 1) && render) {
+                running[id] = null;
+                completedCallback(desiredFrames - (dropCounter / ((now - start) / millisecondsPerSecond)), id, percent === 1 || duration === undefined);
+            } else if (render) {
+                lastFrame = now;
+                exports.requestAnimationFrame(step, root);
+            }
+        };
+
+        // Mark as running
+        running[id] = true;
+
+        // Init first step
+        exports.requestAnimationFrame(step, root);
+
+        // Return unique animation ID
+        return id;
+    };
+}));
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+ * Scroller
+ * http://github.com/zynga/scroller
+ *
+ * Copyright 2011, Zynga Inc.
+ * Licensed under the MIT License.
+ * https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
+ *
+ * Based on the work of: Unify Project (unify-project.org)
+ * http://unify-project.org
+ * Copyright 2011, Deutsche Telekom AG
+ * License: MIT + Apache (V2)
+ */
+
+(function (root, factory) {
+    if (true) {
+        // AMD
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(35)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+}(this, function (animate) {
+    var NOOP = function () {};
+
+    /**
+     * A pure logic 'component' for 'virtual' scrolling/zooming.
+     */
+    var Scroller = function (callback, options) {
+        this.__callback = callback;
+
+        this.options = {
+            /** Enable scrolling on x-axis */
+            scrollingX: true,
+
+            /** Enable scrolling on y-axis */
+            scrollingY: true,
+
+            /** Enable animations for deceleration, snap back, zooming and scrolling */
+            animating: true,
+
+            /** duration for animations triggered by scrollTo/zoomTo */
+            animationDuration: 250,
+
+            /** Enable bouncing (content can be slowly moved outside and jumps back after releasing) */
+            bouncing: true,
+
+            /** Enable locking to the main axis if user moves only slightly on one of them at start */
+            locking: true,
+
+            /** Enable pagination mode (switching between full page content panes) */
+            paging: false,
+
+            /** Enable snapping of content to a configured pixel grid */
+            snapping: false,
+
+            /** Enable zooming of content via API, fingers and mouse wheel */
+            zooming: false,
+
+            /** Minimum zoom level */
+            minZoom: 0.5,
+
+            /** Maximum zoom level */
+            maxZoom: 3,
+
+            /** Multiply or decrease scrolling speed **/
+            speedMultiplier: 1,
+
+            /** Callback that is fired on the later of touch end or deceleration end,
+                provided that another scrolling action has not begun. Used to know
+                when to fade out a scrollbar. */
+            scrollingComplete: NOOP,
+
+            /** This configures the amount of change applied to deceleration when reaching boundaries  **/
+            penetrationDeceleration : 0.03,
+
+            /** This configures the amount of change applied to acceleration when reaching boundaries  **/
+            penetrationAcceleration : 0.08
+        };
+
+        for (var key in options) {
+            this.options[key] = options[key];
+        }
+    };
+
+
+    // Easing Equations (c) 2003 Robert Penner, all rights reserved.
+    // Open source under the BSD License.
+
+    /**
+     * @param pos {Number} position between 0 (start of effect) and 1 (end of effect)
+     **/
+    var easeOutCubic = function (pos) {
+        return (Math.pow((pos - 1), 3) + 1);
+    };
+
+    /**
+     * @param pos {Number} position between 0 (start of effect) and 1 (end of effect)
+     **/
+    var easeInOutCubic = function (pos) {
+        if ((pos /= 0.5) < 1) {
+            return 0.5 * Math.pow(pos, 3);
+        }
+
+        return 0.5 * (Math.pow((pos - 2), 3) + 2);
+    };
+
+
+    Scroller.prototype = {
+
+        /*
+          ---------------------------------------------------------------------------
+          INTERNAL FIELDS :: STATUS
+          ---------------------------------------------------------------------------
+        */
+
+        /** {Boolean} Whether only a single finger is used in touch handling */
+        __isSingleTouch: false,
+
+        /** {Boolean} Whether a touch event sequence is in progress */
+        __isTracking: false,
+
+        /** {Boolean} Whether a deceleration animation went to completion. */
+        __didDecelerationComplete: false,
+
+        /**
+         * {Boolean} Whether a gesture zoom/rotate event is in progress. Activates when
+         * a gesturestart event happens. This has higher priority than dragging.
+         */
+        __isGesturing: false,
+
+        /**
+         * {Boolean} Whether the user has moved by such a distance that we have enabled
+         * dragging mode. Hint: It's only enabled after some pixels of movement to
+         * not interrupt with clicks etc.
+         */
+        __isDragging: false,
+
+        /**
+         * {Boolean} Not touching and dragging anymore, and smoothly animating the
+         * touch sequence using deceleration.
+         */
+        __isDecelerating: false,
+
+        /**
+         * {Boolean} Smoothly animating the currently configured change
+         */
+        __isAnimating: false,
+
+
+
+        /*
+          ---------------------------------------------------------------------------
+          INTERNAL FIELDS :: DIMENSIONS
+          ---------------------------------------------------------------------------
+        */
+
+        /** {Integer} Viewport left boundary */
+        __clientLeft: 0,
+
+        /** {Integer} Viewport right boundary */
+        __clientTop: 0,
+
+        /** {Integer} Viewport width */
+        __clientWidth: 0,
+
+        /** {Integer} Viewport height */
+        __clientHeight: 0,
+
+        /** {Integer} Full content's width */
+        __contentWidth: 0,
+
+        /** {Integer} Full content's height */
+        __contentHeight: 0,
+
+        /** {Integer} Snapping width for content */
+        __snapWidth: 100,
+
+        /** {Integer} Snapping height for content */
+        __snapHeight: 100,
+
+        /** {Number} Zoom level */
+        __zoomLevel: 1,
+
+        /** {Number} Scroll position on x-axis */
+        __scrollLeft: 0,
+
+        /** {Number} Scroll position on y-axis */
+        __scrollTop: 0,
+
+        /** {Integer} Maximum allowed scroll position on x-axis */
+        __maxScrollLeft: 0,
+
+        /** {Integer} Maximum allowed scroll position on y-axis */
+        __maxScrollTop: 0,
+
+        /* {Number} Scheduled left position (final position when animating) */
+        __scheduledLeft: 0,
+
+        /* {Number} Scheduled top position (final position when animating) */
+        __scheduledTop: 0,
+
+        /* {Number} Scheduled zoom level (final scale when animating) */
+        __scheduledZoom: 0,
+
+
+
+        /*
+          ---------------------------------------------------------------------------
+          INTERNAL FIELDS :: LAST POSITIONS
+          ---------------------------------------------------------------------------
+        */
+
+        /** {Number} Left position of finger at start */
+        __lastTouchLeft: null,
+
+        /** {Number} Top position of finger at start */
+        __lastTouchTop: null,
+
+        /** {Date} Timestamp of last move of finger. Used to limit tracking range for deceleration speed. */
+        __lastTouchMove: null,
+
+        /** {Array} List of positions, uses three indexes for each state: left, top, timestamp */
+        __positions: null,
+
+
+
+        /*
+          ---------------------------------------------------------------------------
+          INTERNAL FIELDS :: DECELERATION SUPPORT
+          ---------------------------------------------------------------------------
+        */
+
+        /** {Integer} Minimum left scroll position during deceleration */
+        __minDecelerationScrollLeft: null,
+
+        /** {Integer} Minimum top scroll position during deceleration */
+        __minDecelerationScrollTop: null,
+
+        /** {Integer} Maximum left scroll position during deceleration */
+        __maxDecelerationScrollLeft: null,
+
+        /** {Integer} Maximum top scroll position during deceleration */
+        __maxDecelerationScrollTop: null,
+
+        /** {Number} Current factor to modify horizontal scroll position with on every step */
+        __decelerationVelocityX: null,
+
+        /** {Number} Current factor to modify vertical scroll position with on every step */
+        __decelerationVelocityY: null,
+
+
+
+        /*
+          ---------------------------------------------------------------------------
+          PUBLIC API
+          ---------------------------------------------------------------------------
+        */
+
+        /**
+         * Configures the dimensions of the client (outer) and content (inner) elements.
+         * Requires the available space for the outer element and the outer size of the inner element.
+         * All values which are falsy (null or zero etc.) are ignored and the old value is kept.
+         *
+         * @param clientWidth {Integer ? null} Inner width of outer element
+         * @param clientHeight {Integer ? null} Inner height of outer element
+         * @param contentWidth {Integer ? null} Outer width of inner element
+         * @param contentHeight {Integer ? null} Outer height of inner element
+         */
+        setDimensions : function (clientWidth, clientHeight, contentWidth, contentHeight) {
+            // Only update values which are defined
+            if (clientWidth !== null) {
+                this.__clientWidth = clientWidth;
+            }
+
+            if (clientHeight !== null) {
+                this.__clientHeight = clientHeight;
+            }
+
+            if (contentWidth !== null) {
+                this.__contentWidth = contentWidth;
+            }
+
+            if (contentHeight !== null) {
+                this.__contentHeight = contentHeight;
+            }
+
+            // Refresh maximums
+            this.__computeScrollMax();
+
+            // Refresh scroll position
+            this.scrollTo(this.__scrollLeft, this.__scrollTop, true);
+        },
+
+
+        /**
+         * Sets the client coordinates in relation to the document.
+         *
+         * @param left {Integer ? 0} Left position of outer element
+         * @param top {Integer ? 0} Top position of outer element
+         */
+        setPosition : function (left, top) {
+            this.__clientLeft = left || 0;
+            this.__clientTop = top || 0;
+        },
+
+
+        /**
+         * Configures the snapping (when snapping is active)
+         *
+         * @param width {Integer} Snapping width
+         * @param height {Integer} Snapping height
+         */
+        setSnapSize : function (width, height) {
+            this.__snapWidth = width;
+            this.__snapHeight = height;
+        },
+
+
+        /**
+         * Returns the scroll position and zooming values
+         *
+         * @return {Map} `left` and `top` scroll position and `zoom` level
+         */
+        getValues : function () {
+            return {
+                left: this.__scrollLeft,
+                top: this.__scrollTop,
+                right: this.__scrollLeft + this.__clientWidth/this.__zoomLevel,
+                bottom: this.__scrollTop + this.__clientHeight/this.__zoomLevel,
+                zoom: this.__zoomLevel
+            };
+        },
+
+
+        /**
+         * Get point in in content space from scroll coordinates.
+         */
+        getPoint : function (scrollLeft, scrollTop) {
+            var values = this.getValues();
+
+            return {
+                left : scrollLeft / values.zoom,
+                top : scrollTop / values.zoom
+            };
+        },
+
+
+        /**
+         * Returns the maximum scroll values
+         *
+         * @return {Map} `left` and `top` maximum scroll values
+         */
+        getScrollMax : function () {
+            return {
+                left: this.__maxScrollLeft,
+                top: this.__maxScrollTop
+            };
+        },
+
+
+        /**
+         * Zooms to the given level. Supports optional animation. Zooms
+         * the center when no coordinates are given.
+         *
+         * @param level {Number} Level to zoom to
+         * @param isAnimated {Boolean ? false} Whether to use animation
+         * @param fixedLeft {Number ? undefined} Stationary point's left coordinate (vector in client space)
+         * @param fixedTop {Number ? undefined} Stationary point's top coordinate (vector in client space)
+         * @param callback {Function ? null} A callback that gets fired when the zoom is complete.
+         */
+        zoomTo : function (level, isAnimated, fixedLeft, fixedTop, callback) {
+            if (!this.options.zooming) {
+                throw new Error("Zooming is not enabled!");
+            }
+
+            // Add callback if exists
+            if(callback) {
+                this.__zoomComplete = callback;
+            }
+
+            // Stop deceleration
+            if (this.__isDecelerating) {
+                animate.stop(this.__isDecelerating);
+                this.__isDecelerating = false;
+            }
+
+            var oldLevel = this.__zoomLevel;
+
+            // Normalize fixed point to center of viewport if not defined
+            if (fixedLeft === undefined) {
+                fixedLeft = this.__clientWidth / 2;
+            }
+
+            if (fixedTop === undefined) {
+                fixedTop = this.__clientHeight / 2;
+            }
+
+            // Limit level according to configuration
+            level = Math.max(Math.min(level, this.options.maxZoom), this.options.minZoom);
+
+            // Recompute maximum values while temporary tweaking maximum scroll ranges
+            this.__computeScrollMax(level);
+
+            // Recompute left and top scroll positions based on new zoom level.
+            // Choosing the new viewport so that the origin's position remains
+            // fixed, we have central dilation about the origin.
+            // * Fixed point, $F$, remains stationary in content space and in the
+            // viewport.
+            // * Initial scroll position, $S_i$, in content space.
+            // * Final scroll position, $S_f$, in content space.
+            // * Initial scaling factor, $k_i$.
+            // * Final scaling factor, $k_f$.
+            //
+            // * $S_i \mapsto S_f$.
+            // * $(S_i - F) k_i = (S_f - F) k_f$.
+            // * $(S_i - F) k_i/k_f = (S_f - F)$.
+            // * $S_f = F + (S_i - F) k_i/k_f$.
+            //
+            // Fixed point location, $\vector{f} = (F - S_i) k_i$.
+            // * $F = S_i + \vector{f}/k_i$.
+            // * $S_f = S_i + \vector{f}/k_i + (S_i - S_i - \vector{f}/k_i) k_i/k_f$.
+            // * $S_f = S_i + \vector{f}/k_i - \vector{f}/k_f$.
+            // * $S_f k_f = S_i k_f + (k_f/k_i - 1)\vector{f}$.
+            // * $S_f k_f = (k_f/k_i)(S_i k_i) + (k_f/k_i - 1) \vector{f}$.
+            var k = level / oldLevel;
+            var left = k*(this.__scrollLeft + fixedLeft) - fixedLeft;
+            var top = k*(this.__scrollTop + fixedTop) - fixedTop;
+
+            // Limit x-axis
+            if (left > this.__maxScrollLeft) {
+                left = this.__maxScrollLeft;
+            } else if (left < 0) {
+                left = 0;
+            }
+
+            // Limit y-axis
+            if (top > this.__maxScrollTop) {
+                top = this.__maxScrollTop;
+            } else if (top < 0) {
+                top = 0;
+            }
+
+            // Push values out
+            this.__publish(left, top, level, isAnimated);
+        },
+
+
+        /**
+         * Zooms the content by the given factor.
+         *
+         * @param factor {Number} Zoom by given factor
+         * @param isAnimated {Boolean ? false} Whether to use animation
+         * @param originLeft {Number ? 0} Zoom in at given left coordinate
+         * @param originTop {Number ? 0} Zoom in at given top coordinate
+         * @param callback {Function ? null} A callback that gets fired when the zoom is complete.
+         */
+        zoomBy : function (factor, isAnimated, originLeft, originTop, callback) {
+            this.zoomTo(this.__zoomLevel * factor, isAnimated, originLeft, originTop, callback);
+        },
+
+
+        /**
+         * Scrolls to the given position. Respect limitations and snapping automatically.
+         *
+         * @param left {Number?null} Horizontal scroll position, keeps current if value is <code>null</code>
+         * @param top {Number?null} Vertical scroll position, keeps current if value is <code>null</code>
+         * @param isAnimated {Boolean?false} Whether the scrolling should happen using an animation
+         * @param zoom {Number} [1.0] Zoom level to go to
+         */
+        scrollTo : function (left, top, isAnimated, zoom) {
+            // Stop deceleration
+            if (this.__isDecelerating) {
+                animate.stop(this.__isDecelerating);
+                this.__isDecelerating = false;
+            }
+
+            // Correct coordinates based on new zoom level
+            if (zoom !== undefined && zoom !== this.__zoomLevel) {
+                if (!this.options.zooming) {
+                    throw new Error("Zooming is not enabled!");
+                }
+
+                left *= zoom;
+                top *= zoom;
+
+                // Recompute maximum values while temporary tweaking maximum scroll ranges
+                this.__computeScrollMax(zoom);
+            } else {
+                // Keep zoom when not defined
+                zoom = this.__zoomLevel;
+            }
+
+            if (!this.options.scrollingX) {
+                left = this.__scrollLeft;
+            } else {
+                if (this.options.paging) {
+                    left = Math.round(left / this.__clientWidth) * this.__clientWidth;
+                } else if (this.options.snapping) {
+                    left = Math.round(left / this.__snapWidth) * this.__snapWidth;
+                }
+            }
+
+            if (!this.options.scrollingY) {
+                top = this.__scrollTop;
+            } else {
+                if (this.options.paging) {
+                    top = Math.round(top / this.__clientHeight) * this.__clientHeight;
+                } else if (this.options.snapping) {
+                    top = Math.round(top / this.__snapHeight) * this.__snapHeight;
+                }
+            }
+
+            // Limit for allowed ranges
+            left = Math.max(Math.min(this.__maxScrollLeft, left), 0);
+            top = Math.max(Math.min(this.__maxScrollTop, top), 0);
+
+            // Don't animate when no change detected, still call publish to make sure
+            // that rendered position is really in-sync with internal data
+            if (left === this.__scrollLeft && top === this.__scrollTop) {
+                isAnimated = false;
+            }
+
+            // Publish new values
+            this.__publish(left, top, zoom, isAnimated);
+        },
+
+
+        /**
+         * Scroll by the given offset
+         *
+         * @param left {Number ? 0} Scroll x-axis by given offset
+         * @param top {Number ? 0} Scroll x-axis by given offset
+         * @param isAnimated {Boolean ? false} Whether to animate the given change
+         */
+        scrollBy : function (left, top, isAnimated) {
+            var startLeft = this.__isAnimating ? this.__scheduledLeft : this.__scrollLeft;
+            var startTop = this.__isAnimating ? this.__scheduledTop : this.__scrollTop;
+
+            this.scrollTo(startLeft + (left || 0), startTop + (top || 0), isAnimated);
+        },
+
+
+        /*
+          ---------------------------------------------------------------------------
+          EVENT CALLBACKS
+          ---------------------------------------------------------------------------
+        */
+
+        /**
+         * Mouse wheel handler for zooming support
+         */
+        doMouseZoom : function (wheelDelta, timeStamp, pageX, pageY) {
+            var change = wheelDelta > 0 ? 0.97 : 1.03;
+
+            return this.zoomTo(this.__zoomLevel * change, false, pageX - this.__clientLeft, pageY - this.__clientTop);
+        },
+
+
+        /**
+         * Touch start handler for scrolling support
+         */
+        doTouchStart : function (touches, timeStamp) {
+            // Array-like check is enough here
+            if (touches.length === undefined) {
+                throw new Error("Invalid touch list: " + touches);
+            }
+
+            if (timeStamp instanceof Date) {
+                timeStamp = timeStamp.valueOf();
+            }
+            if (typeof timeStamp !== "number") {
+                throw new Error("Invalid timestamp value: " + timeStamp);
+            }
+
+            // Reset interruptedAnimation flag
+            this.__interruptedAnimation = true;
+
+            // Stop deceleration
+            if (this.__isDecelerating) {
+                animate.stop(this.__isDecelerating);
+                this.__isDecelerating = false;
+                this.__interruptedAnimation = true;
+            }
+
+            // Stop animation
+            if (this.__isAnimating) {
+                animate.stop(this.__isAnimating);
+                this.__isAnimating = false;
+                this.__interruptedAnimation = true;
+            }
+
+            // Use center point when dealing with two fingers
+            var currentTouchLeft, currentTouchTop;
+            var isSingleTouch = touches.length === 1;
+            if (isSingleTouch) {
+                currentTouchLeft = touches[0].pageX;
+                currentTouchTop = touches[0].pageY;
+            } else {
+                currentTouchLeft = Math.abs(touches[0].pageX + touches[1].pageX) / 2;
+                currentTouchTop = Math.abs(touches[0].pageY + touches[1].pageY) / 2;
+            }
+
+            // Store initial positions
+            this.__initialTouchLeft = currentTouchLeft;
+            this.__initialTouchTop = currentTouchTop;
+
+            // Store current zoom level
+            this.__zoomLevelStart = this.__zoomLevel;
+
+            // Store initial touch positions
+            this.__lastTouchLeft = currentTouchLeft;
+            this.__lastTouchTop = currentTouchTop;
+
+            // Store initial move time stamp
+            this.__lastTouchMove = timeStamp;
+
+            // Reset initial scale
+            this.__lastScale = 1;
+
+            // Reset locking flags
+            this.__enableScrollX = !isSingleTouch && this.options.scrollingX;
+            this.__enableScrollY = !isSingleTouch && this.options.scrollingY;
+
+            // Reset tracking flag
+            this.__isTracking = true;
+
+            // Reset deceleration complete flag
+            this.__didDecelerationComplete = false;
+
+            // Dragging starts directly with two fingers, otherwise lazy with an offset
+            this.__isDragging = !isSingleTouch;
+
+            // Some features are disabled in multi touch scenarios
+            this.__isSingleTouch = isSingleTouch;
+
+            // Clearing data structure
+            this.__positions = [];
+        },
+
+
+        /**
+         * Touch move handler for scrolling support
+         * @param {Number} [1.0] scale - ....
+         */
+        doTouchMove : function (touches, timeStamp, scale) {
+            // Array-like check is enough here
+            if (touches.length === undefined) {
+                throw new Error("Invalid touch list: " + touches);
+            }
+
+            if (timeStamp instanceof Date) {
+                timeStamp = timeStamp.valueOf();
+            }
+            if (typeof timeStamp !== "number") {
+                throw new Error("Invalid timestamp value: " + timeStamp);
+            }
+
+            // Ignore event when tracking is not enabled (event might be outside of element)
+            if (!this.__isTracking) {
+                return;
+            }
+
+            var currentTouchLeft, currentTouchTop;
+
+            // Compute move based around of center of fingers
+            if (touches.length === 2) {
+                currentTouchLeft = Math.abs(touches[0].pageX + touches[1].pageX) / 2;
+                currentTouchTop = Math.abs(touches[0].pageY + touches[1].pageY) / 2;
+            } else {
+                currentTouchLeft = touches[0].pageX;
+                currentTouchTop = touches[0].pageY;
+            }
+
+            var positions = this.__positions;
+
+            // Are we already is dragging mode?
+            if (this.__isDragging) {
+                // Compute move distance
+                var moveX = currentTouchLeft - this.__lastTouchLeft;
+                var moveY = currentTouchTop - this.__lastTouchTop;
+
+                // Read previous scroll position and zooming
+                var scrollLeft = this.__scrollLeft;
+                var scrollTop = this.__scrollTop;
+                var level = this.__zoomLevel;
+
+                // Work with scaling
+                if (scale !== undefined && this.options.zooming) {
+                    var oldLevel = level;
+
+                    // Recompute level based on previous scale and new scale
+                    level = level / this.__lastScale * scale;
+
+                    // Limit level according to configuration
+                    level = Math.max(Math.min(level, this.options.maxZoom), this.options.minZoom);
+
+                    // Only do further compution when change happened
+                    if (oldLevel !== level) {
+                        // Compute relative event position to container
+                        var currentTouchLeftRel = currentTouchLeft - this.__clientLeft;
+                        var currentTouchTopRel = currentTouchTop - this.__clientTop;
+
+                        // Recompute left and top coordinates based on new zoom level
+                        scrollLeft = ((currentTouchLeftRel + scrollLeft) * level / oldLevel) - currentTouchLeftRel;
+                        scrollTop = ((currentTouchTopRel + scrollTop) * level / oldLevel) - currentTouchTopRel;
+
+                        // Recompute max scroll values
+                        this.__computeScrollMax(level);
+                    }
+                }
+
+                if (this.__enableScrollX) {
+                    scrollLeft -= moveX * this.options.speedMultiplier;
+                    var maxScrollLeft = this.__maxScrollLeft;
+
+                    if (scrollLeft > maxScrollLeft || scrollLeft < 0) {
+                        // Slow down on the edges
+                        if (this.options.bouncing) {
+                            scrollLeft += (moveX / 2  * this.options.speedMultiplier);
+                        } else if (scrollLeft > maxScrollLeft) {
+                            scrollLeft = maxScrollLeft;
+                        } else {
+                            scrollLeft = 0;
+                        }
+                    }
+                }
+
+                // Compute new vertical scroll position
+                if (this.__enableScrollY) {
+                    scrollTop -= moveY * this.options.speedMultiplier;
+                    var maxScrollTop = this.__maxScrollTop;
+
+                    if (scrollTop > maxScrollTop || scrollTop < 0) {
+                        // Slow down on the edges
+                        if (this.options.bouncing) {
+                            scrollTop += (moveY / 2 * this.options.speedMultiplier);
+                        } else if (scrollTop > maxScrollTop) {
+                            scrollTop = maxScrollTop;
+                        } else {
+                            scrollTop = 0;
+                        }
+                    }
+                }
+
+                // Keep list from growing infinitely (holding min 10, max 20 measure points)
+                if (positions.length > 60) {
+                    positions.splice(0, 30);
+                }
+
+                // Track scroll movement for decleration
+                positions.push(scrollLeft, scrollTop, timeStamp);
+
+                // Sync scroll position
+                this.__publish(scrollLeft, scrollTop, level);
+
+                // Otherwise figure out whether we are switching into dragging mode now.
+            } else {
+                var minimumTrackingForScroll = this.options.locking ? 3 : 0;
+                var minimumTrackingForDrag = 5;
+
+                var distanceX = Math.abs(currentTouchLeft - this.__initialTouchLeft);
+                var distanceY = Math.abs(currentTouchTop - this.__initialTouchTop);
+
+                this.__enableScrollX = this.options.scrollingX && distanceX >= minimumTrackingForScroll;
+                this.__enableScrollY = this.options.scrollingY && distanceY >= minimumTrackingForScroll;
+
+                positions.push(this.__scrollLeft, this.__scrollTop, timeStamp);
+
+                this.__isDragging = (this.__enableScrollX || this.__enableScrollY) && (distanceX >= minimumTrackingForDrag || distanceY >= minimumTrackingForDrag);
+                if (this.__isDragging) {
+                    this.__interruptedAnimation = false;
+                }
+            }
+
+            // Update last touch positions and time stamp for next event
+            this.__lastTouchLeft = currentTouchLeft;
+            this.__lastTouchTop = currentTouchTop;
+            this.__lastTouchMove = timeStamp;
+            this.__lastScale = scale;
+        },
+
+
+        /**
+         * Touch end handler for scrolling support
+         */
+        doTouchEnd : function (timeStamp) {
+            if (timeStamp instanceof Date) {
+                timeStamp = timeStamp.valueOf();
+            }
+            if (typeof timeStamp !== "number") {
+                throw new Error("Invalid timestamp value: " + timeStamp);
+            }
+
+            // Ignore event when tracking is not enabled (no touchstart event on element)
+            // This is required as this listener ('touchmove') sits on the document and not on the element itself.
+            if (!this.__isTracking) {
+                return;
+            }
+
+            // Not touching anymore (when two finger hit the screen there are two touch end events)
+            this.__isTracking = false;
+
+            // Be sure to reset the dragging flag now. Here we also detect whether
+            // the finger has moved fast enough to switch into a deceleration animation.
+            if (this.__isDragging) {
+                // Reset dragging flag
+                this.__isDragging = false;
+
+                // Start deceleration
+                // Verify that the last move detected was in some relevant time frame
+                if (this.__isSingleTouch && this.options.animating && (timeStamp - this.__lastTouchMove) <= 100) {
+                    // Then figure out what the scroll position was about 100ms ago
+                    var positions = this.__positions;
+                    var endPos = positions.length - 1;
+                    var startPos = endPos;
+
+                    // Move pointer to position measured 100ms ago
+                    for (var i = endPos; i > 0 && positions[i] > (this.__lastTouchMove - 100); i -= 3) {
+                        startPos = i;
+                    }
+
+                    // If start and stop position is identical in a 100ms timeframe,
+                    // we cannot compute any useful deceleration.
+                    if (startPos !== endPos) {
+                        // Compute relative movement between these two points
+                        var timeOffset = positions[endPos] - positions[startPos];
+                        var movedLeft = this.__scrollLeft - positions[startPos - 2];
+                        var movedTop = this.__scrollTop - positions[startPos - 1];
+
+                        // Based on 50ms compute the movement to apply for each render step
+                        this.__decelerationVelocityX = movedLeft / timeOffset * (1000 / 60);
+                        this.__decelerationVelocityY = movedTop / timeOffset * (1000 / 60);
+
+                        // How much velocity is required to start the deceleration
+                        var minVelocityToStartDeceleration = this.options.paging || this.options.snapping ? 4 : 1;
+
+                        // Verify that we have enough velocity to start deceleration
+                        if (Math.abs(this.__decelerationVelocityX) > minVelocityToStartDeceleration || Math.abs(this.__decelerationVelocityY) > minVelocityToStartDeceleration) {
+                            this.__startDeceleration(timeStamp);
+                        }
+                    } else {
+                        this.options.scrollingComplete();
+                    }
+                } else if ((timeStamp - this.__lastTouchMove) > 100) {
+                    this.options.scrollingComplete();
+                }
+            }
+
+            // If this was a slower move it is per default non decelerated, but this
+            // still means that we want snap back to the bounds which is done here.
+            // This is placed outside the condition above to improve edge case stability
+            // e.g. touchend fired without enabled dragging. This should normally do not
+            // have modified the scroll positions or even showed the scrollbars though.
+            if (!this.__isDecelerating) {
+                if (this.__interruptedAnimation || this.__isDragging) {
+                    this.options.scrollingComplete();
+                }
+                this.scrollTo(this.__scrollLeft, this.__scrollTop, true, this.__zoomLevel);
+            }
+
+            // Fully cleanup list
+            this.__positions.length = 0;
+        },
+
+
+
+        /*
+          ---------------------------------------------------------------------------
+          PRIVATE API
+          ---------------------------------------------------------------------------
+        */
+
+        /**
+         * Applies the scroll position to the content element
+         *
+         * @param left {Number} Left scroll position
+         * @param top {Number} Top scroll position
+         * @param isAnimated {Boolean?false} Whether animation should be used to move to the new coordinates
+         */
+        __publish : function (left, top, zoom, isAnimated) {
+            // Remember whether we had an animation, then we try to continue
+            // based on the current "drive" of the animation.
+            var wasAnimating = this.__isAnimating;
+            if (wasAnimating) {
+                animate.stop(wasAnimating);
+                this.__isAnimating = false;
+            }
+
+            if (isAnimated && this.options.animating) {
+                // Keep scheduled positions for scrollBy/zoomBy functionality.
+                this.__scheduledLeft = left;
+                this.__scheduledTop = top;
+                this.__scheduledZoom = zoom;
+
+                var oldLeft = this.__scrollLeft;
+                var oldTop = this.__scrollTop;
+                var oldZoom = this.__zoomLevel;
+
+                var diffLeft = left - oldLeft;
+                var diffTop = top - oldTop;
+                var diffZoom = zoom - oldZoom;
+
+                var step = function (percent, now, render) {
+                    if (render) {
+                        this.__scrollLeft = oldLeft + (diffLeft * percent);
+                        this.__scrollTop = oldTop + (diffTop * percent);
+                        this.__zoomLevel = oldZoom + (diffZoom * percent);
+
+                        // Push values out
+                        if (this.__callback) {
+                            this.__callback(this.__scrollLeft, this.__scrollTop, this.__zoomLevel);
+                        }
+                    }
+                }.bind(this);
+
+                var verify = function (id) {
+                    return this.__isAnimating === id;
+                }.bind(this);
+
+                var completed = function (renderedFramesPerSecond, animationId, wasFinished) {
+                    if (animationId === this.__isAnimating) {
+                        this.__isAnimating = false;
+                    }
+                    if (this.__didDecelerationComplete || wasFinished) {
+                        this.options.scrollingComplete();
+                    }
+
+                    if (this.options.zooming) {
+                        this.__computeScrollMax();
+                        if (this.__zoomComplete) {
+                            this.__zoomComplete();
+                            this.__zoomComplete = null;
+                        }
+                    }
+                }.bind(this);
+
+                // When continuing based on previous animation we choose an ease-out animation instead of ease-in-out
+                this.__isAnimating = animate.start(step, verify, completed, this.options.animationDuration, wasAnimating ? easeOutCubic : easeInOutCubic);
+
+            } else {
+                this.__scheduledLeft = this.__scrollLeft = left;
+                this.__scheduledTop = this.__scrollTop = top;
+                this.__scheduledZoom = this.__zoomLevel = zoom;
+
+                // Push values out
+                if (this.__callback) {
+                    this.__callback(left, top, zoom);
+                }
+
+                // Fix max scroll ranges
+                if (this.options.zooming) {
+                    this.__computeScrollMax();
+                    if (this.__zoomComplete) {
+                        this.__zoomComplete();
+                        this.__zoomComplete = null;
+                    }
+                }
+            }
+        },
+
+
+        /**
+         * Recomputes scroll minimum values based on client dimensions and content dimensions.
+         */
+        __computeScrollMax : function (zoomLevel) {
+            if (zoomLevel === undefined) {
+                zoomLevel = this.__zoomLevel;
+            }
+
+            this.__maxScrollLeft = Math.max(this.__contentWidth*zoomLevel - this.__clientWidth, 0);
+            this.__maxScrollTop = Math.max(this.__contentHeight*zoomLevel - this.__clientHeight, 0);
+        },
+
+
+
+        /*
+          ---------------------------------------------------------------------------
+          ANIMATION (DECELERATION) SUPPORT
+          ---------------------------------------------------------------------------
+        */
+
+        /**
+         * Called when a touch sequence end and the speed of the finger was high enough
+         * to switch into deceleration mode.
+         */
+        __startDeceleration : function (timeStamp) {
+            if (this.options.paging) {
+                var scrollLeft = Math.max(Math.min(this.__scrollLeft, this.__maxScrollLeft), 0);
+                var scrollTop = Math.max(Math.min(this.__scrollTop, this.__maxScrollTop), 0);
+                var clientWidth = this.__clientWidth;
+                var clientHeight = this.__clientHeight;
+
+                // We limit deceleration not to the min/max values of the allowed range, but to the size of the visible client area.
+                // Each page should have exactly the size of the client area.
+                this.__minDecelerationScrollLeft = Math.floor(scrollLeft / clientWidth) * clientWidth;
+                this.__minDecelerationScrollTop = Math.floor(scrollTop / clientHeight) * clientHeight;
+                this.__maxDecelerationScrollLeft = Math.ceil(scrollLeft / clientWidth) * clientWidth;
+                this.__maxDecelerationScrollTop = Math.ceil(scrollTop / clientHeight) * clientHeight;
+            } else {
+                this.__minDecelerationScrollLeft = 0;
+                this.__minDecelerationScrollTop = 0;
+                this.__maxDecelerationScrollLeft = this.__maxScrollLeft;
+                this.__maxDecelerationScrollTop = this.__maxScrollTop;
+            }
+
+            // Wrap class method
+            var step = function (percent, now, render) {
+                this.__stepThroughDeceleration(render);
+            }.bind(this);
+
+            // How much velocity is required to keep the deceleration running
+            var minVelocityToKeepDecelerating = this.options.snapping ? 4 : 0.1;
+
+            // Detect whether it's still worth to continue animating steps
+            // If we are already slow enough to not being user perceivable anymore, we stop the whole process here.
+            var verify = function () {
+                var shouldContinue = Math.abs(this.__decelerationVelocityX) >= minVelocityToKeepDecelerating || Math.abs(this.__decelerationVelocityY) >= minVelocityToKeepDecelerating;
+                if (!shouldContinue) {
+                    this.__didDecelerationComplete = true;
+                }
+                return shouldContinue;
+            }.bind(this);
+
+            var completed = function (renderedFramesPerSecond, animationId, wasFinished) {
+                this.__isDecelerating = false;
+                if (this.__didDecelerationComplete) {
+                    this.options.scrollingComplete();
+                }
+
+                // Animate to grid when snapping is active, otherwise just fix out-of-boundary positions
+                this.scrollTo(this.__scrollLeft, this.__scrollTop, this.options.snapping);
+            }.bind(this);
+
+            // Start animation and switch on flag
+            this.__isDecelerating = animate.start(step, verify, completed);
+        },
+
+
+        /**
+         * Called on every step of the animation
+         *
+         * @param inMemory {Boolean?false} Whether to not render the current step, but keep it in memory only. Used internally only!
+         */
+        __stepThroughDeceleration : function (render) {
+
+            //
+            // COMPUTE NEXT SCROLL POSITION
+            //
+
+            // Add deceleration to scroll position
+            var scrollLeft = this.__scrollLeft + this.__decelerationVelocityX;
+            var scrollTop = this.__scrollTop + this.__decelerationVelocityY;
+
+
+            //
+            // HARD LIMIT SCROLL POSITION FOR NON BOUNCING MODE
+            //
+
+            if (!this.options.bouncing) {
+                var scrollLeftFixed = Math.max(Math.min(this.__maxDecelerationScrollLeft, scrollLeft), this.__minDecelerationScrollLeft);
+                if (scrollLeftFixed !== scrollLeft) {
+                    scrollLeft = scrollLeftFixed;
+                    this.__decelerationVelocityX = 0;
+                }
+
+                var scrollTopFixed = Math.max(Math.min(this.__maxDecelerationScrollTop, scrollTop), this.__minDecelerationScrollTop);
+                if (scrollTopFixed !== scrollTop) {
+                    scrollTop = scrollTopFixed;
+                    this.__decelerationVelocityY = 0;
+                }
+            }
+
+
+            //
+            // UPDATE SCROLL POSITION
+            //
+
+            if (render) {
+                this.__publish(scrollLeft, scrollTop, this.__zoomLevel);
+            } else {
+                this.__scrollLeft = scrollLeft;
+                this.__scrollTop = scrollTop;
+            }
+
+
+            //
+            // SLOW DOWN
+            //
+
+            // Slow down velocity on every iteration
+            if (!this.options.paging) {
+                // This is the factor applied to every iteration of the animation
+                // to slow down the process. This should emulate natural behavior where
+                // objects slow down when the initiator of the movement is removed
+                var frictionFactor = 0.95;
+
+                this.__decelerationVelocityX *= frictionFactor;
+                this.__decelerationVelocityY *= frictionFactor;
+            }
+
+
+            //
+            // BOUNCING SUPPORT
+            //
+
+            if (this.options.bouncing) {
+                var scrollOutsideX = 0;
+                var scrollOutsideY = 0;
+
+                // This configures the amount of change applied to deceleration/acceleration when reaching boundaries
+                var penetrationDeceleration = this.options.penetrationDeceleration;
+                var penetrationAcceleration = this.options.penetrationAcceleration;
+
+                // Check limits
+                if (scrollLeft < this.__minDecelerationScrollLeft) {
+                    scrollOutsideX = this.__minDecelerationScrollLeft - scrollLeft;
+                } else if (scrollLeft > this.__maxDecelerationScrollLeft) {
+                    scrollOutsideX = this.__maxDecelerationScrollLeft - scrollLeft;
+                }
+
+                if (scrollTop < this.__minDecelerationScrollTop) {
+                    scrollOutsideY = this.__minDecelerationScrollTop - scrollTop;
+                } else if (scrollTop > this.__maxDecelerationScrollTop) {
+                    scrollOutsideY = this.__maxDecelerationScrollTop - scrollTop;
+                }
+
+                // Slow down until slow enough, then flip back to snap position
+                if (scrollOutsideX !== 0) {
+                    if (scrollOutsideX * this.__decelerationVelocityX <= 0) {
+                        this.__decelerationVelocityX += scrollOutsideX * penetrationDeceleration;
+                    } else {
+                        this.__decelerationVelocityX = scrollOutsideX * penetrationAcceleration;
+                    }
+                }
+
+                if (scrollOutsideY !== 0) {
+                    if (scrollOutsideY * this.__decelerationVelocityY <= 0) {
+                        this.__decelerationVelocityY += scrollOutsideY * penetrationDeceleration;
+                    } else {
+                        this.__decelerationVelocityY = scrollOutsideY * penetrationAcceleration;
+                    }
+                }
+            }
+        }
+    };
+
+    return Scroller;
+}));
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "adaptor", function() { return adaptor; });
+function adaptor(node) {
+  var isDarkMode = false;
+
+  if (node.root) {
+    isDarkMode = node.root.isDarkMode();
+  } else {
+    isDarkMode = node.isDarkMode();
+  }
+
+  var style = {};
+
+  if (isDarkMode) {
+    style = Object.assign({}, node.styleInit, node.styleDarkInit, node.styleProp, node._innerStyle);
+  } else {
+    style = Object.assign({}, node.styleInit, node.styleProp, node._innerStyle);
+  } // 处理宽度
+  // if (style.width === 'auto') {
+  // 	yogaNode.setWidthAuto();
+  // } else if (typeof style.width === 'string' && style.width.endsWith('%')) {
+  // 	yogaNode.setWidthPercent(parseFloat(style.width));
+  // } else if (typeof style.width !== 'undefined') {
+  // 	yogaNode.setWidth(style.width);
+  // } else {
+  // 	yogaNode.setWidthAuto();
+  // }
+  // TODO 百分比的情况和auto情况处理
+
+
+  if (typeof style.minWidth === 'string' && style.minWidth.endsWith('%')) {
+    style.minWidth = node.parent.style.width * parseFloat(style.minWidth);
+  } // 处理最大高度
+
+
+  if (typeof style.maxHeight === 'string' && style.maxHeight.endsWith('%')) {
+    style.minHeight = node.parent.style.height * parseFloat(style.minHeight);
+  } // 处理高度
+
+
+  if (style.height === 'auto') {// 处理高度为auto的情况
+  } else if (typeof style.height === 'string' && style.height.endsWith('%')) {
+    style.height = node.parent.style.height * parseFloat(style.height);
+  } // 处理padding/margin/border
+
+
+  for (var _i = 0, _arr = ['padding', 'margin', 'borderWidth']; _i < _arr.length; _i++) {
+    var styleName = _arr[_i];
+
+    if (typeof style[styleName] === 'number') {
+      style[styleName + "Top"] = style[styleName];
+      style[styleName + "Bottom"] = style[styleName];
+      style[styleName + "Left"] = style[styleName];
+      style[styleName + "Right"] = style[styleName];
+    } else if (typeof style[styleName] === 'string') {
+      var s = style[styleName].split(' '); // 根据空格分割出padding的不同参数
+
+      if (s.length === 1) {
+        style[styleName + "Top"] = style[styleName];
+        style[styleName + "Bottom"] = style[styleName];
+        style[styleName + "Left"] = style[styleName];
+        style[styleName + "Right"] = style[styleName];
+      } else if (s.length === 2) {
+        style[styleName + "Top"] = s[0];
+        style[styleName + "Bottom"] = s[0];
+        style[styleName + "Left"] = s[1];
+        style[styleName + "Right"] = s[1];
+      } else if (s.length === 3) {
+        style[styleName + "Top"] = s[0];
+        style[styleName + "Bottom"] = s[1];
+        style[styleName + "Left"] = s[1];
+        style[styleName + "Right"] = s[2];
+      } else if (s.length === 4) {
+        style[styleName + "Top"] = s[0];
+        style[styleName + "Bottom"] = s[1];
+        style[styleName + "Left"] = s[2];
+        style[styleName + "Right"] = s[3];
+      }
+    }
+  }
+
+  node.style = style;
+  node.children.forEach(function (child) {
+    adaptor(child);
+  });
+  return node;
+}
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// UMD (Universal Module Definition)
+// See https://github.com/umdjs/umd for reference
+//
+// This file uses the following specific UMD implementation:
+// https://github.com/umdjs/umd/blob/master/returnExports.js
+(function(root, factory) {
+  if (true) {
+    // AMD. Register as an anonymous module.
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {}
+}(this, function() {
+  /**
+ * Copyright (c) 2014, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+var computeLayout = (function() {
+
+  var CSS_UNDEFINED;
+
+  var CSS_DIRECTION_INHERIT = 'inherit';
+  var CSS_DIRECTION_LTR = 'ltr';
+  var CSS_DIRECTION_RTL = 'rtl';
+
+  var CSS_FLEX_DIRECTION_ROW = 'row';
+  var CSS_FLEX_DIRECTION_ROW_REVERSE = 'row-reverse';
+  var CSS_FLEX_DIRECTION_COLUMN = 'column';
+  var CSS_FLEX_DIRECTION_COLUMN_REVERSE = 'column-reverse';
+
+  var CSS_JUSTIFY_FLEX_START = 'flex-start';
+  var CSS_JUSTIFY_CENTER = 'center';
+  var CSS_JUSTIFY_FLEX_END = 'flex-end';
+  var CSS_JUSTIFY_SPACE_BETWEEN = 'space-between';
+  var CSS_JUSTIFY_SPACE_AROUND = 'space-around';
+
+  var CSS_ALIGN_FLEX_START = 'flex-start';
+  var CSS_ALIGN_CENTER = 'center';
+  var CSS_ALIGN_FLEX_END = 'flex-end';
+  var CSS_ALIGN_STRETCH = 'stretch';
+
+  var CSS_POSITION_RELATIVE = 'relative';
+  var CSS_POSITION_ABSOLUTE = 'absolute';
+
+  var leading = {
+    'row': 'left',
+    'row-reverse': 'right',
+    'column': 'top',
+    'column-reverse': 'bottom'
+  };
+  var trailing = {
+    'row': 'right',
+    'row-reverse': 'left',
+    'column': 'bottom',
+    'column-reverse': 'top'
+  };
+  var pos = {
+    'row': 'left',
+    'row-reverse': 'right',
+    'column': 'top',
+    'column-reverse': 'bottom'
+  };
+  var dim = {
+    'row': 'width',
+    'row-reverse': 'width',
+    'column': 'height',
+    'column-reverse': 'height'
+  };
+
+  // When transpiled to Java / C the node type has layout, children and style
+  // properties. For the JavaScript version this function adds these properties
+  // if they don't already exist.
+  function fillNodes(node) {
+    if (!node.layout || node.isDirty) {
+      node.layout = {
+        width: undefined,
+        height: undefined,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      };
+    }
+
+    if (!node.style) {
+      node.style = {};
+    }
+
+    if (!node.children) {
+      node.children = [];
+    }
+    node.children.forEach(fillNodes);
+    return node;
+  }
+
+  function isUndefined(value) {
+    return value === undefined;
+  }
+
+  function isRowDirection(flexDirection) {
+    return flexDirection === CSS_FLEX_DIRECTION_ROW ||
+           flexDirection === CSS_FLEX_DIRECTION_ROW_REVERSE;
+  }
+
+  function isColumnDirection(flexDirection) {
+    return flexDirection === CSS_FLEX_DIRECTION_COLUMN ||
+           flexDirection === CSS_FLEX_DIRECTION_COLUMN_REVERSE;
+  }
+
+  function getLeadingMargin(node, axis) {
+    if (node.style.marginStart !== undefined && isRowDirection(axis)) {
+      return node.style.marginStart;
+    }
+
+    var value = null;
+    switch (axis) {
+      case 'row':            value = node.style.marginLeft;   break;
+      case 'row-reverse':    value = node.style.marginRight;  break;
+      case 'column':         value = node.style.marginTop;    break;
+      case 'column-reverse': value = node.style.marginBottom; break;
+    }
+
+    if (value !== undefined) {
+      return value;
+    }
+
+    if (node.style.margin !== undefined) {
+      return node.style.margin;
+    }
+
+    return 0;
+  }
+
+  function getTrailingMargin(node, axis) {
+    if (node.style.marginEnd !== undefined && isRowDirection(axis)) {
+      return node.style.marginEnd;
+    }
+
+    var value = null;
+    switch (axis) {
+      case 'row':            value = node.style.marginRight;  break;
+      case 'row-reverse':    value = node.style.marginLeft;   break;
+      case 'column':         value = node.style.marginBottom; break;
+      case 'column-reverse': value = node.style.marginTop;    break;
+    }
+
+    if (value != null) {
+      return value;
+    }
+
+    if (node.style.margin !== undefined) {
+      return node.style.margin;
+    }
+
+    return 0;
+  }
+
+  function getLeadingPadding(node, axis) {
+    if (node.style.paddingStart !== undefined && node.style.paddingStart >= 0
+        && isRowDirection(axis)) {
+      return node.style.paddingStart;
+    }
+
+    var value = null;
+    switch (axis) {
+      case 'row':            value = node.style.paddingLeft;   break;
+      case 'row-reverse':    value = node.style.paddingRight;  break;
+      case 'column':         value = node.style.paddingTop;    break;
+      case 'column-reverse': value = node.style.paddingBottom; break;
+    }
+
+    if (value != null && value >= 0) {
+      return value;
+    }
+
+    if (node.style.padding !== undefined && node.style.padding >= 0) {
+      return node.style.padding;
+    }
+
+    return 0;
+  }
+
+  function getTrailingPadding(node, axis) {
+    if (node.style.paddingEnd !== undefined && node.style.paddingEnd >= 0
+        && isRowDirection(axis)) {
+      return node.style.paddingEnd;
+    }
+
+    var value = null;
+    switch (axis) {
+      case 'row':            value = node.style.paddingRight;  break;
+      case 'row-reverse':    value = node.style.paddingLeft;   break;
+      case 'column':         value = node.style.paddingBottom; break;
+      case 'column-reverse': value = node.style.paddingTop;    break;
+    }
+
+    if (value != null && value >= 0) {
+      return value;
+    }
+
+    if (node.style.padding !== undefined && node.style.padding >= 0) {
+      return node.style.padding;
+    }
+
+    return 0;
+  }
+
+  function getLeadingBorder(node, axis) {
+    if (node.style.borderStartWidth !== undefined && node.style.borderStartWidth >= 0
+        && isRowDirection(axis)) {
+      return node.style.borderStartWidth;
+    }
+
+    var value = null;
+    switch (axis) {
+      case 'row':            value = node.style.borderLeftWidth;   break;
+      case 'row-reverse':    value = node.style.borderRightWidth;  break;
+      case 'column':         value = node.style.borderTopWidth;    break;
+      case 'column-reverse': value = node.style.borderBottomWidth; break;
+    }
+
+    if (value != null && value >= 0) {
+      return value;
+    }
+
+    if (node.style.borderWidth !== undefined && node.style.borderWidth >= 0) {
+      return node.style.borderWidth;
+    }
+
+    return 0;
+  }
+
+  function getTrailingBorder(node, axis) {
+    if (node.style.borderEndWidth !== undefined && node.style.borderEndWidth >= 0
+        && isRowDirection(axis)) {
+      return node.style.borderEndWidth;
+    }
+
+    var value = null;
+    switch (axis) {
+      case 'row':            value = node.style.borderRightWidth;  break;
+      case 'row-reverse':    value = node.style.borderLeftWidth;   break;
+      case 'column':         value = node.style.borderBottomWidth; break;
+      case 'column-reverse': value = node.style.borderTopWidth;    break;
+    }
+
+    if (value != null && value >= 0) {
+      return value;
+    }
+
+    if (node.style.borderWidth !== undefined && node.style.borderWidth >= 0) {
+      return node.style.borderWidth;
+    }
+
+    return 0;
+  }
+
+  function getLeadingPaddingAndBorder(node, axis) {
+    return getLeadingPadding(node, axis) + getLeadingBorder(node, axis);
+  }
+
+  function getTrailingPaddingAndBorder(node, axis) {
+    return getTrailingPadding(node, axis) + getTrailingBorder(node, axis);
+  }
+
+  function getBorderAxis(node, axis) {
+    return getLeadingBorder(node, axis) + getTrailingBorder(node, axis);
+  }
+
+  function getMarginAxis(node, axis) {
+    return getLeadingMargin(node, axis) + getTrailingMargin(node, axis);
+  }
+
+  function getPaddingAndBorderAxis(node, axis) {
+    return getLeadingPaddingAndBorder(node, axis) +
+        getTrailingPaddingAndBorder(node, axis);
+  }
+
+  function getJustifyContent(node) {
+    if (node.style.justifyContent) {
+      return node.style.justifyContent;
+    }
+    return 'flex-start';
+  }
+
+  function getAlignContent(node) {
+    if (node.style.alignContent) {
+      return node.style.alignContent;
+    }
+    return 'flex-start';
+  }
+
+  function getAlignItem(node, child) {
+    if (child.style.alignSelf) {
+      return child.style.alignSelf;
+    }
+    if (node.style.alignItems) {
+      return node.style.alignItems;
+    }
+    return 'stretch';
+  }
+
+  function resolveAxis(axis, direction) {
+    if (direction === CSS_DIRECTION_RTL) {
+      if (axis === CSS_FLEX_DIRECTION_ROW) {
+        return CSS_FLEX_DIRECTION_ROW_REVERSE;
+      } else if (axis === CSS_FLEX_DIRECTION_ROW_REVERSE) {
+        return CSS_FLEX_DIRECTION_ROW;
+      }
+    }
+
+    return axis;
+  }
+
+  function resolveDirection(node, parentDirection) {
+    var direction;
+    if (node.style.direction) {
+      direction = node.style.direction;
+    } else {
+      direction = CSS_DIRECTION_INHERIT;
+    }
+
+    if (direction === CSS_DIRECTION_INHERIT) {
+      direction = (parentDirection === undefined ? CSS_DIRECTION_LTR : parentDirection);
+    }
+
+    return direction;
+  }
+
+  function getFlexDirection(node) {
+    if (node.style.flexDirection) {
+      return node.style.flexDirection;
+    }
+    return CSS_FLEX_DIRECTION_COLUMN;
+  }
+
+  function getCrossFlexDirection(flexDirection, direction) {
+    if (isColumnDirection(flexDirection)) {
+      return resolveAxis(CSS_FLEX_DIRECTION_ROW, direction);
+    } else {
+      return CSS_FLEX_DIRECTION_COLUMN;
+    }
+  }
+
+  function getPositionType(node) {
+    if (node.style.position) {
+      return node.style.position;
+    }
+    return 'relative';
+  }
+
+  function isFlex(node) {
+    return (
+      getPositionType(node) === CSS_POSITION_RELATIVE &&
+      node.style.flex > 0
+    );
+  }
+
+  function isFlexWrap(node) {
+    return node.style.flexWrap === 'wrap';
+  }
+
+  function getDimWithMargin(node, axis) {
+    return node.layout[dim[axis]] + getMarginAxis(node, axis);
+  }
+
+  function isDimDefined(node, axis) {
+    return node.style[dim[axis]] !== undefined && node.style[dim[axis]] >= 0;
+  }
+
+  function isPosDefined(node, pos) {
+    return node.style[pos] !== undefined;
+  }
+
+  function isMeasureDefined(node) {
+    return node.style.measure !== undefined;
+  }
+
+  function getPosition(node, pos) {
+    if (node.style[pos] !== undefined) {
+      return node.style[pos];
+    }
+    return 0;
+  }
+
+  function boundAxis(node, axis, value) {
+    var min = {
+      'row': node.style.minWidth,
+      'row-reverse': node.style.minWidth,
+      'column': node.style.minHeight,
+      'column-reverse': node.style.minHeight
+    }[axis];
+
+    var max = {
+      'row': node.style.maxWidth,
+      'row-reverse': node.style.maxWidth,
+      'column': node.style.maxHeight,
+      'column-reverse': node.style.maxHeight
+    }[axis];
+
+    var boundValue = value;
+    if (max !== undefined && max >= 0 && boundValue > max) {
+      boundValue = max;
+    }
+    if (min !== undefined && min >= 0 && boundValue < min) {
+      boundValue = min;
+    }
+    return boundValue;
+  }
+
+  function fmaxf(a, b) {
+    if (a > b) {
+      return a;
+    }
+    return b;
+  }
+
+  // When the user specifically sets a value for width or height
+  function setDimensionFromStyle(node, axis) {
+    // The parent already computed us a width or height. We just skip it
+    if (node.layout[dim[axis]] !== undefined) {
+      return;
+    }
+    // We only run if there's a width or height defined
+    if (!isDimDefined(node, axis)) {
+      return;
+    }
+
+    // The dimensions can never be smaller than the padding and border
+    node.layout[dim[axis]] = fmaxf(
+      boundAxis(node, axis, node.style[dim[axis]]),
+      getPaddingAndBorderAxis(node, axis)
+    );
+  }
+
+  function setTrailingPosition(node, child, axis) {
+    child.layout[trailing[axis]] = node.layout[dim[axis]] -
+        child.layout[dim[axis]] - child.layout[pos[axis]];
+  }
+
+  // If both left and right are defined, then use left. Otherwise return
+  // +left or -right depending on which is defined.
+  function getRelativePosition(node, axis) {
+    if (node.style[leading[axis]] !== undefined) {
+      return getPosition(node, leading[axis]);
+    }
+    return -getPosition(node, trailing[axis]);
+  }
+
+  function layoutNodeImpl(node, parentMaxWidth, /*css_direction_t*/parentDirection) {
+    var/*css_direction_t*/ direction = resolveDirection(node, parentDirection);
+    var/*(c)!css_flex_direction_t*//*(java)!int*/ mainAxis = resolveAxis(getFlexDirection(node), direction);
+    var/*(c)!css_flex_direction_t*//*(java)!int*/ crossAxis = getCrossFlexDirection(mainAxis, direction);
+    var/*(c)!css_flex_direction_t*//*(java)!int*/ resolvedRowAxis = resolveAxis(CSS_FLEX_DIRECTION_ROW, direction);
+
+    // Handle width and height style attributes
+    setDimensionFromStyle(node, mainAxis);
+    setDimensionFromStyle(node, crossAxis);
+
+    // Set the resolved resolution in the node's layout
+    node.layout.direction = direction;
+
+    // The position is set by the parent, but we need to complete it with a
+    // delta composed of the margin and left/top/right/bottom
+    node.layout[leading[mainAxis]] += getLeadingMargin(node, mainAxis) +
+      getRelativePosition(node, mainAxis);
+    node.layout[trailing[mainAxis]] += getTrailingMargin(node, mainAxis) +
+      getRelativePosition(node, mainAxis);
+    node.layout[leading[crossAxis]] += getLeadingMargin(node, crossAxis) +
+      getRelativePosition(node, crossAxis);
+    node.layout[trailing[crossAxis]] += getTrailingMargin(node, crossAxis) +
+      getRelativePosition(node, crossAxis);
+
+    // Inline immutable values from the target node to avoid excessive method
+    // invocations during the layout calculation.
+    var/*int*/ childCount = node.children.length;
+    var/*float*/ paddingAndBorderAxisResolvedRow = getPaddingAndBorderAxis(node, resolvedRowAxis);
+
+    if (isMeasureDefined(node)) {
+      var/*bool*/ isResolvedRowDimDefined = !isUndefined(node.layout[dim[resolvedRowAxis]]);
+
+      var/*float*/ width = CSS_UNDEFINED;
+      if (isDimDefined(node, resolvedRowAxis)) {
+        width = node.style.width;
+      } else if (isResolvedRowDimDefined) {
+        width = node.layout[dim[resolvedRowAxis]];
+      } else {
+        width = parentMaxWidth -
+          getMarginAxis(node, resolvedRowAxis);
+      }
+      width -= paddingAndBorderAxisResolvedRow;
+
+      // We only need to give a dimension for the text if we haven't got any
+      // for it computed yet. It can either be from the style attribute or because
+      // the element is flexible.
+      var/*bool*/ isRowUndefined = !isDimDefined(node, resolvedRowAxis) && !isResolvedRowDimDefined;
+      var/*bool*/ isColumnUndefined = !isDimDefined(node, CSS_FLEX_DIRECTION_COLUMN) &&
+        isUndefined(node.layout[dim[CSS_FLEX_DIRECTION_COLUMN]]);
+
+      // Let's not measure the text if we already know both dimensions
+      if (isRowUndefined || isColumnUndefined) {
+        var/*css_dim_t*/ measureDim = node.style.measure(
+          /*(c)!node->context,*/
+          /*(java)!layoutContext.measureOutput,*/
+          width
+        );
+        if (isRowUndefined) {
+          node.layout.width = measureDim.width +
+            paddingAndBorderAxisResolvedRow;
+        }
+        if (isColumnUndefined) {
+          node.layout.height = measureDim.height +
+            getPaddingAndBorderAxis(node, CSS_FLEX_DIRECTION_COLUMN);
+        }
+      }
+      if (childCount === 0) {
+        return;
+      }
+    }
+
+    var/*bool*/ isNodeFlexWrap = isFlexWrap(node);
+
+    var/*css_justify_t*/ justifyContent = getJustifyContent(node);
+
+    var/*float*/ leadingPaddingAndBorderMain = getLeadingPaddingAndBorder(node, mainAxis);
+    var/*float*/ leadingPaddingAndBorderCross = getLeadingPaddingAndBorder(node, crossAxis);
+    var/*float*/ paddingAndBorderAxisMain = getPaddingAndBorderAxis(node, mainAxis);
+    var/*float*/ paddingAndBorderAxisCross = getPaddingAndBorderAxis(node, crossAxis);
+
+    var/*bool*/ isMainDimDefined = !isUndefined(node.layout[dim[mainAxis]]);
+    var/*bool*/ isCrossDimDefined = !isUndefined(node.layout[dim[crossAxis]]);
+    var/*bool*/ isMainRowDirection = isRowDirection(mainAxis);
+
+    var/*int*/ i;
+    var/*int*/ ii;
+    var/*css_node_t**/ child;
+    var/*(c)!css_flex_direction_t*//*(java)!int*/ axis;
+
+    var/*css_node_t**/ firstAbsoluteChild = null;
+    var/*css_node_t**/ currentAbsoluteChild = null;
+
+    var/*float*/ definedMainDim = CSS_UNDEFINED;
+    if (isMainDimDefined) {
+      definedMainDim = node.layout[dim[mainAxis]] - paddingAndBorderAxisMain;
+    }
+
+    // We want to execute the next two loops one per line with flex-wrap
+    var/*int*/ startLine = 0;
+    var/*int*/ endLine = 0;
+    // var/*int*/ nextOffset = 0;
+    var/*int*/ alreadyComputedNextLayout = 0;
+    // We aggregate the total dimensions of the container in those two variables
+    var/*float*/ linesCrossDim = 0;
+    var/*float*/ linesMainDim = 0;
+    var/*int*/ linesCount = 0;
+    while (endLine < childCount) {
+      // <Loop A> Layout non flexible children and count children by type
+
+      // mainContentDim is accumulation of the dimensions and margin of all the
+      // non flexible children. This will be used in order to either set the
+      // dimensions of the node if none already exist, or to compute the
+      // remaining space left for the flexible children.
+      var/*float*/ mainContentDim = 0;
+
+      // There are three kind of children, non flexible, flexible and absolute.
+      // We need to know how many there are in order to distribute the space.
+      var/*int*/ flexibleChildrenCount = 0;
+      var/*float*/ totalFlexible = 0;
+      var/*int*/ nonFlexibleChildrenCount = 0;
+
+      // Use the line loop to position children in the main axis for as long
+      // as they are using a simple stacking behaviour. Children that are
+      // immediately stacked in the initial loop will not be touched again
+      // in <Loop C>.
+      var/*bool*/ isSimpleStackMain =
+          (isMainDimDefined && justifyContent === CSS_JUSTIFY_FLEX_START) ||
+          (!isMainDimDefined && justifyContent !== CSS_JUSTIFY_CENTER);
+      var/*int*/ firstComplexMain = (isSimpleStackMain ? childCount : startLine);
+
+      // Use the initial line loop to position children in the cross axis for
+      // as long as they are relatively positioned with alignment STRETCH or
+      // FLEX_START. Children that are immediately stacked in the initial loop
+      // will not be touched again in <Loop D>.
+      var/*bool*/ isSimpleStackCross = true;
+      var/*int*/ firstComplexCross = childCount;
+
+      var/*css_node_t**/ firstFlexChild = null;
+      var/*css_node_t**/ currentFlexChild = null;
+
+      var/*float*/ mainDim = leadingPaddingAndBorderMain;
+      var/*float*/ crossDim = 0;
+
+      var/*float*/ maxWidth;
+      for (i = startLine; i < childCount; ++i) {
+        child = node.children[i];
+        child.lineIndex = linesCount;
+
+        child.nextAbsoluteChild = null;
+        child.nextFlexChild = null;
+
+        var/*css_align_t*/ alignItem = getAlignItem(node, child);
+
+        // Pre-fill cross axis dimensions when the child is using stretch before
+        // we call the recursive layout pass
+        if (alignItem === CSS_ALIGN_STRETCH &&
+            getPositionType(child) === CSS_POSITION_RELATIVE &&
+            isCrossDimDefined &&
+            !isDimDefined(child, crossAxis)) {
+          child.layout[dim[crossAxis]] = fmaxf(
+            boundAxis(child, crossAxis, node.layout[dim[crossAxis]] -
+              paddingAndBorderAxisCross - getMarginAxis(child, crossAxis)),
+            // You never want to go smaller than padding
+            getPaddingAndBorderAxis(child, crossAxis)
+          );
+        } else if (getPositionType(child) === CSS_POSITION_ABSOLUTE) {
+          // Store a private linked list of absolutely positioned children
+          // so that we can efficiently traverse them later.
+          if (firstAbsoluteChild === null) {
+            firstAbsoluteChild = child;
+          }
+          if (currentAbsoluteChild !== null) {
+            currentAbsoluteChild.nextAbsoluteChild = child;
+          }
+          currentAbsoluteChild = child;
+
+          // Pre-fill dimensions when using absolute position and both offsets for the axis are defined (either both
+          // left and right or top and bottom).
+          for (ii = 0; ii < 2; ii++) {
+            axis = (ii !== 0) ? CSS_FLEX_DIRECTION_ROW : CSS_FLEX_DIRECTION_COLUMN;
+            if (!isUndefined(node.layout[dim[axis]]) &&
+                !isDimDefined(child, axis) &&
+                isPosDefined(child, leading[axis]) &&
+                isPosDefined(child, trailing[axis])) {
+              child.layout[dim[axis]] = fmaxf(
+                boundAxis(child, axis, node.layout[dim[axis]] -
+                  getPaddingAndBorderAxis(node, axis) -
+                  getMarginAxis(child, axis) -
+                  getPosition(child, leading[axis]) -
+                  getPosition(child, trailing[axis])),
+                // You never want to go smaller than padding
+                getPaddingAndBorderAxis(child, axis)
+              );
+            }
+          }
+        }
+
+        var/*float*/ nextContentDim = 0;
+
+        // It only makes sense to consider a child flexible if we have a computed
+        // dimension for the node.
+        if (isMainDimDefined && isFlex(child)) {
+          flexibleChildrenCount++;
+          totalFlexible += child.style.flex;
+
+          // Store a private linked list of flexible children so that we can
+          // efficiently traverse them later.
+          if (firstFlexChild === null) {
+            firstFlexChild = child;
+          }
+          if (currentFlexChild !== null) {
+            currentFlexChild.nextFlexChild = child;
+          }
+          currentFlexChild = child;
+
+          // Even if we don't know its exact size yet, we already know the padding,
+          // border and margin. We'll use this partial information, which represents
+          // the smallest possible size for the child, to compute the remaining
+          // available space.
+          nextContentDim = getPaddingAndBorderAxis(child, mainAxis) +
+            getMarginAxis(child, mainAxis);
+
+        } else {
+          maxWidth = CSS_UNDEFINED;
+          if (!isMainRowDirection) {
+            if (isDimDefined(node, resolvedRowAxis)) {
+              maxWidth = node.layout[dim[resolvedRowAxis]] -
+                paddingAndBorderAxisResolvedRow;
+            } else {
+              maxWidth = parentMaxWidth -
+                getMarginAxis(node, resolvedRowAxis) -
+                paddingAndBorderAxisResolvedRow;
+            }
+          }
+
+          // This is the main recursive call. We layout non flexible children.
+          if (alreadyComputedNextLayout === 0) {
+            layoutNode(/*(java)!layoutContext, */child, maxWidth, direction);
+          }
+
+          // Absolute positioned elements do not take part of the layout, so we
+          // don't use them to compute mainContentDim
+          if (getPositionType(child) === CSS_POSITION_RELATIVE) {
+            nonFlexibleChildrenCount++;
+            // At this point we know the final size and margin of the element.
+            nextContentDim = getDimWithMargin(child, mainAxis);
+          }
+        }
+
+        // The element we are about to add would make us go to the next line
+        if (isNodeFlexWrap &&
+            isMainDimDefined &&
+            mainContentDim + nextContentDim > definedMainDim &&
+            // If there's only one element, then it's bigger than the content
+            // and needs its own line
+            i !== startLine) {
+          nonFlexibleChildrenCount--;
+          alreadyComputedNextLayout = 1;
+          break;
+        }
+
+        // Disable simple stacking in the main axis for the current line as
+        // we found a non-trivial child. The remaining children will be laid out
+        // in <Loop C>.
+        if (isSimpleStackMain &&
+            (getPositionType(child) !== CSS_POSITION_RELATIVE || isFlex(child))) {
+          isSimpleStackMain = false;
+          firstComplexMain = i;
+        }
+
+        // Disable simple stacking in the cross axis for the current line as
+        // we found a non-trivial child. The remaining children will be laid out
+        // in <Loop D>.
+        if (isSimpleStackCross &&
+            (getPositionType(child) !== CSS_POSITION_RELATIVE ||
+                (alignItem !== CSS_ALIGN_STRETCH && alignItem !== CSS_ALIGN_FLEX_START) ||
+                isUndefined(child.layout[dim[crossAxis]]))) {
+          isSimpleStackCross = false;
+          firstComplexCross = i;
+        }
+
+        if (isSimpleStackMain) {
+          child.layout[pos[mainAxis]] += mainDim;
+          if (isMainDimDefined) {
+            setTrailingPosition(node, child, mainAxis);
+          }
+
+          mainDim += getDimWithMargin(child, mainAxis);
+          crossDim = fmaxf(crossDim, boundAxis(child, crossAxis, getDimWithMargin(child, crossAxis)));
+        }
+
+        if (isSimpleStackCross) {
+          child.layout[pos[crossAxis]] += linesCrossDim + leadingPaddingAndBorderCross;
+          if (isCrossDimDefined) {
+            setTrailingPosition(node, child, crossAxis);
+          }
+        }
+
+        alreadyComputedNextLayout = 0;
+        mainContentDim += nextContentDim;
+        endLine = i + 1;
+      }
+
+      // <Loop B> Layout flexible children and allocate empty space
+
+      // In order to position the elements in the main axis, we have two
+      // controls. The space between the beginning and the first element
+      // and the space between each two elements.
+      var/*float*/ leadingMainDim = 0;
+      var/*float*/ betweenMainDim = 0;
+
+      // The remaining available space that needs to be allocated
+      var/*float*/ remainingMainDim = 0;
+      if (isMainDimDefined) {
+        remainingMainDim = definedMainDim - mainContentDim;
+      } else {
+        remainingMainDim = fmaxf(mainContentDim, 0) - mainContentDim;
+      }
+
+      // If there are flexible children in the mix, they are going to fill the
+      // remaining space
+      if (flexibleChildrenCount !== 0) {
+        var/*float*/ flexibleMainDim = remainingMainDim / totalFlexible;
+        var/*float*/ baseMainDim;
+        var/*float*/ boundMainDim;
+
+        // If the flex share of remaining space doesn't meet min/max bounds,
+        // remove this child from flex calculations.
+        currentFlexChild = firstFlexChild;
+        while (currentFlexChild !== null) {
+          baseMainDim = flexibleMainDim * currentFlexChild.style.flex +
+              getPaddingAndBorderAxis(currentFlexChild, mainAxis);
+          boundMainDim = boundAxis(currentFlexChild, mainAxis, baseMainDim);
+
+          if (baseMainDim !== boundMainDim) {
+            remainingMainDim -= boundMainDim;
+            totalFlexible -= currentFlexChild.style.flex;
+          }
+
+          currentFlexChild = currentFlexChild.nextFlexChild;
+        }
+        flexibleMainDim = remainingMainDim / totalFlexible;
+
+        // The non flexible children can overflow the container, in this case
+        // we should just assume that there is no space available.
+        if (flexibleMainDim < 0) {
+          flexibleMainDim = 0;
+        }
+
+        currentFlexChild = firstFlexChild;
+        while (currentFlexChild !== null) {
+          // At this point we know the final size of the element in the main
+          // dimension
+          currentFlexChild.layout[dim[mainAxis]] = boundAxis(currentFlexChild, mainAxis,
+            flexibleMainDim * currentFlexChild.style.flex +
+                getPaddingAndBorderAxis(currentFlexChild, mainAxis)
+          );
+
+          maxWidth = CSS_UNDEFINED;
+          if (isDimDefined(node, resolvedRowAxis)) {
+            maxWidth = node.layout[dim[resolvedRowAxis]] -
+              paddingAndBorderAxisResolvedRow;
+          } else if (!isMainRowDirection) {
+            maxWidth = parentMaxWidth -
+              getMarginAxis(node, resolvedRowAxis) -
+              paddingAndBorderAxisResolvedRow;
+          }
+
+          // And we recursively call the layout algorithm for this child
+          layoutNode(/*(java)!layoutContext, */currentFlexChild, maxWidth, direction);
+
+          child = currentFlexChild;
+          currentFlexChild = currentFlexChild.nextFlexChild;
+          child.nextFlexChild = null;
+        }
+
+      // We use justifyContent to figure out how to allocate the remaining
+      // space available
+      } else if (justifyContent !== CSS_JUSTIFY_FLEX_START) {
+        if (justifyContent === CSS_JUSTIFY_CENTER) {
+          leadingMainDim = remainingMainDim / 2;
+        } else if (justifyContent === CSS_JUSTIFY_FLEX_END) {
+          leadingMainDim = remainingMainDim;
+        } else if (justifyContent === CSS_JUSTIFY_SPACE_BETWEEN) {
+          remainingMainDim = fmaxf(remainingMainDim, 0);
+          if (flexibleChildrenCount + nonFlexibleChildrenCount - 1 !== 0) {
+            betweenMainDim = remainingMainDim /
+              (flexibleChildrenCount + nonFlexibleChildrenCount - 1);
+          } else {
+            betweenMainDim = 0;
+          }
+        } else if (justifyContent === CSS_JUSTIFY_SPACE_AROUND) {
+          // Space on the edges is half of the space between elements
+          betweenMainDim = remainingMainDim /
+            (flexibleChildrenCount + nonFlexibleChildrenCount);
+          leadingMainDim = betweenMainDim / 2;
+        }
+      }
+
+      // <Loop C> Position elements in the main axis and compute dimensions
+
+      // At this point, all the children have their dimensions set. We need to
+      // find their position. In order to do that, we accumulate data in
+      // variables that are also useful to compute the total dimensions of the
+      // container!
+      mainDim += leadingMainDim;
+
+      for (i = firstComplexMain; i < endLine; ++i) {
+        child = node.children[i];
+
+        if (getPositionType(child) === CSS_POSITION_ABSOLUTE &&
+            isPosDefined(child, leading[mainAxis])) {
+          // In case the child is position absolute and has left/top being
+          // defined, we override the position to whatever the user said
+          // (and margin/border).
+          child.layout[pos[mainAxis]] = getPosition(child, leading[mainAxis]) +
+            getLeadingBorder(node, mainAxis) +
+            getLeadingMargin(child, mainAxis);
+        } else {
+          // If the child is position absolute (without top/left) or relative,
+          // we put it at the current accumulated offset.
+          child.layout[pos[mainAxis]] += mainDim;
+
+          // Define the trailing position accordingly.
+          if (isMainDimDefined) {
+            setTrailingPosition(node, child, mainAxis);
+          }
+
+          // Now that we placed the element, we need to update the variables
+          // We only need to do that for relative elements. Absolute elements
+          // do not take part in that phase.
+          if (getPositionType(child) === CSS_POSITION_RELATIVE) {
+            // The main dimension is the sum of all the elements dimension plus
+            // the spacing.
+            mainDim += betweenMainDim + getDimWithMargin(child, mainAxis);
+            // The cross dimension is the max of the elements dimension since there
+            // can only be one element in that cross dimension.
+            crossDim = fmaxf(crossDim, boundAxis(child, crossAxis, getDimWithMargin(child, crossAxis)));
+          }
+        }
+      }
+
+      var/*float*/ containerCrossAxis = node.layout[dim[crossAxis]];
+      if (!isCrossDimDefined) {
+        containerCrossAxis = fmaxf(
+          // For the cross dim, we add both sides at the end because the value
+          // is aggregate via a max function. Intermediate negative values
+          // can mess this computation otherwise
+          boundAxis(node, crossAxis, crossDim + paddingAndBorderAxisCross),
+          paddingAndBorderAxisCross
+        );
+      }
+
+      // <Loop D> Position elements in the cross axis
+      for (i = firstComplexCross; i < endLine; ++i) {
+        child = node.children[i];
+
+        if (getPositionType(child) === CSS_POSITION_ABSOLUTE &&
+            isPosDefined(child, leading[crossAxis])) {
+          // In case the child is absolutely positionned and has a
+          // top/left/bottom/right being set, we override all the previously
+          // computed positions to set it correctly.
+          child.layout[pos[crossAxis]] = getPosition(child, leading[crossAxis]) +
+            getLeadingBorder(node, crossAxis) +
+            getLeadingMargin(child, crossAxis);
+
+        } else {
+          var/*float*/ leadingCrossDim = leadingPaddingAndBorderCross;
+
+          // For a relative children, we're either using alignItems (parent) or
+          // alignSelf (child) in order to determine the position in the cross axis
+          if (getPositionType(child) === CSS_POSITION_RELATIVE) {
+            /*eslint-disable */
+            // This variable is intentionally re-defined as the code is transpiled to a block scope language
+            var/*css_align_t*/ alignItem = getAlignItem(node, child);
+            /*eslint-enable */
+            if (alignItem === CSS_ALIGN_STRETCH) {
+              // You can only stretch if the dimension has not already been set
+              // previously.
+              if (isUndefined(child.layout[dim[crossAxis]])) {
+                child.layout[dim[crossAxis]] = fmaxf(
+                  boundAxis(child, crossAxis, containerCrossAxis -
+                    paddingAndBorderAxisCross - getMarginAxis(child, crossAxis)),
+                  // You never want to go smaller than padding
+                  getPaddingAndBorderAxis(child, crossAxis)
+                );
+              }
+            } else if (alignItem !== CSS_ALIGN_FLEX_START) {
+              // The remaining space between the parent dimensions+padding and child
+              // dimensions+margin.
+              var/*float*/ remainingCrossDim = containerCrossAxis -
+                paddingAndBorderAxisCross - getDimWithMargin(child, crossAxis);
+
+              if (alignItem === CSS_ALIGN_CENTER) {
+                leadingCrossDim += remainingCrossDim / 2;
+              } else { // CSS_ALIGN_FLEX_END
+                leadingCrossDim += remainingCrossDim;
+              }
+            }
+          }
+
+          // And we apply the position
+          child.layout[pos[crossAxis]] += linesCrossDim + leadingCrossDim;
+
+          // Define the trailing position accordingly.
+          if (isCrossDimDefined) {
+            setTrailingPosition(node, child, crossAxis);
+          }
+        }
+      }
+
+      linesCrossDim += crossDim;
+      linesMainDim = fmaxf(linesMainDim, mainDim);
+      linesCount += 1;
+      startLine = endLine;
+    }
+
+    // <Loop E>
+    //
+    // Note(prenaux): More than one line, we need to layout the crossAxis
+    // according to alignContent.
+    //
+    // Note that we could probably remove <Loop D> and handle the one line case
+    // here too, but for the moment this is safer since it won't interfere with
+    // previously working code.
+    //
+    // See specs:
+    // http://www.w3.org/TR/2012/CR-css3-flexbox-20120918/#layout-algorithm
+    // section 9.4
+    //
+    if (linesCount > 1 && isCrossDimDefined) {
+      var/*float*/ nodeCrossAxisInnerSize = node.layout[dim[crossAxis]] -
+          paddingAndBorderAxisCross;
+      var/*float*/ remainingAlignContentDim = nodeCrossAxisInnerSize - linesCrossDim;
+
+      var/*float*/ crossDimLead = 0;
+      var/*float*/ currentLead = leadingPaddingAndBorderCross;
+
+      var/*css_align_t*/ alignContent = getAlignContent(node);
+      if (alignContent === CSS_ALIGN_FLEX_END) {
+        currentLead += remainingAlignContentDim;
+      } else if (alignContent === CSS_ALIGN_CENTER) {
+        currentLead += remainingAlignContentDim / 2;
+      } else if (alignContent === CSS_ALIGN_STRETCH) {
+        if (nodeCrossAxisInnerSize > linesCrossDim) {
+          crossDimLead = (remainingAlignContentDim / linesCount);
+        }
+      }
+
+      var/*int*/ endIndex = 0;
+      for (i = 0; i < linesCount; ++i) {
+        var/*int*/ startIndex = endIndex;
+
+        // compute the line's height and find the endIndex
+        var/*float*/ lineHeight = 0;
+        for (ii = startIndex; ii < childCount; ++ii) {
+          child = node.children[ii];
+          if (getPositionType(child) !== CSS_POSITION_RELATIVE) {
+            continue;
+          }
+          if (child.lineIndex !== i) {
+            break;
+          }
+          if (!isUndefined(child.layout[dim[crossAxis]])) {
+            lineHeight = fmaxf(
+              lineHeight,
+              child.layout[dim[crossAxis]] + getMarginAxis(child, crossAxis)
+            );
+          }
+        }
+        endIndex = ii;
+        lineHeight += crossDimLead;
+
+        for (ii = startIndex; ii < endIndex; ++ii) {
+          child = node.children[ii];
+          if (getPositionType(child) !== CSS_POSITION_RELATIVE) {
+            continue;
+          }
+
+          var/*css_align_t*/ alignContentAlignItem = getAlignItem(node, child);
+          if (alignContentAlignItem === CSS_ALIGN_FLEX_START) {
+            child.layout[pos[crossAxis]] = currentLead + getLeadingMargin(child, crossAxis);
+          } else if (alignContentAlignItem === CSS_ALIGN_FLEX_END) {
+            child.layout[pos[crossAxis]] = currentLead + lineHeight - getTrailingMargin(child, crossAxis) - child.layout[dim[crossAxis]];
+          } else if (alignContentAlignItem === CSS_ALIGN_CENTER) {
+            var/*float*/ childHeight = child.layout[dim[crossAxis]];
+            child.layout[pos[crossAxis]] = currentLead + (lineHeight - childHeight) / 2;
+          } else if (alignContentAlignItem === CSS_ALIGN_STRETCH) {
+            child.layout[pos[crossAxis]] = currentLead + getLeadingMargin(child, crossAxis);
+            // TODO(prenaux): Correctly set the height of items with undefined
+            //                (auto) crossAxis dimension.
+          }
+        }
+
+        currentLead += lineHeight;
+      }
+    }
+
+    var/*bool*/ needsMainTrailingPos = false;
+    var/*bool*/ needsCrossTrailingPos = false;
+
+    // If the user didn't specify a width or height, and it has not been set
+    // by the container, then we set it via the children.
+    if (!isMainDimDefined) {
+      node.layout[dim[mainAxis]] = fmaxf(
+        // We're missing the last padding at this point to get the final
+        // dimension
+        boundAxis(node, mainAxis, linesMainDim + getTrailingPaddingAndBorder(node, mainAxis)),
+        // We can never assign a width smaller than the padding and borders
+        paddingAndBorderAxisMain
+      );
+
+      if (mainAxis === CSS_FLEX_DIRECTION_ROW_REVERSE ||
+          mainAxis === CSS_FLEX_DIRECTION_COLUMN_REVERSE) {
+        needsMainTrailingPos = true;
+      }
+    }
+
+    if (!isCrossDimDefined) {
+      node.layout[dim[crossAxis]] = fmaxf(
+        // For the cross dim, we add both sides at the end because the value
+        // is aggregate via a max function. Intermediate negative values
+        // can mess this computation otherwise
+        boundAxis(node, crossAxis, linesCrossDim + paddingAndBorderAxisCross),
+        paddingAndBorderAxisCross
+      );
+
+      if (crossAxis === CSS_FLEX_DIRECTION_ROW_REVERSE ||
+          crossAxis === CSS_FLEX_DIRECTION_COLUMN_REVERSE) {
+        needsCrossTrailingPos = true;
+      }
+    }
+
+    // <Loop F> Set trailing position if necessary
+    if (needsMainTrailingPos || needsCrossTrailingPos) {
+      for (i = 0; i < childCount; ++i) {
+        child = node.children[i];
+
+        if (needsMainTrailingPos) {
+          setTrailingPosition(node, child, mainAxis);
+        }
+
+        if (needsCrossTrailingPos) {
+          setTrailingPosition(node, child, crossAxis);
+        }
+      }
+    }
+
+    // <Loop G> Calculate dimensions for absolutely positioned elements
+    currentAbsoluteChild = firstAbsoluteChild;
+    while (currentAbsoluteChild !== null) {
+      // Pre-fill dimensions when using absolute position and both offsets for
+      // the axis are defined (either both left and right or top and bottom).
+      for (ii = 0; ii < 2; ii++) {
+        axis = (ii !== 0) ? CSS_FLEX_DIRECTION_ROW : CSS_FLEX_DIRECTION_COLUMN;
+
+        if (!isUndefined(node.layout[dim[axis]]) &&
+            !isDimDefined(currentAbsoluteChild, axis) &&
+            isPosDefined(currentAbsoluteChild, leading[axis]) &&
+            isPosDefined(currentAbsoluteChild, trailing[axis])) {
+          currentAbsoluteChild.layout[dim[axis]] = fmaxf(
+            boundAxis(currentAbsoluteChild, axis, node.layout[dim[axis]] -
+              getBorderAxis(node, axis) -
+              getMarginAxis(currentAbsoluteChild, axis) -
+              getPosition(currentAbsoluteChild, leading[axis]) -
+              getPosition(currentAbsoluteChild, trailing[axis])
+            ),
+            // You never want to go smaller than padding
+            getPaddingAndBorderAxis(currentAbsoluteChild, axis)
+          );
+        }
+
+        if (isPosDefined(currentAbsoluteChild, trailing[axis]) &&
+            !isPosDefined(currentAbsoluteChild, leading[axis])) {
+          currentAbsoluteChild.layout[leading[axis]] =
+            node.layout[dim[axis]] -
+            currentAbsoluteChild.layout[dim[axis]] -
+            getPosition(currentAbsoluteChild, trailing[axis]);
+        }
+      }
+
+      child = currentAbsoluteChild;
+      currentAbsoluteChild = currentAbsoluteChild.nextAbsoluteChild;
+      child.nextAbsoluteChild = null;
+    }
+  }
+
+  function layoutNode(node, parentMaxWidth, parentDirection) {
+    node.shouldUpdate = true;
+
+    var direction = node.style.direction || CSS_DIRECTION_LTR;
+    var skipLayout =
+      !node.isDirty &&
+      node.lastLayout &&
+      node.lastLayout.requestedHeight === node.layout.height &&
+      node.lastLayout.requestedWidth === node.layout.width &&
+      node.lastLayout.parentMaxWidth === parentMaxWidth &&
+      node.lastLayout.direction === direction;
+
+    if (skipLayout) {
+      node.layout.width = node.lastLayout.width;
+      node.layout.height = node.lastLayout.height;
+      node.layout.top = node.lastLayout.top;
+      node.layout.left = node.lastLayout.left;
+    } else {
+      if (!node.lastLayout) {
+        node.lastLayout = {};
+      }
+
+      node.lastLayout.requestedWidth = node.layout.width;
+      node.lastLayout.requestedHeight = node.layout.height;
+      node.lastLayout.parentMaxWidth = parentMaxWidth;
+      node.lastLayout.direction = direction;
+
+      // Reset child layouts
+      node.children.forEach(function(child) {
+        child.layout.width = undefined;
+        child.layout.height = undefined;
+        child.layout.top = 0;
+        child.layout.left = 0;
+      });
+
+      layoutNodeImpl(node, parentMaxWidth, parentDirection);
+
+      node.lastLayout.width = node.layout.width;
+      node.lastLayout.height = node.layout.height;
+      node.lastLayout.top = node.layout.top;
+      node.lastLayout.left = node.layout.left;
+    }
+  }
+
+  return {
+    layoutNodeImpl: layoutNodeImpl,
+    computeLayout: layoutNode,
+    fillNodes: fillNodes
+  };
+})();
+
+// This module export is only used for the purposes of unit testing this file. When
+// the library is packaged this file is included within css-layout.js which forms
+// the public API.
+if (true) {
+  module.exports = computeLayout;
+}
+
+
+  return function(node) {
+    /*eslint-disable */
+    // disabling ESLint because this code relies on the above include
+    computeLayout.fillNodes(node);
+    computeLayout.computeLayout(node);
+    /*eslint-enable */
+  };
+}));
+
 
 /***/ })
 /******/ ]);

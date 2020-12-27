@@ -8,7 +8,7 @@ module.exports = {
        'demos/webgl/libs/engine': './src/index',
        'demos/interactivedemo/sub/engine': './src/index',
        'demos/cocoscreator/build/wechatgame/sub/engine': './src/index',*/
-    /*'./index': './src/core/index',*/
+    './index': './src/core/index',
     '../minigame_plugins/minigame_profile/plugin/libs/engine': './src/core/index',
     '../minigame_plugins/minigame_profile/minigame/plugin/libs/engine': './src/core/index',
   },

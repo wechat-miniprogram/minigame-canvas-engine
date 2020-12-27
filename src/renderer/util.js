@@ -233,7 +233,7 @@ export const VIDEOS = Object.create(null);
 const glPool = Object.create(null);
 
 /**
- * 
+ *
  * @param {CanvasContext} gl
  */
 function resetGl(gl) {
@@ -266,11 +266,11 @@ export function createRender({ dpr, createImage, createCanvas }) {
 
   function drawOneGlRect(gl, rect, repaintCbk = none) {
     const glRectData = scaleData(rect, dpr);
-    
+
     if (!rect.uid) {
       rect.uid = uid();
     }
-  
+
     const dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
     let glRect = glPool[rect.uid];
     if (!glRect) {
@@ -290,7 +290,7 @@ export function createRender({ dpr, createImage, createCanvas }) {
     glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);
     glRectData.opacity && glRect.setOpacity(glRectData.opacity);
     glRect.updateContours(dimension);
-  
+
     if (glRectData.image) {
       const { src } = glRectData.image;
       loadImage(src, (image, lazy) => {
@@ -322,10 +322,10 @@ export function createRender({ dpr, createImage, createCanvas }) {
 
     if (glRectData.type === 'Video') {
       const video = VIDEOS[`${gl.canvas.id}-${glRectData.id}`];
-  
+
       if (video) {
         video.repaint = () => repaintCbk();
-  
+
         if (video.iData) {
           glRect.setTextureData({ imageData: video.iData, width: video.vWidth, height: video.vHeight });
         }
@@ -336,12 +336,12 @@ export function createRender({ dpr, createImage, createCanvas }) {
     // const needUpdateTexture = !!(glRectData.type === 'ScrollView');
     glRect.draw();
   }
-  
+
   return {
     loadImage,
     resetGl,
-    
-    repaint: function drawRects(gl, glRects, scrollGlrects) {      
+
+    repaint: function drawRects(gl, glRects, scrollGlrects) {
       // resetGl(gl);
       glRects.forEach((item, idx) => {
         // scrollview开启模板测试

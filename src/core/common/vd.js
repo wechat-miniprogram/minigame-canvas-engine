@@ -290,6 +290,7 @@ export function layoutChildren(children, isDarkMode, fontSize) {
     }
     // 子节点的updateRenderData会收集渲染相关的数据
     child.updateRenderData && child.updateRenderData(computedStyle);
+
     layoutChildren.call(this, child.children, isDarkMode, fontSize);
   }
 }

@@ -1,9 +1,6 @@
 import View                from './view.js';
-import Touch               from '../common/touch.js';
 import {throttle, createCanvas} from '../common/util.js';
-
 import {Scroller} from 'scroller';
-console.log(1111, Scroller);
 
 export default class ScrollView extends View {
   constructor({
@@ -27,42 +24,41 @@ export default class ScrollView extends View {
       styleDarkActive,
     });
 
-    this.type            = 'ScrollView';
+    this.type = 'ScrollView';
 
     // 当前列表滚动的值
     this.scrollTop = 0;
     this.scrollLeft = 0;
 
     // 滚动处理器
-    this.touch           = new Touch();
-
-
-    this.requestID = null;
+    /*this.touch           = new Touch();*/
 
     this.hasEventBind = false;
-
-    this.overflowX = false;
-    this.overflowY = false;
+    this.currentEvent = null;
   }
 
   _active() {
-    // console.log('scrollview active call')
-    this.touch.needProcess = true;
+    if (this.scrollerObj) {
+      this.scrollActive = true;
+    }
   }
 
   _deactive() {
-    this.touch.needProcess = false;
+    if (this.scrollerObj) {
+      this.scrollActive = false;
+    }
   }
 
   destroySelf() {
     this.isDestroyed = true;
     this.children = null;
+    this.currentEvent = null;
 
     this.off('touchstart')
     this.off('touchmove')
-    this.off('touchend');
+    this.root && this.root.off('touchend');
 
-    this.touch = null;
+    this.scrollerObj = null;
   }
 
   /**
@@ -91,12 +87,8 @@ export default class ScrollView extends View {
     return last.layoutBox.left + last.layoutBox.width;
   }
 
-  /**
-   * 与主canvas的尺寸保持一致
-   */
   updateRenderPort(renderport) {
     if (this.hasEventBind) {
-      // console.log('has binded')
       return;
     }
 
@@ -105,60 +97,39 @@ export default class ScrollView extends View {
     this.root.scrollview = this;
 
     this.scrollerObj = new Scroller((left, top, zoom) => {
-      if (this.scrollActive) {
+      // 可能被销毁了或者节点树还没准备好
+      if (this.scrollActive && !this.isDestroyed) {
         this.traverseToChangeGlRect(this, left, top);
         this.root.repaint(false);
+
+        this.currentEvent.type = 'scroll';
+        this.currentEvent.currentTarget = this;
+        this.emit('scroll', this.currentEvent);
       }
     }, {
-        scrollingY: !!(this.scrollHeight > this.layoutBox.height),
-        scrollingX: !!(this.scrollWidth > this.layoutBox.width)
+      scrollingY: !!(this.scrollHeight > this.layoutBox.height),
+      scrollingX: !!(this.scrollWidth > this.layoutBox.width)
     });
 
     this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
     this.scrollActive = false;
     this.on('touchstart', (e) => {
-    this.scrollActive = true;
+      this.scrollActive = true;
       this.scrollerObj.doTouchStart(e.touches, e.timeStamp);
+      this.currentEvent = e;
     });
+
     this.on('touchmove', (e) => {
       this.scrollerObj.doTouchMove(e.touches, e.timeStamp);
+      this.currentEvent = e;
     });
-    this.on('touchend', (e) => {
+
+    // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
+    this.root.on('touchend', (e) => {
       this.scrollerObj.doTouchEnd(e.timeStamp);
+      this.currentEvent = e;
     });
-
-    return;
-
-    if ( this.scrollHeight > this.layoutBox.height ) {
-      this.overflowY = true;
-      this.touch.touchDirection = "Y";
-      // console.log(this.overflowY)
-      this.touch.setTouchRange(
-        -(this.scrollHeight - this.layoutBox.height),
-        0,
-        this.scrollRender.bind(this)
-      );
-
-      // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
-      this.on('touchstart', this.touch.startFunc);
-      this.on('touchmove',  this.touch.moveFunc);
-      this.on('touchend',   this.touch.endFunc);
-    } else if (this.scrollWidth > this.layoutBox.width) {
-      this.overflowX = true;
-      this.touch.touchDirection = "X";
-      // console.log(this.overflowX)
-      this.touch.setTouchRange(
-        -(this.scrollWidth - this.layoutBox.width),
-        0,
-        this.scrollRender.bind(this)
-      );
-
-      // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
-      this.on('touchstart', this.touch.startFunc);
-      this.on('touchmove',  this.touch.moveFunc);
-      this.on('touchend',   this.touch.endFunc);
-    }
   }
 
   /**
@@ -173,49 +144,18 @@ export default class ScrollView extends View {
       glRect.x = glRect.originX - x;
       glRect.y = glRect.originY - y;
 
-
       if (node.type === 'Text') {
-
         glRect.text.style.drawX -= x;
         glRect.text.style.drawY -= y;
       }
     } else {
       this.scrollTop = y;
       this.scrollLeft = x;
-
-      if (this.touch && this.touch.touchDirection === "X") {
-        // this.touch.move = -x;
-        // this.touch.target = -x;
-      } else if (this.touch) {
-        // console.log('set touch move ', -y)
-        // this.touch.move = -y;
-        // this.touch.target = -y;
-      }
-
     }
 
+    // @TODO: 多个scrollview嵌套的情况
     node.children.forEach(child => {
       this.traverseToChangeGlRect(child, x, y);
     });
-  }
-
-  scrollRender(top, event) {
-    if (!this.root) {
-      return;
-    }
-    if (this.overflowX) {
-      this.scrollLeft = -top;
-    }
-    if (this.overflowY) {
-      this.scrollTop = -top;
-    }
-
-    this.traverseToChangeGlRect(this, this.scrollLeft, this.scrollTop);
-
-    event.type = 'scroll';
-    event.currentTarget = this;
-
-    this.emit('scroll', event);
-    this.root.repaint(false);
   }
 }
