@@ -46,6 +46,7 @@
     "css-layout": "^1.1.1",
     "esm": "^3.2.25",
     "fast-xml-parser": "^3.14.0",
+    "scroller": "0.0.3",
     "sinon": "^7.5.0",
     "stretch-layout": "^0.3.2",
     "tiny-emitter": "^2.1.0",

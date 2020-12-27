@@ -2,6 +2,9 @@ import View                from './view.js';
 import Touch               from '../common/touch.js';
 import {throttle, createCanvas} from '../common/util.js';
 
+import {Scroller} from 'scroller';
+console.log(1111, Scroller);
+
 export default class ScrollView extends View {
   constructor({
     styleInit = {},
@@ -32,6 +35,7 @@ export default class ScrollView extends View {
 
     // 滚动处理器
     this.touch           = new Touch();
+
 
     this.requestID = null;
 
@@ -99,6 +103,32 @@ export default class ScrollView extends View {
     this.hasEventBind = true;
 
     this.root.scrollview = this;
+
+    this.scrollerObj = new Scroller((left, top, zoom) => {
+      if (this.scrollActive) {
+        this.traverseToChangeGlRect(this, left, top);
+        this.root.repaint(false);
+      }
+    }, {
+        scrollingY: !!(this.scrollHeight > this.layoutBox.height),
+        scrollingX: !!(this.scrollWidth > this.layoutBox.width)
+    });
+
+    this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+
+    this.scrollActive = false;
+    this.on('touchstart', (e) => {
+    this.scrollActive = true;
+      this.scrollerObj.doTouchStart(e.touches, e.timeStamp);
+    });
+    this.on('touchmove', (e) => {
+      this.scrollerObj.doTouchMove(e.touches, e.timeStamp);
+    });
+    this.on('touchend', (e) => {
+      this.scrollerObj.doTouchEnd(e.timeStamp);
+    });
+
+    return;
 
     if ( this.scrollHeight > this.layoutBox.height ) {
       this.overflowY = true;
