@@ -2873,21 +2873,16 @@ var RenderContextManager = /*#__PURE__*/function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RoundRect", function() { return RoundRect; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setupGl", function() { return setupGl; });
 /* harmony import */ var _m4_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
 /* harmony import */ var _roundedRect_vert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(16);
 /* harmony import */ var _roundedRect_frag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
 
@@ -2904,10 +2899,9 @@ function createTexture(gl) {
 }
 
 var positions = new Float32Array([0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]);
+var textureMap = new WeakMap();
 
 function createProgram(gl) {
-  var needFlipY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  var textureMap = new WeakMap();
   var program;
   var bufferId;
   var uResolution;
@@ -2918,16 +2912,15 @@ function createProgram(gl) {
   var uMatrix;
   var uRect;
   var uTexRect;
-  var uBitset; // let blankTexId
-
+  var uBitset;
   var uTex;
   var vPosition;
   var textureMatrixLocation;
   var uOpacity;
   {
     gl.enable(gl.BLEND);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, needFlipY); // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
+    // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     // gl.blendEquation(gl.FUNC_ADD);
     // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
@@ -2990,7 +2983,6 @@ function createProgram(gl) {
     uRect: uRect,
     uTexRect: uTexRect,
     uBitset: uBitset,
-    // blankTexId,
     uTex: uTex,
     vPosition: vPosition,
     textureMatrixLocation: textureMatrixLocation,
@@ -3000,230 +2992,197 @@ function createProgram(gl) {
   };
 }
 
-function useProgram(gl) {
-  var needFlipY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  var hasSetuResolution = false;
+var RoundRect = /*#__PURE__*/function () {
+  function RoundRect(gl) {
+    _classCallCheck(this, RoundRect);
 
-  if (!gl.program) {
-    gl.program = createProgram(gl, needFlipY); // eslint-disable-line
+    this.gl = gl;
+    this.reset();
   }
 
-  var _gl$program = gl.program,
-      uResolution = _gl$program.uResolution,
-      uRadius = _gl$program.uRadius,
-      uBorderWidth = _gl$program.uBorderWidth,
-      uBorderColor = _gl$program.uBorderColor,
-      uColor = _gl$program.uColor,
-      uMatrix = _gl$program.uMatrix,
-      uRect = _gl$program.uRect,
-      uTexRect = _gl$program.uTexRect,
-      uBitset = _gl$program.uBitset,
-      uTex = _gl$program.uTex,
-      textureMatrixLocation = _gl$program.textureMatrixLocation,
-      textureMap = _gl$program.textureMap,
-      uOpacity = _gl$program.uOpacity;
-  return function createRoundRect() {
-    var x = 0;
-    var y = 0;
-    var width = 1;
-    var height = 1;
-    var radius = [0, 0, 0, 0];
-    var backgroundColor = [0, 0, 0, 0];
-    var backgroundImage;
-    var backgroundImageData;
-    var imageRect = [];
-    var imageSrcRect = [];
-    var borderWidth = 0;
-    var borderColor = [0, 0, 0, 0];
-    var imageWidth = 1;
-    var imageHeight = 1;
-    var opacity = 1;
-    var canvasWidth;
-    var canvasHeight;
-    var matrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["identity"])();
-    var texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
-    var result = {
-      reset: function reset() {
-        x = 0;
-        y = 0;
-        width = 1;
-        height = 1;
-        radius = [0, 0, 0, 0];
-        backgroundColor = [0, 0, 0, 0];
-        backgroundImage = undefined;
-        backgroundImageData = undefined;
-        imageRect = [];
-        imageSrcRect = [];
-        borderWidth = 0;
-        borderColor = [0, 0, 0, 0];
-        imageWidth = 1;
-        imageHeight = 1;
-        texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
-      },
-      updateContours: function updateContours(dimension) {
-        var _dimension = _slicedToArray(dimension, 4);
+  _createClass(RoundRect, [{
+    key: "reset",
+    value: function reset() {
+      this.x = 0;
+      this.y = 0;
+      this.width = 1;
+      this.height = 1;
+      this.radius = [0, 0, 0, 0];
+      this.backgroundColor = [0, 0, 0, 0];
+      this.backgroundImage = undefined;
+      this.backgroundImageData = undefined;
+      this.imageRect = [];
+      this.imageSrcRect = [];
+      this.borderWidth = 0;
+      this.borderColor = [0, 0, 0, 0];
+      this.imageWidth = 1;
+      this.imageHeight = 1;
+      this.texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
+      this.canvasWidth = 0;
+      this.canvasHeight = 0;
+      this.matrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["identity"])();
+      this.texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
+    }
+  }, {
+    key: "updateContours",
+    value: function updateContours(dimension) {
+      this.x = dimension[0];
+      this.y = dimension[1];
+      this.width = dimension[2];
+      this.height = dimension[3];
+    }
+  }, {
+    key: "updateViewPort",
+    value: function updateViewPort() {
+      var gl = this.gl;
+      var canvasWidth = this.canvasWidth;
+      var canvasHeight = this.canvasHeight;
 
-        x = _dimension[0];
-        y = _dimension[1];
-        width = _dimension[2];
-        height = _dimension[3];
-      },
-      updateViewPort: function updateViewPort() {
-        if (canvasWidth !== gl.canvas.width || canvasHeight !== gl.canvas.height) {
-          canvasWidth !== gl.canvas.width && (canvasWidth = gl.canvas.width);
-          canvasHeight !== gl.canvas.height && (canvasHeight = gl.canvas.height);
-          Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["orthographic"])(0, gl.canvas.width, gl.canvas.height, 0, -1, 1, matrix);
-          Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translate"])(matrix, x, y, 0, matrix);
-          Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(matrix, width, height, 1, matrix);
-          canvasWidth = gl.canvas.width;
-          canvasHeight = gl.canvas.height;
-        }
-      },
-      setRadius: function setRadius(r) {
-        if (typeof r === 'number') {
-          radius = [r, r, r, r];
-        } else {
-          radius = r;
-        }
-      },
-      setBorder: function setBorder(width, color) {
-        borderWidth = width;
-        borderColor = color;
-      },
-      setBackgroundColor: function setBackgroundColor(color) {
-        backgroundColor = color;
-      },
-      setOpacity: function setOpacity() {
-        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        opacity = value;
-      },
-      setTexture: function setTexture() {
-        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-            image = _ref.image,
-            _ref$rect = _ref.rect,
-            rect = _ref$rect === void 0 ? [0, 0, width, height] : _ref$rect,
-            srcRect = _ref.srcRect;
-
-        backgroundImage = image;
-        imageWidth = image.width;
-        imageHeight = image.height;
-        imageRect = rect;
-        imageSrcRect = srcRect || [0, 0, image.width, image.height];
-        result.setTexMatrix();
-      },
-      setTextureData: function setTextureData() {
-        var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-            imageData = _ref2.imageData,
-            tWidth = _ref2.width,
-            tHeight = _ref2.height,
-            _ref2$rect = _ref2.rect,
-            rect = _ref2$rect === void 0 ? [0, 0, width, height] : _ref2$rect,
-            srcRect = _ref2.srcRect;
-
-        backgroundImageData = imageData;
-        imageWidth = tWidth;
-        imageHeight = tHeight;
-        imageRect = rect;
-        imageSrcRect = srcRect || [0, 0, tWidth, tHeight];
-        result.setTexMatrix();
-      },
-      setTexMatrix: function setTexMatrix() {
-        var srcX = imageSrcRect[0] || 0;
-        var srcY = imageSrcRect[1] || 0;
-        var srcWidth = imageSrcRect[2] || imageWidth;
-        var srcHeight = imageSrcRect[3] || imageHeight;
-        Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(srcX / imageWidth, srcY / imageHeight, texMatrix);
-        Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(texMatrix, srcWidth / imageWidth, srcHeight / imageHeight, 1, texMatrix);
-      },
-      draw: function draw() {
-        var needUpdateTexture = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-        var dstX = (imageRect[0] || 0) + x + borderWidth;
-        var dstY = (imageRect[1] || 0) + y + borderWidth;
-        var dstWidth = imageRect[2] || width;
-        var dstHeight = imageRect[3] || height;
-        var hasTexture = false;
-
-        if (typeof backgroundImage !== 'undefined') {
-          var texId = textureMap.get(backgroundImage);
-
-          if (!texId) {
-            texId = createTexture(gl); // 将图像上传到纹理
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
-            textureMap.set(backgroundImage, texId);
-          }
-
-          gl.bindTexture(gl.TEXTURE_2D, texId); // // scrollview每次重绘都需要更新纹理
-          // if(needUpdateTexture) {
-          //   // 将图像上传到纹理
-          //   // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
-          //   gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage)
-          // }
-
-          hasTexture = true;
-        } else if (typeof backgroundImageData !== 'undefined') {
-          var _texId = textureMap.get(ArrayBuffer);
-
-          if (!_texId) {
-            _texId = createTexture(gl);
-            textureMap.set(ArrayBuffer, _texId);
-          }
-
-          gl.bindTexture(gl.TEXTURE_2D, _texId);
-          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, imageWidth, imageHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImageData);
-          hasTexture = true;
-        } else {} // gl.bindTexture(gl.TEXTURE_2D, blankTexId);
-        // // needUpdateTexture代表为scrollview
-        // if (needUpdateTexture) {
-        //   // 清除模板缓存
-        //   gl.clear(gl.STENCIL_BUFFER_BIT);
-        //   // 开启模板测试
-        //   gl.enable(gl.STENCIL_TEST);
-        //   // 设置模板测试参数
-        //   gl.stencilFunc(gl.ALWAYS, 1, 1);
-        //   // 设置模板值操作
-        //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-        // } else {
-        //   gl.stencilFunc(gl.EQUAL, 1, 1);
-        //   //设置模板测试后的操作
-        //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-        // }
-        // 所有绘制共用一个就行
-
-
-        if (!hasSetuResolution) {
-          gl.uniform2f(uResolution, gl.canvas.width, gl.canvas.height);
-          hasSetuResolution = true;
-        }
-
-        gl.uniformMatrix4fv(uMatrix, false, matrix); // 设置矩形除去border左下角和右上角位置
-
-        gl.uniform4f(uTexRect, dstX, dstY + dstHeight, dstX + dstWidth, dstY); // 设置完整矩形的位置
-
-        gl.uniform4f(uRect, x, y + height, x + width, y); // 纹理设置
-
-        gl.uniform4f(uBitset, hasTexture ? 1 : 0, 0, 0, 0);
-        gl.uniformMatrix4fv(textureMatrixLocation, false, texMatrix);
-        gl.uniform1i(uTex, 0); // gl.uniform4f(uColor, ...backgroundColor);
-
-        gl.uniform4f(uColor, backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]); // gl.uniform4f(uRadius, ...radius);
-
-        gl.uniform4f(uRadius, radius[0], radius[1], radius[2], radius[3]); // gl.uniform4f(uBorderColor, ...borderColor);
-
-        gl.uniform4f(uBorderColor, borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
-        gl.uniform1f(uOpacity, opacity);
-        gl.uniform1f(uBorderWidth, borderWidth); // 因为count = 6，所以顶点着色器将运行6次
-
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      if (canvasWidth !== gl.canvas.width || canvasHeight !== gl.canvas.height) {
+        canvasWidth !== gl.canvas.width && (canvasWidth = gl.canvas.width);
+        canvasHeight !== gl.canvas.height && (canvasHeight = gl.canvas.height);
+        Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["orthographic"])(0, gl.canvas.width, gl.canvas.height, 0, -1, 1, this.matrix);
+        Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translate"])(this.matrix, this.x, this.y, 0, this.matrix);
+        Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(this.matrix, this.width, this.height, 1, this.matrix);
+        /*this.canvasWidth = gl.canvas.width;
+        this.canvasHeight = gl.canvas.height;*/
       }
-    };
-    return result;
-  };
-}
+    }
+  }, {
+    key: "setRadius",
+    value: function setRadius(r) {
+      if (typeof r === 'number') {
+        this.radius = [r, r, r, r];
+      } else {
+        this.radius = r;
+      }
+    }
+  }, {
+    key: "setBorder",
+    value: function setBorder(width, color) {
+      this.borderWidth = width;
+      this.borderColor = color;
+    }
+  }, {
+    key: "setBackgroundColor",
+    value: function setBackgroundColor(color) {
+      this.backgroundColor = color;
+    }
+  }, {
+    key: "setOpacity",
+    value: function setOpacity() {
+      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.opacity = value;
+    }
+  }, {
+    key: "setTexture",
+    value: function setTexture() {
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          image = _ref.image,
+          rect = _ref.rect,
+          srcRect = _ref.srcRect;
 
+      if (!rect) {
+        rect = [0, 0, this.width, this.height];
+      }
+
+      this.backgroundImage = image;
+      this.imageWidth = image.width;
+      this.imageHeight = image.height;
+      this.imageRect = rect;
+      this.imageSrcRect = srcRect || [0, 0, image.width, image.height];
+      this.setTexMatrix();
+    }
+  }, {
+    key: "setTextureData",
+    value: function setTextureData() {
+      var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          imageData = _ref2.imageData,
+          tWidth = _ref2.width,
+          tHeight = _ref2.height,
+          rect = _ref2.rect,
+          srcRect = _ref2.srcRect;
+
+      if (!rect) {
+        rect = [0, 0, this.width, this.height];
+      }
+
+      this.backgroundImageData = imageData;
+      this.imageWidth = tWidth;
+      this.imageHeight = tHeight;
+      this.imageRect = rect;
+      this.imageSrcRect = srcRect || [0, 0, tWidth, tHeight];
+      this.setTexMatrix();
+    }
+  }, {
+    key: "setTexMatrix",
+    value: function setTexMatrix() {
+      var srcX = this.imageSrcRect[0] || 0;
+      var srcY = this.imageSrcRect[1] || 0;
+      var srcWidth = this.imageSrcRect[2] || this.imageWidth;
+      var srcHeight = this.imageSrcRect[3] || this.imageHeight;
+      Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(srcX / this.imageWidth, srcY / this.imageHeight, this.texMatrix);
+      Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(this.texMatrix, srcWidth / this.imageWidth, srcHeight / this.imageHeight, 1, this.texMatrix);
+    }
+  }, {
+    key: "draw",
+    value: function draw() {
+      var gl = this.gl;
+      var dstX = (this.imageRect[0] || 0) + this.x + this.borderWidth;
+      var dstY = (this.imageRect[1] || 0) + this.y + this.borderWidth;
+      var dstWidth = this.imageRect[2] || this.width;
+      var dstHeight = this.imageRect[3] || this.height;
+      var hasTexture = false;
+
+      if (typeof this.backgroundImage !== 'undefined') {
+        var texId = textureMap.get(this.backgroundImage);
+
+        if (!texId) {
+          texId = createTexture(gl); // 将图像上传到纹理
+
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.backgroundImage);
+          textureMap.set(this.backgroundImage, texId);
+        }
+
+        gl.bindTexture(gl.TEXTURE_2D, texId);
+        hasTexture = true;
+      } else if (typeof this.backgroundImageData !== 'undefined') {
+        var _texId = textureMap.get(this.backgroundImageData);
+
+        if (!_texId) {
+          _texId = createTexture(gl);
+          textureMap.set(backgroundImageData, _texId);
+        }
+
+        gl.bindTexture(gl.TEXTURE_2D, _texId);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.imageWidth, this.imageHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, this.backgroundImageData);
+        hasTexture = true;
+      } // 所有绘制共用一个就行
+
+
+      gl.uniform2f(gl.program.uResolution, gl.canvas.width, gl.canvas.height);
+      gl.uniformMatrix4fv(gl.program.uMatrix, false, this.matrix); // 设置矩形除去border左下角和右上角位置
+
+      gl.uniform4f(gl.program.uTexRect, dstX, dstY + dstHeight, dstX + dstWidth, dstY); // 设置完整矩形的位置
+
+      gl.uniform4f(gl.program.uRect, this.x, this.y + this.height, this.x + this.width, this.y); // 纹理设置
+
+      gl.uniform4f(gl.program.uBitset, hasTexture ? 1 : 0, 0, 0, 0);
+      gl.uniformMatrix4fv(gl.program.textureMatrixLocation, false, this.texMatrix);
+      gl.uniform1i(gl.program.uTex, 0);
+      gl.uniform4f(gl.program.uColor, this.backgroundColor[0], this.backgroundColor[1], this.backgroundColor[2], this.backgroundColor[3]);
+      gl.uniform4f(gl.program.uRadius, this.radius[0], this.radius[1], this.radius[2], this.radius[3]);
+      gl.uniform4f(gl.program.uBorderColor, this.borderColor[0], this.borderColor[1], this.borderColor[2], this.borderColor[3]);
+      gl.uniform1f(gl.program.uOpacity, this.opacity);
+      gl.uniform1f(gl.program.uBorderWidth, this.borderWidth); // 因为count = 6，所以顶点着色器将运行6次
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+  }]);
+
+  return RoundRect;
+}();
 function setupGl(canvas) {
-  var needFlipY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
   if (!canvas.webgl) {
     var _gl = canvas.getContext('webgl', {
       preserveDrawingBuffer: true,
@@ -3234,7 +3193,7 @@ function setupGl(canvas) {
       stencil: true
     });
 
-    _gl.createRoundRect = useProgram(_gl, needFlipY);
+    _gl.program = createProgram(_gl);
     canvas.webgl = _gl; // eslint-disable-line
   }
 
@@ -4665,7 +4624,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("precision mediump float;\nuniform sampler2D u_texture;\nuniform vec4 u_rect;\nuniform vec4 u_color;\nuniform vec4 u_radius;\nuniform vec4 u_border_color;\nuniform float u_border_width;\nuniform float u_opacity;\nuniform vec4 u_bitset; //texture[, context, border, radius]\nvarying vec2 v_resolution;\nvarying vec2 v_texcoord;\nvarying vec4 v_tex_rect;\n\n\n// float sdfBox(vec2 coord, vec2 center, vec2 rect) {\n//   vec2 d = abs(coord - center) - rect;\n//   return min(max(d.x,d.y),0.0) + length(max(d,0.0));\n// }\n// float sdfCircle(vec2 coord, vec2 center, float radius) {\n//   return length(coord - center) - radius;\n// }\n// vec3 createCorner(vec2 dir, float raidus, float sign, float stroke) {\n//   return vec3(dir + sign * raidus, raidus - stroke);\n// }\n// float getCorner(vec2 p, vec3 corner) {\n//   return sdfCircle(p, corner.xy, corner.z);\n// }\n// float getCenter(vec2 p, vec3 from, vec3 to, vec2 r) {\n//   return sdfBox(p, (from + to).xy / 2., r - abs(from + to).z/2.);\n// }\n// float getHEdge(vec2 p, vec3 from, vec3 to) {\n//   return sdfBox(p,\n//   vec2((from.x + to.x)/2., sign(from.y) * min(abs(from.y), abs(to.y))),\n//   vec2(abs(from.x - to.x)/2., max(from.z, to.z)));\n// }\n// float getVEdge(vec2 p, vec3 from, vec3 to) {\n//   return sdfBox(p,\n//   vec2(sign(from.x) * min(abs(from.x), abs(to.x)), (from.y + to.y)/2.),\n//   vec2(max(from.z, to.z), abs(from.y - to.y)/2.));\n// }\n// float drawRect(vec2 p, vec2 lt, vec2 rt, vec2 rb, vec2 lb, vec4 corners, float stroke) {\n//   vec3 cLt = vec3(vec2(lt.x + corners.x, lt.y - corners.x), corners.x - stroke);\n//   vec3 cRt = vec3(vec2(rt.x - corners.y, rt.y - corners.y), corners.y - stroke);\n//   vec3 cRb = vec3(vec2(rb.x - corners.z, rb.y + corners.z), corners.z - stroke);\n//   vec3 cLb = vec3(vec2(lb.x + corners.w, lb.y + corners.w), corners.w - stroke);\n\n//   float circle = getCorner(p, cLt);\n//   circle = min(circle, getCorner(p, cRt));\n//   circle = min(circle, getCorner(p, cRb));\n//   circle = min(circle, getCorner(p, cLb));\n\n//   float box = getHEdge(p, cLt, cRt);\n//   box = min(box, getHEdge(p, cLb, cRb));\n//   box = min(box, getVEdge(p, cLt, cLb));\n//   box = min(box, getVEdge(p, cRt, cRb));\n//   float center = sdfBox(p, (cRt + cLb).xy / 2., vec2((cRt.x - cLb.x) / 2., (cRt.y - cLb.y) / 2.));\n//   center = max(center, sdfBox(p, (cRb + cLt).xy / 2., vec2((cRb.x - cLt.x) / 2., (cLt.y - cRb.y) / 2.)));\n//   box = min(box, center);\n\n//   return min(circle, box);\n// }\n\n// https://www.shadertoy.com/view/4llXD7\n/**\n * function length — calculate the length of a vector\n * function normalize — calculates the unit vector in the same direction as the original vector\n */\nfloat sdfRoundedRect(vec2 uv, vec2 center, vec2 size, vec4 r) {\n  vec2 p = uv - center;\n  // r.xy = (p.x > 0.0) ? r.xy : r.zw;\n  r.xy = mix(r.xy, r.zw, step(p.x, 0.0));\n  // r.x  = (p.y > 0.0) ? r.x  : r.y;\n  r.x  = mix(r.x, r.y, step(p.y, 0.0));\n\n  vec2 d = abs(p) - size + r.x;\n  // return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - r.x;\n  return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - r.x;\n}\n\n/**\n * 屏幕像素坐标转换成裁剪空间坐标\n */\nvec2 pixel2coord (vec2 p) {\n  return (2.0 * vec2(p.x, v_resolution.y - p.y) - v_resolution) / v_resolution.y;\n}\n\nvec4 blend(vec4 cb, vec4 ca) {\n  float alpha = ca.a + cb.a * (1.0 - ca.a);\n  return mix(vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha), vec4(0.0), step(abs(alpha), 0.0));\n  // return alpha == 0.0 ? vec4(0.0) : vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha);\n}\n\nvoid main() {\n    float anti = 0.003;\n    // 归一化坐标\n    vec2 p = (2.0 * gl_FragCoord.xy - v_resolution) / v_resolution.y;\n    vec4 radius = u_radius * 2.0 / v_resolution.y;\n    float borderWidth = u_border_width * 2.0 / v_resolution.y;\n\n    // 矩形左上角\n    vec2 lt = pixel2coord(u_rect.xw);\n    // 矩形右下角\n    vec2 rb = pixel2coord(u_rect.zy);\n    // 矩形中心\n    vec2 center = (rb + lt) / 2.;\n    // 矩形尺寸\n    vec2 size = abs(rb - lt) / 2.;\n    // 矩形的radius\n    vec4 corners = vec4(radius.y, radius.z, radius.x, radius.w);\n\n    float border = sdfRoundedRect(p, center, size, corners);\n\n    float content = sdfRoundedRect(p, center, size - borderWidth, corners - borderWidth);\n\n    // 纹理左上角\n    vec2 texLt = pixel2coord(v_tex_rect.xw);\n    // 纹理右下角\n    vec2 texRb = pixel2coord(v_tex_rect.zy);\n    // 纹理中心    \n    vec2 texCenter = (texRb + texLt) / 2.;\n    // 纹理尺寸\n    vec2 texSize = abs(texRb - texLt) / 2.;\n    \n    float texContent = sdfRoundedRect(p, texCenter, texSize, vec4(0.));\n\n    vec4 borderColor = u_border_color;\n    borderColor.a *= smoothstep(-anti, anti, -max(border, -content));\n    vec4 contentColor = u_color;\n    contentColor.a *= smoothstep(-anti, anti, -content);\n    vec4 textureColor = mix(texture2D(u_texture, v_texcoord), vec4(0.0), step(abs(u_bitset.x), 0.0));\n    textureColor.rgb /= mix(textureColor.a, 1.0, step(textureColor.a, 0.0));\n    textureColor.a *= sign(-texContent) * smoothstep(-anti, anti, -content);\n    \n    vec4 temp = blend(blend(contentColor, textureColor), borderColor);\n    temp.a *= u_opacity;\n\n    gl_FragColor = temp;\n}\n");
+/* harmony default export */ __webpack_exports__["default"] = ("precision mediump float;\nuniform sampler2D u_texture;\nuniform vec4 u_rect;\nuniform vec4 u_color;\nuniform vec4 u_radius;\nuniform vec4 u_border_color;\nuniform float u_border_width;\nuniform float u_opacity;\nuniform vec4 u_bitset; //texture[, context, border, radius]\nvarying vec2 v_resolution;\nvarying vec2 v_texcoord;\nvarying vec4 v_tex_rect;\n\n\n// float sdfBox(vec2 coord, vec2 center, vec2 rect) {\n//   vec2 d = abs(coord - center) - rect;\n//   return min(max(d.x,d.y),0.0) + length(max(d,0.0));\n// }\n// float sdfCircle(vec2 coord, vec2 center, float radius) {\n//   return length(coord - center) - radius;\n// }\n// vec3 createCorner(vec2 dir, float raidus, float sign, float stroke) {\n//   return vec3(dir + sign * raidus, raidus - stroke);\n// }\n// float getCorner(vec2 p, vec3 corner) {\n//   return sdfCircle(p, corner.xy, corner.z);\n// }\n// float getCenter(vec2 p, vec3 from, vec3 to, vec2 r) {\n//   return sdfBox(p, (from + to).xy / 2., r - abs(from + to).z/2.);\n// }\n// float getHEdge(vec2 p, vec3 from, vec3 to) {\n//   return sdfBox(p,\n//   vec2((from.x + to.x)/2., sign(from.y) * min(abs(from.y), abs(to.y))),\n//   vec2(abs(from.x - to.x)/2., max(from.z, to.z)));\n// }\n// float getVEdge(vec2 p, vec3 from, vec3 to) {\n//   return sdfBox(p,\n//   vec2(sign(from.x) * min(abs(from.x), abs(to.x)), (from.y + to.y)/2.),\n//   vec2(max(from.z, to.z), abs(from.y - to.y)/2.));\n// }\n// float drawRect(vec2 p, vec2 lt, vec2 rt, vec2 rb, vec2 lb, vec4 corners, float stroke) {\n//   vec3 cLt = vec3(vec2(lt.x + corners.x, lt.y - corners.x), corners.x - stroke);\n//   vec3 cRt = vec3(vec2(rt.x - corners.y, rt.y - corners.y), corners.y - stroke);\n//   vec3 cRb = vec3(vec2(rb.x - corners.z, rb.y + corners.z), corners.z - stroke);\n//   vec3 cLb = vec3(vec2(lb.x + corners.w, lb.y + corners.w), corners.w - stroke);\n\n//   float circle = getCorner(p, cLt);\n//   circle = min(circle, getCorner(p, cRt));\n//   circle = min(circle, getCorner(p, cRb));\n//   circle = min(circle, getCorner(p, cLb));\n\n//   float box = getHEdge(p, cLt, cRt);\n//   box = min(box, getHEdge(p, cLb, cRb));\n//   box = min(box, getVEdge(p, cLt, cLb));\n//   box = min(box, getVEdge(p, cRt, cRb));\n//   float center = sdfBox(p, (cRt + cLb).xy / 2., vec2((cRt.x - cLb.x) / 2., (cRt.y - cLb.y) / 2.));\n//   center = max(center, sdfBox(p, (cRb + cLt).xy / 2., vec2((cRb.x - cLt.x) / 2., (cLt.y - cRb.y) / 2.)));\n//   box = min(box, center);\n\n//   return min(circle, box);\n// }\n\n// https://www.shadertoy.com/view/4llXD7\n/**\n * function length — calculate the length of a vector\n * function normalize — calculates the unit vector in the same direction as the original vector\n */\nfloat sdfRoundedRect(vec2 uv, vec2 center, vec2 size, vec4 r) {\n  vec2 p = uv - center;\n  // r.xy = (p.x > 0.0) ? r.xy : r.zw;\n  r.xy = mix(r.xy, r.zw, step(p.x, 0.0));\n  // r.x  = (p.y > 0.0) ? r.x  : r.y;\n  r.x  = mix(r.x, r.y, step(p.y, 0.0));\n\n  vec2 d = abs(p) - size + r.x;\n  // return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - r.x;\n  return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - r.x;\n}\n\n/**\n * 屏幕像素坐标转换成裁剪空间坐标\n */\nvec2 pixel2coord (vec2 p) {\n  return (2.0 * vec2(p.x, v_resolution.y - p.y) - v_resolution) / v_resolution.y;\n}\n\nvec4 blend(vec4 cb, vec4 ca) {\n  float alpha = ca.a + cb.a * (1.0 - ca.a);\n  return mix(vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha), vec4(0.0), step(abs(alpha), 0.0));\n  // return alpha == 0.0 ? vec4(0.0) : vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha);\n}\n\nvoid main() {\n    float anti = 0.003;\n    // 归一化坐标\n    vec2 p = (2.0 * gl_FragCoord.xy - v_resolution) / v_resolution.y;\n    vec4 radius = u_radius * 2.0 / v_resolution.y;\n    float borderWidth = u_border_width * 2.0 / v_resolution.y;\n\n    // 矩形左上角\n    vec2 lt = pixel2coord(u_rect.xw);\n    // 矩形右下角\n    vec2 rb = pixel2coord(u_rect.zy);\n    // 矩形中心\n    vec2 center = (rb + lt) / 2.;\n    // 矩形尺寸\n    vec2 size = abs(rb - lt) / 2.;\n    // 矩形的radius\n    vec4 corners = vec4(radius.y, radius.z, radius.x, radius.w);\n\n    float border = sdfRoundedRect(p, center, size, corners);\n\n    float content = sdfRoundedRect(p, center, size - borderWidth, corners - borderWidth);\n\n    // 纹理左上角\n    vec2 texLt = pixel2coord(v_tex_rect.xw);\n    // 纹理右下角\n    vec2 texRb = pixel2coord(v_tex_rect.zy);\n    // 纹理中心\n    vec2 texCenter = (texRb + texLt) / 2.;\n    // 纹理尺寸\n    vec2 texSize = abs(texRb - texLt) / 2.;\n\n    float texContent = sdfRoundedRect(p, texCenter, texSize, vec4(0.));\n\n    vec4 borderColor = u_border_color;\n    borderColor.a *= smoothstep(-anti, anti, -max(border, -content));\n    vec4 contentColor = u_color;\n    contentColor.a *= smoothstep(-anti, anti, -content);\n    vec4 textureColor = mix(texture2D(u_texture, v_texcoord), vec4(0.0), step(abs(u_bitset.x), 0.0));\n    textureColor.rgb /= mix(textureColor.a, 1.0, step(textureColor.a, 0.0));\n    textureColor.a *= sign(-texContent) * smoothstep(-anti, anti, -content);\n\n    vec4 temp = blend(blend(contentColor, textureColor), borderColor);\n    temp.a *= u_opacity;\n\n    gl_FragColor = temp;\n}\n");
 
 /***/ }),
 /* 18 */
@@ -4679,6 +4638,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createRender", function() { return createRender; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderDetection", function() { return renderDetection; });
 /* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(19);
+/* harmony import */ var _gl_rect_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -4690,6 +4650,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -4990,7 +4951,13 @@ function createRender(_ref7) {
 
   function drawOneGlRect(gl, rect) {
     var repaintCbk = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : none;
-    var glRectData = scaleData(rect, dpr);
+    var glRectData = rect.glRectData || scaleData(rect, dpr);
+    glRectData.x = rect.x * dpr;
+    glRectData.y = rect.y * dpr;
+
+    if (!rect.glRectData) {
+      rect.glRectData = glRectData;
+    }
 
     if (!rect.uid) {
       rect.uid = uid();
@@ -5000,15 +4967,12 @@ function createRender(_ref7) {
     var glRect = glPool[rect.uid];
 
     if (!glRect) {
-      glRect = gl.createRoundRect(); // glPool[rect.uid] = glRect;
+      glRect = new _gl_rect_js__WEBPACK_IMPORTED_MODULE_1__["RoundRect"](gl);
+      glPool[rect.uid] = glRect;
     } else {
-      // scrollview每一项会更新，存在glRect直接绘制
-      glRect.updateContours(dimension);
-      glRect.draw();
-      return;
+      glRect.reset();
     }
 
-    glRect.reset();
     glRectData.radius && glRect.setRadius(glRectData.radius);
     glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);
     glRectData.borderWidth && glRect.setBorder(glRectData.borderWidth, glRectData.borderColor);

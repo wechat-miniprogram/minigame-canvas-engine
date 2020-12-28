@@ -1,4 +1,5 @@
 import { SCALE_KEY } from './const.js';
+import { RoundRect } from './gl_rect.js';
 
 function none() {
 
@@ -265,7 +266,14 @@ export function createRender({ dpr, createImage, createCanvas }) {
   const getTextTexture = createTextTexture(createCanvas);
 
   function drawOneGlRect(gl, rect, repaintCbk = none) {
-    const glRectData = scaleData(rect, dpr);
+    const glRectData = rect.glRectData || scaleData(rect, dpr);
+
+    glRectData.x = rect.x * dpr;
+    glRectData.y = rect.y * dpr;
+
+    if (!rect.glRectData) {
+      rect.glRectData = glRectData;
+    }
 
     if (!rect.uid) {
       rect.uid = uid();
@@ -274,16 +282,11 @@ export function createRender({ dpr, createImage, createCanvas }) {
     const dimension = [glRectData.x, glRectData.y, glRectData.width, glRectData.height];
     let glRect = glPool[rect.uid];
     if (!glRect) {
-      glRect = gl.createRoundRect();
-      // glPool[rect.uid] = glRect;
+      glRect = new RoundRect(gl);
+      glPool[rect.uid] = glRect;
     } else {
-      // scrollview每一项会更新，存在glRect直接绘制
-      glRect.updateContours(dimension);
-      glRect.draw();
-      return;
+      glRect.reset();
     }
-
-    glRect.reset();
 
     glRectData.radius && glRect.setRadius(glRectData.radius);
     glRectData.backgroundColor && glRect.setBackgroundColor(glRectData.backgroundColor);

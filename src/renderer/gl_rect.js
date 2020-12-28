@@ -7,7 +7,7 @@ function createTexture(gl) {
   const texId = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texId);
 
-    // 设置参数，让我们可以绘制任何尺寸的图像
+  // 设置参数，让我们可以绘制任何尺寸的图像
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -22,9 +22,9 @@ const positions = new Float32Array([
   0, 1,
   1, 1,
 ]);
+const textureMap = new WeakMap();
 
-function createProgram(gl, needFlipY = true) {
-  const textureMap = new WeakMap();
+function createProgram(gl) {
   let program;
   let bufferId;
   let uResolution;
@@ -36,7 +36,6 @@ function createProgram(gl, needFlipY = true) {
   let uRect;
   let uTexRect;
   let uBitset;
-  // let blankTexId
   let uTex;
   let vPosition;
   let textureMatrixLocation;
@@ -46,7 +45,7 @@ function createProgram(gl, needFlipY = true) {
     gl.enable(gl.BLEND);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, needFlipY)
+    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
     // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     // gl.blendEquation(gl.FUNC_ADD);
     // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -100,6 +99,7 @@ function createProgram(gl, needFlipY = true) {
   }
 
   gl.useProgram(program);
+
   return {
     program,
     bufferId,
@@ -112,7 +112,6 @@ function createProgram(gl, needFlipY = true) {
     uRect,
     uTexRect,
     uBitset,
-    // blankTexId,
     uTex,
     vPosition,
     textureMatrixLocation,
@@ -122,238 +121,181 @@ function createProgram(gl, needFlipY = true) {
   };
 }
 
-function useProgram(gl, needFlipY = true) {
-  let hasSetuResolution = false;
-  if (!gl.program) {
-    gl.program = createProgram(gl, needFlipY); // eslint-disable-line
+export class RoundRect {
+  constructor(gl) {
+    this.gl = gl;
+
+    this.reset();
   }
-  const {
-    // bufferId,
-    uResolution,
-    uRadius,
-    uBorderWidth,
-    uBorderColor,
-    uColor,
-    uMatrix,
-    uRect,
-    uTexRect,
-    uBitset,
-    // blankTexId,
-    uTex,
-    // vPosition,
-    textureMatrixLocation,
-    textureMap,
-    uOpacity,
-  } = gl.program;
 
-  return function createRoundRect() {
+  reset() {
+    this.x = 0;
+    this.y = 0;
+    this.width = 1;
+    this.height = 1;
+    this.radius = [0, 0, 0, 0];
+    this.backgroundColor = [0, 0, 0, 0];
+    this.backgroundImage = undefined
+    this.backgroundImageData = undefined;
+    this.imageRect = [];
+    this.imageSrcRect = [];
+    this.borderWidth = 0;
+    this.borderColor = [0, 0, 0, 0];
+    this.imageWidth = 1;
+    this.imageHeight = 1;
+    this.texMatrix = translation(0, 0, 0);
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+    this.matrix = identity();
+    this.texMatrix = translation(0, 0, 0);
+  }
 
-    let x = 0;
-    let y = 0;
-    let width = 1;
-    let height = 1;
-    let radius = [0, 0, 0, 0];
-    let backgroundColor = [0, 0, 0, 0];
-    let backgroundImage;
-    let backgroundImageData;
-    let imageRect = [];
-    let imageSrcRect = [];
-    let borderWidth = 0;
-    let borderColor = [0, 0, 0, 0];
-    let imageWidth = 1;
-    let imageHeight = 1;
-    let opacity = 1;
+  updateContours(dimension) {
+    this.x = dimension[0];
+    this.y = dimension[1];
+    this.width = dimension[2];
+    this.height = dimension[3];
+  }
 
-    let canvasWidth;
-    let canvasHeight;
+  updateViewPort() {
+    let gl = this.gl;
+    let canvasWidth = this.canvasWidth;
+    let canvasHeight = this.canvasHeight;
+    if (canvasWidth !== gl.canvas.width || canvasHeight !== gl.canvas.height) {
+      canvasWidth !== gl.canvas.width && (canvasWidth = gl.canvas.width);
+      canvasHeight !== gl.canvas.height && (canvasHeight = gl.canvas.height);
+      orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1, this.matrix);
+      translate(this.matrix, this.x, this.y, 0, this.matrix);
+      scale(this.matrix, this.width, this.height, 1, this.matrix);
+      /*this.canvasWidth = gl.canvas.width;
+      this.canvasHeight = gl.canvas.height;*/
+    }
+  }
 
-    let matrix = identity();
-    let texMatrix = translation(0, 0, 0);
+  setRadius(r) {
+    if (typeof r === 'number') {
+      this.radius = [r, r, r, r];
+    } else {
+      this.radius = r;
+    }
+  }
 
-    const result = {
-      reset() {
-        x = 0;
-        y = 0;
-        width = 1;
-        height = 1;
-        radius = [0, 0, 0, 0];
-        backgroundColor = [0, 0, 0, 0];
-        backgroundImage = undefined
-        backgroundImageData = undefined;
-        imageRect = [];
-        imageSrcRect = [];
-        borderWidth = 0;
-        borderColor = [0, 0, 0, 0];
-        imageWidth = 1;
-        imageHeight = 1;
-        texMatrix = translation(0, 0, 0);
-      },
+  setBorder(width, color) {
+    this.borderWidth = width;
+    this.borderColor = color;
+  }
+  setBackgroundColor(color) {
+    this.backgroundColor = color;
+  }
 
-      updateContours(dimension) {
-        [x, y, width, height] = dimension;
-      },
-      updateViewPort() {
-        if (canvasWidth !== gl.canvas.width || canvasHeight !== gl.canvas.height) {
-          canvasWidth !== gl.canvas.width && (canvasWidth = gl.canvas.width);
-          canvasHeight !== gl.canvas.height && (canvasHeight = gl.canvas.height);
-          orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1, matrix);
-          translate(matrix, x, y, 0, matrix);
-          scale(matrix, width, height, 1, matrix);
-          canvasWidth = gl.canvas.width;
-          canvasHeight = gl.canvas.height;
-        }
-      },
-      setRadius(r) {
-        if (typeof r === 'number') {
-          radius = [r, r, r, r];
-        } else {
-          radius = r;
-        }
-      },
-      setBorder(width, color) {
-        borderWidth = width;
-        borderColor = color;
-      },
-      setBackgroundColor(color) {
-        backgroundColor = color;
-      },
+  setOpacity(value = 1) {
+    this.opacity = value;
+  }
 
-      setOpacity(value = 1) {
-        opacity = value;
-      },
+  setTexture({ image, rect, srcRect } = {}) {
+    if (!rect) {
+      rect = [0, 0, this.width, this.height]
+    }
+    this.backgroundImage = image;
+    this.imageWidth = image.width;
+    this.imageHeight = image.height;
+    this.imageRect = rect;
+    this.imageSrcRect = srcRect || [0, 0, image.width, image.height];
 
-      setTexture({ image, rect = [0, 0, width, height], srcRect } = {}) {
-        backgroundImage = image;
-        imageWidth = image.width;
-        imageHeight = image.height;
-        imageRect = rect;
-        imageSrcRect = srcRect || [0, 0, image.width, image.height];
-        result.setTexMatrix();
-      },
+    this.setTexMatrix();
+  }
 
-      setTextureData({ imageData, width: tWidth, height: tHeight, rect = [0, 0, width, height], srcRect } = {}) {
-        backgroundImageData = imageData;
-        imageWidth = tWidth;
-        imageHeight = tHeight;
-        imageRect = rect;
-        imageSrcRect = srcRect || [0, 0, tWidth, tHeight];
+  setTextureData({ imageData, width: tWidth, height: tHeight, rect, srcRect } = {}) {
+    if (!rect) {
+      rect = [0, 0, this.width, this.height]
+    }
+    this.backgroundImageData = imageData;
+    this.imageWidth = tWidth;
+    this.imageHeight = tHeight;
+    this.imageRect = rect;
+    this.imageSrcRect = srcRect || [0, 0, tWidth, tHeight];
 
-        result.setTexMatrix();
-      },
-      setTexMatrix() {
-        const srcX = imageSrcRect[0] || 0;
-        const srcY = imageSrcRect[1] || 0;
-        const srcWidth = imageSrcRect[2] || imageWidth;
-        const srcHeight = imageSrcRect[3] || imageHeight;
-        translation(srcX / imageWidth, srcY / imageHeight, texMatrix);
-        scale(texMatrix, srcWidth / imageWidth, srcHeight / imageHeight, 1, texMatrix);
-      },
-      draw(needUpdateTexture = false) {
-        const dstX = (imageRect[0] || 0) + x + borderWidth;
-        const dstY = (imageRect[1] || 0) + y + borderWidth;
-        const dstWidth = imageRect[2] || width;
-        const dstHeight = imageRect[3] || height;
+    this.setTexMatrix();
+  }
+  setTexMatrix() {
+    const srcX = this.imageSrcRect[0] || 0;
+    const srcY = this.imageSrcRect[1] || 0;
+    const srcWidth = this.imageSrcRect[2] || this.imageWidth;
+    const srcHeight = this.imageSrcRect[3] || this.imageHeight;
+    translation(srcX / this.imageWidth, srcY / this.imageHeight, this.texMatrix);
+    scale(this.texMatrix, srcWidth / this.imageWidth, srcHeight / this.imageHeight, 1, this.texMatrix);
+  }
 
-        let hasTexture = false;
-        if (typeof backgroundImage !== 'undefined') {
-          let texId = textureMap.get(backgroundImage);
-          if (!texId) {
-            texId = createTexture(gl);
+  draw() {
+    let gl = this.gl;
+    const dstX = (this.imageRect[0] || 0) + this.x + this.borderWidth;
+    const dstY = (this.imageRect[1] || 0) + this.y + this.borderWidth;
+    const dstWidth = this.imageRect[2] || this.width;
+    const dstHeight = this.imageRect[3] || this.height;
 
-            // 将图像上传到纹理
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
-            textureMap.set(backgroundImage, texId);
-          }
+    let hasTexture = false;
+    if (typeof this.backgroundImage !== 'undefined') {
+      let texId = textureMap.get(this.backgroundImage);
+      if (!texId) {
+        texId = createTexture(gl);
 
-          gl.bindTexture(gl.TEXTURE_2D, texId);
+        // 将图像上传到纹理
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.backgroundImage);
+        textureMap.set(this.backgroundImage, texId);
+      }
 
-          // // scrollview每次重绘都需要更新纹理
-          // if(needUpdateTexture) {
-          //   // 将图像上传到纹理
-          //   // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage);
+      gl.bindTexture(gl.TEXTURE_2D, texId);
 
-          //   gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, backgroundImage)
-          // }
+      hasTexture = true;
+    } else if (typeof this.backgroundImageData !== 'undefined') {
+      let texId = textureMap.get(this.backgroundImageData);
+      if (!texId) {
+        texId = createTexture(gl);
+        textureMap.set(backgroundImageData, texId);
+      }
+      gl.bindTexture(gl.TEXTURE_2D, texId);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        this.imageWidth,
+        this.imageHeight,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        this.backgroundImageData,
+      );
+      hasTexture = true;
+    }
 
-          hasTexture = true;
-        } else if (typeof backgroundImageData !== 'undefined') {
-          let texId = textureMap.get(ArrayBuffer);
-          if (!texId) {
-            texId = createTexture(gl);
-            textureMap.set(ArrayBuffer, texId);
-          }
-          gl.bindTexture(gl.TEXTURE_2D, texId);
-          gl.texImage2D(
-            gl.TEXTURE_2D,
-            0,
-            gl.RGBA,
-            imageWidth,
-            imageHeight,
-            0,
-            gl.RGBA,
-            gl.UNSIGNED_BYTE,
-            backgroundImageData,
-          );
-          hasTexture = true;
-        } else {
-          // gl.bindTexture(gl.TEXTURE_2D, blankTexId);
-        }
+    // 所有绘制共用一个就行
+    gl.uniform2f(gl.program.uResolution, gl.canvas.width, gl.canvas.height);
 
-        // // needUpdateTexture代表为scrollview
-        // if (needUpdateTexture) {
-        //   // 清除模板缓存
-        //   gl.clear(gl.STENCIL_BUFFER_BIT);
-        //   // 开启模板测试
-        //   gl.enable(gl.STENCIL_TEST);
+    gl.uniformMatrix4fv(gl.program.uMatrix, false, this.matrix);
+    // 设置矩形除去border左下角和右上角位置
+    gl.uniform4f(gl.program.uTexRect, dstX, dstY + dstHeight, dstX + dstWidth, dstY);
+    // 设置完整矩形的位置
+    gl.uniform4f(gl.program.uRect, this.x, this.y + this.height, this.x + this.width, this.y);
 
-        //   // 设置模板测试参数
-        //   gl.stencilFunc(gl.ALWAYS, 1, 1);
-        //   // 设置模板值操作
-        //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
-        // } else {
-        //   gl.stencilFunc(gl.EQUAL, 1, 1);
-        //   //设置模板测试后的操作
-        //   gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-        // }
+    // 纹理设置
+    gl.uniform4f(gl.program.uBitset, hasTexture ? 1 : 0, 0, 0, 0);
+    gl.uniformMatrix4fv(gl.program.textureMatrixLocation, false, this.texMatrix);
 
-        // 所有绘制共用一个就行
-        if (!hasSetuResolution) {
-          gl.uniform2f(uResolution, gl.canvas.width, gl.canvas.height);
-          hasSetuResolution = true;
-        }
+    gl.uniform1i(gl.program.uTex, 0);
+    gl.uniform4f(gl.program.uColor, this.backgroundColor[0], this.backgroundColor[1], this.backgroundColor[2], this.backgroundColor[3]);
 
-        gl.uniformMatrix4fv(uMatrix, false, matrix);
-        // 设置矩形除去border左下角和右上角位置
-        gl.uniform4f(uTexRect, dstX, dstY + dstHeight, dstX + dstWidth, dstY);
-        // 设置完整矩形的位置
-        gl.uniform4f(uRect, x, y + height, x + width, y);
+    gl.uniform4f(gl.program.uRadius, this.radius[0], this.radius[1], this.radius[2], this.radius[3]);
+    gl.uniform4f(gl.program.uBorderColor, this.borderColor[0], this.borderColor[1], this.borderColor[2], this.borderColor[3]);
 
-        // 纹理设置
-        gl.uniform4f(uBitset, hasTexture ? 1 : 0, 0, 0, 0);
-        gl.uniformMatrix4fv(textureMatrixLocation, false, texMatrix);
+    gl.uniform1f(gl.program.uOpacity, this.opacity);
+    gl.uniform1f(gl.program.uBorderWidth, this.borderWidth);
 
-        gl.uniform1i(uTex, 0);
-        // gl.uniform4f(uColor, ...backgroundColor);
-        gl.uniform4f(uColor, backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
-
-        // gl.uniform4f(uRadius, ...radius);
-        gl.uniform4f(uRadius, radius[0], radius[1], radius[2], radius[3]);
-        // gl.uniform4f(uBorderColor, ...borderColor);
-        gl.uniform4f(uBorderColor, borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
-
-        gl.uniform1f(uOpacity, opacity);
-        gl.uniform1f(uBorderWidth, borderWidth);
-
-        // 因为count = 6，所以顶点着色器将运行6次
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      },
-    };
-
-    return result;
-  };
+    // 因为count = 6，所以顶点着色器将运行6次
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
 }
 
-export function setupGl(canvas, needFlipY = true) {
+export function setupGl(canvas) {
   if (!canvas.webgl) {
     const gl = canvas.getContext('webgl', {
       preserveDrawingBuffer: true,
@@ -363,9 +305,13 @@ export function setupGl(canvas, needFlipY = true) {
       depth: false,
       stencil: true,
     });
-    gl.createRoundRect = useProgram(gl, needFlipY);
+
+    gl.program = createProgram(gl);
+
     canvas.webgl = gl; // eslint-disable-line
   }
+
   const gl = canvas.webgl;
+
   return gl;
 }

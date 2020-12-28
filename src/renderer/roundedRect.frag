@@ -116,11 +116,11 @@ void main() {
     vec2 texLt = pixel2coord(v_tex_rect.xw);
     // 纹理右下角
     vec2 texRb = pixel2coord(v_tex_rect.zy);
-    // 纹理中心    
+    // 纹理中心
     vec2 texCenter = (texRb + texLt) / 2.;
     // 纹理尺寸
     vec2 texSize = abs(texRb - texLt) / 2.;
-    
+
     float texContent = sdfRoundedRect(p, texCenter, texSize, vec4(0.));
 
     vec4 borderColor = u_border_color;
@@ -130,7 +130,7 @@ void main() {
     vec4 textureColor = mix(texture2D(u_texture, v_texcoord), vec4(0.0), step(abs(u_bitset.x), 0.0));
     textureColor.rgb /= mix(textureColor.a, 1.0, step(textureColor.a, 0.0));
     textureColor.a *= sign(-texContent) * smoothstep(-anti, anti, -content);
-    
+
     vec4 temp = blend(blend(contentColor, textureColor), borderColor);
     temp.a *= u_opacity;
 
