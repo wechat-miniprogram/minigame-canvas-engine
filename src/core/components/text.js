@@ -148,6 +148,8 @@ export default class Text extends Element {
       style: {
         drawX: box.absoluteX,
         drawY: box.absoluteY,
+        originDrawX: box.absoluteX,
+        originDrawY: box.absoluteY,
         fontSize: (computedStyle.fontSize || 12) * this.root.getFontSize(),
         fontWeight: computedStyle.fontWeight || '',
         fontFamily: computedStyle.fontFamily || DEFAULT_FONT_FAMILY,

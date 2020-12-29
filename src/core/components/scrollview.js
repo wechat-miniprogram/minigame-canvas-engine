@@ -162,8 +162,8 @@ export default class ScrollView extends View {
       glRect.y = glRect.originY - y;
 
       if (node.type === 'Text') {
-        glRect.text.style.drawX -= x;
-        glRect.text.style.drawY -= y;
+        glRect.text.style.drawX = glRect.text.style.originDrawX - x;
+        glRect.text.style.drawY = glRect.text.style.originDrawY - y;
       }
     } else {
       this.scrollTop = y;

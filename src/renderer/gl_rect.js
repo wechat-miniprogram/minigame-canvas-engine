@@ -22,7 +22,6 @@ const positions = new Float32Array([
   0, 1,
   1, 1,
 ]);
-const textureMap = new WeakMap();
 
 function createProgram(gl) {
   let program;
@@ -115,9 +114,9 @@ function createProgram(gl) {
     uTex,
     vPosition,
     textureMatrixLocation,
-    textureMap,
     positions,
-    uOpacity
+    uOpacity,
+    textureMap: new WeakMap()
   };
 }
 
@@ -125,6 +124,11 @@ export class RoundRect {
   constructor(gl) {
     this.gl = gl;
 
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+
+    this.texMatrix = translation(0, 0, 0);
+    this.matrix = identity();
     this.reset();
   }
 
@@ -143,11 +147,6 @@ export class RoundRect {
     this.borderColor = [0, 0, 0, 0];
     this.imageWidth = 1;
     this.imageHeight = 1;
-    this.texMatrix = translation(0, 0, 0);
-    this.canvasWidth = 0;
-    this.canvasHeight = 0;
-    this.matrix = identity();
-    this.texMatrix = translation(0, 0, 0);
   }
 
   updateContours(dimension) {
@@ -159,14 +158,11 @@ export class RoundRect {
 
   updateViewPort() {
     let gl = this.gl;
-    let canvasWidth = this.canvasWidth;
-    let canvasHeight = this.canvasHeight;
-    if (canvasWidth !== gl.canvas.width || canvasHeight !== gl.canvas.height) {
-      canvasWidth !== gl.canvas.width && (canvasWidth = gl.canvas.width);
-      canvasHeight !== gl.canvas.height && (canvasHeight = gl.canvas.height);
+    if (this.canvasWidth !== gl.canvas.width || this.canvasHeight !== gl.canvas.height) {
       orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1, this.matrix);
       translate(this.matrix, this.x, this.y, 0, this.matrix);
       scale(this.matrix, this.width, this.height, 1, this.matrix);
+
       /*this.canvasWidth = gl.canvas.width;
       this.canvasHeight = gl.canvas.height;*/
     }
@@ -217,6 +213,7 @@ export class RoundRect {
 
     this.setTexMatrix();
   }
+
   setTexMatrix() {
     const srcX = this.imageSrcRect[0] || 0;
     const srcY = this.imageSrcRect[1] || 0;
@@ -235,23 +232,23 @@ export class RoundRect {
 
     let hasTexture = false;
     if (typeof this.backgroundImage !== 'undefined') {
-      let texId = textureMap.get(this.backgroundImage);
+      let texId = gl.program.textureMap.get(this.backgroundImage);
       if (!texId) {
         texId = createTexture(gl);
 
         // 将图像上传到纹理
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.backgroundImage);
-        textureMap.set(this.backgroundImage, texId);
+        gl.program.textureMap.set(this.backgroundImage, texId);
       }
 
       gl.bindTexture(gl.TEXTURE_2D, texId);
 
       hasTexture = true;
     } else if (typeof this.backgroundImageData !== 'undefined') {
-      let texId = textureMap.get(this.backgroundImageData);
+      let texId = gl.program.textureMap.get(this.backgroundImageData);
       if (!texId) {
         texId = createTexture(gl);
-        textureMap.set(backgroundImageData, texId);
+        gl.program.textureMap.set(backgroundImageData, texId);
       }
       gl.bindTexture(gl.TEXTURE_2D, texId);
       gl.texImage2D(

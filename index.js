@@ -102,22 +102,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_textManager_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(12);
 /* harmony import */ var _renderer_renderContextManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(13);
 /* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(26);
-/* harmony import */ var _common_cssLayoutAdapter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(37);
-/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(38);
+/* harmony import */ var _common_cssLayoutAdapter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(36);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(37);
 /* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_10__);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -125,19 +121,15 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
 
@@ -169,10 +161,10 @@ function getFontManager() {
   return fontManager;
 }
 
-var _Layout = /*#__PURE__*/function (_Element) {
+var _Layout =
+/*#__PURE__*/
+function (_Element) {
   _inherits(_Layout, _Element);
-
-  var _super = _createSuper(_Layout);
 
   function _Layout() {
     var _this;
@@ -193,11 +185,11 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
     _classCallCheck(this, _Layout);
 
-    _this = _super.call(this, {
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(_Layout).call(this, {
       style: style,
       id: 0,
       name: name
-    });
+    }));
     _this._methods = {};
     _this.canvasId = canvasId;
     _this.hasEventHandler = false;
@@ -411,11 +403,12 @@ var _Layout = /*#__PURE__*/function (_Element) {
       }
 
       this.flushing = true;
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["nextTick"])(function () {
+      return Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["nextTick"])(function () {
         // log('nextTick forceUpdate--------');
         _this3.repaint();
 
         _this3.flushing = false;
+        _this3.scrollview.scrollActive = true;
       });
     }
   }, {
@@ -586,7 +579,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
       this.bindEvents();
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].RENDERED;
-      this.forceUpdate();
+      return this.forceUpdate();
     } // 根据x和y找到相应的子节点
 
   }, {
@@ -806,7 +799,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "clearPool",
     value: function clearPool() {
-      this.imgPool.clear(); // this.canvasPool.clear();
+      this.imgPool.clear();
     }
   }, {
     key: "clearAll",
@@ -983,15 +976,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Element; });
 /* harmony import */ var _style_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -1020,7 +1009,9 @@ var toEventName = function toEventName(event, id) {
 /* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
 
 
-var Element = /*#__PURE__*/function () {
+var Element =
+/*#__PURE__*/
+function () {
   function Element(_ref) {
     var _this = this;
 
@@ -1591,15 +1582,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementStyle", function() { return getElementStyle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "log", function() { return log; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createImage", function() { return createImage; });
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -1773,7 +1760,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var Pool = /*#__PURE__*/function () {
+var Pool =
+/*#__PURE__*/
+function () {
   function Pool() {
     var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'pool';
 
@@ -2447,7 +2436,9 @@ function getNodeAll(node) {
  */
 
 
-var PseudoClassManager = /*#__PURE__*/function () {
+var PseudoClassManager =
+/*#__PURE__*/
+function () {
   function PseudoClassManager(layout) {
     _classCallCheck(this, PseudoClassManager);
 
@@ -2573,7 +2564,9 @@ var finder = function finder(t, w, arr, measure) {
   return mid;
 };
 
-var TextManager = /*#__PURE__*/function () {
+var TextManager =
+/*#__PURE__*/
+function () {
   function TextManager(layout) {
     _classCallCheck(this, TextManager);
 
@@ -2743,7 +2736,9 @@ function createCanvas() {
 var canvasPool = [];
 var renderer;
 
-var RenderContextManager = /*#__PURE__*/function () {
+var RenderContextManager =
+/*#__PURE__*/
+function () {
   function RenderContextManager(canvasContext) {
     var scale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
@@ -2847,9 +2842,6 @@ var RenderContextManager = /*#__PURE__*/function () {
         gl.canvas.width = this.width;
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         this.gl = gl;
-        console.log(this.glRects.filter(function (item) {
-          return item.type === 'Text' || item.type === 'Image';
-        }));
 
         if (this.layout.scrollview) {
           this.hasScroll = true;
@@ -2899,7 +2891,6 @@ function createTexture(gl) {
 }
 
 var positions = new Float32Array([0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]);
-var textureMap = new WeakMap();
 
 function createProgram(gl) {
   var program;
@@ -2986,17 +2977,23 @@ function createProgram(gl) {
     uTex: uTex,
     vPosition: vPosition,
     textureMatrixLocation: textureMatrixLocation,
-    textureMap: textureMap,
     positions: positions,
-    uOpacity: uOpacity
+    uOpacity: uOpacity,
+    textureMap: new WeakMap()
   };
 }
 
-var RoundRect = /*#__PURE__*/function () {
+var RoundRect =
+/*#__PURE__*/
+function () {
   function RoundRect(gl) {
     _classCallCheck(this, RoundRect);
 
     this.gl = gl;
+    this.canvasWidth = 0;
+    this.canvasHeight = 0;
+    this.texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
+    this.matrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["identity"])();
     this.reset();
   }
 
@@ -3017,11 +3014,6 @@ var RoundRect = /*#__PURE__*/function () {
       this.borderColor = [0, 0, 0, 0];
       this.imageWidth = 1;
       this.imageHeight = 1;
-      this.texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
-      this.canvasWidth = 0;
-      this.canvasHeight = 0;
-      this.matrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["identity"])();
-      this.texMatrix = Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translation"])(0, 0, 0);
     }
   }, {
     key: "updateContours",
@@ -3035,12 +3027,8 @@ var RoundRect = /*#__PURE__*/function () {
     key: "updateViewPort",
     value: function updateViewPort() {
       var gl = this.gl;
-      var canvasWidth = this.canvasWidth;
-      var canvasHeight = this.canvasHeight;
 
-      if (canvasWidth !== gl.canvas.width || canvasHeight !== gl.canvas.height) {
-        canvasWidth !== gl.canvas.width && (canvasWidth = gl.canvas.width);
-        canvasHeight !== gl.canvas.height && (canvasHeight = gl.canvas.height);
+      if (this.canvasWidth !== gl.canvas.width || this.canvasHeight !== gl.canvas.height) {
         Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["orthographic"])(0, gl.canvas.width, gl.canvas.height, 0, -1, 1, this.matrix);
         Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["translate"])(this.matrix, this.x, this.y, 0, this.matrix);
         Object(_m4_js__WEBPACK_IMPORTED_MODULE_0__["scale"])(this.matrix, this.width, this.height, 1, this.matrix);
@@ -3135,23 +3123,23 @@ var RoundRect = /*#__PURE__*/function () {
       var hasTexture = false;
 
       if (typeof this.backgroundImage !== 'undefined') {
-        var texId = textureMap.get(this.backgroundImage);
+        var texId = gl.program.textureMap.get(this.backgroundImage);
 
         if (!texId) {
           texId = createTexture(gl); // 将图像上传到纹理
 
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.backgroundImage);
-          textureMap.set(this.backgroundImage, texId);
+          gl.program.textureMap.set(this.backgroundImage, texId);
         }
 
         gl.bindTexture(gl.TEXTURE_2D, texId);
         hasTexture = true;
       } else if (typeof this.backgroundImageData !== 'undefined') {
-        var _texId = textureMap.get(this.backgroundImageData);
+        var _texId = gl.program.textureMap.get(this.backgroundImageData);
 
         if (!_texId) {
           _texId = createTexture(gl);
-          textureMap.set(backgroundImageData, _texId);
+          gl.program.textureMap.set(backgroundImageData, _texId);
         }
 
         gl.bindTexture(gl.TEXTURE_2D, _texId);
@@ -4636,18 +4624,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTextTexture", function() { return createTextTexture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VIDEOS", function() { return VIDEOS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createRender", function() { return createRender; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderDetection", function() { return renderDetection; });
 /* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(19);
 /* harmony import */ var _gl_rect_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -4832,15 +4815,15 @@ function createTextTexture(createCanvas) {
 
     if (TEXT_TEXTURE[key]) {
       return TEXT_TEXTURE[key];
+    } else {
+      console.log(key);
     }
 
     var canvas = createCanvas();
     var ctx = canvas.getContext('2d');
     canvas.width = Math.ceil(width);
     canvas.height = Math.ceil(height);
-    ctx.save(); // ctx.fillStyle = 'red';
-    // ctx.fillRect(0, 0, width, height);
-
+    ctx.save();
     ctx.textBaseline = 'top';
     ctx.font = style.font;
     ctx.textAlign = style.textAlign;
@@ -4926,11 +4909,8 @@ function resetGl(gl) {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
   {
     gl.enable(gl.BLEND);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    // gl.blendEquation(gl.FUNC_ADD);
-    // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-
-    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE); // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE);
   }
   {
     // VBO
@@ -4939,7 +4919,7 @@ function resetGl(gl) {
     gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
     gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(gl.program.vPosition);
-  } // gl.useProgram(gl.program.program);
+  }
 }
 
 function createRender(_ref7) {
@@ -4951,11 +4931,13 @@ function createRender(_ref7) {
 
   function drawOneGlRect(gl, rect) {
     var repaintCbk = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : none;
-    var glRectData = rect.glRectData || scaleData(rect, dpr);
-    glRectData.x = rect.x * dpr;
-    glRectData.y = rect.y * dpr;
+    var glRectData = rect.glRectData;
 
-    if (!rect.glRectData) {
+    if (glRectData) {
+      glRectData.x = rect.x * dpr;
+      glRectData.y = rect.y * dpr;
+    } else {
+      glRectData = scaleData(rect, dpr);
       rect.glRectData = glRectData;
     }
 
@@ -5014,11 +4996,7 @@ function createRender(_ref7) {
       glRect.setTexture({
         image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr)
       });
-    } // if (glRectData.type === 'ScrollView' && glRectData.glTexture) {
-    //   // console.log(glRectData.glTexture.toDataURL('image/png'))
-    //   glRect.setTexture({ image: glRectData.glTexture, srcRect: [glRectData.x, glRectData.y, glRectData.width, glRectData.height]});
-    // }
-
+    }
 
     if (glRectData.type === 'Video') {
       var video = VIDEOS["".concat(gl.canvas.id, "-").concat(glRectData.id)];
@@ -5038,8 +5016,7 @@ function createRender(_ref7) {
       }
     }
 
-    glRect.updateViewPort(); // const needUpdateTexture = !!(glRectData.type === 'ScrollView');
-
+    glRect.updateViewPort();
     glRect.draw();
   }
 
@@ -5066,10 +5043,11 @@ function createRender(_ref7) {
 
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
           scrollGlrects.forEach(function (scrollItem) {
-            // if (scrollItem.y + scrollItem.height >= item.y && scrollItem.y <= item.y + item.height) {
-            drawOneGlRect(gl, scrollItem, function () {
-              drawRects(gl, glRects, scrollGlrects);
-            }); // }
+            if (scrollItem.y + scrollItem.height >= item.y && scrollItem.y <= item.y + item.height && scrollItem.x + scrollItem.width > item.x && scrollItem.x <= item.x + item.width) {
+              drawOneGlRect(gl, scrollItem, function () {
+                drawRects(gl, glRects, scrollGlrects);
+              });
+            }
           }); // 关闭模板测试
 
           gl.disable(gl.STENCIL_TEST);
@@ -5088,26 +5066,22 @@ function createRender(_ref7) {
  * @param {Number} count [采样点的数量]
  */
 
-function renderDetection(gl, count) {
-  var width = gl.canvas.width;
-  var height = gl.canvas.height;
-  var pixels = new Uint8Array(width * height * 3);
-  gl.readPixels(0, 0, width, height, gl.RGB, gl.UNSIGNED_BYTE, pixels); // const result = [];
+/*export function renderDetection(gl, count) {
+  const { width } = gl.canvas;
+  const { height } = gl.canvas;
+  let pixels = new Uint8Array(width * height * 3);
+  gl.readPixels(0, 0, width, height, gl.RGB, gl.UNSIGNED_BYTE, pixels);
 
-  var map = {};
-  var maxKey = '';
-
-  for (var i = 0; i < count; i++) {
-    var row = Math.random() * width; // 取一行
-
-    var column = Math.random() * height; // 取一列
-
-    var p = 3 * row * width + 3 * column;
-    var key = "".concat(pixels[p], "_").concat(pixels[p + 1], "_").concat(pixels[p + 2]);
-
+  // const result = [];
+  const map = {};
+  let maxKey = '';
+  for (let i = 0; i < count; i++) {
+    const row = Math.random() * width; // 取一行
+    const column = Math.random() * height; // 取一列
+    const p = 3 * row * width + 3 * column;
+    const key = `${pixels[p]}_${pixels[p + 1]}_${pixels[p + 2]}`;
     if (map[key]) {
       map[key] += 1;
-
       if (map[key] > map[maxKey]) {
         maxKey = key;
       }
@@ -5115,15 +5089,12 @@ function renderDetection(gl, count) {
       map[key] = 1;
     }
   }
-
   pixels = null;
-
   if (map[maxKey] / count > 0.9) {
     return false;
   }
-
   return true;
-}
+}*/
 
 /***/ }),
 /* 19 */
@@ -5144,15 +5115,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RenderContext; });
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
 /* harmony import */ var color_rgba__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(color_rgba__WEBPACK_IMPORTED_MODULE_0__);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -5186,7 +5153,9 @@ var normalizeColor = cached(function (color) {
  * @description 每个组件对应的渲染数据
  */
 
-var RenderContext = /*#__PURE__*/function () {
+var RenderContext =
+/*#__PURE__*/
+function () {
   function RenderContext(id, type) {
     _classCallCheck(this, RenderContext);
 
@@ -5240,7 +5209,6 @@ var RenderContext = /*#__PURE__*/function () {
     key: "setTexture",
     value: function setTexture(texture) {
       this.texture = texture;
-      console.log(texture, texture.type);
     }
   }, {
     key: "setImage",
@@ -6334,7 +6302,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return View; });
 /* harmony import */ var _block_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(29);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6342,27 +6310,23 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
 
-var View = /*#__PURE__*/function (_Block) {
+
+var View =
+/*#__PURE__*/
+function (_Block) {
   _inherits(View, _Block);
-
-  var _super = _createSuper(View);
 
   function View(_ref) {
     var _this;
@@ -6386,7 +6350,7 @@ var View = /*#__PURE__*/function (_Block) {
 
     _classCallCheck(this, View);
 
-    _this = _super.call(this, {
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(View).call(this, {
       props: props,
       dataset: dataset,
       idName: idName,
@@ -6395,7 +6359,7 @@ var View = /*#__PURE__*/function (_Block) {
       styleActive: styleActive,
       styleDarkInit: styleDarkInit,
       styleDarkActive: styleDarkActive
-    });
+    }));
     _this.type = 'View';
     Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["nextTick"])(function () {
       var style = _this.root.isDarkMode() ? _this.styleInit : _this.styleDarkInit;
@@ -6495,7 +6459,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Block; });
 /* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6503,32 +6467,28 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
 
-var Block = /*#__PURE__*/function (_Element) {
+
+var Block =
+/*#__PURE__*/
+function (_Element) {
   _inherits(Block, _Element);
-
-  var _super = _createSuper(Block);
 
   function Block() {
     _classCallCheck(this, Block);
 
-    return _super.apply(this, arguments);
+    return _possibleConstructorReturn(this, _getPrototypeOf(Block).apply(this, arguments));
   }
 
   _createClass(Block, [{
@@ -6618,7 +6578,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Image; });
 /* harmony import */ var _block_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(29);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6626,31 +6586,27 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
-
-var Image = /*#__PURE__*/function (_Block) {
+var Image =
+/*#__PURE__*/
+function (_Block) {
   _inherits(Image, _Block);
-
-  var _super = _createSuper(Image);
 
   function Image(opts) {
     var _this;
@@ -6675,7 +6631,7 @@ var Image = /*#__PURE__*/function (_Block) {
         className = _opts$className === void 0 ? '' : _opts$className,
         _opts$src = opts.src,
         src = _opts$src === void 0 ? '' : _opts$src;
-    _this = _super.call(this, {
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Image).call(this, {
       props: props,
       dataset: dataset,
       idName: idName,
@@ -6684,7 +6640,7 @@ var Image = /*#__PURE__*/function (_Block) {
       styleActive: styleActive,
       styleDarkInit: styleDarkInit,
       styleDarkActive: styleDarkActive
-    });
+    }));
     _this.imgsrc = src;
     Object.defineProperty(_assertThisInitialized(_this), "src", {
       get: function get() {
@@ -6813,7 +6769,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Text; });
 /* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6821,27 +6777,23 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
-
-var Text = /*#__PURE__*/function (_Element) {
+var Text =
+/*#__PURE__*/
+function (_Element) {
   _inherits(Text, _Element);
-
-  var _super = _createSuper(Text);
 
   function Text(_ref) {
     var _this;
@@ -6869,7 +6821,7 @@ var Text = /*#__PURE__*/function (_Element) {
 
     var valueInit = value; // 先存下初始化时的value
 
-    _this = _super.call(this, {
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Text).call(this, {
       props: props,
       idName: idName,
       className: className,
@@ -6878,7 +6830,7 @@ var Text = /*#__PURE__*/function (_Element) {
       styleDarkInit: styleDarkInit,
       styleDarkActive: styleDarkActive,
       dataset: dataset
-    });
+    }));
     _this.type = 'Text';
     _this.valueShow = value; // 显示的时候的value
 
@@ -7014,6 +6966,8 @@ var Text = /*#__PURE__*/function (_Element) {
         style: {
           drawX: box.absoluteX,
           drawY: box.absoluteY,
+          originDrawX: box.absoluteX,
+          originDrawY: box.absoluteY,
           fontSize: (computedStyle.fontSize || 12) * this.root.getFontSize(),
           fontWeight: computedStyle.fontWeight || '',
           fontFamily: computedStyle.fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_1__["DEFAULT_FONT_FAMILY"],
@@ -7043,9 +6997,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
 /* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(28);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(34);
+/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(33);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -7053,28 +7007,24 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
 
 
-var ScrollView = /*#__PURE__*/function (_View) {
+
+var ScrollView =
+/*#__PURE__*/
+function (_View) {
   _inherits(ScrollView, _View);
-
-  var _super = _createSuper(ScrollView);
 
   function ScrollView(_ref) {
     var _this;
@@ -7098,7 +7048,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
     _classCallCheck(this, ScrollView);
 
-    _this = _super.call(this, {
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ScrollView).call(this, {
       props: props,
       dataset: dataset,
       idName: idName,
@@ -7107,7 +7057,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
       styleActive: styleActive,
       styleDarkInit: styleDarkInit,
       styleDarkActive: styleDarkActive
-    });
+    }));
     _this.type = 'ScrollView'; // 当前列表滚动的值
 
     _this.scrollTop = 0;
@@ -7144,6 +7094,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.off('touchmove');
       this.root && this.root.off('touchend');
       this.scrollerObj = null;
+      this._scrollerOption = Object.create(null);
     }
     /**
      * 获取滚动列表内所有元素的高度和
@@ -7162,21 +7113,21 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.hasEventBind = true;
       this.root.scrollview = this;
       this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top, zoom) {
+        /*console.log(left, top);*/
         // 可能被销毁了或者节点树还没准备好
         if (_this2.scrollActive && !_this2.isDestroyed) {
           _this2.traverseToChangeGlRect(_this2, left, top);
 
           _this2.root.repaint(false);
 
-          _this2.currentEvent.type = 'scroll';
-          _this2.currentEvent.currentTarget = _this2;
+          if (_this2.currentEvent) {
+            _this2.currentEvent.type = 'scroll';
+            _this2.currentEvent.currentTarget = _this2;
 
-          _this2.emit('scroll', _this2.currentEvent);
+            _this2.emit('scroll', _this2.currentEvent);
+          }
         }
-      }, {
-        scrollingY: !!(this.scrollHeight > this.layoutBox.height),
-        scrollingX: !!(this.scrollWidth > this.layoutBox.width)
-      });
+      }, this.scrollerOpt);
       this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
       this.scrollActive = false;
       this.on('touchstart', function (e) {
@@ -7219,8 +7170,8 @@ var ScrollView = /*#__PURE__*/function (_View) {
         glRect.y = glRect.originY - y;
 
         if (node.type === 'Text') {
-          glRect.text.style.drawX -= x;
-          glRect.text.style.drawY -= y;
+          glRect.text.style.drawX = glRect.text.style.originDrawX - x;
+          glRect.text.style.drawY = glRect.text.style.originDrawY - y;
         }
       } else {
         this.scrollTop = y;
@@ -7254,6 +7205,22 @@ var ScrollView = /*#__PURE__*/function (_View) {
       var last = this.children[this.children.length - 1];
       return last.layoutBox.left + last.layoutBox.width;
     }
+  }, {
+    key: "scrollerOption",
+    get: function get() {
+      return Object.assign({
+        scrollingY: !!(this.scrollHeight > this.layoutBox.height),
+        scrollingX: !!(this.scrollWidth > this.layoutBox.width)
+      }, this._scrollerOption);
+    },
+    set: function set() {
+      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      this._scrollerOption = value;
+
+      if (this.scrollerObj) {
+        Object.assign(this.scrollerObj.options, this.scrollerOption);
+      }
+    }
   }]);
 
   return ScrollView;
@@ -7262,14 +7229,13 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
 
 /***/ }),
-/* 33 */,
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
     if (true) {
         // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(35), __webpack_require__(36)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(34), __webpack_require__(35)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -7281,7 +7247,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -7515,7 +7481,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -7535,7 +7501,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 (function (root, factory) {
     if (true) {
         // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(35)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(34)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -8670,7 +8636,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8763,7 +8729,7 @@ function adaptor(node) {
 }
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// UMD (Universal Module Definition)

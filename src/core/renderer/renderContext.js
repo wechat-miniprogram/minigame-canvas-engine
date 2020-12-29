@@ -34,7 +34,6 @@ export default class RenderContext {
 
     this.originX = x;
     this.originY = y;
-    
   }
 
   setOpacity(v) {
@@ -57,7 +56,6 @@ export default class RenderContext {
   }
   setTexture(texture) {
     this.texture = texture;
-    console.log(texture, texture.type)
   }
   setImage(src, rect, srcRect) {
     this.image = { src, rect, srcRect }

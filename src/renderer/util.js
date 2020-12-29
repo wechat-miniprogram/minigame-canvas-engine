@@ -144,6 +144,8 @@ export function createTextTexture(createCanvas) {
 
     if (TEXT_TEXTURE[key]) {
       return TEXT_TEXTURE[key];
+    } else {
+      console.log(key);
     }
 
     const canvas = createCanvas();
@@ -153,8 +155,6 @@ export function createTextTexture(createCanvas) {
     canvas.height = Math.ceil(height);
 
     ctx.save();
-    // ctx.fillStyle = 'red';
-    // ctx.fillRect(0, 0, width, height);
 
     ctx.textBaseline = 'top';
     ctx.font = style.font;
@@ -240,25 +240,19 @@ const glPool = Object.create(null);
 function resetGl(gl) {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
-    {
-      gl.enable(gl.BLEND);
-      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-      // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-      // gl.blendEquation(gl.FUNC_ADD);
-      // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE);
-      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-    }
+  {
+    gl.enable(gl.BLEND);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE);
+  }
 
-    { // VBO
-      // bufferId = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, gl.program.bufferId);
-      gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
-      gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(gl.program.vPosition);
-    }
-
-    // gl.useProgram(gl.program.program);
+  { // VBO
+    // bufferId = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.program.bufferId);
+    gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(gl.program.vPosition);
+  }
 }
 
 export function createRender({ dpr, createImage, createCanvas }) {
@@ -266,12 +260,13 @@ export function createRender({ dpr, createImage, createCanvas }) {
   const getTextTexture = createTextTexture(createCanvas);
 
   function drawOneGlRect(gl, rect, repaintCbk = none) {
-    const glRectData = rect.glRectData || scaleData(rect, dpr);
+    let glRectData = rect.glRectData;
 
-    glRectData.x = rect.x * dpr;
-    glRectData.y = rect.y * dpr;
-
-    if (!rect.glRectData) {
+    if (glRectData) {
+      glRectData.x = rect.x * dpr;
+      glRectData.y = rect.y * dpr;
+    } else {
+      glRectData = scaleData(rect, dpr);
       rect.glRectData = glRectData;
     }
 
@@ -318,11 +313,6 @@ export function createRender({ dpr, createImage, createCanvas }) {
       glRect.setTexture({ image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr) });
     }
 
-    // if (glRectData.type === 'ScrollView' && glRectData.glTexture) {
-    //   // console.log(glRectData.glTexture.toDataURL('image/png'))
-    //   glRect.setTexture({ image: glRectData.glTexture, srcRect: [glRectData.x, glRectData.y, glRectData.width, glRectData.height]});
-    // }
-
     if (glRectData.type === 'Video') {
       const video = VIDEOS[`${gl.canvas.id}-${glRectData.id}`];
 
@@ -336,7 +326,6 @@ export function createRender({ dpr, createImage, createCanvas }) {
     }
     glRect.updateViewPort();
 
-    // const needUpdateTexture = !!(glRectData.type === 'ScrollView');
     glRect.draw();
   }
 
@@ -345,7 +334,7 @@ export function createRender({ dpr, createImage, createCanvas }) {
     resetGl,
 
     repaint: function drawRects(gl, glRects, scrollGlrects) {
-       resetGl(gl);
+      resetGl(gl);
       glRects.forEach((item, idx) => {
         // scrollview开启模板测试
         if (item.type === 'ScrollView') {
@@ -368,11 +357,14 @@ export function createRender({ dpr, createImage, createCanvas }) {
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
           scrollGlrects.forEach(scrollItem => {
-            // if (scrollItem.y + scrollItem.height >= item.y && scrollItem.y <= item.y + item.height) {
+            if (   scrollItem.y + scrollItem.height >= item.y
+                && scrollItem.y <= item.y + item.height
+                && scrollItem.x + scrollItem.width > item.x
+                && scrollItem.x <= item.x + item.width  ) {
               drawOneGlRect(gl, scrollItem, () => {
                 drawRects(gl, glRects, scrollGlrects);
-              })
-            // }
+              });
+            }
           });
 
           // 关闭模板测试
@@ -392,7 +384,7 @@ export function createRender({ dpr, createImage, createCanvas }) {
  * @param {Object} gl
  * @param {Number} count [采样点的数量]
  */
-export function renderDetection(gl, count) {
+/*export function renderDetection(gl, count) {
   const { width } = gl.canvas;
   const { height } = gl.canvas;
   let pixels = new Uint8Array(width * height * 3);
@@ -420,4 +412,4 @@ export function renderDetection(gl, count) {
     return false;
   }
   return true;
-}
+}*/
