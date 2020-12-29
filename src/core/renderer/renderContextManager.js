@@ -127,7 +127,6 @@ export default class RenderContextManager {
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
       this.gl = gl;
-      console.log(this.glRects.filter((item => item.type === 'Text' || item.type === 'Image')));
 
       if (this.layout.scrollview) {
         this.hasScroll = true;
