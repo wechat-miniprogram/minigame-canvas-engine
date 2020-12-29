@@ -144,6 +144,14 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+function trnode(node) {
+  console.log(node.style);
+  node.children.forEach(function (child) {
+    trnode(child);
+  });
+}
+
 var wx = pluginEnv.customEnv.wx; // 默认的字体管理器getFontManager
 
 function getFontManager() {
@@ -299,6 +307,7 @@ function (_Element) {
 
       var styleDark = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       var attrValueProcessor = arguments.length > 3 ? arguments[3] : undefined;
+      console.log('init call');
       return new Promise(function (resolve, reject) {
         var start = new Date();
 
@@ -794,6 +803,8 @@ function (_Element) {
       });
       this.off('reflow');
       this.scrollview = null;
+      delete this.layout;
+      delete this.lastLayout;
       console.log('layout clear call', this._EE, this._emitter);
     }
   }, {
@@ -2755,36 +2766,12 @@ function () {
       createCanvas: createCanvas
     });
     this.layout = null;
-    this.scrollRenderer = Object(_renderer_util_js__WEBPACK_IMPORTED_MODULE_1__["createRender"])({
-      dpr: scale,
-      createCanvas: createCanvas,
-      createImage: _common_util__WEBPACK_IMPORTED_MODULE_2__["createImage"]
-    });
-    var canvas = canvasPool.pop() || createCanvas();
-    this.scrollCanvas = canvas;
-    console.log('scrollcanvas', canvas);
     this.hasSetup = false;
     this.gl = null;
-    this.scrollGl = null;
     this.hasScroll = false;
   }
 
   _createClass(RenderContextManager, [{
-    key: "setupScrollGl",
-    value: function setupScrollGl() {
-      if (!this.scrollCanvas) {
-        this.scrollCanvas = canvasPool.pop() || createCanvas();
-      }
-
-      var gl = Object(_renderer_gl_rect_js__WEBPACK_IMPORTED_MODULE_0__["setupGl"])(this.scrollCanvas, false);
-      gl.canvas.height = this.height;
-      gl.canvas.width = this.width;
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-      this.scrollGl = gl;
-      this.layout.scrollview.glRect.glTexture = this.scrollCanvas;
-    }
-  }, {
     key: "createRoundRect",
     value: function createRoundRect(id, type) {
       var glRect = new _renderContext__WEBPACK_IMPORTED_MODULE_3__["default"](id, type);
@@ -4815,8 +4802,6 @@ function createTextTexture(createCanvas) {
 
     if (TEXT_TEXTURE[key]) {
       return TEXT_TEXTURE[key];
-    } else {
-      console.log(key);
     }
 
     var canvas = createCanvas();

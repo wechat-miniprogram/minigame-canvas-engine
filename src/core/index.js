@@ -13,6 +13,13 @@ import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElement
 import {adaptor} from './common/cssLayoutAdapter';
 import computeLayout from 'css-layout';
 
+ function trnode(node) {
+    console.log(node.style)
+    node.children.forEach(child => {
+        trnode(child)
+    })
+}
+
 const {wx} = pluginEnv.customEnv;
 // 默认的字体管理器getFontManager
 function getFontManager() {
@@ -120,6 +127,7 @@ class _Layout extends Element {
   }
 
   init(template, style, styleDark = {}, attrValueProcessor) {
+    console.log('init call');
     return new Promise((resolve, reject) => {
       const start = new Date();
 
@@ -600,6 +608,9 @@ class _Layout extends Element {
 
     this.off('reflow');
     this.scrollview = null;
+
+    delete this.layout;
+    delete this.lastLayout;
 
     console.log('layout clear call', this._EE, this._emitter)
   }

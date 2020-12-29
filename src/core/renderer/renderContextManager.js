@@ -45,38 +45,9 @@ export default class RenderContextManager {
 
     this.layout = null;
 
-    this.scrollRenderer = createRender({
-      dpr: scale,
-      createCanvas,
-      createImage
-    });
-
-    let canvas = canvasPool.pop()|| createCanvas();
-    this.scrollCanvas = canvas;
-
-    console.log('scrollcanvas', canvas)
-
     this.hasSetup = false;
     this.gl = null;
-    this.scrollGl = null;
     this.hasScroll = false;
-  }
-
-  setupScrollGl() {
-
-    if (!this.scrollCanvas) {
-      this.scrollCanvas = canvasPool.pop() || createCanvas();
-    }
-    const gl = setupGl(this.scrollCanvas, false);
-    gl.canvas.height = this.height;
-    gl.canvas.width = this.width;
-
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-
-    this.scrollGl = gl;
-
-    this.layout.scrollview.glRect.glTexture = this.scrollCanvas;
   }
 
   createRoundRect(id, type) {

@@ -144,8 +144,6 @@ export function createTextTexture(createCanvas) {
 
     if (TEXT_TEXTURE[key]) {
       return TEXT_TEXTURE[key];
-    } else {
-      console.log(key);
     }
 
     const canvas = createCanvas();
