@@ -1,5 +1,5 @@
 import View                from './view.js';
-import {throttle, createCanvas} from '../common/util.js';
+import {throttle, createCanvas, nextTick} from '../common/util.js';
 import {Scroller} from 'scroller';
 
 export default class ScrollView extends View {
@@ -59,6 +59,8 @@ export default class ScrollView extends View {
     this.root && this.root.off('touchend');
 
     this.scrollerObj = null;
+
+    this._scrollerOption = Object.create(null);
   }
 
   /**
@@ -87,6 +89,21 @@ export default class ScrollView extends View {
     return last.layoutBox.left + last.layoutBox.width;
   }
 
+  get scrollerOption() {
+    return Object.assign({
+      scrollingY: !!(this.scrollHeight > this.layoutBox.height),
+      scrollingX: !!(this.scrollWidth > this.layoutBox.width)
+    }, this._scrollerOption);
+  }
+
+  set scrollerOption(value = {}) {
+    this._scrollerOption = value;
+
+    if (this.scrollerObj) {
+      Object.assign(this.scrollerObj.options, this.scrollerOption);
+    }
+  }
+
   updateRenderPort(renderport) {
     if (this.hasEventBind) {
       return;
@@ -97,19 +114,19 @@ export default class ScrollView extends View {
     this.root.scrollview = this;
 
     this.scrollerObj = new Scroller((left, top, zoom) => {
+      /*console.log(left, top);*/
       // 可能被销毁了或者节点树还没准备好
       if (this.scrollActive && !this.isDestroyed) {
         this.traverseToChangeGlRect(this, left, top);
         this.root.repaint(false);
 
-        this.currentEvent.type = 'scroll';
-        this.currentEvent.currentTarget = this;
-        this.emit('scroll', this.currentEvent);
+        if (this.currentEvent) {
+          this.currentEvent.type = 'scroll';
+          this.currentEvent.currentTarget = this;
+          this.emit('scroll', this.currentEvent);
+        }
       }
-    }, {
-      scrollingY: !!(this.scrollHeight > this.layoutBox.height),
-      scrollingX: !!(this.scrollWidth > this.layoutBox.width)
-    });
+    }, this.scrollerOpt);
 
     this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 

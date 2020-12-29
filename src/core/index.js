@@ -224,11 +224,13 @@ class _Layout extends Element {
       return
     }
     this.flushing = true
-    nextTick(() => {
+    return nextTick(() => {
       // log('nextTick forceUpdate--------');
 
       this.repaint();
       this.flushing = false;
+
+      this.scrollview.scrollActive = true;
     })
   }
 
@@ -407,7 +409,7 @@ class _Layout extends Element {
     this.bindEvents();
 
     this.state = STATE.RENDERED;
-    this.forceUpdate();
+    return this.forceUpdate();
   }
 
   // 根据x和y找到相应的子节点
@@ -604,7 +606,6 @@ class _Layout extends Element {
 
   clearPool() {
     this.imgPool.clear();
-    // this.canvasPool.clear();
   }
 
   clearAll() {
