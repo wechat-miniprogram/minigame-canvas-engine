@@ -10,6 +10,8 @@ function uid() {
 }
 
 const IMAGE_POOL = Object.create(null);
+const glPool = Object.create(null);
+const TEXT_TEXTURE = Object.create(null);
 
 export function createImageLoader(createImage) {
   return function (src, cb = () => {}) {
@@ -133,9 +135,7 @@ function getBgImageRect(
   return BGIMAGE_RECT_CACHE[key];
 }
 
-const TEXT_TEXTURE = Object.create(null);
-
-export function createTextTexture(createCanvas) {
+export function createTextTexture( createCanvas) {
   return function ([x, y, width, height], { valueShow, valueBreak }, style, dpr = 2) {
     style.font = `${style.fontWeight || ''} ${style.fontSize * dpr}px ${style.fontFamily}`;
 
@@ -204,8 +204,8 @@ export function createTextTexture(createCanvas) {
     }
     ctx.restore();
 
-    // console.log(key, drawX, drawY, canvas.toDataURL('image/png'))
     TEXT_TEXTURE[key] = canvas;
+
     return TEXT_TEXTURE[key];
   };
 }
@@ -229,7 +229,6 @@ function scaleData(data, dpr) {
 
 export const VIDEOS = Object.create(null);
 
-const glPool = Object.create(null);
 
 /**
  *
@@ -256,6 +255,7 @@ function resetGl(gl) {
 export function createRender({ dpr, createImage, createCanvas }) {
   const loadImage = createImageLoader(createImage);
   const getTextTexture = createTextTexture(createCanvas);
+  console.log('createRender pool', glPool)
 
   function drawOneGlRect(gl, rect, repaintCbk = none) {
     let glRectData = rect.glRectData;
@@ -328,6 +328,9 @@ export function createRender({ dpr, createImage, createCanvas }) {
   }
 
   return {
+    IMAGE_POOL,
+    glPool,
+    TEXT_TEXTURE,
     loadImage,
     resetGl,
 

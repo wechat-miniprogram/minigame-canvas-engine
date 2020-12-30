@@ -27,7 +27,12 @@ function createCanvas() {
 
 const canvasPool = [];
 
-let renderer;
+function clearPool(obj) {
+  Object.getOwnPropertyNames(obj).forEach(function(key){
+    delete obj[key];
+  });
+}
+
 export default class RenderContextManager {
   constructor(canvasContext, scale = 1) {
     this.canvasContext = canvasContext;
@@ -37,7 +42,7 @@ export default class RenderContextManager {
     this.width = 0;
     this.height = 0;
 
-    renderer = createRender({
+    this.renderer = createRender({
       dpr: scale,
       createImage,
       createCanvas
@@ -59,15 +64,20 @@ export default class RenderContextManager {
    * @description 清空数据
    */
   clear() {
-    // console.log('clear call');
-    this.glRects = this.glRects.slice(0, 0);
+    this.glRects = [];
+    this.scrollGlrects = [];
   }
 
   release() {
-    canvasPool.push(this.scrollCanvas);
-    this.scrollCanvas = null;
+    clearPool(this.renderer.TEXT_TEXTURE);
+    clearPool(this.renderer.IMAGE_POOL);
+    clearPool(this.renderer.glPool);
 
-    console.log('renderContext release call')
+    console.log(this.renderer.TEXT_TEXTURE, this.renderer.IMAGE_POOL, this.renderer.glPool);
+
+    this.gl = null;
+
+    this.clear();
   }
 
   getChildrenGlRects(node, res = []) {
@@ -107,6 +117,6 @@ export default class RenderContextManager {
       }
     }
 
-    renderer.repaint(this.gl, this.glRects, this.scrollGlrects);
+    this.renderer.repaint(this.gl, this.glRects, this.scrollGlrects);
   }
 }

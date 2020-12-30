@@ -144,14 +144,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-
-function trnode(node) {
-  console.log(node.style);
-  node.children.forEach(function (child) {
-    trnode(child);
-  });
-}
-
 var wx = pluginEnv.customEnv.wx; // 默认的字体管理器getFontManager
 
 function getFontManager() {
@@ -285,7 +277,7 @@ function (_Element) {
   }, {
     key: "deactive",
     value: function deactive() {
-      console.log('deactive call');
+      /*console.log('deactive call')*/
       this._oldState = this.state;
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].DEACTIVE;
 
@@ -294,7 +286,7 @@ function (_Element) {
   }, {
     key: "active",
     value: function active() {
-      console.log('active call');
+      /*console.log('active call')*/
       this.state = this._oldState || _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].RENDERED;
 
       this._activeTree(this);
@@ -307,7 +299,8 @@ function (_Element) {
 
       var styleDark = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       var attrValueProcessor = arguments.length > 3 ? arguments[3] : undefined;
-      console.log('init call');
+
+      /*console.log('init call');*/
       return new Promise(function (resolve, reject) {
         var start = new Date();
 
@@ -369,8 +362,9 @@ function (_Element) {
         _this2.debugInfo.layoutTree = new Date() - start;
 
         _this2.add(_this2.layoutTree);
+        /*console.log(this.layoutTree);*/
 
-        console.log(_this2.layoutTree);
+
         _this2.debugInfo.renderTree = new Date() - start;
         _this2.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].INITED;
         _this2.reflowRequest = 0;
@@ -517,8 +511,9 @@ function (_Element) {
       var computedStart = Date.now();
 
       css_layout__WEBPACK_IMPORTED_MODULE_10___default()(this);
+      /*console.log('computeLayout cost', Date.now() - computedStart);*/
 
-      console.log('computeLayout cost', Date.now() - computedStart);
+
       this.debugInfo.yogaLayout = new Date() - start; // 这里更新下文本节点的宽高
 
       if (!this.textManager.hasUpdate) {
@@ -774,7 +769,6 @@ function (_Element) {
     value: function destroyAll(tree) {
       if (!tree) {
         tree = this;
-        this.renderContext.release();
       }
 
       for (var i = 0; i < tree.children.length; i++) {
@@ -798,6 +792,8 @@ function (_Element) {
       this.children = [];
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR;
+      this.cssRules = null;
+      this.cssDarkRules = null;
       ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
         _this5.off(eventName);
       });
@@ -805,7 +801,9 @@ function (_Element) {
       this.scrollview = null;
       delete this.layout;
       delete this.lastLayout;
-      console.log('layout clear call', this._EE, this._emitter);
+      /*console.log('layout clear call', this._EE, this._emitter)*/
+
+      this.renderContext && this.renderContext.release();
     }
   }, {
     key: "clearPool",
@@ -823,6 +821,7 @@ function (_Element) {
     value: function loadImgs(arr) {
       var _this6 = this;
 
+      return;
       arr.forEach(function (src) {
         var img = _this6.canvasContext.createImage ? _this6.canvasContext.createImage() : Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createImage"])();
 
@@ -2745,7 +2744,12 @@ function createCanvas() {
 }
 
 var canvasPool = [];
-var renderer;
+
+function clearPool(obj) {
+  Object.getOwnPropertyNames(obj).forEach(function (key) {
+    delete obj[key];
+  });
+}
 
 var RenderContextManager =
 /*#__PURE__*/
@@ -2760,7 +2764,7 @@ function () {
     this.scale = scale;
     this.width = 0;
     this.height = 0;
-    renderer = Object(_renderer_util_js__WEBPACK_IMPORTED_MODULE_1__["createRender"])({
+    this.renderer = Object(_renderer_util_js__WEBPACK_IMPORTED_MODULE_1__["createRender"])({
       dpr: scale,
       createImage: _common_util__WEBPACK_IMPORTED_MODULE_2__["createImage"],
       createCanvas: createCanvas
@@ -2785,15 +2789,18 @@ function () {
   }, {
     key: "clear",
     value: function clear() {
-      // console.log('clear call');
-      this.glRects = this.glRects.slice(0, 0);
+      this.glRects = [];
+      this.scrollGlrects = [];
     }
   }, {
     key: "release",
     value: function release() {
-      canvasPool.push(this.scrollCanvas);
-      this.scrollCanvas = null;
-      console.log('renderContext release call');
+      clearPool(this.renderer.TEXT_TEXTURE);
+      clearPool(this.renderer.IMAGE_POOL);
+      clearPool(this.renderer.glPool);
+      console.log(this.renderer.TEXT_TEXTURE, this.renderer.IMAGE_POOL, this.renderer.glPool);
+      this.gl = null;
+      this.clear();
     }
   }, {
     key: "getChildrenGlRects",
@@ -2837,7 +2844,7 @@ function () {
         }
       }
 
-      renderer.repaint(this.gl, this.glRects, this.scrollGlrects);
+      this.renderer.repaint(this.gl, this.glRects, this.scrollGlrects);
     }
   }]);
 
@@ -4631,6 +4638,8 @@ function uid() {
 }
 
 var IMAGE_POOL = Object.create(null);
+var glPool = Object.create(null);
+var TEXT_TEXTURE = Object.create(null);
 function createImageLoader(createImage) {
   return function (src) {
     var cb = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
@@ -4784,7 +4793,6 @@ function getBgImageRect(_ref, size, position, borderWidth, _ref2) {
   return BGIMAGE_RECT_CACHE[key];
 }
 
-var TEXT_TEXTURE = Object.create(null);
 function createTextTexture(createCanvas) {
   return function (_ref4, _ref5, style) {
     var _ref6 = _slicedToArray(_ref4, 4),
@@ -4857,8 +4865,7 @@ function createTextTexture(createCanvas) {
       }
     }
 
-    ctx.restore(); // console.log(key, drawX, drawY, canvas.toDataURL('image/png'))
-
+    ctx.restore();
     TEXT_TEXTURE[key] = canvas;
     return TEXT_TEXTURE[key];
   };
@@ -4884,7 +4891,6 @@ function scaleData(data, dpr) {
 }
 
 var VIDEOS = Object.create(null);
-var glPool = Object.create(null);
 /**
  *
  * @param {CanvasContext} gl
@@ -4913,6 +4919,7 @@ function createRender(_ref7) {
       createCanvas = _ref7.createCanvas;
   var loadImage = createImageLoader(createImage);
   var getTextTexture = createTextTexture(createCanvas);
+  console.log('createRender pool', glPool);
 
   function drawOneGlRect(gl, rect) {
     var repaintCbk = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : none;
@@ -5006,6 +5013,9 @@ function createRender(_ref7) {
   }
 
   return {
+    IMAGE_POOL: IMAGE_POOL,
+    glPool: glPool,
+    TEXT_TEXTURE: TEXT_TEXTURE,
     loadImage: loadImage,
     resetGl: resetGl,
     repaint: function drawRects(gl, glRects, scrollGlrects) {

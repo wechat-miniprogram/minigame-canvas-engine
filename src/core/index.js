@@ -13,13 +13,6 @@ import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElement
 import {adaptor} from './common/cssLayoutAdapter';
 import computeLayout from 'css-layout';
 
- function trnode(node) {
-    console.log(node.style)
-    node.children.forEach(child => {
-        trnode(child)
-    })
-}
-
 const {wx} = pluginEnv.customEnv;
 // 默认的字体管理器getFontManager
 function getFontManager() {
@@ -112,7 +105,7 @@ class _Layout extends Element {
   initRepaint() { }
 
   deactive() {
-    console.log('deactive call')
+    /*console.log('deactive call')*/
     this._oldState = this.state;
     this.state = STATE.DEACTIVE;
 
@@ -120,14 +113,14 @@ class _Layout extends Element {
   }
 
   active() {
-    console.log('active call')
+    /*console.log('active call')*/
     this.state = this._oldState || STATE.RENDERED;
 
     this._activeTree(this);
   }
 
   init(template, style, styleDark = {}, attrValueProcessor) {
-    console.log('init call');
+    /*console.log('init call');*/
     return new Promise((resolve, reject) => {
       const start = new Date();
 
@@ -191,7 +184,7 @@ class _Layout extends Element {
       this.debugInfo.layoutTree = new Date() - start;
       this.add(this.layoutTree);
 
-      console.log(this.layoutTree);
+      /*console.log(this.layoutTree);*/
 
       this.debugInfo.renderTree = new Date() - start;
 
@@ -333,7 +326,7 @@ class _Layout extends Element {
 
     let computedStart = Date.now();
     computeLayout(this);
-    console.log('computeLayout cost', Date.now() - computedStart);
+    /*console.log('computeLayout cost', Date.now() - computedStart);*/
 
     this.debugInfo.yogaLayout = new Date() - start;
 
@@ -579,8 +572,6 @@ class _Layout extends Element {
   destroyAll(tree) {
     if (!tree) {
       tree = this;
-
-      this.renderContext.release();
     }
 
     for (let i = 0; i < tree.children.length; i++) {
@@ -601,6 +592,8 @@ class _Layout extends Element {
     this.children = [];
     this.layoutTree = {};
     this.state = STATE.CLEAR;
+    this.cssRules = null;
+    this.cssDarkRules = null;
 
     ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(eventName => {
       this.off(eventName);
@@ -612,7 +605,8 @@ class _Layout extends Element {
     delete this.layout;
     delete this.lastLayout;
 
-    console.log('layout clear call', this._EE, this._emitter)
+    /*console.log('layout clear call', this._EE, this._emitter)*/
+    this.renderContext && this.renderContext.release();
   }
 
   clearPool() {
@@ -625,6 +619,7 @@ class _Layout extends Element {
   }
 
   loadImgs(arr) {
+    return;
     arr.forEach(src => {
       const img = this.canvasContext.createImage ? this.canvasContext.createImage() : createImage();
 
