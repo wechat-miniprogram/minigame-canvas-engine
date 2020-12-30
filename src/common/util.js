@@ -74,14 +74,30 @@ export function createImage() {
   }
 }
 
+let _dpr;
+// only Baidu platform need to recieve system info from main context
+if (typeof swan !== 'undefined') {
+  __env.onMessage(res => {
+    if (res && res.type === 'engine') {
+      if (res.event === 'systemInfo') {
+        _dpr = res.systemInfo.devicePixelRatio;
+      }
+    }
+  });
+}
+
 export function getDpr() {
-  // totally not consider dpr
-  return 1;
-  // if (typeof __env !== "undefined") {
-  //   return __env.getSystemInfoSync().devicePixelRatio;
-  // } else {
-  //   return window.devicePixelRatio;
-  // }
+  if (typeof _dpr !== 'undefined') {
+    return _dpr;
+  }
+  if (typeof __env !== "undefined" && __env.getSystemInfoSync) {
+    _dpr = __env.getSystemInfoSync().devicePixelRatio;
+  }
+  else {
+    console.warn('failed to access device pixel ratio, fallback to 1');
+    _dpr = 1;
+  }
+  return _dpr;
 }
 
 export const STATE = {

@@ -1,0 +1,1 @@
+GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;

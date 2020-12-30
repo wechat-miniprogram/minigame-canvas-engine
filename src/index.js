@@ -1,3 +1,4 @@
+import './env.js';
 import Element                         from './components/elements.js';
 import Pool                            from './common/pool.js';
 import Emitter                         from 'tiny-emitter';
@@ -10,8 +11,6 @@ import BitMapFont  from './common/bitMapFont';
 import {
   View, Text, Image, ScrollView, BitMapText
 } from './components/index.js'
-
-GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
 
 // 全局事件管道
 export const EE  = new Emitter();
