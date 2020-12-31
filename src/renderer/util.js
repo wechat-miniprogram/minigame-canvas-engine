@@ -1,152 +1,70 @@
 import { SCALE_KEY } from './const.js';
-import { RoundRect } from './gl_rect.js';
+import { RoundRect, setupGl} from './gl_rect.js';
 
-function none() {
-
-}
+function none() {}
 
 function uid() {
   return '_' + Math.random().toString(36).substr(2, 9);
 }
 
-const IMAGE_POOL = Object.create(null);
-const glPool = Object.create(null);
-const TEXT_TEXTURE = Object.create(null);
-
-export function createImageLoader(createImage) {
-  return function (src, cb = () => {}) {
-    if (IMAGE_POOL[src]) {
-      if (IMAGE_POOL[src].loaded) {
-        cb(IMAGE_POOL[src].image);
-      } else {
-        IMAGE_POOL[src].onloads.push(cb);
-      }
-    } else {
-      const img = createImage();
-      IMAGE_POOL[src] = { image: img, loaded: false, onloads: [cb] };
-      img.onload = () => {
-        IMAGE_POOL[src].loaded = true;
-        IMAGE_POOL[src].onloads.pop()(IMAGE_POOL[src].image, true);
-        IMAGE_POOL[src].onloads = [];
-      };
-      img.onerror = () => {};
-      img.src = src;
+/**
+ * 处理渲染相关数据的分辨率
+ * @param {Object} data [render数据]
+ * @param {Number} dpr [分辨率]
+ */
+function scaleData(data, dpr) {
+  const newData = Object.assign({}, data);
+  SCALE_KEY.forEach((key) => {
+    if (typeof newData[key] === 'number') {
+      newData[key] *= dpr;
+    } else if (Array.isArray(newData[key])) {
+      newData[key] = newData[key].map(v => v * dpr);
     }
-  };
+  });
+
+  return newData;
 }
 
-const BGIMAGE_RECT_CACHE = Object.create(null);
 
-function getBgImageRect(
-  { src, width, height },
-  size,
-  position,
-  borderWidth,
-  [baseX, baseY, boxWidth, boxHeight],
-  dpr = 2
-) {
-  const key = `${src}_${size}_${position}_${borderWidth}_${baseX}_${baseY}_${boxWidth}_${boxHeight}`;
+let glPool = Object.create(null);
+let TEXT_TEXTURE = Object.create(null);
+let BGIMAGE_RECT_CACHE = Object.create(null);
+let imgPool = {};
 
-  if (BGIMAGE_RECT_CACHE[key]) {
-    return BGIMAGE_RECT_CACHE[key];
+export default class Renderer {
+  constructor({ dpr, createImage, createCanvas }) {
+    this.createImage = createImage;
+    this.createCanvas = createCanvas;
+    this.dpr = dpr;
+
+    this.gl = null;
   }
 
-  let finalX = baseX - borderWidth;
-  let finalY = baseY - borderWidth;
+  static release() {
+    TEXT_TEXTURE = {};
+    BGIMAGE_RECT_CACHE = {};
 
-  if (size) {
-    const splitVal = size.split(' ');
-    if (splitVal.length === 2) {
-      const setWidth = splitVal[0];
-      const setHeight = splitVal[1];
-      width = setWidth[setWidth.length - 1] === '%' ? (boxWidth * parseFloat(setWidth.slice(0, -1))) / 100 : parseFloat(setWidth) * dpr;
-      height = setHeight[setHeight.length - 1] === '%' ? (boxHeight * parseFloat(setHeight.slice(0, -1))) / 100 : parseFloat(setHeight) * dpr;
-    } else if (splitVal.length === 1) {
-      const imgRatio = width / height;
-      const boxRatio = boxWidth / boxHeight;
-      switch (splitVal[0]) {
-        case 'contain':
-          if (imgRatio < boxRatio) {
-            height = boxHeight;
-            width = height * imgRatio;
-            if (!position) {
-              finalY = baseY;
-              finalX = baseX + (boxWidth - width) / 2;
-            }
-          } else {
-            width = boxWidth;
-            height = width / imgRatio;
-            if (!position) {
-              finalX = baseX;
-              finalY = baseY + (boxHeight - height) / 2;
-            }
-          }
-          break;
-        case 'cover':
-          if (imgRatio < boxRatio) {
-            width = boxWidth;
-            height = width / imgRatio;
-            if (!position) {
-              finalX = baseX;
-              finalY = baseY - (height - boxHeight) / 2;
-            }
-          } else {
-            height = boxHeight;
-            width = height * imgRatio;
-            if (!position) {
-              finalY = baseY;
-              finalX = baseX - (width - boxWidth) / 2;
-            }
-          }
-          break;
-      }
-    }
-    if (position) {
-      let [x, y] = position.split(' ');
-      switch (x) {
-        case 'left':
-          x = '0%';
-          break;
-        case 'center':
-          x = '50%';
-          break;
-        case 'right':
-          x = '100%';
-      }
-      switch (y) {
-        case 'top':
-          y = '0%';
-          break;
-        case 'center':
-          y = '50%';
-          break;
-        case 'bottom':
-          y = '100%';
-      }
-      x = x[x.length - 1] === '%' ? ((boxWidth - width) * parseFloat(x.slice(0, -1))) / 100 : parseFloat(x) * dpr;
-      y = y[y.length - 1] === '%' ? ((boxHeight - height) * parseFloat(y.slice(0, -1))) / 100 : parseFloat(y) * dpr;
-      finalX += x;
-      finalY += y;
-    }
+    Object.getOwnPropertyNames(glPool).forEach(function(key){
+      glPool[key].destroy();
+
+      delete glPool[key];
+    });
+
+    glPool = {};
+    imgPool = {};
+    console.log('销毁资源');
   }
 
-  BGIMAGE_RECT_CACHE[key] = [finalX - baseX, finalY - baseY, width, height];
-
-  return BGIMAGE_RECT_CACHE[key];
-}
-
-export function createTextTexture( createCanvas) {
-  return function ([x, y, width, height], { valueShow, valueBreak }, style, dpr = 2) {
+  getTextTexture([x, y, width, height], { valueShow, valueBreak }, style, dpr = 2) {
     style.font = `${style.fontWeight || ''} ${style.fontSize * dpr}px ${style.fontFamily}`;
 
-    // const key = `${x}_${y}_${width}_${height}_${valueShow}_${style.font}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
     const key = `${width}_${height}_${valueShow}_${style.font || '_'}_${style.lineHeight}_${style.textAlign}_${style.textShadow}_${style.whiteSpace}_${style.textOverflow}_${style.color}`;
 
     if (TEXT_TEXTURE[key]) {
       return TEXT_TEXTURE[key];
     }
 
-    const canvas = createCanvas();
+    const canvas = this.createCanvas();
     const ctx = canvas.getContext('2d');
 
     canvas.width = Math.ceil(width);
@@ -207,64 +125,162 @@ export function createTextTexture( createCanvas) {
     TEXT_TEXTURE[key] = canvas;
 
     return TEXT_TEXTURE[key];
-  };
-}
+  }
 
-/**
- * 处理渲染相关数据的分辨率
- * @param {Object} data [render数据]
- * @param {Number} dpr [分辨率]
- */
-function scaleData(data, dpr) {
-  const newData = Object.assign({}, data);
-  SCALE_KEY.forEach((key) => {
-    if (typeof newData[key] === 'number') {
-      newData[key] *= dpr;
-    } else if (Array.isArray(newData[key])) {
-      newData[key] = newData[key].map(v => v * dpr);
+  /**
+   *
+   * @param {CanvasContext} gl
+   */
+  resetGl(gl) {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+    {
+      gl.enable(gl.BLEND);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+      gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE);
     }
-  });
-  return newData;
-}
 
-export const VIDEOS = Object.create(null);
-
-
-/**
- *
- * @param {CanvasContext} gl
- */
-function resetGl(gl) {
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-
-  {
-    gl.enable(gl.BLEND);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE);
+    { // VBO
+      // bufferId = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.program.bufferId);
+      gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
+      gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(gl.program.vPosition);
+    }
   }
 
-  { // VBO
-    // bufferId = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.program.bufferId);
-    gl.bufferData(gl.ARRAY_BUFFER, gl.program.positions, gl.STATIC_DRAW);
-    gl.vertexAttribPointer(gl.program.vPosition, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(gl.program.vPosition);
+  loadImage(src, cb = none) {
+    if (imgPool[src]) {
+      if (imgPool[src].loaded) {
+        console.log('命中缓存');
+        cb(imgPool[src].image);
+      }
+      /*else {
+        imgPool[src].onloads.push(cb);
+      }*/
+    } else {
+      let start = new Date();
+      const img = this.createImage();
+      imgPool[src] = { image: img, loaded: false, onloads: [cb] };
+
+      img.onload = () => {
+        console.log('加载耗时', new Date() - start);
+        imgPool[src].loaded = true;
+        imgPool[src].onloads.pop()(imgPool[src].image, true);
+        imgPool[src].onloads = [];
+      };
+      img.onerror = () => {};
+      img.src = src;
+    }
   }
-}
 
-export function createRender({ dpr, createImage, createCanvas }) {
-  const loadImage = createImageLoader(createImage);
-  const getTextTexture = createTextTexture(createCanvas);
-  console.log('createRender pool', glPool)
+  getBgImageRect(
+    { src, width, height },
+    size,
+    position,
+    borderWidth,
+    [baseX, baseY, boxWidth, boxHeight],
+    dpr = 2
+  ) {
+    const key = `${src}_${size}_${position}_${borderWidth}_${baseX}_${baseY}_${boxWidth}_${boxHeight}`;
 
-  function drawOneGlRect(gl, rect, repaintCbk = none) {
+    if (BGIMAGE_RECT_CACHE[key]) {
+      return BGIMAGE_RECT_CACHE[key];
+    }
+
+    let finalX = baseX - borderWidth;
+    let finalY = baseY - borderWidth;
+
+    if (size) {
+      const splitVal = size.split(' ');
+      if (splitVal.length === 2) {
+        const setWidth = splitVal[0];
+        const setHeight = splitVal[1];
+        width = setWidth[setWidth.length - 1] === '%' ? (boxWidth * parseFloat(setWidth.slice(0, -1))) / 100 : parseFloat(setWidth) * dpr;
+        height = setHeight[setHeight.length - 1] === '%' ? (boxHeight * parseFloat(setHeight.slice(0, -1))) / 100 : parseFloat(setHeight) * dpr;
+      } else if (splitVal.length === 1) {
+        const imgRatio = width / height;
+        const boxRatio = boxWidth / boxHeight;
+        switch (splitVal[0]) {
+          case 'contain':
+            if (imgRatio < boxRatio) {
+              height = boxHeight;
+              width = height * imgRatio;
+              if (!position) {
+                finalY = baseY;
+                finalX = baseX + (boxWidth - width) / 2;
+              }
+            } else {
+              width = boxWidth;
+              height = width / imgRatio;
+              if (!position) {
+                finalX = baseX;
+                finalY = baseY + (boxHeight - height) / 2;
+              }
+            }
+            break;
+          case 'cover':
+            if (imgRatio < boxRatio) {
+              width = boxWidth;
+              height = width / imgRatio;
+              if (!position) {
+                finalX = baseX;
+                finalY = baseY - (height - boxHeight) / 2;
+              }
+            } else {
+              height = boxHeight;
+              width = height * imgRatio;
+              if (!position) {
+                finalY = baseY;
+                finalX = baseX - (width - boxWidth) / 2;
+              }
+            }
+            break;
+        }
+      }
+      if (position) {
+        let [x, y] = position.split(' ');
+        switch (x) {
+          case 'left':
+            x = '0%';
+            break;
+          case 'center':
+            x = '50%';
+            break;
+          case 'right':
+            x = '100%';
+        }
+        switch (y) {
+          case 'top':
+            y = '0%';
+            break;
+          case 'center':
+            y = '50%';
+            break;
+          case 'bottom':
+            y = '100%';
+        }
+        x = x[x.length - 1] === '%' ? ((boxWidth - width) * parseFloat(x.slice(0, -1))) / 100 : parseFloat(x) * dpr;
+        y = y[y.length - 1] === '%' ? ((boxHeight - height) * parseFloat(y.slice(0, -1))) / 100 : parseFloat(y) * dpr;
+        finalX += x;
+        finalY += y;
+      }
+    }
+
+    BGIMAGE_RECT_CACHE[key] = [finalX - baseX, finalY - baseY, width, height];
+
+    return BGIMAGE_RECT_CACHE[key];
+  }
+
+  drawOneGlRect(gl, rect) {
     let glRectData = rect.glRectData;
+    let dpr = this.dpr;
 
     if (glRectData) {
       glRectData.x = rect.x * dpr;
       glRectData.y = rect.y * dpr;
     } else {
-      glRectData = scaleData(rect, dpr);
+      glRectData = scaleData(rect, this.dpr);
       rect.glRectData = glRectData;
     }
 
@@ -289,128 +305,78 @@ export function createRender({ dpr, createImage, createCanvas }) {
 
     if (glRectData.image) {
       const { src } = glRectData.image;
-      loadImage(src, (image, lazy) => {
-        glRect.setTexture({ image });
-        if (lazy) {
-          repaintCbk();
-        }
-      });
+      if (imgPool[src] && imgPool[src].loaded) {
+        glRect.setTexture({ image: imgPool[src].image });
+      }
     }
+
     if (glRectData.backgroundImage) {
       const { src, size, position } = glRectData.backgroundImage;
-      loadImage(src, (image, lazy) => {
-        const rect = getBgImageRect(image, size, position, glRectData.borderWidth || 0, dimension, dpr);
-        glRect.setTexture({ image, rect });
-        if (lazy) {
-          repaintCbk();
-        }
-      });
+
+      if (imgPool[src] && imgPool[src].loaded) {
+        const rect = getBgImageRect(imgPool[src].image, size, position, glRectData.borderWidth || 0, dimension, dpr);
+        glRect.setTexture({ image: imgPool[src].image, rect });
+      }
     }
 
     if (glRectData.text) {
-      glRect.setTexture({ image: getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr) });
+      glRect.setTexture({ image: this.getTextTexture(dimension, glRectData.text.value, glRectData.text.style, dpr) });
     }
 
-    if (glRectData.type === 'Video') {
-      const video = VIDEOS[`${gl.canvas.id}-${glRectData.id}`];
-
-      if (video) {
-        video.repaint = () => repaintCbk();
-
-        if (video.iData) {
-          glRect.setTextureData({ imageData: video.iData, width: video.vWidth, height: video.vHeight });
-        }
-      }
-    }
     glRect.updateViewPort();
 
     glRect.draw();
   }
 
-  return {
-    IMAGE_POOL,
-    glPool,
-    TEXT_TEXTURE,
-    loadImage,
-    resetGl,
+  repaint(gl, glRects, scrollGlrects) {
+    this.resetGl(gl);
+    glRects.forEach((item, idx) => {
+      if (item.image && (!imgPool[item.image.src] || !imgPool[item.image.src].loaded)) {
+        this.loadImage(item.image.src, () => {
+          this.repaint(gl, glRects, scrollGlrects);
+        });
+      }
 
-    repaint: function drawRects(gl, glRects, scrollGlrects) {
-      resetGl(gl);
-      glRects.forEach((item, idx) => {
-        // scrollview开启模板测试
-        if (item.type === 'ScrollView') {
-          // 清除模板缓存
-          gl.clear(gl.STENCIL_BUFFER_BIT);
-          // 开启模板测试
-          gl.enable(gl.STENCIL_TEST);
+      // scrollview开启模板测试
+      if (item.type === 'ScrollView') {
+        // 清除模板缓存
+        gl.clear(gl.STENCIL_BUFFER_BIT);
+        // 开启模板测试
+        gl.enable(gl.STENCIL_TEST);
 
-          // 设置模板测试参数
-          gl.stencilFunc(gl.ALWAYS, 1, 1);
-          // 设置模板值操作
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
+        // 设置模板测试参数
+        gl.stencilFunc(gl.ALWAYS, 1, 1);
+        // 设置模板值操作
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE);
 
-          // 绘制scrollview
-          drawOneGlRect(gl, item);
+        // 绘制scrollview
+        this.drawOneGlRect(gl, item);
 
-          // 设置模板测试参数，只有滚动窗口内的才进行绘制
-          gl.stencilFunc(gl.EQUAL, 1, 1);
-          //设置模板测试后的操作
-          gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        // 设置模板测试参数，只有滚动窗口内的才进行绘制
+        gl.stencilFunc(gl.EQUAL, 1, 1);
+        //设置模板测试后的操作
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
-          scrollGlrects.forEach(scrollItem => {
-            if (   scrollItem.y + scrollItem.height >= item.y
-                && scrollItem.y <= item.y + item.height
-                && scrollItem.x + scrollItem.width > item.x
-                && scrollItem.x <= item.x + item.width  ) {
-              drawOneGlRect(gl, scrollItem, () => {
-                drawRects(gl, glRects, scrollGlrects);
-              });
-            }
-          });
+        scrollGlrects.forEach(scrollItem => {
+          if (scrollItem.image && (!imgPool[scrollItem.image.src] || !imgPool[scrollItem.image.src].loaded)) {
+            this.loadImage(scrollItem.image.src, () => {
+              this.repaint(gl, glRects, scrollGlrects);
+            });
+          }
+          if ( scrollItem.y + scrollItem.height >= item.y
+            && scrollItem.y <= item.y + item.height
+            && scrollItem.x + scrollItem.width > item.x
+            && scrollItem.x <= item.x + item.width  ) {
+            this.drawOneGlRect(gl, scrollItem);
+          }
+        });
 
-          // 关闭模板测试
-          gl.disable(gl.STENCIL_TEST);
-        } else {
-          drawOneGlRect(gl, item, () => {
-            drawRects(gl, glRects, scrollGlrects);
-          })
-        }
-      });
-    },
-  };
+        // 关闭模板测试
+        gl.disable(gl.STENCIL_TEST);
+      } else {
+        this.drawOneGlRect(gl, item)
+      }
+    });
+  }
 }
 
-/**
- * 像素点采样检测渲染异常，随机采样count个像素点，如果像素点中超过90%是相同的，则认为是有异常的
- * @param {Object} gl
- * @param {Number} count [采样点的数量]
- */
-/*export function renderDetection(gl, count) {
-  const { width } = gl.canvas;
-  const { height } = gl.canvas;
-  let pixels = new Uint8Array(width * height * 3);
-  gl.readPixels(0, 0, width, height, gl.RGB, gl.UNSIGNED_BYTE, pixels);
-
-  // const result = [];
-  const map = {};
-  let maxKey = '';
-  for (let i = 0; i < count; i++) {
-    const row = Math.random() * width; // 取一行
-    const column = Math.random() * height; // 取一列
-    const p = 3 * row * width + 3 * column;
-    const key = `${pixels[p]}_${pixels[p + 1]}_${pixels[p + 2]}`;
-    if (map[key]) {
-      map[key] += 1;
-      if (map[key] > map[maxKey]) {
-        maxKey = key;
-      }
-    } else {
-      map[key] = 1;
-    }
-  }
-  pixels = null;
-  if (map[maxKey] / count > 0.9) {
-    return false;
-  }
-  return true;
-}*/

@@ -40,6 +40,9 @@ function createProgram(gl) {
   let textureMatrixLocation;
   let uOpacity;
 
+  let vertexShader;
+  let fragmentShader;
+
   {
     gl.enable(gl.BLEND);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
@@ -52,11 +55,11 @@ function createProgram(gl) {
     // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
   }
   { // program
-    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vertex);
     gl.compileShader(vertexShader);
 
-    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragmentShader, fragment);
     gl.compileShader(fragmentShader);
 
@@ -116,6 +119,8 @@ function createProgram(gl) {
     textureMatrixLocation,
     positions,
     uOpacity,
+    vertexShader,
+    fragmentShader,
     textureMap: new WeakMap()
   };
 }
@@ -129,6 +134,28 @@ export class RoundRect {
 
     this.texMatrix = translation(0, 0, 0);
     this.matrix = identity();
+    this.reset();
+  }
+
+  destroy() {
+    let gl = this.gl;
+    let texture1 = gl.program.textureMap.get(this.backgroundImage);
+    if (texture1) {
+      gl.bindTexture(gl.TEXTURE_2D, null);
+      gl.deleteTexture(texture1);
+      texture1 = null;
+    }
+
+    let texture2 = gl.program.textureMap.get(this.backgroundImageData);
+    if (texture2) {
+      gl.bindTexture(gl.TEXTURE_2D, null);
+      gl.deleteTexture(texture2);
+      texture2 = null;
+    }
+
+    this.gl.program.textureMap.delete(this.backgroundImage);
+    this.gl.program.textureMap.delete(this.backgroundImageData);
+
     this.reset();
   }
 
@@ -236,6 +263,9 @@ export class RoundRect {
       if (!texId) {
         texId = createTexture(gl);
 
+        /*gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.deleteTexture(texId);*/
+
         // 将图像上传到纹理
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.backgroundImage);
         gl.program.textureMap.set(this.backgroundImage, texId);
@@ -311,4 +341,9 @@ export function setupGl(canvas) {
   const gl = canvas.webgl;
 
   return gl;
+}
+
+export function releaseGl(gl) {
+  gl.deleteShader(gl.program.vertexShader);
+  gl.deleteShader(gl.program.fragmentShader);
 }

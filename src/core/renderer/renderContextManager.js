@@ -1,12 +1,5 @@
-import {
-  setupGl
-} from '../../renderer/gl_rect.js';
-import {
-  createRender,
-  VIDEOS,
-  renderDetection
-} from '../../renderer/util.js';
-
+import { setupGl, releaseGl } from '../../renderer/gl_rect.js';
+import Renderer from '../../renderer/util.js';
 
 import {
   createImage
@@ -37,12 +30,11 @@ export default class RenderContextManager {
   constructor(canvasContext, scale = 1) {
     this.canvasContext = canvasContext;
     this.glRects = [];
-    this.scale = scale;
 
     this.width = 0;
     this.height = 0;
 
-    this.renderer = createRender({
+    this.renderer = new Renderer({
       dpr: scale,
       createImage,
       createCanvas
@@ -69,15 +61,12 @@ export default class RenderContextManager {
   }
 
   release() {
-    clearPool(this.renderer.TEXT_TEXTURE);
-    clearPool(this.renderer.IMAGE_POOL);
-    clearPool(this.renderer.glPool);
-
-    console.log(this.renderer.TEXT_TEXTURE, this.renderer.IMAGE_POOL, this.renderer.glPool);
-
-    this.gl = null;
-
+    Renderer.release();
     this.clear();
+
+    if (this.gl) {
+      releaseGl(this.gl);
+    }
   }
 
   getChildrenGlRects(node, res = []) {
@@ -108,6 +97,7 @@ export default class RenderContextManager {
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
       this.gl = gl;
+      this.renderer.gl = gl;
 
       if (this.layout.scrollview) {
         this.hasScroll = true;
