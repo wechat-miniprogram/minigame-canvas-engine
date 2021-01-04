@@ -13,6 +13,8 @@ import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElement
 import {adaptor} from './common/cssLayoutAdapter';
 import computeLayout from 'css-layout';
 
+let imgPool = {};
+
 const {wx} = pluginEnv.customEnv;
 // 默认的字体管理器getFontManager
 function getFontManager() {
@@ -33,7 +35,7 @@ function getFontManager() {
   return fontManager;
 }
 
-class _Layout extends Element {
+export class Layout extends Element {
   constructor({ style, name, isDarkMode, getWidth, getSize, getFontSize, getFps, canvasId, canvasContext, fontManager, scale = 1 } = {}) {
     super({
       style,
@@ -76,15 +78,10 @@ class _Layout extends Element {
     this.getSize = getSize || (() => { return {width: 0, height: 0}});
     this.getFontSize = getFontSize || (() => 1);
     this.getFps = getFps || (() => 0);
-
     this.state = STATE.UNINIT;
-    this.imgPool = new Pool('imgPool');
     this._emitter = new Emitter();
     this._EE = new Emitter();
 
-    // this.viewport = {
-    //   width: getWidth(),
-    // }; // 不包含像素的宽高
     this.viewport = getSize();
 
     this._videos = [];
@@ -98,7 +95,7 @@ class _Layout extends Element {
 
   setCanvasContext(ctx, scale) {
     this.canvasContext = ctx;
-    this.renderContext = new RenderContextManager(ctx, scale);
+    this.renderContext = new RenderContextManager(ctx, scale, imgPool);
     this.renderContext.layout = this;
   }
 
@@ -604,38 +601,54 @@ class _Layout extends Element {
 
     delete this.layout;
     delete this.lastLayout;
-
-    /*console.log('layout clear call', this._EE, this._emitter)*/
-    this.renderContext && this.renderContext.release();
   }
 
   clearPool() {
-    this.imgPool.clear();
+    console.log('clearPool');
+    imgPool = {};
   }
 
   clearAll() {
     this.clear();
     this.clearPool();
+    this.renderContext && this.renderContext.release();
   }
 
-  loadImgs(arr) {
-    return;
+  static loadImgs(arr) {
+    let promises = [];
     arr.forEach(src => {
-      const img = this.canvasContext.createImage ? this.canvasContext.createImage() : createImage();
+      if (!imgPool[src]) {
+        let p = new Promise((resolve, reject) => {
+          const img = createImage();
 
-      this.imgPool.set(src, img);
+          imgPool[src] = { image: img, loaded: false, onloads: [] };
 
-      img.onload = () => {
-        img.loadDone = true;
-      }
+          img.onload = () => {
+            imgPool[src].loaded = true;
+            const func = imgPool[src].onloads.pop()
+            func && func(img);
+            imgPool[src].onloads = [];
 
-      img.onloadcbks = [];
-      if (img.setSrc) {
-        img.setSrc(src);
-      } else {
-        img.src = src;
+            resolve(src);
+          }
+
+          img.onerror = () => {
+            delete imgPool[src];
+            reject();
+          }
+
+          if (img.setSrc) {
+            img.setSrc(src);
+          } else {
+            img.src = src;
+          }
+        });
+
+        promises.push(p);
       }
     });
+
+    return Promise.all(promises);
   }
 
   /**
@@ -652,7 +665,7 @@ class _Layout extends Element {
     // this.canvasContext && this.canvasContext.release();
     this.canvasContext = null;
     this.renderContext = null;
-    this.imgPool.clear();
+    imgPool = {};
   }
 
   /**
@@ -727,8 +740,8 @@ class _Layout extends Element {
   }
 }
 
-const newInstance = function (opt) {
-  return new _Layout({
+export function getLayout (opt) {
+  return new Layout({
     style: {
       width: '100%',
       height: '100%',
@@ -746,4 +759,3 @@ const newInstance = function (opt) {
   });
 }
 
-export default { newInstance };

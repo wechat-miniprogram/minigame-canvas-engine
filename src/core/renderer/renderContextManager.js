@@ -27,7 +27,7 @@ function clearPool(obj) {
 }
 
 export default class RenderContextManager {
-  constructor(canvasContext, scale = 1) {
+  constructor(canvasContext, scale = 1, imgPool) {
     this.canvasContext = canvasContext;
     this.glRects = [];
 
@@ -37,7 +37,8 @@ export default class RenderContextManager {
     this.renderer = new Renderer({
       dpr: scale,
       createImage,
-      createCanvas
+      createCanvas,
+      imgPool
     });
 
     this.layout = null;

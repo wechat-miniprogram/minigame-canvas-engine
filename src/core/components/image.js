@@ -74,27 +74,6 @@ export default class Image extends Block {
     delete this.src;
   }
 
-  // 废弃
-  initImg(callback = none) {
-  }
-
-  render(needEmitEvent = true) {
-    if (!this.img) {
-      return;
-    }
-  }
-
-  insert(isDarkMode) {
-    super.insert(isDarkMode);
-    this.glRect.setTexture({
-      type: 'image',
-      src: this.src
-    });
-    this.initImg(() => {
-      this.render();
-    });
-  }
-
   updateRenderData(computedStyle) {
     if (!this.layoutBox) {
       return;

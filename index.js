@@ -91,6 +91,8 @@ module.exports =
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Layout", function() { return Layout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLayout", function() { return getLayout; });
 /* harmony import */ var _components_elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
@@ -144,6 +146,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+var imgPool = {};
 var wx = pluginEnv.customEnv.wx; // 默认的字体管理器getFontManager
 
 function getFontManager() {
@@ -161,12 +164,12 @@ function getFontManager() {
   return fontManager;
 }
 
-var _Layout =
+var Layout =
 /*#__PURE__*/
 function (_Element) {
-  _inherits(_Layout, _Element);
+  _inherits(Layout, _Element);
 
-  function _Layout() {
+  function Layout() {
     var _this;
 
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -183,9 +186,9 @@ function (_Element) {
         _ref$scale = _ref.scale,
         scale = _ref$scale === void 0 ? 1 : _ref$scale;
 
-    _classCallCheck(this, _Layout);
+    _classCallCheck(this, Layout);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(_Layout).call(this, {
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Layout).call(this, {
       style: style,
       id: 0,
       name: name
@@ -244,12 +247,8 @@ function (_Element) {
     };
 
     _this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].UNINIT;
-    _this.imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('imgPool');
     _this._emitter = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a();
-    _this._EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a(); // this.viewport = {
-    //   width: getWidth(),
-    // }; // 不包含像素的宽高
-
+    _this._EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a();
     _this.viewport = getSize();
     _this._videos = [];
     _this._firstComputeLayout = true; // 是否首次计算布局
@@ -259,7 +258,7 @@ function (_Element) {
     return _this;
   }
 
-  _createClass(_Layout, [{
+  _createClass(Layout, [{
     key: "methods",
     value: function methods(config) {
       this._methods = config;
@@ -268,7 +267,7 @@ function (_Element) {
     key: "setCanvasContext",
     value: function setCanvasContext(ctx, scale) {
       this.canvasContext = ctx;
-      this.renderContext = new _renderer_renderContextManager__WEBPACK_IMPORTED_MODULE_7__["default"](ctx, scale);
+      this.renderContext = new _renderer_renderContextManager__WEBPACK_IMPORTED_MODULE_7__["default"](ctx, scale, imgPool);
       this.renderContext.layout = this;
     }
   }, {
@@ -801,52 +800,27 @@ function (_Element) {
       this.scrollview = null;
       delete this.layout;
       delete this.lastLayout;
-      /*console.log('layout clear call', this._EE, this._emitter)*/
-
-      this.renderContext && this.renderContext.release();
     }
   }, {
     key: "clearPool",
     value: function clearPool() {
-      this.imgPool.clear();
+      console.log('clearPool');
+      imgPool = {};
     }
   }, {
     key: "clearAll",
     value: function clearAll() {
       this.clear();
       this.clearPool();
+      this.renderContext && this.renderContext.release();
     }
   }, {
-    key: "loadImgs",
-    value: function loadImgs(arr) {
-      var _this6 = this;
+    key: "releaseSource",
 
-      return;
-      arr.forEach(function (src) {
-        var img = _this6.canvasContext.createImage ? _this6.canvasContext.createImage() : Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createImage"])();
-
-        _this6.imgPool.set(src, img);
-
-        img.onload = function () {
-          img.loadDone = true;
-        };
-
-        img.onloadcbks = [];
-
-        if (img.setSrc) {
-          img.setSrc(src);
-        } else {
-          img.src = src;
-        }
-      });
-    }
     /**
      * 用于jscore里面的context和canvas解绑的时候释放资源
      * 包括canvas/context/image/video等和客户端相关的资源
      */
-
-  }, {
-    key: "releaseSource",
     value: function releaseSource() {
       this.unbindEvents();
 
@@ -859,7 +833,7 @@ function (_Element) {
 
       this.canvasContext = null;
       this.renderContext = null;
-      this.imgPool.clear();
+      imgPool = {};
     }
     /**
      * 设置和layout相关的上下文，包括canvas，事件绑定，视频离屏canvas，图片
@@ -917,7 +891,7 @@ function (_Element) {
   }, {
     key: "_measureText",
     value: function _measureText(_ref2) {
-      var _this7 = this;
+      var _this6 = this;
 
       var fontStyle = _ref2.fontStyle,
           fontWeight = _ref2.fontWeight,
@@ -932,7 +906,7 @@ function (_Element) {
           width = _common_util_js__WEBPACK_IMPORTED_MODULE_3__["charWidthMap"][key];
         } else {
           // log('new text', key);
-          width = _this7.fontManager.measureText(str, fontWeight || 'normal', fontStyle || 'normal', (fontSize || 12) * fontSizeRate, fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_3__["DEFAULT_FONT_FAMILY"]) || 0;
+          width = _this6.fontManager.measureText(str, fontWeight || 'normal', fontStyle || 'normal', (fontSize || 12) * fontSizeRate, fontFamily || _common_util_js__WEBPACK_IMPORTED_MODULE_3__["DEFAULT_FONT_FAMILY"]) || 0;
           _common_util_js__WEBPACK_IMPORTED_MODULE_3__["charWidthMap"][key] = width;
         }
 
@@ -941,13 +915,50 @@ function (_Element) {
         };
       };
     }
+  }], [{
+    key: "loadImgs",
+    value: function loadImgs(arr) {
+      var promises = [];
+      arr.forEach(function (src) {
+        if (!imgPool[src]) {
+          var p = new Promise(function (resolve, reject) {
+            var img = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createImage"])();
+            imgPool[src] = {
+              image: img,
+              loaded: false,
+              onloads: []
+            };
+
+            img.onload = function () {
+              imgPool[src].loaded = true;
+              var func = imgPool[src].onloads.pop();
+              func && func(img);
+              imgPool[src].onloads = [];
+              resolve(src);
+            };
+
+            img.onerror = function () {
+              delete imgPool[src];
+              reject();
+            };
+
+            if (img.setSrc) {
+              img.setSrc(src);
+            } else {
+              img.src = src;
+            }
+          });
+          promises.push(p);
+        }
+      });
+      return Promise.all(promises);
+    }
   }]);
 
-  return _Layout;
+  return Layout;
 }(_components_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-var newInstance = function newInstance(opt) {
-  return new _Layout({
+function getLayout(opt) {
+  return new Layout({
     style: {
       width: '100%',
       height: '100%'
@@ -971,11 +982,7 @@ var newInstance = function newInstance(opt) {
     getSize: opt.getSize,
     scale: opt.scale
   });
-};
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  newInstance: newInstance
-});
+}
 
 /***/ }),
 /* 1 */
@@ -1746,7 +1753,7 @@ function getElementStyle(isDarkMode) {
   return style;
 }
 function log() {
-  console.log.apply(null, arguments);
+  /*console.log.apply(null, arguments)*/
 }
 function createImage() {
   /* istanbul ignore if*/
@@ -1770,6 +1777,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+var pools = [];
+
 var Pool =
 /*#__PURE__*/
 function () {
@@ -1778,8 +1787,17 @@ function () {
 
     _classCallCheck(this, Pool);
 
+    var curr = pools.find(function (item) {
+      return item.name === name;
+    });
+
+    if (curr) {
+      return curr;
+    }
+
     this.name = name;
     this.pool = {};
+    pools.push(this);
   }
 
   _createClass(Pool, [{
@@ -1796,6 +1814,11 @@ function () {
     key: "clear",
     value: function clear() {
       this.pool = {};
+    }
+  }, {
+    key: "getList",
+    value: function getList() {
+      return Object.values(this.pool);
     }
   }]);
 
@@ -2624,7 +2647,7 @@ function () {
             fontWeight: style.fontWeight || null,
             fontSize: style.fontSize || null,
             fontFamily: style.fontFamily || null
-          }, node.root.getFontSize()); // console.log(nodeTextArray)
+          }, node.root.getFontSize());
 
           if (style.textOverflow === 'ellipsis' && style.whiteSpace === 'nowrap') {
             // 单行溢出...
@@ -2756,6 +2779,7 @@ var RenderContextManager =
 function () {
   function RenderContextManager(canvasContext) {
     var scale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+    var imgPool = arguments.length > 2 ? arguments[2] : undefined;
 
     _classCallCheck(this, RenderContextManager);
 
@@ -2766,7 +2790,8 @@ function () {
     this.renderer = new _renderer_util_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
       dpr: scale,
       createImage: _common_util__WEBPACK_IMPORTED_MODULE_2__["createImage"],
-      createCanvas: createCanvas
+      createCanvas: createCanvas,
+      imgPool: imgPool
     });
     this.layout = null;
     this.hasSetup = false;
@@ -4699,7 +4724,6 @@ function scaleData(data, dpr) {
 var glPool = Object.create(null);
 var TEXT_TEXTURE = Object.create(null);
 var BGIMAGE_RECT_CACHE = Object.create(null);
-var imgPool = {};
 
 var Renderer =
 /*#__PURE__*/
@@ -4707,13 +4731,15 @@ function () {
   function Renderer(_ref) {
     var dpr = _ref.dpr,
         createImage = _ref.createImage,
-        createCanvas = _ref.createCanvas;
+        createCanvas = _ref.createCanvas,
+        imgPool = _ref.imgPool;
 
     _classCallCheck(this, Renderer);
 
     this.createImage = createImage;
     this.createCanvas = createCanvas;
     this.dpr = dpr;
+    this.imgPool = imgPool;
     this.gl = null;
   }
 
@@ -4819,31 +4845,31 @@ function () {
   }, {
     key: "loadImage",
     value: function loadImage(src) {
+      var _this = this;
+
       var cb = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : none;
 
-      if (imgPool[src]) {
-        if (imgPool[src].loaded) {
-          console.log('命中缓存');
-          cb(imgPool[src].image);
+      if (this.imgPool[src]) {
+        if (this.imgPool[src].loaded) {
+          cb(this.imgPool[src].image);
+        } else {
+          /*console.log('load img in render', src);*/
+          this.imgPool[src].onloads.push(cb);
         }
-        /*else {
-          imgPool[src].onloads.push(cb);
-        }*/
-
       } else {
-        var start = new Date();
         var img = this.createImage();
-        imgPool[src] = {
+        this.imgPool[src] = {
           image: img,
           loaded: false,
           onloads: [cb]
         };
 
         img.onload = function () {
-          console.log('加载耗时', new Date() - start);
-          imgPool[src].loaded = true;
-          imgPool[src].onloads.pop()(imgPool[src].image, true);
-          imgPool[src].onloads = [];
+          _this.imgPool[src].loaded = true;
+
+          _this.imgPool[src].onloads.pop()(_this.imgPool[src].image, true);
+
+          _this.imgPool[src].onloads = [];
         };
 
         img.onerror = function () {};
@@ -5010,9 +5036,9 @@ function () {
       if (glRectData.image) {
         var src = glRectData.image.src;
 
-        if (imgPool[src] && imgPool[src].loaded) {
+        if (this.imgPool[src] && this.imgPool[src].loaded) {
           glRect.setTexture({
-            image: imgPool[src].image
+            image: this.imgPool[src].image
           });
         }
       }
@@ -5023,11 +5049,11 @@ function () {
             size = _glRectData$backgroun.size,
             position = _glRectData$backgroun.position;
 
-        if (imgPool[_src] && imgPool[_src].loaded) {
-          var _rect = getBgImageRect(imgPool[_src].image, size, position, glRectData.borderWidth || 0, dimension, dpr);
+        if (this.imgPool[_src] && this.imgPool[_src].loaded) {
+          var _rect = getBgImageRect(this.imgPool[_src].image, size, position, glRectData.borderWidth || 0, dimension, dpr);
 
           glRect.setTexture({
-            image: imgPool[_src].image,
+            image: this.imgPool[_src].image,
             rect: _rect
           });
         }
@@ -5045,13 +5071,13 @@ function () {
   }, {
     key: "repaint",
     value: function repaint(gl, glRects, scrollGlrects) {
-      var _this = this;
+      var _this2 = this;
 
       this.resetGl(gl);
       glRects.forEach(function (item, idx) {
-        if (item.image && (!imgPool[item.image.src] || !imgPool[item.image.src].loaded)) {
-          _this.loadImage(item.image.src, function () {
-            _this.repaint(gl, glRects, scrollGlrects);
+        if (item.image && (!_this2.imgPool[item.image.src] || !_this2.imgPool[item.image.src].loaded)) {
+          _this2.loadImage(item.image.src, function () {
+            _this2.repaint(gl, glRects, scrollGlrects);
           });
         } // scrollview开启模板测试
 
@@ -5066,27 +5092,27 @@ function () {
 
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE); // 绘制scrollview
 
-          _this.drawOneGlRect(gl, item); // 设置模板测试参数，只有滚动窗口内的才进行绘制
+          _this2.drawOneGlRect(gl, item); // 设置模板测试参数，只有滚动窗口内的才进行绘制
 
 
           gl.stencilFunc(gl.EQUAL, 1, 1); //设置模板测试后的操作
 
           gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
           scrollGlrects.forEach(function (scrollItem) {
-            if (scrollItem.image && (!imgPool[scrollItem.image.src] || !imgPool[scrollItem.image.src].loaded)) {
-              _this.loadImage(scrollItem.image.src, function () {
-                _this.repaint(gl, glRects, scrollGlrects);
+            if (scrollItem.image && (!_this2.imgPool[scrollItem.image.src] || !_this2.imgPool[scrollItem.image.src].loaded)) {
+              _this2.loadImage(scrollItem.image.src, function () {
+                _this2.repaint(gl, glRects, scrollGlrects);
               });
             }
 
             if (scrollItem.y + scrollItem.height >= item.y && scrollItem.y <= item.y + item.height && scrollItem.x + scrollItem.width > item.x && scrollItem.x <= item.x + item.width) {
-              _this.drawOneGlRect(gl, scrollItem);
+              _this2.drawOneGlRect(gl, scrollItem);
             }
           }); // 关闭模板测试
 
           gl.disable(gl.STENCIL_TEST);
         } else {
-          _this.drawOneGlRect(gl, item);
+          _this2.drawOneGlRect(gl, item);
         }
       });
     }
@@ -5100,8 +5126,6 @@ function () {
         delete glPool[key];
       });
       glPool = {};
-      imgPool = {};
-      console.log('销毁资源');
     }
   }]);
 
@@ -6592,13 +6616,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -6688,36 +6708,6 @@ function (_Block) {
 
       this.img = null;
       delete this.src;
-    } // 废弃
-
-  }, {
-    key: "initImg",
-    value: function initImg() {
-      var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _common_util_js__WEBPACK_IMPORTED_MODULE_1__["none"];
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var needEmitEvent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-
-      if (!this.img) {
-        return;
-      }
-    }
-  }, {
-    key: "insert",
-    value: function insert(isDarkMode) {
-      var _this2 = this;
-
-      _get(_getPrototypeOf(Image.prototype), "insert", this).call(this, isDarkMode);
-
-      this.glRect.setTexture({
-        type: 'image',
-        src: this.src
-      });
-      this.initImg(function () {
-        _this2.render();
-      });
     }
   }, {
     key: "updateRenderData",

@@ -67,8 +67,6 @@ class TextManager {
           fontFamily: style.fontFamily || null,
         }, node.root.getFontSize());
 
-        // console.log(nodeTextArray)
-
         if (style.textOverflow === 'ellipsis' && style.whiteSpace === 'nowrap') { // 单行溢出...
           const t = nodeTextArray[0] || ''; // 取截断后的第一个文本片段
           let { length } = t;

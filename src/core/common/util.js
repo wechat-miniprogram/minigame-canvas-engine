@@ -157,7 +157,7 @@ export function getElementStyle(isDarkMode, needInnerStyle = true) {
 }
 
 export function log() {
-  console.log.apply(null, arguments)
+  /*console.log.apply(null, arguments)*/
 }
 
 export function createImage() {

@@ -29,13 +29,13 @@ function scaleData(data, dpr) {
 let glPool = Object.create(null);
 let TEXT_TEXTURE = Object.create(null);
 let BGIMAGE_RECT_CACHE = Object.create(null);
-let imgPool = {};
 
 export default class Renderer {
-  constructor({ dpr, createImage, createCanvas }) {
+  constructor({ dpr, createImage, createCanvas, imgPool }) {
     this.createImage = createImage;
     this.createCanvas = createCanvas;
     this.dpr = dpr;
+    this.imgPool = imgPool;
 
     this.gl = null;
   }
@@ -51,8 +51,6 @@ export default class Renderer {
     });
 
     glPool = {};
-    imgPool = {};
-    console.log('销毁资源');
   }
 
   getTextTexture([x, y, width, height], { valueShow, valueBreak }, style, dpr = 2) {
@@ -150,24 +148,21 @@ export default class Renderer {
   }
 
   loadImage(src, cb = none) {
-    if (imgPool[src]) {
-      if (imgPool[src].loaded) {
-        console.log('命中缓存');
-        cb(imgPool[src].image);
+    if (this.imgPool[src]) {
+      if (this.imgPool[src].loaded) {
+        cb(this.imgPool[src].image);
+      } else {
+        /*console.log('load img in render', src);*/
+        this.imgPool[src].onloads.push(cb);
       }
-      /*else {
-        imgPool[src].onloads.push(cb);
-      }*/
     } else {
-      let start = new Date();
       const img = this.createImage();
-      imgPool[src] = { image: img, loaded: false, onloads: [cb] };
+      this.imgPool[src] = { image: img, loaded: false, onloads: [cb] };
 
       img.onload = () => {
-        console.log('加载耗时', new Date() - start);
-        imgPool[src].loaded = true;
-        imgPool[src].onloads.pop()(imgPool[src].image, true);
-        imgPool[src].onloads = [];
+        this.imgPool[src].loaded = true;
+        this.imgPool[src].onloads.pop()(this.imgPool[src].image, true);
+        this.imgPool[src].onloads = [];
       };
       img.onerror = () => {};
       img.src = src;
@@ -305,17 +300,17 @@ export default class Renderer {
 
     if (glRectData.image) {
       const { src } = glRectData.image;
-      if (imgPool[src] && imgPool[src].loaded) {
-        glRect.setTexture({ image: imgPool[src].image });
+      if (this.imgPool[src] && this.imgPool[src].loaded) {
+        glRect.setTexture({ image: this.imgPool[src].image });
       }
     }
 
     if (glRectData.backgroundImage) {
       const { src, size, position } = glRectData.backgroundImage;
 
-      if (imgPool[src] && imgPool[src].loaded) {
-        const rect = getBgImageRect(imgPool[src].image, size, position, glRectData.borderWidth || 0, dimension, dpr);
-        glRect.setTexture({ image: imgPool[src].image, rect });
+      if (this.imgPool[src] && this.imgPool[src].loaded) {
+        const rect = getBgImageRect(this.imgPool[src].image, size, position, glRectData.borderWidth || 0, dimension, dpr);
+        glRect.setTexture({ image: this.imgPool[src].image, rect });
       }
     }
 
@@ -331,7 +326,7 @@ export default class Renderer {
   repaint(gl, glRects, scrollGlrects) {
     this.resetGl(gl);
     glRects.forEach((item, idx) => {
-      if (item.image && (!imgPool[item.image.src] || !imgPool[item.image.src].loaded)) {
+      if (item.image && (!this.imgPool[item.image.src] || !this.imgPool[item.image.src].loaded)) {
         this.loadImage(item.image.src, () => {
           this.repaint(gl, glRects, scrollGlrects);
         });
@@ -358,7 +353,7 @@ export default class Renderer {
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
         scrollGlrects.forEach(scrollItem => {
-          if (scrollItem.image && (!imgPool[scrollItem.image.src] || !imgPool[scrollItem.image.src].loaded)) {
+          if (scrollItem.image && (!this.imgPool[scrollItem.image.src] || !this.imgPool[scrollItem.image.src].loaded)) {
             this.loadImage(scrollItem.image.src, () => {
               this.repaint(gl, glRects, scrollGlrects);
             });
