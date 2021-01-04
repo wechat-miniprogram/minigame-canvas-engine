@@ -86,8 +86,8 @@ vec2 pixel2coord (vec2 p) {
 
 vec4 blend(vec4 cb, vec4 ca) {
   float alpha = ca.a + cb.a * (1.0 - ca.a);
-  return mix(vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha), vec4(0.0), step(abs(alpha), 0.0));
-  // return alpha == 0.0 ? vec4(0.0) : vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha);
+  // return mix(vec4((ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)) / alpha, alpha), vec4(0.0), step(abs(alpha), 0.0));
+  return alpha == 0.0 ? vec4(0.0) : vec4(  (ca.rgb * ca.a + cb.rgb * cb.a * (1.0 - ca.a)  ) / alpha, alpha);
 }
 
 void main() {
