@@ -1,5 +1,4 @@
 import View                from './view.js';
-import {throttle, createCanvas, nextTick} from '../common/util.js';
 import {Scroller} from 'scroller';
 
 export default class ScrollView extends View {
@@ -104,7 +103,7 @@ export default class ScrollView extends View {
     }
   }
 
-  updateRenderPort(renderport) {
+  updateRenderPort() {
     if (this.hasEventBind) {
       return;
     }
@@ -113,8 +112,7 @@ export default class ScrollView extends View {
 
     this.root.scrollview = this;
 
-    this.scrollerObj = new Scroller((left, top, zoom) => {
-      /*console.log(left, top);*/
+    this.scrollerObj = new Scroller((left, top) => {
       // 可能被销毁了或者节点树还没准备好
       if (this.scrollActive && !this.isDestroyed) {
         this.traverseToChangeGlRect(this, left, top);

@@ -109,7 +109,7 @@ export default class Text extends Element {
     });
   }
 
-  render(isDarkMode) {
+  render() {
   }
 
   updateRenderData(computedStyle) {

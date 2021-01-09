@@ -1,6 +1,5 @@
 import Block from './block.js';
 import {
-  none,
   nextTick
 } from '../common/util.js';
 
@@ -98,6 +97,11 @@ export default class Image extends Block {
     // 设置边框数据
     if (computedStyle.borderWidth) {
       this.glRect.setBorder(computedStyle.borderWidth, computedStyle.borderColor);
+    }
+
+    // 设置边框数据
+    if (computedStyle.objectFit ) {
+      this.glRect.setObjectFit(computedStyle.objectFit);
     }
 
     this.glRect.setOpacity(this.opacity);

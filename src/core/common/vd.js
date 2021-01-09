@@ -11,7 +11,6 @@ const constructorMap = {
   text: Text,
   image: Image,
   scrollview: ScrollView,
-  // video: Video
 }
 
 /**
@@ -346,37 +345,6 @@ export function updateRealLayout(children, scale) {
 
     updateRealLayout(child.children, scale);
   });
-}
-
-
-/**
- * 获取节点需要缓存的数据
- * @param {Array} children
- */
-function getNodeData(children) {
-  const layoutData = [];
-  for (let i = 0; i < children.length; i++) {
-    const child = children[i];
-    layoutData[i] = {
-      layoutBox: child.layoutBox, // 布局信息
-      type: child.type, // 节点信息
-      id: child.id, // 每个节点都有个id
-      styleInit: child.styleInit,
-      styleProp: child.styleProp,
-      styleDarkInit: child.styleDarkInit,
-      computedStyle: JSON.parse(JSON.stringify(child.computedStyle))
-    }
-    if (child.type === 'Text') { // 文本节点还要存下文本内容信息
-      layoutData[i]['value'] = child.value;
-      layoutData[i]['valueBreak'] = child.valueBreak;
-    }
-    if (child.children && child.children.length) {
-      layoutData[i].children = getNodeData(child.children);
-    } else {
-      layoutData[i].children = [];
-    }
-  }
-  return layoutData;
 }
 
 // 恢复布局数据，需要保证节点树、节点样式完全一致

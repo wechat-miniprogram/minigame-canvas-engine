@@ -246,7 +246,8 @@ export class RoundRect {
     const srcY = this.imageSrcRect[1] || 0;
     const srcWidth = this.imageSrcRect[2] || this.imageWidth;
     const srcHeight = this.imageSrcRect[3] || this.imageHeight;
-    translation(srcX / this.imageWidth, srcY / this.imageHeight, this.texMatrix);
+
+    translation(srcX / this.imageWidth, srcY / this.imageHeight, 0, this.texMatrix);
     scale(this.texMatrix, srcWidth / this.imageWidth, srcHeight / this.imageHeight, 1, this.texMatrix);
   }
 
@@ -262,9 +263,6 @@ export class RoundRect {
       let texId = gl.program.textureMap.get(this.backgroundImage);
       if (!texId) {
         texId = createTexture(gl);
-
-        /*gl.bindTexture(gl.TEXTURE_2D, null);
-        gl.deleteTexture(texId);*/
 
         // 将图像上传到纹理
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.backgroundImage);

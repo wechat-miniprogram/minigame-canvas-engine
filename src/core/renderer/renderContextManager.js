@@ -18,14 +18,6 @@ function createCanvas() {
   return wx.createCanvas();
 }
 
-const canvasPool = [];
-
-function clearPool(obj) {
-  Object.getOwnPropertyNames(obj).forEach(function(key){
-    delete obj[key];
-  });
-}
-
 export default class RenderContextManager {
   constructor(canvasContext, scale = 1, imgPool) {
     this.canvasContext = canvasContext;

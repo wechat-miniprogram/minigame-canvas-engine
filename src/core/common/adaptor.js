@@ -18,11 +18,7 @@ export function initYoga() {
 yoga = Yoga.init({ sync: true });
 
 export function adaptor(tree) {
-  // console.log('adaptor call');
-
-  const s = Date.now();
-  const yogaTree = getYogaTree(tree); // 获得一棵yoga虚拟树
-  // console.log(`calculateLayout ${Date.now() - s}`);
+  getYogaTree(tree); // 获得一棵yoga虚拟树
   updateLayout(tree);
 }
 

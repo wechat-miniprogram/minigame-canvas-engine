@@ -1,5 +1,6 @@
 import { SCALE_KEY } from './const.js';
-import { RoundRect, setupGl} from './gl_rect.js';
+import { RoundRect} from './gl_rect.js';
+import { getImageRect } from './canvas-object-fit.js'
 
 function none() {}
 
@@ -301,7 +302,13 @@ export default class Renderer {
     if (glRectData.image) {
       const { src } = glRectData.image;
       if (this.imgPool[src] && this.imgPool[src].loaded) {
-        glRect.setTexture({ image: this.imgPool[src].image });
+        let image = this.imgPool[src].image;
+        if (rect.objectFit) {
+          const rect = getImageRect(image, 0, 0, glRectData.width, glRectData.height, {objectFit: 'cover'});
+          glRect.setTexture({ image, srcRect:rect});
+        } else {
+          glRect.setTexture({image});
+        }
       }
     }
 
@@ -325,7 +332,7 @@ export default class Renderer {
 
   repaint(gl, glRects, scrollGlrects) {
     this.resetGl(gl);
-    glRects.forEach((item, idx) => {
+    glRects.forEach((item) => {
       if (item.image && (!this.imgPool[item.image.src] || !this.imgPool[item.image.src].loaded)) {
         this.loadImage(item.image.src, () => {
           this.repaint(gl, glRects, scrollGlrects);

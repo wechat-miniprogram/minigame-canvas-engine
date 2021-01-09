@@ -25,6 +25,7 @@ export default class RenderContext {
     this.id = id;
     this.type = type;
     this.opacity = 1;
+    this.objectFit = undefined;
   }
   updateContours([x, y, width, height]) {
     this.x = x;
@@ -38,6 +39,10 @@ export default class RenderContext {
 
   setOpacity(v) {
     this.opacity = v;
+  }
+
+  setObjectFit(value) {
+    this.objectFit = value;
   }
 
   setRadius(r) {

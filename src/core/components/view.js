@@ -48,21 +48,6 @@ export default class View extends Block {
     return true;
   }
 
-  // 废弃
-  render(img) {
-
-  }
-
-  // 废弃
-  loadImg(src, callback = none) {
-
-  }
-
-  // 废弃
-  insert(isDarkMode) {
-
-  }
-
   updateRenderData(computedStyle) {
     if (!this.layoutBox) {
       return;
@@ -83,7 +68,6 @@ export default class View extends Block {
     if (computedStyle.borderWidth) {
       this.glRect.setBorder(computedStyle.borderWidth, computedStyle.borderColor);
     }
-
 
     // 设置圆角数据
     const radius = this.getRadius(computedStyle);

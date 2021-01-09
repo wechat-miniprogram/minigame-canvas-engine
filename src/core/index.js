@@ -1,5 +1,4 @@
 import Element from './components/elements.js';
-import Pool from './common/pool.js';
 import Emitter from 'tiny-emitter';
 import { isClick, STATE, setCharMap, nextTick, log } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
@@ -16,6 +15,7 @@ import computeLayout from 'css-layout';
 let imgPool = {};
 
 const {wx} = pluginEnv.customEnv;
+
 // 默认的字体管理器getFontManager
 function getFontManager() {
   const measureCanvas = wx.createCanvas();
@@ -61,7 +61,7 @@ export class Layout extends Element {
     this.touchEnd = this.eventHandler('touchend').bind(this);
     this.touchCancel = this.eventHandler('touchcancel').bind(this);
 
-    this.version = '0.0.1';
+    this.version = '1.0.0';
 
     this.touchMsg = {};
 
@@ -99,10 +99,7 @@ export class Layout extends Element {
     this.renderContext.layout = this;
   }
 
-  initRepaint() { }
-
   deactive() {
-    /*console.log('deactive call')*/
     this._oldState = this.state;
     this.state = STATE.DEACTIVE;
 
@@ -110,15 +107,13 @@ export class Layout extends Element {
   }
 
   active() {
-    /*console.log('active call')*/
     this.state = this._oldState || STATE.RENDERED;
 
     this._activeTree(this);
   }
 
   init(template, style, styleDark = {}, attrValueProcessor) {
-    /*console.log('init call');*/
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const start = new Date();
 
       if (typeof styleDark  === "function" && arguments.length === 3) {
@@ -181,8 +176,6 @@ export class Layout extends Element {
       this.debugInfo.layoutTree = new Date() - start;
       this.add(this.layoutTree);
 
-      /*console.log(this.layoutTree);*/
-
       this.debugInfo.renderTree = new Date() - start;
 
       this.state = STATE.INITED;
@@ -217,14 +210,11 @@ export class Layout extends Element {
   }
 
   forceUpdate() {
-    // log('forceUpdate--------');
     if (this.flushing) {
       return
     }
     this.flushing = true
     return nextTick(() => {
-      // log('nextTick forceUpdate--------');
-
       this.repaint();
       this.flushing = false;
 
@@ -244,10 +234,7 @@ export class Layout extends Element {
 
   // 把数据丢给渲染线程
   repaint(needInit = true) {
-    // log('repaint call');
-    const renderer = this.renderContext;
-    // log(renderer.glRects.length);
-    renderer.draw(needInit);
+    this.renderContext.draw(needInit);
   }
 
   getLayoutData() { // 缓存layout相关的数据，方便冷启动时恢复
@@ -321,9 +308,7 @@ export class Layout extends Element {
       this._useLayoutData = false;
     }
 
-    let computedStart = Date.now();
     computeLayout(this);
-    /*console.log('computeLayout cost', Date.now() - computedStart);*/
 
     this.debugInfo.yogaLayout = new Date() - start;
 
@@ -332,8 +317,6 @@ export class Layout extends Element {
       this.textManager.hasUpdate = true;
       this.textManager.updateTextNodeLayoutBox();
       log('updateTextNodeLayoutBox');
-      // calculateDirtyNode(this);
-      // updateLayout(this);
     }
 
     log('before renderContext clear');
@@ -349,7 +332,6 @@ export class Layout extends Element {
       this.renderport.height += this.children[i].layoutBox.height;
     }
     this.viewport.height = this.renderport.height
-    /*console.log('viewport.height', this.viewport.height);*/
 
     this.renderContext.width = this.viewport.width * this.scale;
     this.renderContext.height = this.viewport.height * this.scale;
@@ -360,8 +342,6 @@ export class Layout extends Element {
 
     if (this._firstComputeLayout && !this._useLayoutData) { // 这里统计首次计算布局并且没有序列化数据的耗时
       this._firstComputeLayout = false;
-    } else if (!this._useLayoutData) {
-    } else if (this._useLayoutData) {
     }
   }
 
@@ -480,34 +460,26 @@ export class Layout extends Element {
   }
 
   bindEvents() {
-    // log('bindEvents call');
     if (this.hasEventHandler) {
       return;
     }
-    // log('bindEvents call');
 
     this.hasEventHandler = true;
 
     this._touchStartHandler = (e) => {
-      // log('touch start');
       this.touchStart(e);
     }
     this._touchMoveHandler = (e) => {
       this.touchMove(e);
     }
     this._touchEndHandler = (e) => {
-      // log('touch end');
       this.touchEnd(e);
-      // log('before pseudoClassManager clearActiveState');
       this.pseudoClassManager.clearActiveState(); // 清除所有:active的状态
     }
     this._touchCancelHandler = (e) => {
       this.touchCancel(e);
       this.pseudoClassManager.clearActiveState(); // 清除所有:active的状态
     }
-
-    // this.canvasContext.addEventListener('mousedown', this._touchStartHandler);
-    // this.canvasContext.addEventListener('mouseup', this._touchEndHandler);
 
     if ( typeof wx !== 'undefined' ) {
       wx.onTouchStart(this.touchStart);
@@ -758,4 +730,3 @@ export function getLayout (opt) {
     scale: opt.scale,
   });
 }
-

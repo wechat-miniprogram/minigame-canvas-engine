@@ -1,6 +1,6 @@
-import { scalableStyles, reflowStyles } from './style.js';
+import { reflowStyles } from './style.js';
 import { nextTick } from '../common/util.js';
-import { getRgba, getElementStyle } from '../common/util';
+import { getElementStyle } from '../common/util';
 
 let uuid = 0;
 
@@ -442,7 +442,6 @@ export default class Element {
     const className = this.className.split(' ');
     const classNameIdx = className.indexOf(name);
     if (classNameIdx > -1) {
-      const { root } = this;
       className.splice(classNameIdx, 1);
 
       this._refreshStyleAfterClassSet(className)
@@ -452,7 +451,6 @@ export default class Element {
   addClass(name) { // 给节点加一个class，会导致整个布局重绘
     const className = this.className.split(' ');
     if (className.indexOf(name) === -1) { // 是一个新的class
-      const { root } = this;
       className.push(name);
       this.className = className.join(' '); // 更新下className
 
