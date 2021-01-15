@@ -11,55 +11,6 @@ varying vec2 v_resolution;
 varying vec2 v_texcoord;
 varying vec4 v_tex_rect;
 
-
-// float sdfBox(vec2 coord, vec2 center, vec2 rect) {
-//   vec2 d = abs(coord - center) - rect;
-//   return min(max(d.x,d.y),0.0) + length(max(d,0.0));
-// }
-// float sdfCircle(vec2 coord, vec2 center, float radius) {
-//   return length(coord - center) - radius;
-// }
-// vec3 createCorner(vec2 dir, float raidus, float sign, float stroke) {
-//   return vec3(dir + sign * raidus, raidus - stroke);
-// }
-// float getCorner(vec2 p, vec3 corner) {
-//   return sdfCircle(p, corner.xy, corner.z);
-// }
-// float getCenter(vec2 p, vec3 from, vec3 to, vec2 r) {
-//   return sdfBox(p, (from + to).xy / 2., r - abs(from + to).z/2.);
-// }
-// float getHEdge(vec2 p, vec3 from, vec3 to) {
-//   return sdfBox(p,
-//   vec2((from.x + to.x)/2., sign(from.y) * min(abs(from.y), abs(to.y))),
-//   vec2(abs(from.x - to.x)/2., max(from.z, to.z)));
-// }
-// float getVEdge(vec2 p, vec3 from, vec3 to) {
-//   return sdfBox(p,
-//   vec2(sign(from.x) * min(abs(from.x), abs(to.x)), (from.y + to.y)/2.),
-//   vec2(max(from.z, to.z), abs(from.y - to.y)/2.));
-// }
-// float drawRect(vec2 p, vec2 lt, vec2 rt, vec2 rb, vec2 lb, vec4 corners, float stroke) {
-//   vec3 cLt = vec3(vec2(lt.x + corners.x, lt.y - corners.x), corners.x - stroke);
-//   vec3 cRt = vec3(vec2(rt.x - corners.y, rt.y - corners.y), corners.y - stroke);
-//   vec3 cRb = vec3(vec2(rb.x - corners.z, rb.y + corners.z), corners.z - stroke);
-//   vec3 cLb = vec3(vec2(lb.x + corners.w, lb.y + corners.w), corners.w - stroke);
-
-//   float circle = getCorner(p, cLt);
-//   circle = min(circle, getCorner(p, cRt));
-//   circle = min(circle, getCorner(p, cRb));
-//   circle = min(circle, getCorner(p, cLb));
-
-//   float box = getHEdge(p, cLt, cRt);
-//   box = min(box, getHEdge(p, cLb, cRb));
-//   box = min(box, getVEdge(p, cLt, cLb));
-//   box = min(box, getVEdge(p, cRt, cRb));
-//   float center = sdfBox(p, (cRt + cLb).xy / 2., vec2((cRt.x - cLb.x) / 2., (cRt.y - cLb.y) / 2.));
-//   center = max(center, sdfBox(p, (cRb + cLt).xy / 2., vec2((cRb.x - cLt.x) / 2., (cLt.y - cRb.y) / 2.)));
-//   box = min(box, center);
-
-//   return min(circle, box);
-// }
-
 // https://www.shadertoy.com/view/4llXD7
 /**
  * function length — calculate the length of a vector

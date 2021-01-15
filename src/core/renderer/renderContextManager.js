@@ -4,9 +4,9 @@ import Renderer from '../../renderer/util.js';
 import {
   createImage
 } from '../common/util'
-const {
-  wx
-} = pluginEnv.customEnv;
+
+import env from '../../common/env';
+const { wx } = env;
 
 /**
  * @description 逻辑线程渲染管理器，用于搜集每个节点需要的渲染数据

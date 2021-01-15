@@ -2,6 +2,10 @@ import { SCALE_KEY } from './const.js';
 import { RoundRect} from './gl_rect.js';
 import { getImageRect } from './canvas-object-fit.js'
 
+import env from '../common/env';
+
+console.log('env', env);
+
 function none() {}
 
 function uid() {
@@ -379,6 +383,11 @@ export default class Renderer {
         this.drawOneGlRect(gl, item)
       }
     });
+
+    if (env.isAndroid) {
+      // 兼容华为问题
+      gl.finish();
+    }
   }
 }
 

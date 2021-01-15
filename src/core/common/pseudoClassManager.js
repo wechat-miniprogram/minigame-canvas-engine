@@ -15,7 +15,7 @@ function getAlpha(rgba) {
 }
 
 function changeStateTrans(item, activeStyle) {
- 
+
   console.log('changeStateTrans', item);
 
   // 先保存_innerStyle中的状态，方便clear的时候恢复

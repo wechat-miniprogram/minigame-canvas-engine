@@ -1,4 +1,5 @@
-const {wx} = pluginEnv.customEnv;
+import env from '../../common/env';
+const { wx } = env;
 
 export function throttle(fn, threshhold, scope) {
   threshhold || (threshhold = 250);
@@ -60,7 +61,7 @@ export function isClick(touchMsg) {
 
 export function createCanvas() {
 	/* istanbul ignore if*/
-	if (typeof wx !== "undefined") { // 小程序环境
+	if (env.isMiniGame) { // 小程序环境
 		return wx.createCanvas();
 	} else if (typeof document !== 'undefined') { // web环境
 		return document.createElement('canvas');
@@ -162,7 +163,7 @@ export function log() {
 
 export function createImage() {
   /* istanbul ignore if*/
-  if ( typeof wx !== "undefined" ) {
+  if (env.isMiniGame) {
     return wx.createImage();
   } else {
     return document.createElement('img');

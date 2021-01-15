@@ -14,7 +14,8 @@ import computeLayout from 'css-layout';
 
 let imgPool = {};
 
-const {wx} = pluginEnv.customEnv;
+import env from '../common/env';
+const { wx } = env;
 
 // 默认的字体管理器getFontManager
 function getFontManager() {
@@ -481,7 +482,7 @@ export class Layout extends Element {
       this.pseudoClassManager.clearActiveState(); // 清除所有:active的状态
     }
 
-    if ( typeof wx !== 'undefined' ) {
+    if (env.isMiniGame) {
       wx.onTouchStart(this.touchStart);
       wx.onTouchMove(this.touchMove);
       wx.onTouchEnd(this.touchEnd);
@@ -496,7 +497,7 @@ export class Layout extends Element {
 
   unbindEvents() {
     if (this.hasEventHandler) {
-      if ( typeof wx !== 'undefined' ) {
+      if (env.isMiniGame) {
         wx.offTouchStart(this.touchStart);
         wx.offTouchMove(this.touchMove);
         wx.offTouchEnd(this.touchEnd);
@@ -584,6 +585,19 @@ export class Layout extends Element {
     this.clear();
     this.clearPool();
     this.renderContext && this.renderContext.release();
+  }
+
+  static clearImgs(arr = [])  {
+    return arr.map(src => {
+      let item = imgPool[src];
+      if (item) {
+        delete imgPool[src];
+
+        return src;
+      }
+
+      return undefined;
+    }).filter(item => item);;
   }
 
   static loadImgs(arr) {
