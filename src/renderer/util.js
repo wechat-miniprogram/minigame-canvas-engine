@@ -165,9 +165,13 @@ export default class Renderer {
       this.imgPool[src] = { image: img, loaded: false, onloads: [cb] };
 
       img.onload = () => {
-        this.imgPool[src].loaded = true;
-        this.imgPool[src].onloads.pop()(this.imgPool[src].image, true);
-        this.imgPool[src].onloads = [];
+        let item = this.imgPool[src];
+        if (item) {
+          item.loaded = true;
+          const func = item.onloads.pop();
+          func && func(this.imgPool[src].image, true);
+          item.onloads = [];
+        }
       };
       img.onerror = () => {};
       img.src = src;

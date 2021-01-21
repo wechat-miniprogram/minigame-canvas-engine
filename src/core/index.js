@@ -396,7 +396,7 @@ export class Layout extends Element {
     const list = _getChildsByPos(tree, x, y, []);
     const length = list.length;
 
-    return list[length - 1];
+    return list && list[length - 1];
   }
 
   eventHandler(eventName) {
@@ -610,12 +610,15 @@ export class Layout extends Element {
           imgPool[src] = { image: img, loaded: false, onloads: [] };
 
           img.onload = () => {
-            imgPool[src].loaded = true;
-            const func = imgPool[src].onloads.pop()
-            func && func(img);
-            imgPool[src].onloads = [];
+            let item = imgPool[src];
+            if (item) {
+              item.loaded = true;
+              const func = item.onloads.pop()
+              func && func(img);
+              item.onloads = [];
 
-            resolve(src);
+              resolve(src);
+            }
           }
 
           img.onerror = () => {
