@@ -166,6 +166,8 @@ export function createImage() {
   if (env.isMiniGame) {
     return wx.createImage();
   } else {
-    return document.createElement('img');
+    let _img = document.createElement('img');
+    _img.setAttribute('crossorigin', 'anonymous');
+    return _img;
   }
 }

@@ -5,7 +5,7 @@ import parser from './libs/fast-xml-parser/parser.js';
 // import { adaptor, updateLayout, initYoga } from './common/adaptor';
 import PseudoClassManager from './common/pseudoClassManager.js';
 import TextManager from './common/textManager.js';
-import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle, createImage } from './common/util.js';
+import { charWidthMap, pointInRect, DEFAULT_FONT_FAMILY, getElementStyle, createImage, createCanvas } from './common/util.js';
 import RenderContextManager from './renderer/renderContextManager';
 import { create, layoutChildren, restoreLayoutTree, _getElementById, _getElementsByClassName, _getChildsByPos, updateRealLayout } from './common/vd';
 
@@ -19,7 +19,7 @@ const { wx } = env;
 
 // 默认的字体管理器getFontManager
 function getFontManager() {
-  const measureCanvas = wx.createCanvas();
+  const measureCanvas = createCanvas();
 
   measureCanvas.width = 1;
   measureCanvas.height = 1;
@@ -488,10 +488,10 @@ export class Layout extends Element {
       wx.onTouchEnd(this.touchEnd);
       wx.onTouchCancel(this.touchCancel);
     } else {
-      this.canvasContext.addEventListener('touchstart', this._touchStartHandler);
-      this.canvasContext.addEventListener('touchmove', this._touchMoveHandler);
-      this.canvasContext.addEventListener('touchend', this._touchEndHandler);
-      this.canvasContext.addEventListener('touchcancel', this._touchCancelHandler);
+      window.addEventListener('touchstart', this._touchStartHandler);
+      window.addEventListener('touchmove', this._touchMoveHandler);
+      window.addEventListener('touchend', this._touchEndHandler);
+      window.addEventListener('touchcancel', this._touchCancelHandler);
     }
   }
 
@@ -503,10 +503,10 @@ export class Layout extends Element {
         wx.offTouchEnd(this.touchEnd);
         wx.offTouchCancel(this.touchCancel);
       } else {
-        this.canvasContext.removeEventListener('touchstart', this._touchStartHandler);
-        this.canvasContext.removeEventListener('touchmove', this._touchMoveHandler);
-        this.canvasContext.removeEventListener('touchend', this._touchEndHandler);
-        this.canvasContext.removeEventListener('touchcancel', this._touchCancelHandler);
+        window.removeEventListener('touchstart', this._touchStartHandler);
+        window.removeEventListener('touchmove', this._touchMoveHandler);
+        window.removeEventListener('touchend', this._touchEndHandler);
+        window.removeEventListener('touchcancel', this._touchCancelHandler);
       }
       this.hasEventHandler = false;
     }
