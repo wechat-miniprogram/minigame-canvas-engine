@@ -14,9 +14,9 @@ if (isMiniGame) {
 
     if (info.platform == "devtools") {
       isDevtools = true;
-    } else if (res.platform == "ios") {
+    } else if (info.platform == "ios") {
       isIOS = true;
-    } else if (res.platform == "android") {
+    } else if (info.platform == "android") {
       isAndroid = true;
     }
   } catch(e) {

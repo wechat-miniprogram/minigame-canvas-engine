@@ -56,7 +56,12 @@ class TextManager {
         fontFamily: style.fontFamily || null,
       }, node.root.getFontSize());
 
-      const maxWidth = style.width || node.parent.layoutBox.width
+      const maxWidth = style.maxWidth || style.width || node.parent.layoutBox.width
+
+      /*console.log(node.valueInit);
+      if(node.valueInit === '阿萨达萨达阿萨德阿萨德阿萨德阿萨德阿萨德阿萨德阿萨德权威的阿萨德阿萨德') {
+        debugger
+      }*/
 
       // if (node.noWrapWidth > node.parent.layoutBox.width) { // 文本的宽度大于父节点的宽度，需要给文本换行
       if (measure(node.valueInit).width > maxWidth) { // 文本的宽度大于父节点的宽度，需要给文本换行
@@ -77,6 +82,7 @@ class TextManager {
           }
           node.valueBreak = [`${str}...`];
         } else if (style.textOverflow === 'ellipsis' && style.lineClamp * 1 > 0) { // 多行溢出...
+          console.log(node.valueInit, nodeTextArray);
           if (nodeTextArray.length > style.lineClamp) { // 行数超过了
             node.valueBreak = nodeTextArray.slice(0, style.lineClamp);
             // 最后一行变成...
@@ -96,11 +102,11 @@ class TextManager {
         }
 
         node.computedStyle.width = maxWidth;
-        node.yogaNode.setWidth(maxWidth);
+        /*node.yogaNode.setWidth(maxWidth);*/
 
         if (style.whiteSpace !== 'nowrap') {
           node.computedStyle.height = (style.lineHeight || style.fontSize) * node.valueBreak.length;
-          node.yogaNode.setHeight((style.lineHeight || style.fontSize) * node.valueBreak.length);
+          /*node.yogaNode.setHeight((style.lineHeight || style.fontSize) * node.valueBreak.length);*/
         }
       }
     }

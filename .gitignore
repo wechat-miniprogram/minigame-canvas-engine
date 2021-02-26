@@ -5,4 +5,5 @@ coverage
 coverage.lcov
 .DS_Store
 .wechatide
+index.js
 
