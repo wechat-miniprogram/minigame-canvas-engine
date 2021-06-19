@@ -1,3 +1,4 @@
+import './env.js';
 import Element                         from './components/elements.js';
 import Pool                            from './common/pool.js';
 import Emitter                         from 'tiny-emitter';
@@ -24,7 +25,21 @@ const constructorMap = {
   bitmaptext: BitMapText
 }
 
-const create = function (node, style) {
+function isPercent (data) {
+  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
+}
+
+function convertPercent (data, parentData) {
+  if (typeof data === 'number') {
+    return data;
+  }
+  let matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
+  if (matchData) {
+    return parentData * matchData * 0.01;
+  }
+}
+
+const create = function (node, style, parent) {
   const _constructor = constructorMap[node.name];
 
   let children = node.children || [];
@@ -69,11 +84,30 @@ const create = function (node, style) {
   args.idName    = id;
   args.className = attr.class || '';
 
+  let thisStyle = args.style;
+  if (thisStyle) {
+    let parentStyle;
+    if (parent) {
+      parentStyle = parent.style;
+    }
+    else if (typeof sharedCanvas !== 'undefined') {
+      parentStyle = sharedCanvas;
+    }
+    else {
+      parentStyle = __env.getSharedCanvas();
+    }
+    if (isPercent(thisStyle.width)) {
+      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
+    }
+    if (isPercent(thisStyle.height)) {
+      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
+    }
+  }
   const element  = new _constructor(args)
   element.root = this;
 
   children.forEach(childNode => {
-    const childElement = create.call(this, childNode, style);
+    const childElement = create.call(this, childNode, style, args);
 
     element.add(childElement);
   });
@@ -418,11 +452,11 @@ class _Layout extends Element {
 
     this.hasEventHandler = true;
 
-    if ( typeof wx !== 'undefined' ) {
-      wx.onTouchStart(this.touchStart);
-      wx.onTouchMove(this.touchMove);
-      wx.onTouchEnd(this.touchEnd);
-      wx.onTouchCancel(this.touchCancel);
+    if ( typeof __env !== 'undefined' ) {
+      __env.onTouchStart(this.touchStart);
+      __env.onTouchMove(this.touchMove);
+      __env.onTouchEnd(this.touchEnd);
+      __env.onTouchCancel(this.touchCancel);
     } else {
       document.onmousedown  = this.touchStart;
       document.onmousemove  = this.touchMove;

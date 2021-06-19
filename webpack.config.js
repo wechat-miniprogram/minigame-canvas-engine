@@ -9,6 +9,7 @@ module.exports = {
        'demos/interactivedemo/sub/engine': './src/index',
        'demos/cocoscreator/build/wechatgame/sub/engine': './src/index',
        './index': './src/index',
+       "../../wechatgame/openDataContext/engine": "./src/index"
     },
     output:{
         path: path.resolve(__dirname, ''),

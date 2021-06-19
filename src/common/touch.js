@@ -1,5 +1,4 @@
 import { getDpr } from './util.js';
-const dpr = getDpr();
 
 export default class Touch {
   constructor() {
@@ -79,6 +78,7 @@ export default class Touch {
       return;
     }
 
+    let dpr = getDpr();
     this.touchStartX = touch.clientX * dpr;
     this.touchStartY = touch.clientY * dpr;
     this.touchTime   = new Date();
@@ -96,6 +96,7 @@ export default class Touch {
       return;
     }
 
+    let dpr = getDpr();
     let currY = touch.clientY * dpr;
 
     if (   this.touchStartY - currY > 2

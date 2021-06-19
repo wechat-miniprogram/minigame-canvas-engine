@@ -58,8 +58,8 @@ export function isClick(touchMsg) {
 
 export function createCanvas() {
   /* istanbul ignore if*/
-  if ( typeof wx !== "undefined" ) {
-    return wx.createCanvas();
+  if ( typeof __env !== "undefined" ) {
+    return __env.createCanvas();
   } else {
     return document.createElement('canvas');
   }
@@ -67,20 +67,37 @@ export function createCanvas() {
 
 export function createImage() {
   /* istanbul ignore if*/
-  if ( typeof wx !== "undefined" ) {
-    return wx.createImage();
+  if ( typeof __env !== "undefined" ) {
+    return __env.createImage();
   } else {
     return document.createElement('img');
   }
 }
 
+let _dpr;
+// only Baidu platform need to recieve system info from main context
+if (typeof swan !== 'undefined') {
+  __env.onMessage(res => {
+    if (res && res.type === 'engine') {
+      if (res.event === 'systemInfo') {
+        _dpr = res.systemInfo.devicePixelRatio;
+      }
+    }
+  });
+}
+
 export function getDpr() {
-  /* istanbul ignore if*/
-  if ( typeof wx !== "undefined" ) {
-    return wx.getSystemInfoSync().devicePixelRatio;
-  } else {
-    return window.devicePixelRatio;
+  if (typeof _dpr !== 'undefined') {
+    return _dpr;
   }
+  if (typeof __env !== "undefined" && __env.getSystemInfoSync) {
+    _dpr = __env.getSystemInfoSync().devicePixelRatio;
+  }
+  else {
+    console.warn('failed to access device pixel ratio, fallback to 1');
+    _dpr = 1;
+  }
+  return _dpr;
 }
 
 export const STATE = {
