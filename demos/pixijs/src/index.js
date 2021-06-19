@@ -43,9 +43,9 @@ export default class App extends PIXI.Application {
 
         this.initShareCanvas();
 
-        setTimeout(()=> {
-            this.showRank();
-        }, 30)
+        // setTimeout(()=> {
+        //     this.showRank();
+        // }, 30)
     }
 
     showRank() {

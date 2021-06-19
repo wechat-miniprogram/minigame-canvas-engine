@@ -29,7 +29,6 @@ export default class Image extends Element {
           this.imgsrc = newValue;
           imageManager.loadImage(this.src, (img) => {
             this.img = img;
-            /*this.repaint();*/
             this.emit('repaint');
           });
         }
@@ -41,6 +40,16 @@ export default class Image extends Element {
     this.type        = 'Image';
     this.renderBoxes = [];
 
+    this.img = imageManager.loadImage(this.src, (img, fromCache) => {
+      if (fromCache) {
+        this.img = img;
+      } else {
+        // 当图片加载完成，实例可能已经被销毁了
+        if (this.img && this.isScrollViewChild) {
+          this.EE.emit('image__render__done', this);
+        }
+      }
+    });
   }
 
   get isScrollViewChild() {
@@ -59,7 +68,7 @@ export default class Image extends Element {
 
   repaint() {
     this.renderBoxes.forEach(item => {
-      this.renderImg(item.ctx, item.box, false);
+      this.render(item.ctx, item.box, false);
     });
   }
 
@@ -73,7 +82,7 @@ export default class Image extends Element {
     this.root          = null;
   }
 
-  renderImg(ctx, layoutBox, needEmitEvent = true) {
+  render(ctx, layoutBox) {
     if ( !this.img ) {
       return;
     }
@@ -106,7 +115,7 @@ export default class Image extends Element {
       // 来自缓存的，还没返回img就会执行回调函数
       if (fromCache) {
         this.img = img;
-        this.renderImg(ctx, box, false);
+        this.render(ctx, box, false);
       } else {
         // 当图片加载完成，实例可能已经被销毁了
         if (this.img) {

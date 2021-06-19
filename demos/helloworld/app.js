@@ -1,10 +1,72 @@
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0__);
+// 引用渲染引擎
+ // 编写模板字符串
+
+var template = "\n    <view id=\"container\">\n        <text id=\"testText\" class=\"redText\" value=\"hello canvas\"></text>\n    </view>\n"; // 编写样式
+
+var style = {
+  container: {
+    width: 400,
+    height: 200,
+    backgroundColor: '#ffffff',
+    justContent: 'center',
+    alignItems: 'center'
+  },
+  testText: {
+    color: '#ffffff',
+    width: 400,
+    height: 200,
+    lineHeight: 200,
+    fontSize: 40,
+    textAlign: 'center'
+  },
+  // 文字的最终颜色为#ff0000
+  redText: {
+    color: '#ff0000'
+  }
+}; // 初始化渲染引擎
+
+minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0___default().init(template, style);
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d'); // 设置canvas的尺寸和样式的container比例一致
+
+canvas.style.width = 400 + 'px';
+canvas.style.height = 200 + 'px';
+canvas.width = 400;
+canvas.height = 200; // 执行渲染
+
+minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0___default().updateViewPort({
+  x: 0,
+  y: 0,
+  width: 400,
+  height: 200
+});
+minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0___default().layout(context); // 事件绑定
+
+var text = minigame_canvas_engine__WEBPACK_IMPORTED_MODULE_0___default().getElementsById('testText')[0];
+text.on('click', function (e) {
+  alert('hello canvas');
+});
+
+/***/ }),
+/* 1 */
+/***/ ((module) => {
+
 module.exports =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+/******/ 	function __nested_webpack_require_187__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId]) {
@@ -18,7 +80,7 @@ module.exports =
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_187__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -29,20 +91,20 @@ module.exports =
 /******/
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
+/******/ 	__nested_webpack_require_187__.m = modules;
 /******/
 /******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
+/******/ 	__nested_webpack_require_187__.c = installedModules;
 /******/
 /******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 	__nested_webpack_require_187__.d = function(exports, name, getter) {
+/******/ 		if(!__nested_webpack_require_187__.o(exports, name)) {
 /******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
+/******/ 	__nested_webpack_require_187__.r = function(exports) {
 /******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
@@ -54,57 +116,55 @@ module.exports =
 /******/ 	// mode & 2: merge all properties of value into the ns
 /******/ 	// mode & 4: return value when already ns object
 /******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 	__nested_webpack_require_187__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __nested_webpack_require_187__(value);
 /******/ 		if(mode & 8) return value;
 /******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
 /******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
+/******/ 		__nested_webpack_require_187__.r(ns);
 /******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __nested_webpack_require_187__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
 /******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
+/******/ 	__nested_webpack_require_187__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
 /******/ 			function getDefault() { return module['default']; } :
 /******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		__nested_webpack_require_187__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
 /******/
 /******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/ 	__nested_webpack_require_187__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__nested_webpack_require_187__.p = "";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __nested_webpack_require_187__(__nested_webpack_require_187__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_3663__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EE", function() { return EE; });
-/* harmony import */ var _env_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _env_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_env_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_elements_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
-/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
-/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
-/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
-/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8);
-/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(14);
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(16);
+__nested_webpack_require_3663__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_3663__.d(__webpack_exports__, "EE", function() { return EE; });
+/* harmony import */ var _components_elements_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_3663__(1);
+/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_3663__(4);
+/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_3663__(3);
+/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_3663__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_3663__(5);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_3663__.n(css_layout__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_3663__(6);
+/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_3663__(7);
+/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__nested_webpack_require_3663__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_6__ = __nested_webpack_require_3663__(13);
+/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_7__ = __nested_webpack_require_3663__(15);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -123,10 +183,9 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 
 
 
@@ -138,34 +197,18 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
  // 全局事件管道
 
-var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default.a();
-var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
-var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('canvasPool');
+var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a();
+var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('imgPool');
+var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
 var constructorMap = {
-  view: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["View"],
-  text: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["Text"],
-  image: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["Image"],
-  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["ScrollView"],
-  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["BitMapText"]
+  view: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["View"],
+  text: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["Text"],
+  image: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["Image"],
+  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["ScrollView"],
+  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["BitMapText"]
 };
 
-function isPercent(data) {
-  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
-}
-
-function convertPercent(data, parentData) {
-  if (typeof data === 'number') {
-    return data;
-  }
-
-  var matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
-
-  if (matchData) {
-    return parentData * matchData * 0.01;
-  }
-}
-
-var create = function create(node, style, parent) {
+var create = function create(node, style) {
   var _this = this;
 
   var _constructor = constructorMap[node.name];
@@ -203,32 +246,10 @@ var create = function create(node, style, parent) {
 
   args.idName = id;
   args.className = attr["class"] || '';
-  var thisStyle = args.style;
-
-  if (thisStyle) {
-    var parentStyle;
-
-    if (parent) {
-      parentStyle = parent.style;
-    } else if (typeof sharedCanvas !== 'undefined') {
-      parentStyle = sharedCanvas;
-    } else {
-      parentStyle = __env.getSharedCanvas();
-    }
-
-    if (isPercent(thisStyle.width)) {
-      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
-    }
-
-    if (isPercent(thisStyle.height)) {
-      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
-    }
-  }
-
   var element = new _constructor(args);
   element.root = this;
   children.forEach(function (childNode) {
-    var childElement = create.call(_this, childNode, style, args);
+    var childElement = create.call(_this, childNode, style);
     element.add(childElement);
   });
   return element;
@@ -396,7 +417,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       realX: 0,
       realY: 0
     };
-    _this3.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].UNINIT;
+    _this3.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].UNINIT;
     _this3.bitMapFonts = [];
     return _this3;
   }
@@ -448,7 +469,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
         parseConfig.attrValueProcessor = attrValueProcessor;
       }
 
-      var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6___default.a.parse(template, parseConfig, true);
+      var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5___default.a.parse(template, parseConfig, true);
       var xmlTree = jsonObj.children[0];
       this.debugInfo.xmlTree = new Date() - start; // XML树生成渲染树
 
@@ -465,7 +486,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
         children: getChildren(this)
       }; // 计算布局树
 
-      css_layout__WEBPACK_IMPORTED_MODULE_4___default()(elementTree);
+      css_layout__WEBPACK_IMPORTED_MODULE_3___default()(elementTree);
       this.elementTree = elementTree;
       this.debugInfo.renderTree = new Date() - start;
       var rootEle = this.children[0];
@@ -477,7 +498,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
         this.renderport.height = rootEle.style.height;
       }
 
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].INITED;
+      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].INITED;
     }
   }, {
     key: "layout",
@@ -501,7 +522,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       renderChildren(this.children, context);
       this.debugInfo.renderChildren = new Date() - start;
       this.bindEvents();
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].RENDERED;
+      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].RENDERED;
     }
   }, {
     key: "initRepaint",
@@ -511,14 +532,15 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.on('repaint', function () {
         _this4.repaint();
       });
-      this.EE.on('one__image__render__done', function () {
+      this.EE.on('one__image__render__done', function (img) {
         _this4.repaint();
       });
     }
   }, {
     key: "repaint",
     value: function repaint() {
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["repaintChildren"])(this.children);
+      var start = new Date();
+      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["repaintChildren"])(this.children);
       this.emit('repaint__done');
     }
   }, {
@@ -566,7 +588,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
           this.touchMsg[eventName] = touch;
         }
 
-        if (eventName === 'touchend' && Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["isClick"])(this.touchMsg)) {
+        if (eventName === 'touchend' && Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["isClick"])(this.touchMsg)) {
           item && item.emit('click', e);
         }
       };
@@ -580,14 +602,11 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
       this.hasEventHandler = true;
 
-      if (typeof __env !== 'undefined') {
-        __env.onTouchStart(this.touchStart);
-
-        __env.onTouchMove(this.touchMove);
-
-        __env.onTouchEnd(this.touchEnd);
-
-        __env.onTouchCancel(this.touchCancel);
+      if (typeof wx !== 'undefined') {
+        wx.onTouchStart(this.touchStart);
+        wx.onTouchMove(this.touchMove);
+        wx.onTouchEnd(this.touchEnd);
+        wx.onTouchCancel(this.touchCancel);
       } else {
         document.onmousedown = this.touchStart;
         document.onmousemove = this.touchMove;
@@ -650,7 +669,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.elementTree = null;
       this.children = [];
       this.layoutTree = {};
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
+      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].CLEAR;
       canvasPool.getList().forEach(function (item) {
         item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
         item.elements = [];
@@ -661,6 +680,10 @@ var _Layout = /*#__PURE__*/function (_Element) {
       if (this.renderContext) {
         this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
       }
+      /*['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(eventName => {
+        this.off(eventName);
+      });*/
+
 
       this.EE.off('image__render__done');
     }
@@ -680,7 +703,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
     key: "loadImgs",
     value: function loadImgs(arr) {
       arr.forEach(function (src) {
-        var img = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["createImage"])();
+        var img = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["createImage"])();
         imgPool.set(src, img);
 
         img.onload = function () {
@@ -694,13 +717,13 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "registBitMapFont",
     value: function registBitMapFont(name, src, config) {
-      var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__["default"](name, src, config);
+      var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_6__["default"](name, src, config);
       this.bitMapFonts.push(font);
     }
   }]);
 
   return _Layout;
-}(_components_elements_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+}(_components_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 var Layout = new _Layout({
   style: {
@@ -713,18 +736,12 @@ var Layout = new _Layout({
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_24071__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Element; });
-/* harmony import */ var _style_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+__nested_webpack_require_24071__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_24071__.d(__webpack_exports__, "default", function() { return Element; });
+/* harmony import */ var _style_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_24071__(2);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -733,7 +750,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-var Emitter = __webpack_require__(4); // 全局事件管道
+var Emitter = __nested_webpack_require_24071__(3); // 全局事件管道
 
 
 var EE = new Emitter();
@@ -987,21 +1004,21 @@ var Element = /*#__PURE__*/function () {
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 2 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_32697__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scalableStyles", function() { return scalableStyles; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "textStyles", function() { return textStyles; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layoutAffectedStyles", function() { return layoutAffectedStyles; });
+__nested_webpack_require_32697__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_32697__.d(__webpack_exports__, "scalableStyles", function() { return scalableStyles; });
+/* harmony export (binding) */ __nested_webpack_require_32697__.d(__webpack_exports__, "textStyles", function() { return textStyles; });
+/* harmony export (binding) */ __nested_webpack_require_32697__.d(__webpack_exports__, "layoutAffectedStyles", function() { return layoutAffectedStyles; });
 var textStyles = ['color', 'fontSize', 'textAlign', 'fontWeight', 'lineHeight', 'lineBreak'];
 var scalableStyles = ['left', 'top', 'right', 'bottom', 'width', 'height', 'margin', 'marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'fontSize', 'lineHeight', 'borderRadius', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight'];
 var layoutAffectedStyles = ['margin', 'marginTop', 'marginBottom', 'marginLeft', 'marginRight', 'padding', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight', 'width', 'height'];
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports) {
 
 function E () {
@@ -1074,12 +1091,12 @@ module.exports.TinyEmitter = E;
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 4 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_35489__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Pool; });
+__nested_webpack_require_35489__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_35489__.d(__webpack_exports__, "default", function() { return Pool; });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -1135,8 +1152,8 @@ var Pool = /*#__PURE__*/function () {
 
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 5 */
+/***/ (function(module, exports, __nested_webpack_require_37247__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// UMD (Universal Module Definition)
 // See https://github.com/umdjs/umd for reference
@@ -2350,20 +2367,20 @@ if (true) {
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 6 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_81142__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throttle", function() { return throttle; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "none", function() { return none; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isClick", function() { return isClick; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCanvas", function() { return createCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createImage", function() { return createImage; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDpr", function() { return getDpr; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "STATE", function() { return STATE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintChildren", function() { return repaintChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
+__nested_webpack_require_81142__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "throttle", function() { return throttle; });
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "none", function() { return none; });
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "isClick", function() { return isClick; });
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "createCanvas", function() { return createCanvas; });
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "createImage", function() { return createImage; });
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "getDpr", function() { return getDpr; });
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "STATE", function() { return STATE; });
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "repaintChildren", function() { return repaintChildren; });
+/* harmony export (binding) */ __nested_webpack_require_81142__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
 function throttle(fn, threshhold, scope) {
   threshhold || (threshhold = 250);
   var last, deferTimer;
@@ -2409,47 +2426,27 @@ function isClick(touchMsg) {
 }
 function createCanvas() {
   /* istanbul ignore if*/
-  if (typeof __env !== "undefined") {
-    return __env.createCanvas();
+  if (typeof wx !== "undefined") {
+    return wx.createCanvas();
   } else {
     return document.createElement('canvas');
   }
 }
 function createImage() {
   /* istanbul ignore if*/
-  if (typeof __env !== "undefined") {
-    return __env.createImage();
+  if (typeof wx !== "undefined") {
+    return wx.createImage();
   } else {
     return document.createElement('img');
   }
 }
-
-var _dpr; // only Baidu platform need to recieve system info from main context
-
-
-if (typeof swan !== 'undefined') {
-  __env.onMessage(function (res) {
-    if (res && res.type === 'engine') {
-      if (res.event === 'systemInfo') {
-        _dpr = res.systemInfo.devicePixelRatio;
-      }
-    }
-  });
-}
-
 function getDpr() {
-  if (typeof _dpr !== 'undefined') {
-    return _dpr;
-  }
-
-  if (typeof __env !== "undefined" && __env.getSystemInfoSync) {
-    _dpr = __env.getSystemInfoSync().devicePixelRatio;
+  /* istanbul ignore if*/
+  if (typeof wx !== "undefined") {
+    return wx.getSystemInfoSync().devicePixelRatio;
   } else {
-    console.warn('failed to access device pixel ratio, fallback to 1');
-    _dpr = 1;
+    return window.devicePixelRatio;
   }
-
-  return _dpr;
 }
 var STATE = {
   "UNINIT": "UNINIT",
@@ -2472,21 +2469,21 @@ var repaintTree = function repaintTree(tree) {
 };
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 7 */
+/***/ (function(module, exports, __nested_webpack_require_84500__) {
 
 "use strict";
 
 
-var nodeToJson = __webpack_require__(9);
+var nodeToJson = __nested_webpack_require_84500__(8);
 
-var xmlToNodeobj = __webpack_require__(11);
+var xmlToNodeobj = __nested_webpack_require_84500__(10);
 
-var x2xmlnode = __webpack_require__(11);
+var x2xmlnode = __nested_webpack_require_84500__(10);
 
-var buildOptions = __webpack_require__(10).buildOptions;
+var buildOptions = __nested_webpack_require_84500__(9).buildOptions;
 
-var validator = __webpack_require__(13);
+var validator = __nested_webpack_require_84500__(12);
 
 exports.parse = function (xmlData, options, validationOption) {
   if (validationOption) {
@@ -2503,13 +2500,13 @@ exports.parse = function (xmlData, options, validationOption) {
 };
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 8 */
+/***/ (function(module, exports, __nested_webpack_require_85279__) {
 
 "use strict";
 
 
-var util = __webpack_require__(10);
+var util = __nested_webpack_require_85279__(9);
 
 var convertToJson = function convertToJson(node, options) {
   var jObj = {
@@ -2565,8 +2562,8 @@ var convertToJson = function convertToJson(node, options) {
 exports.convertToJson = convertToJson;
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 9 */
+/***/ (function(module, exports, __nested_webpack_require_87268__) {
 
 "use strict";
 
@@ -2666,17 +2663,17 @@ exports.doesNotMatch = doesNotMatch;
 exports.getAllMatches = getAllMatches;
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 10 */
+/***/ (function(module, exports, __nested_webpack_require_89374__) {
 
 "use strict";
 
 
-var util = __webpack_require__(10);
+var util = __nested_webpack_require_89374__(9);
 
-var buildOptions = __webpack_require__(10).buildOptions;
+var buildOptions = __nested_webpack_require_89374__(9).buildOptions;
 
-var xmlNode = __webpack_require__(12);
+var xmlNode = __nested_webpack_require_89374__(11);
 
 var TagType = {
   OPENING: 1,
@@ -2929,8 +2926,8 @@ function buildAttributesMap(attrStr, options) {
 exports.getTraversalObj = getTraversalObj;
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 11 */
+/***/ (function(module, exports, __nested_webpack_require_97356__) {
 
 "use strict";
 
@@ -2958,13 +2955,13 @@ module.exports = function (tagname, parent, val) {
 };
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 12 */
+/***/ (function(module, exports, __nested_webpack_require_97937__) {
 
 "use strict";
 
 
-var util = __webpack_require__(10);
+var util = __nested_webpack_require_97937__(9);
 
 var defaultOptions = {
   allowBooleanAttributes: false,
@@ -3345,14 +3342,14 @@ function validateTagName(tagname, regxTagName) {
 }
 
 /***/ }),
-/* 14 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 13 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_108541__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapFont; });
-/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
-/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+__nested_webpack_require_108541__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_108541__.d(__webpack_exports__, "default", function() { return BitMapFont; });
+/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_108541__(14);
+/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_108541__(4);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -3363,7 +3360,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
 
-var Emitter = __webpack_require__(4);
+var Emitter = __nested_webpack_require_108541__(3);
 /**
  * http://www.angelcode.com/products/bmfont/doc/file_format.html
  */
@@ -3447,13 +3444,13 @@ var BitMapFont = /*#__PURE__*/function () {
 
 
 /***/ }),
-/* 15 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 14 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_112106__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+__nested_webpack_require_112106__.r(__webpack_exports__);
+/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_112106__(4);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_112106__(6);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -3524,25 +3521,25 @@ var ImageManager = /*#__PURE__*/function () {
 /* harmony default export */ __webpack_exports__["default"] = (new ImageManager());
 
 /***/ }),
-/* 16 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 15 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_114667__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(17);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "View", function() { return _view_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+__nested_webpack_require_114667__.r(__webpack_exports__);
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_114667__(16);
+/* harmony reexport (safe) */ __nested_webpack_require_114667__.d(__webpack_exports__, "View", function() { return _view_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_114667__(17);
+/* harmony reexport (safe) */ __nested_webpack_require_114667__.d(__webpack_exports__, "Image", function() { return _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(19);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Text", function() { return _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_114667__(18);
+/* harmony reexport (safe) */ __nested_webpack_require_114667__.d(__webpack_exports__, "Text", function() { return _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
+/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_114667__(19);
+/* harmony reexport (safe) */ __nested_webpack_require_114667__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(22);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BitMapText", function() { return _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_114667__(21);
+/* harmony reexport (safe) */ __nested_webpack_require_114667__.d(__webpack_exports__, "BitMapText", function() { return _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
 
 
@@ -3552,13 +3549,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /***/ }),
-/* 17 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 16 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_116089__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return View; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+__nested_webpack_require_116089__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_116089__.d(__webpack_exports__, "default", function() { return View; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_116089__(1);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3577,7 +3574,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3683,14 +3680,14 @@ var View = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 18 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 17 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_122320__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Image; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+__nested_webpack_require_122320__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_122320__.d(__webpack_exports__, "default", function() { return Image; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_122320__(1);
+/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_122320__(14);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3709,7 +3706,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3754,6 +3751,7 @@ var Image = /*#__PURE__*/function (_Element) {
           this.imgsrc = newValue;
           _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
             _this2.img = img;
+            /*this.repaint();*/
 
             _this2.emit('repaint');
           });
@@ -3764,42 +3762,16 @@ var Image = /*#__PURE__*/function (_Element) {
     });
     _this.type = 'Image';
     _this.renderBoxes = [];
-    _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
-      if (fromCache) {
-        _this.img = img;
-      } else {
-        // 当图片加载完成，实例可能已经被销毁了
-        if (_this.img && _this.isScrollViewChild) {
-          _this.EE.emit('image__render__done', _assertThisInitialized(_this));
-        }
-      }
-    });
     return _this;
   }
 
   _createClass(Image, [{
-    key: "isScrollViewChild",
-    get: function get() {
-      var flag = false;
-      var parent = this.parent;
-
-      while (parent && !flag) {
-        if (parent.type === 'ScrollView') {
-          flag = true;
-        } else {
-          parent = parent.parent;
-        }
-      }
-
-      return flag;
-    }
-  }, {
     key: "repaint",
     value: function repaint() {
       var _this3 = this;
 
       this.renderBoxes.forEach(function (item) {
-        _this3.render(item.ctx, item.box, false);
+        _this3.renderImg(item.ctx, item.box, false);
       });
     } // 子类填充实现
 
@@ -3812,8 +3784,10 @@ var Image = /*#__PURE__*/function (_Element) {
       this.root = null;
     }
   }, {
-    key: "render",
-    value: function render(ctx, layoutBox) {
+    key: "renderImg",
+    value: function renderImg(ctx, layoutBox) {
+      var needEmitEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
       if (!this.img) {
         return;
       }
@@ -3847,7 +3821,7 @@ var Image = /*#__PURE__*/function (_Element) {
         if (fromCache) {
           _this4.img = img;
 
-          _this4.render(ctx, box, false);
+          _this4.renderImg(ctx, box, false);
         } else {
           // 当图片加载完成，实例可能已经被销毁了
           if (_this4.img) {
@@ -3858,6 +3832,22 @@ var Image = /*#__PURE__*/function (_Element) {
         }
       });
     }
+  }, {
+    key: "isScrollViewChild",
+    get: function get() {
+      var flag = false;
+      var parent = this.parent;
+
+      while (parent && !flag) {
+        if (parent.type === 'ScrollView') {
+          flag = true;
+        } else {
+          parent = parent.parent;
+        }
+      }
+
+      return flag;
+    }
   }]);
 
   return Image;
@@ -3866,14 +3856,14 @@ var Image = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 19 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 18 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_129341__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Text; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+__nested_webpack_require_129341__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_129341__.d(__webpack_exports__, "default", function() { return Text; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_129341__(1);
+/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_129341__(6);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3892,7 +3882,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -4080,16 +4070,16 @@ var Text = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 19 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_137526__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(17);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
-/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
+__nested_webpack_require_137526__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_137526__.d(__webpack_exports__, "default", function() { return ScrollView; });
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_137526__(16);
+/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_137526__(4);
+/* harmony import */ var _common_touch_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_137526__(20);
+/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_137526__(6);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4108,13 +4098,16 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
 
+
+var id = 0;
+var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
 
 var ScrollView = /*#__PURE__*/function (_View) {
   _inherits(ScrollView, _View);
@@ -4140,16 +4133,19 @@ var ScrollView = /*#__PURE__*/function (_View) {
     });
     _this.type = 'ScrollView'; // 当前列表滚动的值
 
-    _this.scrollTop = 0;
-    _this.scrollLeft = 0;
-    _this.hasEventBind = false;
-    _this.currentEvent = null; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
+    _this.top = 0; // 滚动处理器
 
-    _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["throttle"])(_this.childImageLoadDoneCbk, 32, _assertThisInitialized(_this));
-    _this.scrollCanvas = null;
-    _this.scrollCtx = null;
+    _this.touch = new _common_touch_js__WEBPACK_IMPORTED_MODULE_2__["default"](); // canvas高度不能过高，在小游戏里面，对canvas尺寸是有限制的
+
+    _this.pageHeight = 2000; // 根据列表总高度和单页高度计算的分页数量
+
+    _this.pageCount = 1;
+    _this.canvasMap = {}; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
+
+    _this.throttleRepaint = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.clipRepaint, 16, _assertThisInitialized(_this));
+    _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.childImageLoadDoneCbk, 32, _assertThisInitialized(_this));
+    _this.renderTimers = [];
     _this.requestID = null;
-    _this.sharedTexture = false;
     return _this;
   }
   /**
@@ -4159,6 +4155,260 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
 
   _createClass(ScrollView, [{
+    key: "repaint",
+    value: function repaint() {
+      var _this2 = this;
+
+      this.clear();
+      this.renderBoxes.forEach(function (item) {
+        _this2.render(item.ctx, item.box);
+      });
+    }
+    /**
+     * 列表子元素重绘之前先将所有的canvas擦除
+     */
+
+  }, {
+    key: "clear",
+    value: function clear() {
+      var _this3 = this;
+
+      Object.keys(this.canvasMap).forEach(function (key) {
+        var item = _this3.canvasMap[key];
+        item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
+      });
+    } // 与主canvas的尺寸保持一致
+
+  }, {
+    key: "updateRenderPort",
+    value: function updateRenderPort(renderport) {
+      this.renderport = renderport;
+    }
+    /**
+     * 计算分页数据
+     * 小游戏的canvas对尺寸有要求，如果如果高度过高，可能出现渲染不出来的情况
+     * 因此需要手动分页，列表过长的时候将数据绘制到几个canvas上面，这里预创建几个canvas
+     */
+
+  }, {
+    key: "calPageData",
+    value: function calPageData() {
+      this.pageCount = Math.ceil((this.scrollHeight + this.layoutBox.absoluteY) / this.pageHeight);
+
+      for (var i = 0; i < this.pageCount; i++) {
+        var cache = canvasPool.get(i);
+
+        if (cache) {
+          cache.context && cache.context.clearRect(0, 0, cache.canvas.width, cache.canvas.height);
+          cache.elements = [];
+          this.canvasMap[i] = cache;
+        } else {
+          this.canvasMap[i] = {
+            elements: []
+          };
+          canvasPool.set(i, this.canvasMap[i]);
+        }
+      }
+    }
+  }, {
+    key: "destroySelf",
+    value: function destroySelf() {
+      this.touch = null;
+      this.isDestroyed = true;
+      this.throttleRepaint = null;
+      this.renderTimers.forEach(function (timer) {
+        clearTimeout(timer);
+      });
+      this.root.off('repaint__done');
+      this.renderTimers = [];
+      this.canvasMap = {};
+      this.ctx = null;
+      this.children = null;
+      this.requestID && cancelAnimationFrame(this.requestID);
+      this.root = null;
+    }
+    /**
+     * 滚动列表重绘逻辑
+     * 将分页canvas按照滚动裁剪绘制到主canvas上面
+     */
+
+  }, {
+    key: "clipRepaint",
+    value: function clipRepaint(top) {
+      var _this4 = this;
+
+      if (this.isDestroyed) {
+        return;
+      }
+
+      this.requestID = requestAnimationFrame(function () {
+        top = -top;
+        _this4.top = top;
+        var box = _this4.layoutBox;
+        var abY = box.absoluteY;
+
+        if (_this4.isDestroyed || _this4.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
+          return;
+        } // 在主canvas上面将滚动列表区域擦除
+
+
+        _this4.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
+
+
+        _this4.ctx.fillStyle = _this4.parent.style.backgroundColor || '#ffffff';
+
+        _this4.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
+
+        for (var i = 0; i < _this4.pageCount; i++) {
+          var canvas = _this4.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
+
+          var startY = abY + top;
+          var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
+
+          if (startY < _this4.pageHeight * (i + 1) && endY > _this4.pageHeight * i) {
+            /**
+             * 这里不能按照box.width * box.height的区域去裁剪
+             * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
+             */
+            var clipY = abY + top - _this4.pageHeight * i;
+            var clipH = box.height;
+            var renderY = abY;
+
+            if (clipY > 0 && _this4.pageHeight - clipY < box.height) {
+              clipH = _this4.pageHeight - clipY;
+            } else if (clipY < 0) {
+              clipH = clipY + box.height;
+              renderY = renderY - clipY;
+              clipY = 0;
+            }
+
+            _this4.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
+          }
+        }
+      });
+    }
+  }, {
+    key: "renderChildren",
+    value: function renderChildren(tree) {
+      var _this5 = this;
+
+      var children = tree.children;
+      var height = this.pageHeight;
+      Object.keys(children).forEach(function (id) {
+        var child = children[id];
+        var originY = child.layoutBox.originalAbsoluteY;
+        var pageIndex = Math.floor(originY / height);
+        var nextPage = pageIndex + 1;
+        child.layoutBox.absoluteY -= _this5.pageHeight * pageIndex;
+
+        if (child.checkNeedRender()) {
+          _this5.canvasMap[pageIndex].elements.push({
+            element: child,
+            box: child.layoutBox
+          });
+        } // 对于跨界的元素，两边都绘制下
+
+
+        if (originY + child.layoutBox.height > height * nextPage) {
+          var tmpBox = Object.assign({}, child.layoutBox);
+          tmpBox.absoluteY = originY - _this5.pageHeight * nextPage;
+
+          if (child.checkNeedRender()) {
+            _this5.canvasMap[nextPage].elements.push({
+              element: child,
+              box: tmpBox
+            });
+          }
+        }
+
+        _this5.renderChildren(child);
+      });
+    }
+  }, {
+    key: "insertElements",
+    value: function insertElements(pageIndex) {
+      var _this6 = this;
+
+      var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
+      var ctx = can.getContext('2d');
+      can.width = this.renderport.width;
+      can.height = this.pageHeight;
+      ctx.id = ++id;
+      this.canvasMap[pageIndex].canvas = can;
+      this.canvasMap[pageIndex].context = ctx;
+      this.canvasMap[pageIndex].elements.forEach(function (ele) {
+        ele.element.insert(ctx, ele.box);
+      });
+
+      if (pageIndex < this.pageCount - 1) {
+        var timer = setTimeout(function () {
+          _this6.insertElements(++pageIndex);
+        }, 250);
+        this.renderTimers.push(timer);
+      }
+    }
+  }, {
+    key: "childImageLoadDoneCbk",
+    value: function childImageLoadDoneCbk(img) {
+      var start = new Date();
+      var list = Object.values(this.canvasMap);
+      var pageIndex = -1;
+
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].elements.find(function (item) {
+          return item.element === img;
+        })) {
+          pageIndex = i;
+          break;
+        }
+      }
+
+      if (pageIndex > -1) {
+        var _start = new Date();
+
+        var canItem = this.canvasMap[pageIndex];
+        var canvas = canItem.canvas;
+        var ctx = canItem.context;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.canvasMap[pageIndex].elements.forEach(function (ele) {
+          Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["repaintTree"])(ele.element);
+        });
+      }
+      /*this.throttleRepaint(-this.top || 0);*/
+
+
+      this.clipRepaint(-this.top);
+    }
+  }, {
+    key: "insertScrollView",
+    value: function insertScrollView(context) {
+      var _this7 = this;
+
+      // 绘制容器
+      this.insert(context);
+      this.root.on('repaint__done', function () {
+        _this7.clipRepaint(-_this7.top);
+      }); // 计算列表应该分割成几页
+
+      this.calPageData(); // 计算分页数据：每个元素应该坐落在哪个canvas
+
+      this.renderChildren(this);
+      this.insertElements(0);
+      this.clipRepaint(-this.top); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+
+      this.EE.on('image__render__done', function (img) {
+        _this7.throttleImageLoadDone(img);
+      });
+
+      if (this.scrollHeight > this.layoutBox.height) {
+        this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, this.clipRepaint.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
+
+        this.on('touchstart', this.touch.startFunc);
+        this.on('touchmove', this.touch.moveFunc);
+        this.on('touchend', this.touch.endFunc);
+      }
+    }
+  }, {
     key: "scrollHeight",
     get: function get() {
       // scrollview为空的情况
@@ -4169,223 +4419,6 @@ var ScrollView = /*#__PURE__*/function (_View) {
       var last = this.children[this.children.length - 1];
       return last.layoutBox.top + last.layoutBox.height;
     }
-  }, {
-    key: "scrollWidth",
-    get: function get() {
-      // scrollview为空的情况
-      if (!this.children.length) {
-        return 0;
-      }
-
-      var last = this.children[this.children.length - 1];
-      return last.layoutBox.left + last.layoutBox.width;
-    }
-  }, {
-    key: "scrollerOption",
-    get: function get() {
-      return Object.assign({
-        scrollingY: !!(this.scrollHeight > this.layoutBox.height),
-        scrollingX: !!(this.scrollWidth > this.layoutBox.width)
-      }, this._scrollerOption);
-    },
-    set: function set(value) {
-      if (value === void 0) {
-        value = {};
-      }
-
-      this._scrollerOption = value;
-
-      if (this.scrollerObj) {
-        Object.assign(this.scrollerObj.options, this.scrollerOption);
-      }
-    }
-  }, {
-    key: "repaint",
-    value: function repaint() {
-      var _this2 = this;
-
-      this.clear();
-      this.renderBoxes.forEach(function (item) {
-        _this2.render(item.ctx, item.box);
-      });
-      this.scrollRender(this.scrollLeft, this.scrollTop);
-    }
-    /**
-     * 与主canvas的尺寸保持一致
-     */
-
-  }, {
-    key: "updateRenderPort",
-    value: function updateRenderPort(renderport) {
-      this.renderport = renderport;
-      this.scrollCanvas = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["createCanvas"])();
-      this.scrollCtx = this.scrollCanvas.getContext('2d');
-      this.scrollCanvas.width = this.renderport.width;
-      this.scrollCanvas.height = this.renderport.height;
-    }
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.touch = null;
-      this.isDestroyed = true;
-      this.root.off('repaint__done');
-      this.ctx = null;
-      this.children = null;
-      this.root = null;
-      this.scrollCanvas = null;
-      this.scrollCtx = null;
-      this.requestID && cancelAnimationFrame(this.requestID);
-    }
-  }, {
-    key: "renderTreeWithTop",
-    value: function renderTreeWithTop(tree, top) {
-      var _this3 = this;
-
-      var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
-
-      layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
-      tree.render(this.scrollCtx, layoutBox);
-      tree.children.forEach(function (child) {
-        _this3.renderTreeWithTop(child, top);
-      });
-    }
-  }, {
-    key: "clear",
-    value: function clear() {
-      var box = this.layoutBox;
-      this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
-      this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
-    }
-  }, {
-    key: "scrollRenderHandler",
-    value: function scrollRenderHandler() {
-      var _this4 = this;
-
-      var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var box = this.layoutBox;
-      this.scrollTop = top;
-      this.scrollLeft = left; // scrollview在全局节点中的Y轴位置
-
-      var abY = box.absoluteY; // 根据滚动值获取裁剪区域
-
-      var startY = abY + this.scrollTop;
-      var endY = abY + this.scrollTop + box.height; // 清理滚动画布和主屏画布
-
-      this.clear();
-      this.renderBoxes.forEach(function (item) {
-        _this4.render(item.ctx, item.box);
-      });
-      this.children.forEach(function (child) {
-        var layoutBox = child.layoutBox;
-        var height = layoutBox.height;
-        var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
-
-        if (originY + height >= startY && originY <= endY) {
-          _this4.renderTreeWithTop(child, _this4.scrollTop);
-        }
-      });
-      this.ctx.drawImage(this.scrollCanvas, box.absoluteX, box.absoluteY, box.width, box.height, box.absoluteX, box.absoluteY, box.width, box.height);
-    }
-  }, {
-    key: "scrollRender",
-    value: function scrollRender(left, top) {
-      var _this5 = this;
-
-      if (this.sharedTexture) {
-        this.requestID = requestAnimationFrame(function () {
-          _this5.scrollRenderHandler(left, top);
-        });
-      } else {
-        this.scrollRenderHandler(left, top);
-      }
-    }
-  }, {
-    key: "childImageLoadDoneCbk",
-    value: function childImageLoadDoneCbk(img) {
-      var box = this.layoutBox; // 根据滚动值获取裁剪区域
-
-      var startY = box.absoluteY + this.scrollTop;
-      var endY = box.absoluteY + this.scrollTop + box.height;
-      var layoutBox = img.layoutBox;
-      var height = layoutBox.height;
-      var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
-
-      if (originY + height >= startY && originY <= endY) {
-        this.scrollRender(this.scrollLeft, this.scrollTop);
-      }
-    }
-  }, {
-    key: "insertScrollView",
-    value: function insertScrollView(context) {
-      var _this6 = this;
-
-      // 绘制容器
-      this.insert(context); // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
-
-      this.root.on('repaint__done', function () {
-        _this6.scrollRender(_this6.scrollLeft, _this6.scrollTop);
-      });
-      this.scrollRender(0, 0); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-
-      this.EE.on('image__render__done', function (img) {
-        _this6.throttleImageLoadDone(img);
-      });
-
-      if (this.hasEventBind) {
-        return;
-      }
-
-      this.hasEventBind = true;
-      this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
-        // 可能被销毁了或者节点树还没准备好
-        if (_this6.scrollActive && !_this6.isDestroyed) {
-          _this6.scrollRender(left, top);
-
-          if (_this6.currentEvent) {
-            _this6.currentEvent.type = 'scroll';
-            _this6.currentEvent.currentTarget = _this6;
-
-            _this6.emit('scroll', _this6.currentEvent);
-          }
-        }
-      }, this.scrollerOpt);
-      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
-      var dpr = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getDpr"])();
-      this.scrollActive = false;
-      this.on('touchstart', function (e) {
-        _this6.scrollActive = true;
-        e.touches.forEach(function (touch) {
-          touch.pageX *= dpr;
-          touch.pageY *= dpr;
-        });
-
-        _this6.scrollerObj.doTouchStart(e.touches, e.timeStamp);
-
-        _this6.currentEvent = e;
-      });
-      this.on('touchmove', function (e) {
-        e.touches.forEach(function (touch) {
-          touch.pageX *= dpr;
-          touch.pageY *= dpr;
-        });
-
-        _this6.scrollerObj.doTouchMove(e.touches, e.timeStamp);
-
-        _this6.currentEvent = e;
-      }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
-
-      this.root.on('touchend', function (e) {
-        e.touches.forEach(function (touch) {
-          touch.pageX *= dpr;
-          touch.pageY *= dpr;
-        });
-
-        _this6.scrollerObj.doTouchEnd(e.timeStamp);
-
-        _this6.currentEvent = e;
-      });
-    }
   }]);
 
   return ScrollView;
@@ -4394,15 +4427,202 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
 
 /***/ }),
-/* 21 */,
-/* 22 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 20 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_150436__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapText; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+__nested_webpack_require_150436__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_150436__.d(__webpack_exports__, "default", function() { return Touch; });
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_150436__(6);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+var dpr = Object(_util_js__WEBPACK_IMPORTED_MODULE_0__["getDpr"])();
+
+var Touch = /*#__PURE__*/function () {
+  function Touch() {
+    _classCallCheck(this, Touch);
+
+    this.needProcess = false;
+    this.startFunc = this.touchStartHandler.bind(this);
+    this.endFunc = this.touchEndHandler.bind(this);
+    this.moveFunc = this.touchMoveHandler.bind(this);
+  }
+
+  _createClass(Touch, [{
+    key: "reset",
+    value: function reset() {
+      this.touchTime = new Date();
+      this.touchStartX = 0;
+      this.touchStartY = 0; // 滚动区间
+
+      this.start = 0;
+      this.end = 0; // 当前位置
+
+      this.move = 0; // 目标位置
+
+      this.target = 0; // 滚动回调函数
+
+      this.scroll = null; // for istanbul
+
+      /* istanbul ignore if*/
+
+      if (typeof cancelAnimationFrame !== 'undefined') {
+        cancelAnimationFrame(this.animate);
+      }
+    }
+  }, {
+    key: "enable",
+    value: function enable() {
+      this.reset();
+      this.needProcess = true;
+    }
+  }, {
+    key: "disable",
+    value: function disable() {
+      this.needProcess = false;
+    } // 设置滚动区间，比如一个排行榜的滚动区间可能是[-300, 0]
+
+  }, {
+    key: "setTouchRange",
+    value: function setTouchRange(start, end, scroll) {
+      // 考虑到切换游戏的场景，每次设置的时候重置所有变量
+      this.enable();
+      this.start = start;
+      this.end = end;
+
+      if (start === 0 && end === 0) {
+        return;
+      }
+
+      this.scroll = scroll; // this.animate = requestAnimationFrame(this.loop.bind(this));
+    } // 保证滚动目标位置在滚动区间内
+
+  }, {
+    key: "limitTarget",
+    value: function limitTarget(target) {
+      var result = target;
+
+      if (target > this.end) {
+        result = this.end;
+      } else if (target < this.start) {
+        result = this.start;
+      }
+
+      return result;
+    }
+  }, {
+    key: "touchStartHandler",
+    value: function touchStartHandler(e) {
+      var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
+
+      if (!touch || !touch.pageX || !touch.pageY) {
+        return;
+      }
+
+      this.touchStartX = touch.clientX * dpr;
+      this.touchStartY = touch.clientY * dpr;
+      this.touchTime = new Date();
+      this.isMoving = true;
+      this.needProcess = true;
+      this.animate = requestAnimationFrame(this.loop.bind(this));
+    }
+  }, {
+    key: "touchMoveHandler",
+    value: function touchMoveHandler(e) {
+      if (!this.isMoving) {
+        return;
+      }
+
+      var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
+
+      if (!touch || !touch.pageX || !touch.pageY) {
+        return;
+      }
+
+      var currY = touch.clientY * dpr;
+
+      if (this.touchStartY - currY > 2 || this.touchStartY - currY < -2) {
+        this.target -= this.touchStartY - currY;
+      }
+
+      this.target = this.limitTarget(this.target);
+      this.touchStartY = currY;
+    }
+  }, {
+    key: "touchEndHandler",
+    value: function touchEndHandler() {
+      this.isMoving = false;
+      var timeInS = (Date.now() - this.touchTime) / 1000;
+      /*console.log(Date.now(), this.touchTime.getTime(), Date.now() - this.touchTime);*/
+
+      if (timeInS < 0.9) {
+        /*console.log(1, timeInS, this.target, this.move);*/
+        this.target += (this.target - this.move) * 0.6 / (timeInS * 5);
+        /*console.log(2, this.target)*/
+
+        this.target = this.limitTarget(this.target);
+        /*console.log(3, this.target)*/
+      }
+    }
+  }, {
+    key: "loop",
+    value: function loop() {
+      if (this.needProcess) {
+        if (this.isMoving) {
+          if (this.move !== this.target) {
+            // 手指移动可能过快，切片以使得滑动流畅
+            if (Math.abs(this.target - this.move) > 1) {
+              this.move += (this.target - this.move) * 0.4;
+            } else {
+              this.move = this.target;
+            }
+
+            this.scroll && this.scroll(this.move);
+          }
+        } else {
+          if (this.move !== this.target) {
+            /**
+             * 如果滑动很快，为了滚动流畅，需要将滑动过程切片
+             */
+            if (Math.abs(this.target - this.move) > 1) {
+              this.move += (this.target - this.move) * 0.3;
+            } else {
+              this.move = this.target;
+            }
+
+            this.scroll && this.scroll(this.move);
+          } else {
+            // 滑动结束，停止动画
+            this.needProcess = false;
+          }
+        }
+
+        this.animate = requestAnimationFrame(this.loop.bind(this));
+      } else if (typeof cancelAnimationFrame !== 'undefined') {
+        cancelAnimationFrame(this.animate);
+      }
+    }
+  }]);
+
+  return Touch;
+}();
+
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __nested_webpack_require_155980__) {
+
+"use strict";
+__nested_webpack_require_155980__.r(__webpack_exports__);
+/* harmony export (binding) */ __nested_webpack_require_155980__.d(__webpack_exports__, "default", function() { return BitMapText; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_155980__(1);
+/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_155980__(4);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4421,7 +4641,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -4605,1412 +4825,80 @@ var BitMapText = /*#__PURE__*/function (_Element) {
 
 
 
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
-    if (true) {
-        // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(24), __webpack_require__(25)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else {}
-}(this, function (exports, animate, Scroller) {
-    exports.animate = animate;
-    exports.Scroller = Scroller;
-}));
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
- * Scroller
- * http://github.com/zynga/scroller
- *
- * Copyright 2011, Zynga Inc.
- * Licensed under the MIT License.
- * https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
- *
- * Based on the work of: Unify Project (unify-project.org)
- * http://unify-project.org
- * Copyright 2011, Deutsche Telekom AG
- * License: MIT + Apache (V2)
- */
-
-/**
- * Generic animation class with support for dropped frames both optional easing and duration.
- *
- * Optional duration is useful when the lifetime is defined by another condition than time
- * e.g. speed of an animating object, etc.
- *
- * Dropped frame logic allows to keep using the same updater logic independent from the actual
- * rendering. This eases a lot of cases where it might be pretty complex to break down a state
- * based on the pure time difference.
- */
-(function (root, factory) {
-    if (true) {
-        // AMD. Register as an anonymous module.
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else {}
-}(this, function (exports) {
-    var global = typeof window === 'undefined' ? this : window
-    var time = Date.now || function () {
-        return +new Date();
-    };
-    var desiredFrames = 60;
-    var millisecondsPerSecond = 1000;
-    var running = {};
-    var counter = 1;
-
-    /**
-     * A requestAnimationFrame wrapper / polyfill.
-     *
-     * @param callback {Function} The callback to be invoked before the next repaint.
-     * @param root {HTMLElement} The root element for the repaint
-     */
-    exports.requestAnimationFrame = (function () {
-        // Check for request animation Frame support
-        var requestFrame = global.requestAnimationFrame || global.webkitRequestAnimationFrame || global.mozRequestAnimationFrame || global.oRequestAnimationFrame;
-        var isNative = !!requestFrame;
-
-        if (requestFrame && !/requestAnimationFrame\(\)\s*\{\s*\[native code\]\s*\}/i.test(requestFrame.toString())) {
-            isNative = false;
-        }
-
-        if (isNative) {
-            return function (callback, root) {
-                requestFrame(callback, root);
-            };
-        }
-
-        var TARGET_FPS = 60;
-        var requests = {};
-        var requestCount = 0;
-        var rafHandle = 1;
-        var intervalHandle = null;
-        var lastActive = +new Date();
-
-        return function (callback, root) {
-            var callbackHandle = rafHandle++;
-
-            // Store callback
-            requests[callbackHandle] = callback;
-            requestCount++;
-
-            // Create timeout at first request
-            if (intervalHandle === null) {
-
-                intervalHandle = setInterval(function () {
-
-                    var time = +new Date();
-                    var currentRequests = requests;
-
-                    // Reset data structure before executing callbacks
-                    requests = {};
-                    requestCount = 0;
-
-                    for(var key in currentRequests) {
-                        if (currentRequests.hasOwnProperty(key)) {
-                            currentRequests[key](time);
-                            lastActive = time;
-                        }
-                    }
-
-                    // Disable the timeout when nothing happens for a certain
-                    // period of time
-                    if (time - lastActive > 2500) {
-                        clearInterval(intervalHandle);
-                        intervalHandle = null;
-                    }
-
-                }, 1000 / TARGET_FPS);
-            }
-
-            return callbackHandle;
-        };
-
-    })();
-
-    /**
-     * Stops the given animation.
-     *
-     * @param id {Integer} Unique animation ID
-     * @return {Boolean} Whether the animation was stopped (aka, was running before)
-     */
-    exports.stop = function (id) {
-        var cleared = (running[id] !== null);
-        if (cleared) {
-            running[id] = null;
-        }
-
-        return cleared;
-    };
-
-
-    /**
-     * Whether the given animation is still running.
-     *
-     * @param id {Integer} Unique animation ID
-     * @return {Boolean} Whether the animation is still running
-     */
-    exports.isRunning = function (id) {
-        return running[id] !== null;
-    };
-
-
-    /**
-     * Start the animation.
-     *
-     * @param stepCallback {Function} Pointer to function which is executed on every step.
-     *   Signature of the method should be `function(percent, now, virtual) { return continueWithAnimation; }`
-     * @param verifyCallback {Function} Executed before every animation step.
-     *   Signature of the method should be `function() { return continueWithAnimation; }`
-     * @param completedCallback {Function}
-     *   Signature of the method should be `function(droppedFrames, finishedAnimation, optional wasFinished) {}`
-     * @param duration {Integer} Milliseconds to run the animation
-     * @param easingMethod {Function} Pointer to easing function
-     *   Signature of the method should be `function(percent) { return modifiedValue; }`
-     * @param root {Element} Render root. Used for internal usage of requestAnimationFrame.
-     * @return {Integer} Identifier of animation. Can be used to stop it any time.
-     */
-    exports.start = function (stepCallback, verifyCallback, completedCallback, duration, easingMethod, root) {
-        var start = time();
-        var lastFrame = start;
-        var percent = 0;
-        var dropCounter = 0;
-        var id = counter++;
-
-        // Compacting running db automatically every few new animations
-        if (id % 20 === 0) {
-            var newRunning = {};
-            for (var usedId in running) {
-                newRunning[usedId] = true;
-            }
-            running = newRunning;
-        }
-
-        // This is the internal step method which is called every few milliseconds
-        var step = function (virtual) {
-
-            // Normalize virtual value
-            var render = virtual !== true;
-
-            // Get current time
-            var now = time();
-
-            // Verification is executed before next animation step
-            if (!running[id] || (verifyCallback && !verifyCallback(id))) {
-
-                running[id] = null;
-                completedCallback(desiredFrames - (dropCounter / ((now - start) / millisecondsPerSecond)), id, false);
-                return;
-
-            }
-
-            // For the current rendering to apply let's update omitted steps in memory.
-            // This is important to bring internal state variables up-to-date with progress in time.
-            if (render) {
-
-                var droppedFrames = Math.round((now - lastFrame) / (millisecondsPerSecond / desiredFrames)) - 1;
-                for (var j = 0; j < Math.min(droppedFrames, 4); j++) {
-                    step(true);
-                    dropCounter++;
-                }
-
-            }
-
-            // Compute percent value
-            if (duration) {
-                percent = (now - start) / duration;
-                if (percent > 1) {
-                    percent = 1;
-                }
-            }
-
-            // Execute step callback, then...
-            var value = easingMethod ? easingMethod(percent) : percent;
-            if ((stepCallback(value, now, render) === false || percent === 1) && render) {
-                running[id] = null;
-                completedCallback(desiredFrames - (dropCounter / ((now - start) / millisecondsPerSecond)), id, percent === 1 || duration === undefined);
-            } else if (render) {
-                lastFrame = now;
-                exports.requestAnimationFrame(step, root);
-            }
-        };
-
-        // Mark as running
-        running[id] = true;
-
-        // Init first step
-        exports.requestAnimationFrame(step, root);
-
-        // Return unique animation ID
-        return id;
-    };
-}));
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
- * Scroller
- * http://github.com/zynga/scroller
- *
- * Copyright 2011, Zynga Inc.
- * Licensed under the MIT License.
- * https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
- *
- * Based on the work of: Unify Project (unify-project.org)
- * http://unify-project.org
- * Copyright 2011, Deutsche Telekom AG
- * License: MIT + Apache (V2)
- */
-
-(function (root, factory) {
-    if (true) {
-        // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(24)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else {}
-}(this, function (animate) {
-    var NOOP = function () {};
-
-    /**
-     * A pure logic 'component' for 'virtual' scrolling/zooming.
-     */
-    var Scroller = function (callback, options) {
-        this.__callback = callback;
-
-        this.options = {
-            /** Enable scrolling on x-axis */
-            scrollingX: true,
-
-            /** Enable scrolling on y-axis */
-            scrollingY: true,
-
-            /** Enable animations for deceleration, snap back, zooming and scrolling */
-            animating: true,
-
-            /** duration for animations triggered by scrollTo/zoomTo */
-            animationDuration: 250,
-
-            /** Enable bouncing (content can be slowly moved outside and jumps back after releasing) */
-            bouncing: true,
-
-            /** Enable locking to the main axis if user moves only slightly on one of them at start */
-            locking: true,
-
-            /** Enable pagination mode (switching between full page content panes) */
-            paging: false,
-
-            /** Enable snapping of content to a configured pixel grid */
-            snapping: false,
-
-            /** Enable zooming of content via API, fingers and mouse wheel */
-            zooming: false,
-
-            /** Minimum zoom level */
-            minZoom: 0.5,
-
-            /** Maximum zoom level */
-            maxZoom: 3,
-
-            /** Multiply or decrease scrolling speed **/
-            speedMultiplier: 1,
-
-            /** Callback that is fired on the later of touch end or deceleration end,
-                provided that another scrolling action has not begun. Used to know
-                when to fade out a scrollbar. */
-            scrollingComplete: NOOP,
-
-            /** This configures the amount of change applied to deceleration when reaching boundaries  **/
-            penetrationDeceleration : 0.03,
-
-            /** This configures the amount of change applied to acceleration when reaching boundaries  **/
-            penetrationAcceleration : 0.08
-        };
-
-        for (var key in options) {
-            this.options[key] = options[key];
-        }
-    };
-
-
-    // Easing Equations (c) 2003 Robert Penner, all rights reserved.
-    // Open source under the BSD License.
-
-    /**
-     * @param pos {Number} position between 0 (start of effect) and 1 (end of effect)
-     **/
-    var easeOutCubic = function (pos) {
-        return (Math.pow((pos - 1), 3) + 1);
-    };
-
-    /**
-     * @param pos {Number} position between 0 (start of effect) and 1 (end of effect)
-     **/
-    var easeInOutCubic = function (pos) {
-        if ((pos /= 0.5) < 1) {
-            return 0.5 * Math.pow(pos, 3);
-        }
-
-        return 0.5 * (Math.pow((pos - 2), 3) + 2);
-    };
-
-
-    Scroller.prototype = {
-
-        /*
-          ---------------------------------------------------------------------------
-          INTERNAL FIELDS :: STATUS
-          ---------------------------------------------------------------------------
-        */
-
-        /** {Boolean} Whether only a single finger is used in touch handling */
-        __isSingleTouch: false,
-
-        /** {Boolean} Whether a touch event sequence is in progress */
-        __isTracking: false,
-
-        /** {Boolean} Whether a deceleration animation went to completion. */
-        __didDecelerationComplete: false,
-
-        /**
-         * {Boolean} Whether a gesture zoom/rotate event is in progress. Activates when
-         * a gesturestart event happens. This has higher priority than dragging.
-         */
-        __isGesturing: false,
-
-        /**
-         * {Boolean} Whether the user has moved by such a distance that we have enabled
-         * dragging mode. Hint: It's only enabled after some pixels of movement to
-         * not interrupt with clicks etc.
-         */
-        __isDragging: false,
-
-        /**
-         * {Boolean} Not touching and dragging anymore, and smoothly animating the
-         * touch sequence using deceleration.
-         */
-        __isDecelerating: false,
-
-        /**
-         * {Boolean} Smoothly animating the currently configured change
-         */
-        __isAnimating: false,
-
-
-
-        /*
-          ---------------------------------------------------------------------------
-          INTERNAL FIELDS :: DIMENSIONS
-          ---------------------------------------------------------------------------
-        */
-
-        /** {Integer} Viewport left boundary */
-        __clientLeft: 0,
-
-        /** {Integer} Viewport right boundary */
-        __clientTop: 0,
-
-        /** {Integer} Viewport width */
-        __clientWidth: 0,
-
-        /** {Integer} Viewport height */
-        __clientHeight: 0,
-
-        /** {Integer} Full content's width */
-        __contentWidth: 0,
-
-        /** {Integer} Full content's height */
-        __contentHeight: 0,
-
-        /** {Integer} Snapping width for content */
-        __snapWidth: 100,
-
-        /** {Integer} Snapping height for content */
-        __snapHeight: 100,
-
-        /** {Number} Zoom level */
-        __zoomLevel: 1,
-
-        /** {Number} Scroll position on x-axis */
-        __scrollLeft: 0,
-
-        /** {Number} Scroll position on y-axis */
-        __scrollTop: 0,
-
-        /** {Integer} Maximum allowed scroll position on x-axis */
-        __maxScrollLeft: 0,
-
-        /** {Integer} Maximum allowed scroll position on y-axis */
-        __maxScrollTop: 0,
-
-        /* {Number} Scheduled left position (final position when animating) */
-        __scheduledLeft: 0,
-
-        /* {Number} Scheduled top position (final position when animating) */
-        __scheduledTop: 0,
-
-        /* {Number} Scheduled zoom level (final scale when animating) */
-        __scheduledZoom: 0,
-
-
-
-        /*
-          ---------------------------------------------------------------------------
-          INTERNAL FIELDS :: LAST POSITIONS
-          ---------------------------------------------------------------------------
-        */
-
-        /** {Number} Left position of finger at start */
-        __lastTouchLeft: null,
-
-        /** {Number} Top position of finger at start */
-        __lastTouchTop: null,
-
-        /** {Date} Timestamp of last move of finger. Used to limit tracking range for deceleration speed. */
-        __lastTouchMove: null,
-
-        /** {Array} List of positions, uses three indexes for each state: left, top, timestamp */
-        __positions: null,
-
-
-
-        /*
-          ---------------------------------------------------------------------------
-          INTERNAL FIELDS :: DECELERATION SUPPORT
-          ---------------------------------------------------------------------------
-        */
-
-        /** {Integer} Minimum left scroll position during deceleration */
-        __minDecelerationScrollLeft: null,
-
-        /** {Integer} Minimum top scroll position during deceleration */
-        __minDecelerationScrollTop: null,
-
-        /** {Integer} Maximum left scroll position during deceleration */
-        __maxDecelerationScrollLeft: null,
-
-        /** {Integer} Maximum top scroll position during deceleration */
-        __maxDecelerationScrollTop: null,
-
-        /** {Number} Current factor to modify horizontal scroll position with on every step */
-        __decelerationVelocityX: null,
-
-        /** {Number} Current factor to modify vertical scroll position with on every step */
-        __decelerationVelocityY: null,
-
-
-
-        /*
-          ---------------------------------------------------------------------------
-          PUBLIC API
-          ---------------------------------------------------------------------------
-        */
-
-        /**
-         * Configures the dimensions of the client (outer) and content (inner) elements.
-         * Requires the available space for the outer element and the outer size of the inner element.
-         * All values which are falsy (null or zero etc.) are ignored and the old value is kept.
-         *
-         * @param clientWidth {Integer ? null} Inner width of outer element
-         * @param clientHeight {Integer ? null} Inner height of outer element
-         * @param contentWidth {Integer ? null} Outer width of inner element
-         * @param contentHeight {Integer ? null} Outer height of inner element
-         */
-        setDimensions : function (clientWidth, clientHeight, contentWidth, contentHeight) {
-            // Only update values which are defined
-            if (clientWidth !== null) {
-                this.__clientWidth = clientWidth;
-            }
-
-            if (clientHeight !== null) {
-                this.__clientHeight = clientHeight;
-            }
-
-            if (contentWidth !== null) {
-                this.__contentWidth = contentWidth;
-            }
-
-            if (contentHeight !== null) {
-                this.__contentHeight = contentHeight;
-            }
-
-            // Refresh maximums
-            this.__computeScrollMax();
-
-            // Refresh scroll position
-            this.scrollTo(this.__scrollLeft, this.__scrollTop, true);
-        },
-
-
-        /**
-         * Sets the client coordinates in relation to the document.
-         *
-         * @param left {Integer ? 0} Left position of outer element
-         * @param top {Integer ? 0} Top position of outer element
-         */
-        setPosition : function (left, top) {
-            this.__clientLeft = left || 0;
-            this.__clientTop = top || 0;
-        },
-
-
-        /**
-         * Configures the snapping (when snapping is active)
-         *
-         * @param width {Integer} Snapping width
-         * @param height {Integer} Snapping height
-         */
-        setSnapSize : function (width, height) {
-            this.__snapWidth = width;
-            this.__snapHeight = height;
-        },
-
-
-        /**
-         * Returns the scroll position and zooming values
-         *
-         * @return {Map} `left` and `top` scroll position and `zoom` level
-         */
-        getValues : function () {
-            return {
-                left: this.__scrollLeft,
-                top: this.__scrollTop,
-                right: this.__scrollLeft + this.__clientWidth/this.__zoomLevel,
-                bottom: this.__scrollTop + this.__clientHeight/this.__zoomLevel,
-                zoom: this.__zoomLevel
-            };
-        },
-
-
-        /**
-         * Get point in in content space from scroll coordinates.
-         */
-        getPoint : function (scrollLeft, scrollTop) {
-            var values = this.getValues();
-
-            return {
-                left : scrollLeft / values.zoom,
-                top : scrollTop / values.zoom
-            };
-        },
-
-
-        /**
-         * Returns the maximum scroll values
-         *
-         * @return {Map} `left` and `top` maximum scroll values
-         */
-        getScrollMax : function () {
-            return {
-                left: this.__maxScrollLeft,
-                top: this.__maxScrollTop
-            };
-        },
-
-
-        /**
-         * Zooms to the given level. Supports optional animation. Zooms
-         * the center when no coordinates are given.
-         *
-         * @param level {Number} Level to zoom to
-         * @param isAnimated {Boolean ? false} Whether to use animation
-         * @param fixedLeft {Number ? undefined} Stationary point's left coordinate (vector in client space)
-         * @param fixedTop {Number ? undefined} Stationary point's top coordinate (vector in client space)
-         * @param callback {Function ? null} A callback that gets fired when the zoom is complete.
-         */
-        zoomTo : function (level, isAnimated, fixedLeft, fixedTop, callback) {
-            if (!this.options.zooming) {
-                throw new Error("Zooming is not enabled!");
-            }
-
-            // Add callback if exists
-            if(callback) {
-                this.__zoomComplete = callback;
-            }
-
-            // Stop deceleration
-            if (this.__isDecelerating) {
-                animate.stop(this.__isDecelerating);
-                this.__isDecelerating = false;
-            }
-
-            var oldLevel = this.__zoomLevel;
-
-            // Normalize fixed point to center of viewport if not defined
-            if (fixedLeft === undefined) {
-                fixedLeft = this.__clientWidth / 2;
-            }
-
-            if (fixedTop === undefined) {
-                fixedTop = this.__clientHeight / 2;
-            }
-
-            // Limit level according to configuration
-            level = Math.max(Math.min(level, this.options.maxZoom), this.options.minZoom);
-
-            // Recompute maximum values while temporary tweaking maximum scroll ranges
-            this.__computeScrollMax(level);
-
-            // Recompute left and top scroll positions based on new zoom level.
-            // Choosing the new viewport so that the origin's position remains
-            // fixed, we have central dilation about the origin.
-            // * Fixed point, $F$, remains stationary in content space and in the
-            // viewport.
-            // * Initial scroll position, $S_i$, in content space.
-            // * Final scroll position, $S_f$, in content space.
-            // * Initial scaling factor, $k_i$.
-            // * Final scaling factor, $k_f$.
-            //
-            // * $S_i \mapsto S_f$.
-            // * $(S_i - F) k_i = (S_f - F) k_f$.
-            // * $(S_i - F) k_i/k_f = (S_f - F)$.
-            // * $S_f = F + (S_i - F) k_i/k_f$.
-            //
-            // Fixed point location, $\vector{f} = (F - S_i) k_i$.
-            // * $F = S_i + \vector{f}/k_i$.
-            // * $S_f = S_i + \vector{f}/k_i + (S_i - S_i - \vector{f}/k_i) k_i/k_f$.
-            // * $S_f = S_i + \vector{f}/k_i - \vector{f}/k_f$.
-            // * $S_f k_f = S_i k_f + (k_f/k_i - 1)\vector{f}$.
-            // * $S_f k_f = (k_f/k_i)(S_i k_i) + (k_f/k_i - 1) \vector{f}$.
-            var k = level / oldLevel;
-            var left = k*(this.__scrollLeft + fixedLeft) - fixedLeft;
-            var top = k*(this.__scrollTop + fixedTop) - fixedTop;
-
-            // Limit x-axis
-            if (left > this.__maxScrollLeft) {
-                left = this.__maxScrollLeft;
-            } else if (left < 0) {
-                left = 0;
-            }
-
-            // Limit y-axis
-            if (top > this.__maxScrollTop) {
-                top = this.__maxScrollTop;
-            } else if (top < 0) {
-                top = 0;
-            }
-
-            // Push values out
-            this.__publish(left, top, level, isAnimated);
-        },
-
-
-        /**
-         * Zooms the content by the given factor.
-         *
-         * @param factor {Number} Zoom by given factor
-         * @param isAnimated {Boolean ? false} Whether to use animation
-         * @param originLeft {Number ? 0} Zoom in at given left coordinate
-         * @param originTop {Number ? 0} Zoom in at given top coordinate
-         * @param callback {Function ? null} A callback that gets fired when the zoom is complete.
-         */
-        zoomBy : function (factor, isAnimated, originLeft, originTop, callback) {
-            this.zoomTo(this.__zoomLevel * factor, isAnimated, originLeft, originTop, callback);
-        },
-
-
-        /**
-         * Scrolls to the given position. Respect limitations and snapping automatically.
-         *
-         * @param left {Number?null} Horizontal scroll position, keeps current if value is <code>null</code>
-         * @param top {Number?null} Vertical scroll position, keeps current if value is <code>null</code>
-         * @param isAnimated {Boolean?false} Whether the scrolling should happen using an animation
-         * @param zoom {Number} [1.0] Zoom level to go to
-         */
-        scrollTo : function (left, top, isAnimated, zoom) {
-            // Stop deceleration
-            if (this.__isDecelerating) {
-                animate.stop(this.__isDecelerating);
-                this.__isDecelerating = false;
-            }
-
-            // Correct coordinates based on new zoom level
-            if (zoom !== undefined && zoom !== this.__zoomLevel) {
-                if (!this.options.zooming) {
-                    throw new Error("Zooming is not enabled!");
-                }
-
-                left *= zoom;
-                top *= zoom;
-
-                // Recompute maximum values while temporary tweaking maximum scroll ranges
-                this.__computeScrollMax(zoom);
-            } else {
-                // Keep zoom when not defined
-                zoom = this.__zoomLevel;
-            }
-
-            if (!this.options.scrollingX) {
-                left = this.__scrollLeft;
-            } else {
-                if (this.options.paging) {
-                    left = Math.round(left / this.__clientWidth) * this.__clientWidth;
-                } else if (this.options.snapping) {
-                    left = Math.round(left / this.__snapWidth) * this.__snapWidth;
-                }
-            }
-
-            if (!this.options.scrollingY) {
-                top = this.__scrollTop;
-            } else {
-                if (this.options.paging) {
-                    top = Math.round(top / this.__clientHeight) * this.__clientHeight;
-                } else if (this.options.snapping) {
-                    top = Math.round(top / this.__snapHeight) * this.__snapHeight;
-                }
-            }
-
-            // Limit for allowed ranges
-            left = Math.max(Math.min(this.__maxScrollLeft, left), 0);
-            top = Math.max(Math.min(this.__maxScrollTop, top), 0);
-
-            // Don't animate when no change detected, still call publish to make sure
-            // that rendered position is really in-sync with internal data
-            if (left === this.__scrollLeft && top === this.__scrollTop) {
-                isAnimated = false;
-            }
-
-            // Publish new values
-            this.__publish(left, top, zoom, isAnimated);
-        },
-
-
-        /**
-         * Scroll by the given offset
-         *
-         * @param left {Number ? 0} Scroll x-axis by given offset
-         * @param top {Number ? 0} Scroll x-axis by given offset
-         * @param isAnimated {Boolean ? false} Whether to animate the given change
-         */
-        scrollBy : function (left, top, isAnimated) {
-            var startLeft = this.__isAnimating ? this.__scheduledLeft : this.__scrollLeft;
-            var startTop = this.__isAnimating ? this.__scheduledTop : this.__scrollTop;
-
-            this.scrollTo(startLeft + (left || 0), startTop + (top || 0), isAnimated);
-        },
-
-
-        /*
-          ---------------------------------------------------------------------------
-          EVENT CALLBACKS
-          ---------------------------------------------------------------------------
-        */
-
-        /**
-         * Mouse wheel handler for zooming support
-         */
-        doMouseZoom : function (wheelDelta, timeStamp, pageX, pageY) {
-            var change = wheelDelta > 0 ? 0.97 : 1.03;
-
-            return this.zoomTo(this.__zoomLevel * change, false, pageX - this.__clientLeft, pageY - this.__clientTop);
-        },
-
-
-        /**
-         * Touch start handler for scrolling support
-         */
-        doTouchStart : function (touches, timeStamp) {
-            // Array-like check is enough here
-            if (touches.length === undefined) {
-                throw new Error("Invalid touch list: " + touches);
-            }
-
-            if (timeStamp instanceof Date) {
-                timeStamp = timeStamp.valueOf();
-            }
-            if (typeof timeStamp !== "number") {
-                throw new Error("Invalid timestamp value: " + timeStamp);
-            }
-
-            // Reset interruptedAnimation flag
-            this.__interruptedAnimation = true;
-
-            // Stop deceleration
-            if (this.__isDecelerating) {
-                animate.stop(this.__isDecelerating);
-                this.__isDecelerating = false;
-                this.__interruptedAnimation = true;
-            }
-
-            // Stop animation
-            if (this.__isAnimating) {
-                animate.stop(this.__isAnimating);
-                this.__isAnimating = false;
-                this.__interruptedAnimation = true;
-            }
-
-            // Use center point when dealing with two fingers
-            var currentTouchLeft, currentTouchTop;
-            var isSingleTouch = touches.length === 1;
-            if (isSingleTouch) {
-                currentTouchLeft = touches[0].pageX;
-                currentTouchTop = touches[0].pageY;
-            } else {
-                currentTouchLeft = Math.abs(touches[0].pageX + touches[1].pageX) / 2;
-                currentTouchTop = Math.abs(touches[0].pageY + touches[1].pageY) / 2;
-            }
-
-            // Store initial positions
-            this.__initialTouchLeft = currentTouchLeft;
-            this.__initialTouchTop = currentTouchTop;
-
-            // Store current zoom level
-            this.__zoomLevelStart = this.__zoomLevel;
-
-            // Store initial touch positions
-            this.__lastTouchLeft = currentTouchLeft;
-            this.__lastTouchTop = currentTouchTop;
-
-            // Store initial move time stamp
-            this.__lastTouchMove = timeStamp;
-
-            // Reset initial scale
-            this.__lastScale = 1;
-
-            // Reset locking flags
-            this.__enableScrollX = !isSingleTouch && this.options.scrollingX;
-            this.__enableScrollY = !isSingleTouch && this.options.scrollingY;
-
-            // Reset tracking flag
-            this.__isTracking = true;
-
-            // Reset deceleration complete flag
-            this.__didDecelerationComplete = false;
-
-            // Dragging starts directly with two fingers, otherwise lazy with an offset
-            this.__isDragging = !isSingleTouch;
-
-            // Some features are disabled in multi touch scenarios
-            this.__isSingleTouch = isSingleTouch;
-
-            // Clearing data structure
-            this.__positions = [];
-        },
-
-
-        /**
-         * Touch move handler for scrolling support
-         * @param {Number} [1.0] scale - ....
-         */
-        doTouchMove : function (touches, timeStamp, scale) {
-            // Array-like check is enough here
-            if (touches.length === undefined) {
-                throw new Error("Invalid touch list: " + touches);
-            }
-
-            if (timeStamp instanceof Date) {
-                timeStamp = timeStamp.valueOf();
-            }
-            if (typeof timeStamp !== "number") {
-                throw new Error("Invalid timestamp value: " + timeStamp);
-            }
-
-            // Ignore event when tracking is not enabled (event might be outside of element)
-            if (!this.__isTracking) {
-                return;
-            }
-
-            var currentTouchLeft, currentTouchTop;
-
-            // Compute move based around of center of fingers
-            if (touches.length === 2) {
-                currentTouchLeft = Math.abs(touches[0].pageX + touches[1].pageX) / 2;
-                currentTouchTop = Math.abs(touches[0].pageY + touches[1].pageY) / 2;
-            } else {
-                currentTouchLeft = touches[0].pageX;
-                currentTouchTop = touches[0].pageY;
-            }
-
-            var positions = this.__positions;
-
-            // Are we already is dragging mode?
-            if (this.__isDragging) {
-                // Compute move distance
-                var moveX = currentTouchLeft - this.__lastTouchLeft;
-                var moveY = currentTouchTop - this.__lastTouchTop;
-
-                // Read previous scroll position and zooming
-                var scrollLeft = this.__scrollLeft;
-                var scrollTop = this.__scrollTop;
-                var level = this.__zoomLevel;
-
-                // Work with scaling
-                if (scale !== undefined && this.options.zooming) {
-                    var oldLevel = level;
-
-                    // Recompute level based on previous scale and new scale
-                    level = level / this.__lastScale * scale;
-
-                    // Limit level according to configuration
-                    level = Math.max(Math.min(level, this.options.maxZoom), this.options.minZoom);
-
-                    // Only do further compution when change happened
-                    if (oldLevel !== level) {
-                        // Compute relative event position to container
-                        var currentTouchLeftRel = currentTouchLeft - this.__clientLeft;
-                        var currentTouchTopRel = currentTouchTop - this.__clientTop;
-
-                        // Recompute left and top coordinates based on new zoom level
-                        scrollLeft = ((currentTouchLeftRel + scrollLeft) * level / oldLevel) - currentTouchLeftRel;
-                        scrollTop = ((currentTouchTopRel + scrollTop) * level / oldLevel) - currentTouchTopRel;
-
-                        // Recompute max scroll values
-                        this.__computeScrollMax(level);
-                    }
-                }
-
-                if (this.__enableScrollX) {
-                    scrollLeft -= moveX * this.options.speedMultiplier;
-                    var maxScrollLeft = this.__maxScrollLeft;
-
-                    if (scrollLeft > maxScrollLeft || scrollLeft < 0) {
-                        // Slow down on the edges
-                        if (this.options.bouncing) {
-                            scrollLeft += (moveX / 2  * this.options.speedMultiplier);
-                        } else if (scrollLeft > maxScrollLeft) {
-                            scrollLeft = maxScrollLeft;
-                        } else {
-                            scrollLeft = 0;
-                        }
-                    }
-                }
-
-                // Compute new vertical scroll position
-                if (this.__enableScrollY) {
-                    scrollTop -= moveY * this.options.speedMultiplier;
-                    var maxScrollTop = this.__maxScrollTop;
-
-                    if (scrollTop > maxScrollTop || scrollTop < 0) {
-                        // Slow down on the edges
-                        if (this.options.bouncing) {
-                            scrollTop += (moveY / 2 * this.options.speedMultiplier);
-                        } else if (scrollTop > maxScrollTop) {
-                            scrollTop = maxScrollTop;
-                        } else {
-                            scrollTop = 0;
-                        }
-                    }
-                }
-
-                // Keep list from growing infinitely (holding min 10, max 20 measure points)
-                if (positions.length > 60) {
-                    positions.splice(0, 30);
-                }
-
-                // Track scroll movement for decleration
-                positions.push(scrollLeft, scrollTop, timeStamp);
-
-                // Sync scroll position
-                this.__publish(scrollLeft, scrollTop, level);
-
-                // Otherwise figure out whether we are switching into dragging mode now.
-            } else {
-                var minimumTrackingForScroll = this.options.locking ? 3 : 0;
-                var minimumTrackingForDrag = 5;
-
-                var distanceX = Math.abs(currentTouchLeft - this.__initialTouchLeft);
-                var distanceY = Math.abs(currentTouchTop - this.__initialTouchTop);
-
-                this.__enableScrollX = this.options.scrollingX && distanceX >= minimumTrackingForScroll;
-                this.__enableScrollY = this.options.scrollingY && distanceY >= minimumTrackingForScroll;
-
-                positions.push(this.__scrollLeft, this.__scrollTop, timeStamp);
-
-                this.__isDragging = (this.__enableScrollX || this.__enableScrollY) && (distanceX >= minimumTrackingForDrag || distanceY >= minimumTrackingForDrag);
-                if (this.__isDragging) {
-                    this.__interruptedAnimation = false;
-                }
-            }
-
-            // Update last touch positions and time stamp for next event
-            this.__lastTouchLeft = currentTouchLeft;
-            this.__lastTouchTop = currentTouchTop;
-            this.__lastTouchMove = timeStamp;
-            this.__lastScale = scale;
-        },
-
-
-        /**
-         * Touch end handler for scrolling support
-         */
-        doTouchEnd : function (timeStamp) {
-            if (timeStamp instanceof Date) {
-                timeStamp = timeStamp.valueOf();
-            }
-            if (typeof timeStamp !== "number") {
-                throw new Error("Invalid timestamp value: " + timeStamp);
-            }
-
-            // Ignore event when tracking is not enabled (no touchstart event on element)
-            // This is required as this listener ('touchmove') sits on the document and not on the element itself.
-            if (!this.__isTracking) {
-                return;
-            }
-
-            // Not touching anymore (when two finger hit the screen there are two touch end events)
-            this.__isTracking = false;
-
-            // Be sure to reset the dragging flag now. Here we also detect whether
-            // the finger has moved fast enough to switch into a deceleration animation.
-            if (this.__isDragging) {
-                // Reset dragging flag
-                this.__isDragging = false;
-
-                // Start deceleration
-                // Verify that the last move detected was in some relevant time frame
-                if (this.__isSingleTouch && this.options.animating && (timeStamp - this.__lastTouchMove) <= 100) {
-                    // Then figure out what the scroll position was about 100ms ago
-                    var positions = this.__positions;
-                    var endPos = positions.length - 1;
-                    var startPos = endPos;
-
-                    // Move pointer to position measured 100ms ago
-                    for (var i = endPos; i > 0 && positions[i] > (this.__lastTouchMove - 100); i -= 3) {
-                        startPos = i;
-                    }
-
-                    // If start and stop position is identical in a 100ms timeframe,
-                    // we cannot compute any useful deceleration.
-                    if (startPos !== endPos) {
-                        // Compute relative movement between these two points
-                        var timeOffset = positions[endPos] - positions[startPos];
-                        var movedLeft = this.__scrollLeft - positions[startPos - 2];
-                        var movedTop = this.__scrollTop - positions[startPos - 1];
-
-                        // Based on 50ms compute the movement to apply for each render step
-                        this.__decelerationVelocityX = movedLeft / timeOffset * (1000 / 60);
-                        this.__decelerationVelocityY = movedTop / timeOffset * (1000 / 60);
-
-                        // How much velocity is required to start the deceleration
-                        var minVelocityToStartDeceleration = this.options.paging || this.options.snapping ? 4 : 1;
-
-                        // Verify that we have enough velocity to start deceleration
-                        if (Math.abs(this.__decelerationVelocityX) > minVelocityToStartDeceleration || Math.abs(this.__decelerationVelocityY) > minVelocityToStartDeceleration) {
-                            this.__startDeceleration(timeStamp);
-                        }
-                    } else {
-                        this.options.scrollingComplete();
-                    }
-                } else if ((timeStamp - this.__lastTouchMove) > 100) {
-                    this.options.scrollingComplete();
-                }
-            }
-
-            // If this was a slower move it is per default non decelerated, but this
-            // still means that we want snap back to the bounds which is done here.
-            // This is placed outside the condition above to improve edge case stability
-            // e.g. touchend fired without enabled dragging. This should normally do not
-            // have modified the scroll positions or even showed the scrollbars though.
-            if (!this.__isDecelerating) {
-                if (this.__interruptedAnimation || this.__isDragging) {
-                    this.options.scrollingComplete();
-                }
-                this.scrollTo(this.__scrollLeft, this.__scrollTop, true, this.__zoomLevel);
-            }
-
-            // Fully cleanup list
-            this.__positions.length = 0;
-        },
-
-
-
-        /*
-          ---------------------------------------------------------------------------
-          PRIVATE API
-          ---------------------------------------------------------------------------
-        */
-
-        /**
-         * Applies the scroll position to the content element
-         *
-         * @param left {Number} Left scroll position
-         * @param top {Number} Top scroll position
-         * @param isAnimated {Boolean?false} Whether animation should be used to move to the new coordinates
-         */
-        __publish : function (left, top, zoom, isAnimated) {
-            // Remember whether we had an animation, then we try to continue
-            // based on the current "drive" of the animation.
-            var wasAnimating = this.__isAnimating;
-            if (wasAnimating) {
-                animate.stop(wasAnimating);
-                this.__isAnimating = false;
-            }
-
-            if (isAnimated && this.options.animating) {
-                // Keep scheduled positions for scrollBy/zoomBy functionality.
-                this.__scheduledLeft = left;
-                this.__scheduledTop = top;
-                this.__scheduledZoom = zoom;
-
-                var oldLeft = this.__scrollLeft;
-                var oldTop = this.__scrollTop;
-                var oldZoom = this.__zoomLevel;
-
-                var diffLeft = left - oldLeft;
-                var diffTop = top - oldTop;
-                var diffZoom = zoom - oldZoom;
-
-                var step = function (percent, now, render) {
-                    if (render) {
-                        this.__scrollLeft = oldLeft + (diffLeft * percent);
-                        this.__scrollTop = oldTop + (diffTop * percent);
-                        this.__zoomLevel = oldZoom + (diffZoom * percent);
-
-                        // Push values out
-                        if (this.__callback) {
-                            this.__callback(this.__scrollLeft, this.__scrollTop, this.__zoomLevel);
-                        }
-                    }
-                }.bind(this);
-
-                var verify = function (id) {
-                    return this.__isAnimating === id;
-                }.bind(this);
-
-                var completed = function (renderedFramesPerSecond, animationId, wasFinished) {
-                    if (animationId === this.__isAnimating) {
-                        this.__isAnimating = false;
-                    }
-                    if (this.__didDecelerationComplete || wasFinished) {
-                        this.options.scrollingComplete();
-                    }
-
-                    if (this.options.zooming) {
-                        this.__computeScrollMax();
-                        if (this.__zoomComplete) {
-                            this.__zoomComplete();
-                            this.__zoomComplete = null;
-                        }
-                    }
-                }.bind(this);
-
-                // When continuing based on previous animation we choose an ease-out animation instead of ease-in-out
-                this.__isAnimating = animate.start(step, verify, completed, this.options.animationDuration, wasAnimating ? easeOutCubic : easeInOutCubic);
-
-            } else {
-                this.__scheduledLeft = this.__scrollLeft = left;
-                this.__scheduledTop = this.__scrollTop = top;
-                this.__scheduledZoom = this.__zoomLevel = zoom;
-
-                // Push values out
-                if (this.__callback) {
-                    this.__callback(left, top, zoom);
-                }
-
-                // Fix max scroll ranges
-                if (this.options.zooming) {
-                    this.__computeScrollMax();
-                    if (this.__zoomComplete) {
-                        this.__zoomComplete();
-                        this.__zoomComplete = null;
-                    }
-                }
-            }
-        },
-
-
-        /**
-         * Recomputes scroll minimum values based on client dimensions and content dimensions.
-         */
-        __computeScrollMax : function (zoomLevel) {
-            if (zoomLevel === undefined) {
-                zoomLevel = this.__zoomLevel;
-            }
-
-            this.__maxScrollLeft = Math.max(this.__contentWidth*zoomLevel - this.__clientWidth, 0);
-            this.__maxScrollTop = Math.max(this.__contentHeight*zoomLevel - this.__clientHeight, 0);
-        },
-
-
-
-        /*
-          ---------------------------------------------------------------------------
-          ANIMATION (DECELERATION) SUPPORT
-          ---------------------------------------------------------------------------
-        */
-
-        /**
-         * Called when a touch sequence end and the speed of the finger was high enough
-         * to switch into deceleration mode.
-         */
-        __startDeceleration : function (timeStamp) {
-            if (this.options.paging) {
-                var scrollLeft = Math.max(Math.min(this.__scrollLeft, this.__maxScrollLeft), 0);
-                var scrollTop = Math.max(Math.min(this.__scrollTop, this.__maxScrollTop), 0);
-                var clientWidth = this.__clientWidth;
-                var clientHeight = this.__clientHeight;
-
-                // We limit deceleration not to the min/max values of the allowed range, but to the size of the visible client area.
-                // Each page should have exactly the size of the client area.
-                this.__minDecelerationScrollLeft = Math.floor(scrollLeft / clientWidth) * clientWidth;
-                this.__minDecelerationScrollTop = Math.floor(scrollTop / clientHeight) * clientHeight;
-                this.__maxDecelerationScrollLeft = Math.ceil(scrollLeft / clientWidth) * clientWidth;
-                this.__maxDecelerationScrollTop = Math.ceil(scrollTop / clientHeight) * clientHeight;
-            } else {
-                this.__minDecelerationScrollLeft = 0;
-                this.__minDecelerationScrollTop = 0;
-                this.__maxDecelerationScrollLeft = this.__maxScrollLeft;
-                this.__maxDecelerationScrollTop = this.__maxScrollTop;
-            }
-
-            // Wrap class method
-            var step = function (percent, now, render) {
-                this.__stepThroughDeceleration(render);
-            }.bind(this);
-
-            // How much velocity is required to keep the deceleration running
-            var minVelocityToKeepDecelerating = this.options.snapping ? 4 : 0.1;
-
-            // Detect whether it's still worth to continue animating steps
-            // If we are already slow enough to not being user perceivable anymore, we stop the whole process here.
-            var verify = function () {
-                var shouldContinue = Math.abs(this.__decelerationVelocityX) >= minVelocityToKeepDecelerating || Math.abs(this.__decelerationVelocityY) >= minVelocityToKeepDecelerating;
-                if (!shouldContinue) {
-                    this.__didDecelerationComplete = true;
-                }
-                return shouldContinue;
-            }.bind(this);
-
-            var completed = function (renderedFramesPerSecond, animationId, wasFinished) {
-                this.__isDecelerating = false;
-                if (this.__didDecelerationComplete) {
-                    this.options.scrollingComplete();
-                }
-
-                // Animate to grid when snapping is active, otherwise just fix out-of-boundary positions
-                this.scrollTo(this.__scrollLeft, this.__scrollTop, this.options.snapping);
-            }.bind(this);
-
-            // Start animation and switch on flag
-            this.__isDecelerating = animate.start(step, verify, completed);
-        },
-
-
-        /**
-         * Called on every step of the animation
-         *
-         * @param inMemory {Boolean?false} Whether to not render the current step, but keep it in memory only. Used internally only!
-         */
-        __stepThroughDeceleration : function (render) {
-
-            //
-            // COMPUTE NEXT SCROLL POSITION
-            //
-
-            // Add deceleration to scroll position
-            var scrollLeft = this.__scrollLeft + this.__decelerationVelocityX;
-            var scrollTop = this.__scrollTop + this.__decelerationVelocityY;
-
-
-            //
-            // HARD LIMIT SCROLL POSITION FOR NON BOUNCING MODE
-            //
-
-            if (!this.options.bouncing) {
-                var scrollLeftFixed = Math.max(Math.min(this.__maxDecelerationScrollLeft, scrollLeft), this.__minDecelerationScrollLeft);
-                if (scrollLeftFixed !== scrollLeft) {
-                    scrollLeft = scrollLeftFixed;
-                    this.__decelerationVelocityX = 0;
-                }
-
-                var scrollTopFixed = Math.max(Math.min(this.__maxDecelerationScrollTop, scrollTop), this.__minDecelerationScrollTop);
-                if (scrollTopFixed !== scrollTop) {
-                    scrollTop = scrollTopFixed;
-                    this.__decelerationVelocityY = 0;
-                }
-            }
-
-
-            //
-            // UPDATE SCROLL POSITION
-            //
-
-            if (render) {
-                this.__publish(scrollLeft, scrollTop, this.__zoomLevel);
-            } else {
-                this.__scrollLeft = scrollLeft;
-                this.__scrollTop = scrollTop;
-            }
-
-
-            //
-            // SLOW DOWN
-            //
-
-            // Slow down velocity on every iteration
-            if (!this.options.paging) {
-                // This is the factor applied to every iteration of the animation
-                // to slow down the process. This should emulate natural behavior where
-                // objects slow down when the initiator of the movement is removed
-                var frictionFactor = 0.95;
-
-                this.__decelerationVelocityX *= frictionFactor;
-                this.__decelerationVelocityY *= frictionFactor;
-            }
-
-
-            //
-            // BOUNCING SUPPORT
-            //
-
-            if (this.options.bouncing) {
-                var scrollOutsideX = 0;
-                var scrollOutsideY = 0;
-
-                // This configures the amount of change applied to deceleration/acceleration when reaching boundaries
-                var penetrationDeceleration = this.options.penetrationDeceleration;
-                var penetrationAcceleration = this.options.penetrationAcceleration;
-
-                // Check limits
-                if (scrollLeft < this.__minDecelerationScrollLeft) {
-                    scrollOutsideX = this.__minDecelerationScrollLeft - scrollLeft;
-                } else if (scrollLeft > this.__maxDecelerationScrollLeft) {
-                    scrollOutsideX = this.__maxDecelerationScrollLeft - scrollLeft;
-                }
-
-                if (scrollTop < this.__minDecelerationScrollTop) {
-                    scrollOutsideY = this.__minDecelerationScrollTop - scrollTop;
-                } else if (scrollTop > this.__maxDecelerationScrollTop) {
-                    scrollOutsideY = this.__maxDecelerationScrollTop - scrollTop;
-                }
-
-                // Slow down until slow enough, then flip back to snap position
-                if (scrollOutsideX !== 0) {
-                    if (scrollOutsideX * this.__decelerationVelocityX <= 0) {
-                        this.__decelerationVelocityX += scrollOutsideX * penetrationDeceleration;
-                    } else {
-                        this.__decelerationVelocityX = scrollOutsideX * penetrationAcceleration;
-                    }
-                }
-
-                if (scrollOutsideY !== 0) {
-                    if (scrollOutsideY * this.__decelerationVelocityY <= 0) {
-                        this.__decelerationVelocityY += scrollOutsideY * penetrationDeceleration;
-                    } else {
-                        this.__decelerationVelocityY = scrollOutsideY * penetrationAcceleration;
-                    }
-                }
-            }
-        }
-    };
-
-    return Scroller;
-}));
-
-
 /***/ })
 /******/ ]);
+
+/***/ })
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => module['default'] :
+/******/ 				() => module;
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
+/******/ })()
+;

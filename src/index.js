@@ -386,13 +386,12 @@ class _Layout extends Element {
       this.repaint();
     });
 
-    this.EE.on('one__image__render__done', (img)=> {
+    this.EE.on('one__image__render__done', ()=> {
       this.repaint();
     })
   }
 
   repaint() {
-    const start = new Date();
     repaintChildren(this.children);
     this.emit('repaint__done');
   }
@@ -522,10 +521,6 @@ class _Layout extends Element {
     if ( this.renderContext ) {
       this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
     }
-
-    /*['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(eventName => {
-      this.off(eventName);
-    });*/
 
     this.EE.off('image__render__done');
 

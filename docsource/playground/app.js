@@ -32416,14 +32416,13 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.on('repaint', function () {
           _this4.repaint();
         });
-        this.EE.on('one__image__render__done', function (img) {
+        this.EE.on('one__image__render__done', function () {
           _this4.repaint();
         });
       }
     }, {
       key: "repaint",
       value: function repaint() {
-        var start = new Date();
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["repaintChildren"])(this.children);
         this.emit('repaint__done');
       }
@@ -32564,10 +32563,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         if (this.renderContext) {
           this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
         }
-        /*['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(eventName => {
-          this.off(eventName);
-        });*/
-
 
         this.EE.off('image__render__done');
       }
@@ -36152,7 +36147,6 @@ function (module, __webpack_exports__, __webpack_require__) {
 
             _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
               _this2.img = img;
-              /*this.repaint();*/
 
               _this2.emit('repaint');
             });
@@ -36163,6 +36157,16 @@ function (module, __webpack_exports__, __webpack_require__) {
       });
       _this.type = 'Image';
       _this.renderBoxes = [];
+      _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
+        if (fromCache) {
+          _this.img = img;
+        } else {
+          // 当图片加载完成，实例可能已经被销毁了
+          if (_this.img && _this.isScrollViewChild) {
+            _this.EE.emit('image__render__done', _assertThisInitialized(_this));
+          }
+        }
+      });
       return _this;
     }
 
@@ -36172,7 +36176,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         var _this3 = this;
 
         this.renderBoxes.forEach(function (item) {
-          _this3.renderImg(item.ctx, item.box, false);
+          _this3.render(item.ctx, item.box, false);
         });
       } // 子类填充实现
 
@@ -36185,10 +36189,8 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.root = null;
       }
     }, {
-      key: "renderImg",
-      value: function renderImg(ctx, layoutBox) {
-        var needEmitEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
+      key: "render",
+      value: function render(ctx, layoutBox) {
         if (!this.img) {
           return;
         }
@@ -36222,7 +36224,7 @@ function (module, __webpack_exports__, __webpack_require__) {
           if (fromCache) {
             _this4.img = img;
 
-            _this4.renderImg(ctx, box, false);
+            _this4.render(ctx, box, false);
           } else {
             // 当图片加载完成，实例可能已经被销毁了
             if (_this4.img) {
@@ -36596,15 +36598,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+  var _common_touch_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(20);
   /* harmony import */
 
 
-  var _common_touch_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
-  /* harmony import */
-
-
-  var _common_util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
+  var _common_util_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -36723,9 +36721,6 @@ function (module, __webpack_exports__, __webpack_require__) {
     return _getPrototypeOf(o);
   }
 
-  var id = 0;
-  var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
-
   var ScrollView = /*#__PURE__*/function (_View) {
     _inherits(ScrollView, _View);
 
@@ -36752,16 +36747,11 @@ function (module, __webpack_exports__, __webpack_require__) {
 
       _this.top = 0; // 滚动处理器
 
-      _this.touch = new _common_touch_js__WEBPACK_IMPORTED_MODULE_2__["default"](); // canvas高度不能过高，在小游戏里面，对canvas尺寸是有限制的
+      _this.touch = new _common_touch_js__WEBPACK_IMPORTED_MODULE_1__["default"](); // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
 
-      _this.pageHeight = 2000; // 根据列表总高度和单页高度计算的分页数量
-
-      _this.pageCount = 1;
-      _this.canvasMap = {}; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
-
-      _this.throttleRepaint = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.clipRepaint, 16, _assertThisInitialized(_this));
-      _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.childImageLoadDoneCbk, 32, _assertThisInitialized(_this));
-      _this.renderTimers = [];
+      _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_2__["throttle"])(_this.childImageLoadDoneCbk, 32, _assertThisInitialized(_this));
+      _this.scrollCanvas = null;
+      _this.scrollCtx = null;
       _this.requestID = null;
       return _this;
     }
@@ -36780,245 +36770,120 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.renderBoxes.forEach(function (item) {
           _this2.render(item.ctx, item.box);
         });
+        this.scrollRender(this.top);
       }
       /**
-       * 列表子元素重绘之前先将所有的canvas擦除
+       * 与主canvas的尺寸保持一致
        */
-
-    }, {
-      key: "clear",
-      value: function clear() {
-        var _this3 = this;
-
-        Object.keys(this.canvasMap).forEach(function (key) {
-          var item = _this3.canvasMap[key];
-          item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
-        });
-      } // 与主canvas的尺寸保持一致
 
     }, {
       key: "updateRenderPort",
       value: function updateRenderPort(renderport) {
         this.renderport = renderport;
-      }
-      /**
-       * 计算分页数据
-       * 小游戏的canvas对尺寸有要求，如果如果高度过高，可能出现渲染不出来的情况
-       * 因此需要手动分页，列表过长的时候将数据绘制到几个canvas上面，这里预创建几个canvas
-       */
-
-    }, {
-      key: "calPageData",
-      value: function calPageData() {
-        this.pageCount = Math.ceil((this.scrollHeight + this.layoutBox.absoluteY) / this.pageHeight);
-
-        for (var i = 0; i < this.pageCount; i++) {
-          var cache = canvasPool.get(i);
-
-          if (cache) {
-            cache.context && cache.context.clearRect(0, 0, cache.canvas.width, cache.canvas.height);
-            cache.elements = [];
-            this.canvasMap[i] = cache;
-          } else {
-            this.canvasMap[i] = {
-              elements: []
-            };
-            canvasPool.set(i, this.canvasMap[i]);
-          }
-        }
+        this.scrollCanvas = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_2__["createCanvas"])();
+        this.scrollCtx = this.scrollCanvas.getContext('2d');
+        this.scrollCanvas.width = this.renderport.width;
+        this.scrollCanvas.height = this.renderport.height;
       }
     }, {
       key: "destroySelf",
       value: function destroySelf() {
         this.touch = null;
         this.isDestroyed = true;
-        this.throttleRepaint = null;
-        this.renderTimers.forEach(function (timer) {
-          clearTimeout(timer);
-        });
         this.root.off('repaint__done');
-        this.renderTimers = [];
-        this.canvasMap = {};
         this.ctx = null;
         this.children = null;
-        this.requestID && cancelAnimationFrame(this.requestID);
         this.root = null;
+        this.scrollCanvas = null;
+        this.scrollCtx = null;
+        this.requestID && cancelAnimationFrame(this.requestID);
       }
-      /**
-       * 滚动列表重绘逻辑
-       * 将分页canvas按照滚动裁剪绘制到主canvas上面
-       */
-
     }, {
-      key: "clipRepaint",
-      value: function clipRepaint(top) {
+      key: "renderTreeWithTop",
+      value: function renderTreeWithTop(tree, top) {
+        var _this3 = this;
+
+        var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
+
+        layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+        tree.render(this.scrollCtx, layoutBox);
+        tree.children.forEach(function (child) {
+          _this3.renderTreeWithTop(child, top);
+        });
+      }
+    }, {
+      key: "clear",
+      value: function clear() {
+        var box = this.layoutBox;
+        this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
+        this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
+      }
+    }, {
+      key: "scrollRender",
+      value: function scrollRender(top) {
         var _this4 = this;
 
-        if (this.isDestroyed) {
-          return;
-        }
-
         this.requestID = requestAnimationFrame(function () {
-          top = -top;
-          _this4.top = top;
           var box = _this4.layoutBox;
-          var abY = box.absoluteY;
+          _this4.top = -top; // scrollview在全局节点中的Y轴位置
 
-          if (_this4.isDestroyed || _this4.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
-            return;
-          } // 在主canvas上面将滚动列表区域擦除
+          var abY = box.absoluteY; // 根据滚动值获取裁剪区域
 
+          var startY = abY + _this4.top;
+          var endY = abY + _this4.top + box.height; // 清理滚动画布和主屏画布
 
-          _this4.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
+          _this4.clear();
 
+          _this4.children.forEach(function (child) {
+            var layoutBox = child.layoutBox;
+            var height = layoutBox.height;
+            var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
 
-          _this4.ctx.fillStyle = _this4.parent.style.backgroundColor || '#ffffff';
-
-          _this4.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
-
-          for (var i = 0; i < _this4.pageCount; i++) {
-            var canvas = _this4.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
-
-            var startY = abY + top;
-            var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
-
-            if (startY < _this4.pageHeight * (i + 1) && endY > _this4.pageHeight * i) {
-              /**
-               * 这里不能按照box.width * box.height的区域去裁剪
-               * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
-               */
-              var clipY = abY + top - _this4.pageHeight * i;
-              var clipH = box.height;
-              var renderY = abY;
-
-              if (clipY > 0 && _this4.pageHeight - clipY < box.height) {
-                clipH = _this4.pageHeight - clipY;
-              } else if (clipY < 0) {
-                clipH = clipY + box.height;
-                renderY = renderY - clipY;
-                clipY = 0;
-              }
-
-              _this4.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
+            if (originY + height >= startY && originY <= endY) {
+              _this4.renderTreeWithTop(child, _this4.top);
             }
-          }
+          });
+
+          _this4.ctx.drawImage(_this4.scrollCanvas, box.absoluteX, box.absoluteY, box.width, box.height, box.absoluteX, box.absoluteY, box.width, box.height);
         });
-      }
-    }, {
-      key: "renderChildren",
-      value: function renderChildren(tree) {
-        var _this5 = this;
-
-        var children = tree.children;
-        var height = this.pageHeight;
-        Object.keys(children).forEach(function (id) {
-          var child = children[id];
-          var originY = child.layoutBox.originalAbsoluteY;
-          var pageIndex = Math.floor(originY / height);
-          var nextPage = pageIndex + 1;
-          child.layoutBox.absoluteY -= _this5.pageHeight * pageIndex;
-
-          if (child.checkNeedRender()) {
-            _this5.canvasMap[pageIndex].elements.push({
-              element: child,
-              box: child.layoutBox
-            });
-          } // 对于跨界的元素，两边都绘制下
-
-
-          if (originY + child.layoutBox.height > height * nextPage) {
-            var tmpBox = Object.assign({}, child.layoutBox);
-            tmpBox.absoluteY = originY - _this5.pageHeight * nextPage;
-
-            if (child.checkNeedRender()) {
-              _this5.canvasMap[nextPage].elements.push({
-                element: child,
-                box: tmpBox
-              });
-            }
-          }
-
-          _this5.renderChildren(child);
-        });
-      }
-    }, {
-      key: "insertElements",
-      value: function insertElements(pageIndex) {
-        var _this6 = this;
-
-        var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
-        var ctx = can.getContext('2d');
-        can.width = this.renderport.width;
-        can.height = this.pageHeight;
-        ctx.id = ++id;
-        this.canvasMap[pageIndex].canvas = can;
-        this.canvasMap[pageIndex].context = ctx;
-        this.canvasMap[pageIndex].elements.forEach(function (ele) {
-          ele.element.insert(ctx, ele.box);
-        });
-
-        if (pageIndex < this.pageCount - 1) {
-          var timer = setTimeout(function () {
-            _this6.insertElements(++pageIndex);
-          }, 250);
-          this.renderTimers.push(timer);
-        }
       }
     }, {
       key: "childImageLoadDoneCbk",
       value: function childImageLoadDoneCbk(img) {
-        var start = new Date();
-        var list = Object.values(this.canvasMap);
-        var pageIndex = -1;
+        var box = this.layoutBox; // 根据滚动值获取裁剪区域
 
-        for (var i = 0; i < list.length; i++) {
-          if (list[i].elements.find(function (item) {
-            return item.element === img;
-          })) {
-            pageIndex = i;
-            break;
-          }
+        var startY = box.absoluteY + this.top;
+        var endY = box.absoluteY + this.top + box.height;
+        var layoutBox = img.layoutBox;
+        var height = layoutBox.height;
+        var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
+
+        if (originY + height >= startY && originY <= endY) {
+          this.scrollRender(-this.top);
         }
-
-        if (pageIndex > -1) {
-          var _start = new Date();
-
-          var canItem = this.canvasMap[pageIndex];
-          var canvas = canItem.canvas;
-          var ctx = canItem.context;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          this.canvasMap[pageIndex].elements.forEach(function (ele) {
-            Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["repaintTree"])(ele.element);
-          });
-        }
-        /*this.throttleRepaint(-this.top || 0);*/
-
-
-        this.clipRepaint(-this.top);
       }
     }, {
       key: "insertScrollView",
       value: function insertScrollView(context) {
-        var _this7 = this; // 绘制容器
+        var _this5 = this; // 绘制容器
 
 
-        this.insert(context);
+        this.insert(context); // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
+
         this.root.on('repaint__done', function () {
-          _this7.clipRepaint(-_this7.top);
-        }); // 计算列表应该分割成几页
-
-        this.calPageData(); // 计算分页数据：每个元素应该坐落在哪个canvas
-
-        this.renderChildren(this);
-        this.insertElements(0);
-        this.clipRepaint(-this.top); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+          _this5.scrollRender(_this5.top);
+        });
+        this.scrollRender(0); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
 
         this.EE.on('image__render__done', function (img) {
-          _this7.throttleImageLoadDone(img);
+          _this5.throttleImageLoadDone(img);
         });
+        /**
+         * scrollview子元素总高度大于盒子高度，绑定滚动事件
+         */
 
         if (this.scrollHeight > this.layoutBox.height) {
-          this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, this.clipRepaint.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
+          this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, this.scrollRender.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
 
           this.on('touchstart', this.touch.startFunc);
           this.on('touchmove', this.touch.moveFunc);
