@@ -224,11 +224,11 @@ export default class ScrollView extends View {
       if (this.scrollActive && !this.isDestroyed) {
         this.scrollRender(left, top);
 
-        if (this.currentEvent) {
-          this.currentEvent.type = 'scroll';
-          this.currentEvent.currentTarget = this;
-          this.emit('scroll', this.currentEvent);
-        }
+        // if (this.currentEvent) {
+        //   this.currentEvent.type = 'scroll';
+        //   this.currentEvent.currentTarget = this;
+        //   this.emit('scroll', this.currentEvent);
+        // }
       }
     }, this.scrollerOpt);
 
@@ -238,18 +238,30 @@ export default class ScrollView extends View {
     this.scrollActive = false;
     this.on('touchstart', (e) => {
       this.scrollActive = true;
+      if (!e.touches) {
+        e.touches = [e];
+      }
+
       e.touches.forEach(touch => {
-        touch.pageX *= dpr;
-        touch.pageY *= dpr;
+        if (dpr !== 1) {
+          touch.pageX *= dpr;
+          touch.pageY *= dpr;            
+        }
       });
       this.scrollerObj.doTouchStart(e.touches, e.timeStamp);
       this.currentEvent = e;
     });
 
     this.on('touchmove', (e) => {
+      if (!e.touches) {
+        e.touches = [e];
+      }
+
       e.touches.forEach(touch => {
-        touch.pageX *= dpr;
-        touch.pageY *= dpr;
+        if (dpr !== 1) {
+          touch.pageX *= dpr;
+          touch.pageY *= dpr;  
+        }
       });
       this.scrollerObj.doTouchMove(e.touches, e.timeStamp);
       this.currentEvent = e;
@@ -257,9 +269,14 @@ export default class ScrollView extends View {
 
     // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
     this.root.on('touchend', (e) => {
+      if (!e.touches) {
+        e.touches = [e];
+      }
       e.touches.forEach(touch => {
-        touch.pageX *= dpr;
-        touch.pageY *= dpr;
+        if (dpr !== 1) {
+          touch.pageX *= dpr;
+          touch.pageY *= dpr;  
+        }
       });
       this.scrollerObj.doTouchEnd(e.timeStamp);
       this.currentEvent = e;

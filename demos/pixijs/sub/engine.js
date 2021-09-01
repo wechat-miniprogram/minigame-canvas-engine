@@ -212,8 +212,13 @@ var create = function create(node, style, parent) {
       parentStyle = parent.style;
     } else if (typeof sharedCanvas !== 'undefined') {
       parentStyle = sharedCanvas;
-    } else {
+    } else if (typeof __env !== 'undefined') {
       parentStyle = __env.getSharedCanvas();
+    } else {
+      parentStyle = {
+        width: 300,
+        height: 150
+      };
     }
 
     if (isPercent(thisStyle.width)) {
@@ -715,7 +720,9 @@ var Layout = new _Layout({
 /* 1 */
 /***/ (function(module, exports) {
 
-GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
+if (typeof GameGlobal !== "undefined") {
+  GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
+}
 
 /***/ }),
 /* 2 */
@@ -760,7 +767,7 @@ function getRgba(hex, opacity) {
 }
 
 var toEventName = function toEventName(event, id) {
-  var elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
+  var elementEvent = ["click", "touchstart", "touchmove", "touchend", "touchcancel"];
 
   if (elementEvent.indexOf(event) !== -1) {
     return "element-".concat(id, "-").concat(event);
@@ -778,9 +785,9 @@ var Element = /*#__PURE__*/function () {
         _ref$props = _ref.props,
         props = _ref$props === void 0 ? {} : _ref$props,
         _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? '' : _ref$idName,
+        idName = _ref$idName === void 0 ? "" : _ref$idName,
         _ref$className = _ref.className,
-        className = _ref$className === void 0 ? '' : _ref$className,
+        className = _ref$className === void 0 ? "" : _ref$className,
         _ref$id = _ref.id,
         id = _ref$id === void 0 ? ++uuid : _ref$id;
 
@@ -800,11 +807,11 @@ var Element = /*#__PURE__*/function () {
     this.isDestroyed = false;
     this.layoutBox = {};
 
-    if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
+    if (style.opacity !== undefined && style.color && style.color.indexOf("#") > -1) {
       style.color = getRgba(style.color, style.opacity);
     }
 
-    if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf('#') > -1) {
+    if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf("#") > -1) {
       style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
     }
 
@@ -815,7 +822,7 @@ var Element = /*#__PURE__*/function () {
     } // 事件冒泡逻辑
 
 
-    ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
+    ["touchstart", "touchmove", "touchcancel", "touchend", "click"].forEach(function (eventName) {
       _this.on(eventName, function (e, touchMsg) {
         _this.parent && _this.parent.emit(eventName, e, touchMsg);
       });
@@ -828,8 +835,8 @@ var Element = /*#__PURE__*/function () {
     value: function initRepaint() {
       var _this2 = this;
 
-      this.on('repaint', function (e) {
-        _this2.parent && _this2.parent.emit('repaint', e);
+      this.on("repaint", function (e) {
+        _this2.parent && _this2.parent.emit("repaint", e);
       });
     } // 子类填充实现
 
@@ -851,10 +858,10 @@ var Element = /*#__PURE__*/function () {
     value: function destroy() {
       var _this3 = this;
 
-      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
+      ["touchstart", "touchmove", "touchcancel", "touchend", "click", "repaint"].forEach(function (eventName) {
         _this3.off(eventName);
       });
-      this.EE.off('image__render__done');
+      this.EE.off("image__render__done");
       this.isDestroyed = true;
       this.EE = null;
       /*this.root          = null;*/
@@ -920,63 +927,112 @@ var Element = /*#__PURE__*/function () {
       ctx.clip();
     }
   }, {
-    key: "renderBorder",
-    value: function renderBorder(ctx, layoutBox) {
+    key: "renderBorder2",
+    value: function renderBorder2(ctx, layoutBox) {
       var style = this.style || {};
+      var radius = style.borderRadius || 0;
+      var _style$borderWidth = style.borderWidth,
+          borderWidth = _style$borderWidth === void 0 ? 0 : _style$borderWidth;
+      var borderTopLeftRadius = style.borderTopLeftRadius || radius;
+      var borderTopRightRadius = style.borderTopRightRadius || radius;
+      var borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
+      var borderBottomRightRadius = style.borderBottomRightRadius || radius;
+      var box = layoutBox || this.layoutBox;
+      var borderColor = style.borderColor;
+      var x = box.absoluteX;
+      var y = box.absoluteY;
+      var width = box.width,
+          height = box.height;
 
-      if (style.borderRadius) {
-        this.roundRect(ctx, layoutBox);
+      if (!borderWidth) {
+        return;
       }
 
+      ctx.lineWidth = borderWidth;
+      ctx.strokeStyle = borderColor; // 左上角的点
+
+      ctx.beginPath();
+      ctx.moveTo(x + borderTopLeftRadius, y);
+      ctx.lineTo(x + width - borderTopRightRadius, y); // 右上角的圆角
+
+      ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius); // 右下角的点
+
+      ctx.lineTo(x + width, y + height - borderBottomRightRadius); // 右下角的圆角
+
+      ctx.quadraticCurveTo(x + width, y + height, x + width - borderBottomRightRadius, y + height); // 左下角的点
+
+      ctx.lineTo(x + borderBottomLeftRadius, y + height); // 左下角的圆角
+
+      ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius); // 左上角的点
+
+      ctx.lineTo(x, y + borderTopLeftRadius); // 左上角的圆角
+
+      ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);
+      ctx.stroke();
+    } // https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-using-html-canvas
+
+  }, {
+    key: "renderBorder",
+    value: function renderBorder(ctx, layoutBox) {
+      var needStroke = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var style = this.style || {};
       ctx.save();
       var box = layoutBox || this.layoutBox;
       var borderWidth = style.borderWidth || 0;
-      var borderLeftWidth = style.borderLeftWidth || 0;
-      var borderRightWidth = style.borderRightWidth || 0;
-      var borderTopWidth = style.borderTopWidth || 0;
-      var borderBottomWidth = style.borderBottomWidth || 0;
+      var borderLeftWidth = style.borderLeftWidth || style.borderWidth || 0;
+      var borderRightWidth = style.borderRightWidth || style.borderWidth || 0;
+      var borderTopWidth = style.borderTopWidth || style.borderWidth || 0;
+      var borderBottomWidth = style.borderBottomWidth || style.borderWidth || 0;
       var radius = style.borderRadius || 0;
       var borderColor = style.borderColor;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
       ctx.beginPath();
 
-      if (borderWidth && borderColor) {
-        ctx.lineWidth = borderWidth;
-        ctx.strokeStyle = borderColor;
-        ctx.strokeRect(drawX, drawY, box.width, box.height);
-      }
+      if (borderColor) {
+        if (borderWidth) {
+          ctx.lineWidth = borderWidth;
+          ctx.strokeStyle = borderColor;
+          ctx.strokeRect(drawX, drawY, box.width, box.height);
+        }
 
-      if (borderTopWidth && (borderColor || style.borderTopColor)) {
-        ctx.lineWidth = borderTopWidth;
-        ctx.strokeStyle = style.borderTopColor || borderColor;
-        ctx.moveTo(radius ? drawX + radius : drawX, drawY + borderTopWidth / 2);
-        ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + borderTopWidth / 2);
-      }
+        if (borderTopWidth && (borderColor || style.borderTopColor)) {
+          ctx.lineWidth = borderTopWidth;
+          ctx.strokeStyle = style.borderTopColor || borderColor;
+          ctx.moveTo(radius ? drawX + radius : drawX, drawY + borderTopWidth / 2);
+          ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + borderTopWidth / 2);
+        }
 
-      if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
-        ctx.lineWidth = borderBottomWidth;
-        ctx.strokeStyle = style.borderBottomColor || borderColor;
-        ctx.moveTo(radius ? drawX + radius : drawX, drawY + box.height - borderBottomWidth / 2);
-        ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + box.height - borderBottomWidth / 2);
-      }
+        if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
+          ctx.lineWidth = borderBottomWidth;
+          ctx.strokeStyle = style.borderBottomColor || borderColor;
+          ctx.moveTo(radius ? drawX + radius : drawX, drawY + box.height - borderBottomWidth / 2);
+          ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + box.height - borderBottomWidth / 2);
+        }
 
-      if (borderLeftWidth && (borderColor || style.borderLeftColor)) {
-        ctx.lineWidth = borderLeftWidth;
-        ctx.strokeStyle = style.borderLeftColor || borderColor;
-        ctx.moveTo(drawX + borderLeftWidth / 2, radius ? drawY + radius : drawY);
-        ctx.lineTo(drawX + borderLeftWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
-      }
+        if (borderLeftWidth && (borderColor || style.borderLeftColor)) {
+          ctx.lineWidth = borderLeftWidth;
+          ctx.strokeStyle = style.borderLeftColor || borderColor;
+          ctx.moveTo(drawX - borderLeftWidth / 2, radius ? drawY + radius : drawY);
+          ctx.lineTo(drawX - borderLeftWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
+        }
 
-      if (borderRightWidth && (borderColor || style.borderRightColor)) {
-        ctx.lineWidth = borderRightWidth;
-        ctx.strokeStyle = style.borderRightColor || borderColor;
-        ctx.moveTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + radius : drawY);
-        ctx.lineTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
+        if (borderRightWidth && (borderColor || style.borderRightColor)) {
+          ctx.lineWidth = borderRightWidth;
+          ctx.strokeStyle = style.borderRightColor || borderColor;
+          ctx.moveTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + radius : drawY);
+          ctx.lineTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
+        }
       }
 
       ctx.closePath();
-      ctx.stroke();
+
+      if (needStroke) {
+        ctx.stroke();
+      } else {
+        ctx.clip();
+      }
+
       ctx.restore();
     }
   }]);
@@ -3541,7 +3597,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(22);
+/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(24);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BitMapText", function() { return _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
 
@@ -3731,11 +3787,11 @@ var Image = /*#__PURE__*/function (_Element) {
         _opts$props = opts.props,
         props = _opts$props === void 0 ? {} : _opts$props,
         _opts$idName = opts.idName,
-        idName = _opts$idName === void 0 ? '' : _opts$idName,
+        idName = _opts$idName === void 0 ? "" : _opts$idName,
         _opts$className = opts.className,
-        className = _opts$className === void 0 ? '' : _opts$className,
+        className = _opts$className === void 0 ? "" : _opts$className,
         _opts$src = opts.src,
-        src = _opts$src === void 0 ? '' : _opts$src;
+        src = _opts$src === void 0 ? "" : _opts$src;
     _this = _super.call(this, {
       props: props,
       idName: idName,
@@ -3755,14 +3811,14 @@ var Image = /*#__PURE__*/function (_Element) {
           _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
             _this2.img = img;
 
-            _this2.emit('repaint');
+            _this2.emit("repaint");
           });
         }
       },
       enumerable: true,
       configurable: true
     });
-    _this.type = 'Image';
+    _this.type = "Image";
     _this.renderBoxes = [];
     _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
       if (fromCache) {
@@ -3770,7 +3826,7 @@ var Image = /*#__PURE__*/function (_Element) {
       } else {
         // 当图片加载完成，实例可能已经被销毁了
         if (_this.img && _this.isScrollViewChild) {
-          _this.EE.emit('image__render__done', _assertThisInitialized(_this));
+          _this.EE.emit("image__render__done", _assertThisInitialized(_this));
         }
       }
     });
@@ -3784,7 +3840,7 @@ var Image = /*#__PURE__*/function (_Element) {
       var parent = this.parent;
 
       while (parent && !flag) {
-        if (parent.type === 'ScrollView') {
+        if (parent.type === "ScrollView") {
           flag = true;
         } else {
           parent = parent.parent;
@@ -3829,8 +3885,12 @@ var Image = /*#__PURE__*/function (_Element) {
       ctx.lineWidth = style.borderWidth || 0;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
-      this.renderBorder(ctx, layoutBox);
-      ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+      ctx.save();
+      this.renderBorder2(ctx, layoutBox); // ctx.clip();
+      // ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+      // ctx.stroke();
+      // this.renderBorder(ctx, layoutBox, true);
+
       ctx.restore();
     }
   }, {
@@ -3851,7 +3911,7 @@ var Image = /*#__PURE__*/function (_Element) {
         } else {
           // 当图片加载完成，实例可能已经被销毁了
           if (_this4.img) {
-            var eventName = _this4.isScrollViewChild ? 'image__render__done' : 'one__image__render__done';
+            var eventName = _this4.isScrollViewChild ? "image__render__done" : "one__image__render__done";
 
             _this4.EE.emit(eventName, _this4);
           }
@@ -4088,7 +4148,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
 /* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(17);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(21);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -4340,14 +4400,12 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
         // 可能被销毁了或者节点树还没准备好
         if (_this6.scrollActive && !_this6.isDestroyed) {
-          _this6.scrollRender(left, top);
+          _this6.scrollRender(left, top); // if (this.currentEvent) {
+          //   this.currentEvent.type = 'scroll';
+          //   this.currentEvent.currentTarget = this;
+          //   this.emit('scroll', this.currentEvent);
+          // }
 
-          if (_this6.currentEvent) {
-            _this6.currentEvent.type = 'scroll';
-            _this6.currentEvent.currentTarget = _this6;
-
-            _this6.emit('scroll', _this6.currentEvent);
-          }
         }
       }, this.scrollerOpt);
       this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
@@ -4355,9 +4413,16 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.scrollActive = false;
       this.on('touchstart', function (e) {
         _this6.scrollActive = true;
+
+        if (!e.touches) {
+          e.touches = [e];
+        }
+
         e.touches.forEach(function (touch) {
-          touch.pageX *= dpr;
-          touch.pageY *= dpr;
+          if (dpr !== 1) {
+            touch.pageX *= dpr;
+            touch.pageY *= dpr;
+          }
         });
 
         _this6.scrollerObj.doTouchStart(e.touches, e.timeStamp);
@@ -4365,9 +4430,15 @@ var ScrollView = /*#__PURE__*/function (_View) {
         _this6.currentEvent = e;
       });
       this.on('touchmove', function (e) {
+        if (!e.touches) {
+          e.touches = [e];
+        }
+
         e.touches.forEach(function (touch) {
-          touch.pageX *= dpr;
-          touch.pageY *= dpr;
+          if (dpr !== 1) {
+            touch.pageX *= dpr;
+            touch.pageY *= dpr;
+          }
         });
 
         _this6.scrollerObj.doTouchMove(e.touches, e.timeStamp);
@@ -4376,9 +4447,15 @@ var ScrollView = /*#__PURE__*/function (_View) {
       }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
 
       this.root.on('touchend', function (e) {
+        if (!e.touches) {
+          e.touches = [e];
+        }
+
         e.touches.forEach(function (touch) {
-          touch.pageX *= dpr;
-          touch.pageY *= dpr;
+          if (dpr !== 1) {
+            touch.pageX *= dpr;
+            touch.pageY *= dpr;
+          }
         });
 
         _this6.scrollerObj.doTouchEnd(e.timeStamp);
@@ -4394,225 +4471,13 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
 
 /***/ }),
-/* 21 */,
-/* 22 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapText; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var bitMapPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
-
-var BitMapText = /*#__PURE__*/function (_Element) {
-  _inherits(BitMapText, _Element);
-
-  var _super = _createSuper(BitMapText);
-
-  function BitMapText(opts) {
-    var _this;
-
-    _classCallCheck(this, BitMapText);
-
-    var _opts$style = opts.style,
-        style = _opts$style === void 0 ? {} : _opts$style,
-        _opts$props = opts.props,
-        props = _opts$props === void 0 ? {} : _opts$props,
-        _opts$idName = opts.idName,
-        idName = _opts$idName === void 0 ? '' : _opts$idName,
-        _opts$className = opts.className,
-        className = _opts$className === void 0 ? '' : _opts$className,
-        _opts$value = opts.value,
-        value = _opts$value === void 0 ? '' : _opts$value,
-        _opts$font = opts.font,
-        font = _opts$font === void 0 ? '' : _opts$font;
-    _this = _super.call(this, {
-      props: props,
-      idName: idName,
-      className: className,
-      style: style
-    });
-    _this.type = "BitMapText";
-    _this.ctx = null;
-    _this.valuesrc = value;
-    _this.renderBoxes = [];
-    Object.defineProperty(_assertThisInitialized(_this), "value", {
-      get: function get() {
-        return this.valuesrc;
-      },
-      set: function set(newValue) {
-        if (newValue !== this.valuesrc) {
-          this.valuesrc = newValue;
-          this.emit('repaint');
-        }
-      },
-      enumerable: true,
-      configurable: true
-    });
-    _this.font = bitMapPool.get(font);
-
-    if (!_this.font) {
-      console.error('Please invoke API `registBitMapFont` before using `BitMapText`');
-    }
-
-    return _this;
-  }
-
-  _createClass(BitMapText, [{
-    key: "insert",
-    value: function insert(ctx, box) {
-      this.renderBoxes.push({
-        ctx: ctx,
-        box: box
-      });
-      this.render(ctx, box);
-    }
-  }, {
-    key: "repaint",
-    value: function repaint() {
-      var _this2 = this;
-
-      this.renderBoxes.forEach(function (item) {
-        _this2.render(item.ctx, item.box);
-      });
-    }
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.root = null;
-    }
-  }, {
-    key: "render",
-    value: function render(ctx, layoutBox) {
-      var _this3 = this;
-
-      if (!this.font) {
-        return;
-      }
-
-      if (this.font.ready) {
-        this.renderText(ctx, layoutBox);
-      } else {
-        this.font.event.on('text__load__done', function () {
-          if (!_this3.isDestroyed) {
-            _this3.renderText(ctx, layoutBox);
-          }
-        });
-      }
-    }
-  }, {
-    key: "getTextBounds",
-    value: function getTextBounds() {
-      var style = this.style;
-      var _style$letterSpacing = style.letterSpacing,
-          letterSpacing = _style$letterSpacing === void 0 ? 0 : _style$letterSpacing;
-      var width = 0;
-
-      for (var i = 0, len = this.value.length; i < len; i++) {
-        var _char = this.value[i];
-        var cfg = this.font.chars[_char];
-
-        if (cfg) {
-          width += cfg.w;
-
-          if (i < len - 1) {
-            width += letterSpacing;
-          }
-        }
-      }
-
-      return {
-        width: width,
-        height: this.font.lineHeight
-      };
-    }
-  }, {
-    key: "renderText",
-    value: function renderText(ctx, layoutBox) {
-      var bounds = this.getTextBounds();
-      var defaultLineHeight = this.font.lineHeight;
-      ctx.save();
-      this.renderBorder(ctx, layoutBox);
-      var box = layoutBox || this.layoutBox;
-      var style = this.style;
-      var width = style.width,
-          height = style.height,
-          _style$lineHeight = style.lineHeight,
-          lineHeight = _style$lineHeight === void 0 ? defaultLineHeight : _style$lineHeight,
-          textAlign = style.textAlign,
-          verticalAlign = style.verticalAlign; // 元素包围盒的左上角坐标
-
-      var x = box.absoluteX;
-      var y = box.absoluteY;
-      var scaleY = lineHeight / defaultLineHeight;
-      var realWidth = scaleY * bounds.width; // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
-
-      if (lineHeight < height) {
-        if (verticalAlign === 'middle') {
-          y += (height - lineHeight) / 2;
-        } else if (verticalAlign === 'bottom') {
-          y = y + height - lineHeight;
-        }
-      }
-
-      if (width > realWidth) {
-        if (textAlign === 'center') {
-          x += (width - realWidth) / 2;
-        } else if (textAlign === 'right') {
-          x += width - realWidth;
-        }
-      }
-
-      for (var i = 0; i < this.value.length; i++) {
-        var _char2 = this.value[i];
-        var cfg = this.font.chars[_char2];
-
-        if (cfg) {
-          ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX * scaleY, y + cfg.offY * scaleY, cfg.w * scaleY, cfg.h * scaleY);
-          x += cfg.w * scaleY;
-        }
-      }
-    }
-  }]);
-
-  return BitMapText;
-}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-
-/***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
     if (true) {
         // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(24), __webpack_require__(25)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(22), __webpack_require__(23)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -4624,7 +4489,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -4858,7 +4723,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -4878,7 +4743,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 (function (root, factory) {
     if (true) {
         // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(24)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(22)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -6010,6 +5875,217 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     return Scroller;
 }));
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapText; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var bitMapPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
+
+var BitMapText = /*#__PURE__*/function (_Element) {
+  _inherits(BitMapText, _Element);
+
+  var _super = _createSuper(BitMapText);
+
+  function BitMapText(opts) {
+    var _this;
+
+    _classCallCheck(this, BitMapText);
+
+    var _opts$style = opts.style,
+        style = _opts$style === void 0 ? {} : _opts$style,
+        _opts$props = opts.props,
+        props = _opts$props === void 0 ? {} : _opts$props,
+        _opts$idName = opts.idName,
+        idName = _opts$idName === void 0 ? '' : _opts$idName,
+        _opts$className = opts.className,
+        className = _opts$className === void 0 ? '' : _opts$className,
+        _opts$value = opts.value,
+        value = _opts$value === void 0 ? '' : _opts$value,
+        _opts$font = opts.font,
+        font = _opts$font === void 0 ? '' : _opts$font;
+    _this = _super.call(this, {
+      props: props,
+      idName: idName,
+      className: className,
+      style: style
+    });
+    _this.type = "BitMapText";
+    _this.ctx = null;
+    _this.valuesrc = value;
+    _this.renderBoxes = [];
+    Object.defineProperty(_assertThisInitialized(_this), "value", {
+      get: function get() {
+        return this.valuesrc;
+      },
+      set: function set(newValue) {
+        if (newValue !== this.valuesrc) {
+          this.valuesrc = newValue;
+          this.emit('repaint');
+        }
+      },
+      enumerable: true,
+      configurable: true
+    });
+    _this.font = bitMapPool.get(font);
+
+    if (!_this.font) {
+      console.error('Please invoke API `registBitMapFont` before using `BitMapText`');
+    }
+
+    return _this;
+  }
+
+  _createClass(BitMapText, [{
+    key: "insert",
+    value: function insert(ctx, box) {
+      this.renderBoxes.push({
+        ctx: ctx,
+        box: box
+      });
+      this.render(ctx, box);
+    }
+  }, {
+    key: "repaint",
+    value: function repaint() {
+      var _this2 = this;
+
+      this.renderBoxes.forEach(function (item) {
+        _this2.render(item.ctx, item.box);
+      });
+    }
+  }, {
+    key: "destroySelf",
+    value: function destroySelf() {
+      this.root = null;
+    }
+  }, {
+    key: "render",
+    value: function render(ctx, layoutBox) {
+      var _this3 = this;
+
+      if (!this.font) {
+        return;
+      }
+
+      if (this.font.ready) {
+        this.renderText(ctx, layoutBox);
+      } else {
+        this.font.event.on('text__load__done', function () {
+          if (!_this3.isDestroyed) {
+            _this3.renderText(ctx, layoutBox);
+          }
+        });
+      }
+    }
+  }, {
+    key: "getTextBounds",
+    value: function getTextBounds() {
+      var style = this.style;
+      var _style$letterSpacing = style.letterSpacing,
+          letterSpacing = _style$letterSpacing === void 0 ? 0 : _style$letterSpacing;
+      var width = 0;
+
+      for (var i = 0, len = this.value.length; i < len; i++) {
+        var _char = this.value[i];
+        var cfg = this.font.chars[_char];
+
+        if (cfg) {
+          width += cfg.w;
+
+          if (i < len - 1) {
+            width += letterSpacing;
+          }
+        }
+      }
+
+      return {
+        width: width,
+        height: this.font.lineHeight
+      };
+    }
+  }, {
+    key: "renderText",
+    value: function renderText(ctx, layoutBox) {
+      var bounds = this.getTextBounds();
+      var defaultLineHeight = this.font.lineHeight;
+      ctx.save();
+      this.renderBorder(ctx, layoutBox);
+      var box = layoutBox || this.layoutBox;
+      var style = this.style;
+      var width = style.width,
+          height = style.height,
+          _style$lineHeight = style.lineHeight,
+          lineHeight = _style$lineHeight === void 0 ? defaultLineHeight : _style$lineHeight,
+          textAlign = style.textAlign,
+          verticalAlign = style.verticalAlign; // 元素包围盒的左上角坐标
+
+      var x = box.absoluteX;
+      var y = box.absoluteY;
+      var scaleY = lineHeight / defaultLineHeight;
+      var realWidth = scaleY * bounds.width; // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
+
+      if (lineHeight < height) {
+        if (verticalAlign === 'middle') {
+          y += (height - lineHeight) / 2;
+        } else if (verticalAlign === 'bottom') {
+          y = y + height - lineHeight;
+        }
+      }
+
+      if (width > realWidth) {
+        if (textAlign === 'center') {
+          x += (width - realWidth) / 2;
+        } else if (textAlign === 'right') {
+          x += width - realWidth;
+        }
+      }
+
+      for (var i = 0; i < this.value.length; i++) {
+        var _char2 = this.value[i];
+        var cfg = this.font.chars[_char2];
+
+        if (cfg) {
+          ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX * scaleY, y + cfg.offY * scaleY, cfg.w * scaleY, cfg.h * scaleY);
+          x += cfg.w * scaleY;
+        }
+      }
+    }
+  }]);
+
+  return BitMapText;
+}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
 
 
 /***/ })

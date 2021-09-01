@@ -89,12 +89,15 @@ const create = function (node, style, parent) {
     let parentStyle;
     if (parent) {
       parentStyle = parent.style;
-    }
-    else if (typeof sharedCanvas !== 'undefined') {
+    } else if (typeof sharedCanvas !== 'undefined') {
       parentStyle = sharedCanvas;
-    }
-    else {
+    } else if (typeof __env !== 'undefined') {
       parentStyle = __env.getSharedCanvas();
+    } else {
+      parentStyle = {
+        width: 300,
+        height: 150
+      }
     }
     if (isPercent(thisStyle.width)) {
       thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;

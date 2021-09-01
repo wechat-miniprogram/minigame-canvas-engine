@@ -3,16 +3,16 @@
         "@babel/core": "^7.7.2",
         "@babel/preset-env": "^7.7.1",
         "babel-loader": "^8.0.6",
+        "codemirror": "^5.49.2",
         "css-loader": "^3.2.0",
+        "dot": "^1.1.2",
         "style-loader": "^1.0.0",
         "webpack": "^4.41.2",
-        "webpack-cli": "^3.3.10",
-        "codemirror": "^5.49.2",
-        "dot": "^1.1.2"
+        "webpack-cli": "^3.3.10"
     },
     "scripts": {
-        "start": "./node_modules/.bin/webpack --watch",
-        "build": "./node_modules/.bin/webpack --mode=production"
+        "start": "webpack --watch",
+        "build": "webpack --mode=production"
     },
     "dependencies": {
         "js-beautify": "^1.10.2",
