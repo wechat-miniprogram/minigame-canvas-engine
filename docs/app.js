@@ -347,6 +347,8 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
   },
   methods: {
     createProj: function createProj(name, xml, css, js) {
+      console.log(name);
+
       if (!name) {
         name = prompt("项目名称", "新项目");
       }
@@ -439,7 +441,7 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("\n<view class=\"container\" id=\"main\">\n  <view class=\"header\">\n    <bitmaptext font=\"fnt_number-export\" class=\"title\" value=\"\u7B49\u7EA7\"></bitmaptext>\n  </view>\n  <view class=\"rankList\">\n        <scrollview class=\"list\">\n            {{~it.data :item:index}}\n                {{? index % 2 === 1 }}\n                <view class=\"listItem listItemOld\">\n                {{?}}\n                {{? index % 2 === 0 }}\n                <view class=\"listItem\">\n                {{?}}\n                    <bitmaptext font=\"fnt_number-export\" class=\"listItemNum\" value=\"{{= index + 1}}\"></bitmaptext>\n                    <image class=\"listHeadImg\" src=\"{{= item.avatarUrl }}\"></image>\n                  <text class=\"listItemName\" value=\"{{= item.nickname}}\"></text>\n                  <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n                  <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n                </view>\n            {{~}}\n        </scrollview>\n        <text class=\"listTips\" value=\"\u4EC5\u5C55\u793A\u524D50\u4F4D\u597D\u53CB\u6392\u540D\"></text>\n\n        <view class=\"listItem selfListItem\">\n            <bitmaptext font=\"fnt_number-export\" class=\"listItemNum\" value=\"{{= it.selfIndex}}\"></bitmaptext>\n            <image class=\"listHeadImg\" src=\"{{= it.self.avatarUrl }}\"></image>\n            <text class=\"listItemName\" value=\"{{= it.self.nickname}}\"></text>\n            <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n            <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n        </view>\n    </view>\n</view>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("\n<view class=\"container\" id=\"main\">\n  <view class=\"header\">\n    <bitmaptext font=\"fnt_number-export\" class=\"title\" value=\"\u7B49\u7EA7\"></bitmaptext>\n  </view>\n  <view class=\"rankList\">\n        <scrollview class=\"list\" scrollY=\"true\">\n            {{~it.data :item:index}}\n                {{? index % 2 === 1 }}\n                <view class=\"listItem listItemOld\">\n                {{?}}\n                {{? index % 2 === 0 }}\n                <view class=\"listItem\">\n                {{?}}\n                    <bitmaptext font=\"fnt_number-export\" class=\"listItemNum\" value=\"{{= index + 1}}\"></bitmaptext>\n                    <image class=\"listHeadImg\" src=\"{{= item.avatarUrl }}\"></image>\n                  <text class=\"listItemName\" value=\"{{= item.nickname}}\"></text>\n                  <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n                  <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n                </view>\n            {{~}}\n        </scrollview>\n        <text class=\"listTips\" value=\"\u4EC5\u5C55\u793A\u524D50\u4F4D\u597D\u53CB\u6392\u540D\"></text>\n\n        <view class=\"listItem selfListItem\">\n            <bitmaptext font=\"fnt_number-export\" class=\"listItemNum\" value=\"{{= it.selfIndex}}\"></bitmaptext>\n            <image class=\"listHeadImg\" src=\"{{= it.self.avatarUrl }}\"></image>\n            <text class=\"listItemName\" value=\"{{= it.self.nickname}}\"></text>\n            <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n            <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n        </view>\n    </view>\n</view>\n");
 
 /***/ }),
 /* 2 */
@@ -447,7 +449,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("window.styleValue = {\n    container: {\n        width: 960,\n        height: 1410,\n        borderRadius: 12,\n    },\n\n    header: {\n        height: 120,\n        width: 960,\n        flexDirection: 'column',\n        alignItems: 'center',\n      \tbackgroundColor: '#ffffff',\n        borderBottomWidth: 0.5,\n        borderColor: 'rgba(0, 0, 0, 0.3)',\n    },\n\n    title: {\n        width: 144,\n        fontSize: 48,\n        height: 120,\n        lineHeight: 50,\n        textAlign: 'center',\n        fontWeight: 'bold',\n        borderBottomWidth: 6,\n        borderColor: '#000000',\n      \tverticalAlign: 'middle'\n    },\n\n    rankList: {\n        width: 960,\n        height: 1000,\n      \tbackgroundColor: '#ffffff',\n    },\n\n    list: {\n        width          : 960,\n        height         : 950,\n      \tbackgroundColor: '#ffffff',\n        marginTop: 30,\n    },\n\n    listItem: {\n        backgroundColor: '#F7F7F7',\n        width: 960,\n        height: 150,\n        flexDirection: 'row',\n        alignItems: 'center',\n    },\n\n    listItemOld: {\n       backgroundColor: '#ffffff',\n    },\n\n    listItemNum: {\n        fontSize: 32,\n        fontWeight: 'bold',\n        lineHeight: 45,\n        height: 150,\n        textAlign: 'center',\n        width: 120,\n      \tverticalAlign: 'middle'\n    },\n\n    listHeadImg: {\n        borderRadius: 6,\n        width: 90,\n        height: 90,\n    },\n\n    listItemScore: {\n        fontSize: 48,\n        fontWeight: 'bold',\n        marginLeft : 10,\n        height: 150,\n        lineHeight: 150,\n        width: 300,\n        textAlign: 'right',\n    },\n\n    listItemName:{\n        fontSize: 36,\n        height: 150,\n        lineHeight: 150,\n        width: 350,\n        marginLeft: 30,\n    },\n\n    listScoreUnit: {\n        opacity: 0.5,\n        color: '#000000',\n        fontSize: 30,\n        height: 150,\n        lineHeight: 150,\n        marginLeft: 8,\n    },\n\n    selfListItem: {\n        borderRadius: 20,\n        marginTop: 50,\n        backgroundColor: '#ffffff',\n    },\n\n  \tlistTips: {\n      \twidth: 960,\n        height: 90,\n      \tlineHeight: 90,\n      \ttextAlign: 'center',\n      \tfontSize: 30,\n      \tcolor: 'rgba(0,0,0,0.5)',\n      \tbackgroundColor: '#ffffff',\n        borderRadius: 10,\n    }\n}");
+/* harmony default export */ __webpack_exports__["default"] = ("window.styleValue = {\n    container: {\n        width: 960,\n        height: 1410,\n        borderRadius: 12,\n    },\n\n    header: {\n        height: 120,\n        width: 960,\n        flexDirection: 'column',\n        alignItems: 'center',\n      \tbackgroundColor: '#ffffff',\n        borderBottomWidth: 0.5,\n        borderColor: 'rgba(0, 0, 0, 0.3)',\n    },\n\n    title: {\n        width: 144,\n        fontSize: 48,\n        height: 120,\n        lineHeight: 50,\n        textAlign: 'center',\n        fontWeight: 'bold',\n        borderBottomWidth: 6,\n        borderColor: '#000000',\n      \tverticalAlign: 'middle'\n    },\n\n    rankList: {\n        width: 960,\n        height: 1000,\n      \tbackgroundColor: '#ffffff',\n    },\n\n    list: {\n        width          : 960,\n        height         : 950,\n      \tbackgroundColor: '#ffffff',\n        marginTop: 30,\n    },\n\n    listItem: {\n        backgroundColor: '#F7F7F7',\n        width: 960,\n        height: 150,\n        flexDirection: 'row',\n        alignItems: 'center',\n    },\n\n    listItemOld: {\n       backgroundColor: '#ffffff',\n    },\n\n    listItemNum: {\n        fontSize: 32,\n        fontWeight: 'bold',\n        lineHeight: 45,\n        height: 150,\n        textAlign: 'center',\n        width: 120,\n      \tverticalAlign: 'middle'\n    },\n\n    listHeadImg: {\n        width: 90,\n        height: 90,\n        borderRadius: 15,\n      \tborderWidth: 5,\n      \tborderColor: 'red',\n    },\n\n    listItemScore: {\n        fontSize: 48,\n        fontWeight: 'bold',\n        marginLeft : 10,\n        height: 150,\n        lineHeight: 150,\n        width: 300,\n        textAlign: 'right',\n    },\n\n    listItemName:{\n        fontSize: 36,\n        height: 150,\n        lineHeight: 150,\n        width: 350,\n        marginLeft: 30,\n    },\n\n    listScoreUnit: {\n        opacity: 0.5,\n        color: '#000000',\n        fontSize: 30,\n        height: 150,\n        lineHeight: 150,\n        marginLeft: 8,\n    },\n\n    selfListItem: {\n        borderRadius: 20,\n        marginTop: 50,\n        backgroundColor: '#ffffff',\n    },\n\n  \tlistTips: {\n      \twidth: 960,\n        height: 90,\n      \tlineHeight: 90,\n      \ttextAlign: 'center',\n      \tfontSize: 30,\n      \tcolor: 'rgba(0,0,0,0.5)',\n      \tbackgroundColor: '#ffffff',\n        borderRadius: 10,\n    }\n}");
 
 /***/ }),
 /* 3 */
@@ -489,8 +491,8 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.6.11
- * (c) 2014-2019 Evan You
+ * Vue.js v2.6.14
+ * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -2193,13 +2195,14 @@ __webpack_require__.r(__webpack_exports__);
         type = [type];
       }
       for (var i = 0; i < type.length && !valid; i++) {
-        var assertedType = assertType(value, type[i]);
+        var assertedType = assertType(value, type[i], vm);
         expectedTypes.push(assertedType.expectedType || '');
         valid = assertedType.valid;
       }
     }
 
-    if (!valid) {
+    var haveExpectedTypes = expectedTypes.some(function (t) { return t; });
+    if (!valid && haveExpectedTypes) {
       warn(
         getInvalidTypeMessage(name, value, expectedTypes),
         vm
@@ -2217,9 +2220,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 
-  var simpleCheckRE = /^(String|Number|Boolean|Function|Symbol)$/;
+  var simpleCheckRE = /^(String|Number|Boolean|Function|Symbol|BigInt)$/;
 
-  function assertType (value, type) {
+  function assertType (value, type, vm) {
     var valid;
     var expectedType = getType(type);
     if (simpleCheckRE.test(expectedType)) {
@@ -2234,7 +2237,12 @@ __webpack_require__.r(__webpack_exports__);
     } else if (expectedType === 'Array') {
       valid = Array.isArray(value);
     } else {
-      valid = value instanceof type;
+      try {
+        valid = value instanceof type;
+      } catch (e) {
+        warn('Invalid prop type: "' + String(type) + '" is not a constructor', vm);
+        valid = false;
+      }
     }
     return {
       valid: valid,
@@ -2242,13 +2250,15 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 
+  var functionTypeCheckRE = /^\s*function (\w+)/;
+
   /**
    * Use function string name to check built-in types,
    * because a simple equality check will fail when running
    * across different vms / iframes.
    */
   function getType (fn) {
-    var match = fn && fn.toString().match(/^\s*function (\w+)/);
+    var match = fn && fn.toString().match(functionTypeCheckRE);
     return match ? match[1] : ''
   }
 
@@ -2273,18 +2283,19 @@ __webpack_require__.r(__webpack_exports__);
       " Expected " + (expectedTypes.map(capitalize).join(', '));
     var expectedType = expectedTypes[0];
     var receivedType = toRawType(value);
-    var expectedValue = styleValue(value, expectedType);
-    var receivedValue = styleValue(value, receivedType);
     // check if we need to specify expected value
-    if (expectedTypes.length === 1 &&
-        isExplicable(expectedType) &&
-        !isBoolean(expectedType, receivedType)) {
-      message += " with value " + expectedValue;
+    if (
+      expectedTypes.length === 1 &&
+      isExplicable(expectedType) &&
+      isExplicable(typeof value) &&
+      !isBoolean(expectedType, receivedType)
+    ) {
+      message += " with value " + (styleValue(value, expectedType));
     }
     message += ", got " + receivedType + " ";
     // check if we need to specify received value
     if (isExplicable(receivedType)) {
-      message += "with value " + receivedValue + ".";
+      message += "with value " + (styleValue(value, receivedType)) + ".";
     }
     return message
   }
@@ -2299,9 +2310,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 
+  var EXPLICABLE_TYPES = ['string', 'number', 'boolean'];
   function isExplicable (value) {
-    var explicitTypes = ['string', 'number', 'boolean'];
-    return explicitTypes.some(function (elem) { return value.toLowerCase() === elem; })
+    return EXPLICABLE_TYPES.some(function (elem) { return value.toLowerCase() === elem; })
   }
 
   function isBoolean () {
@@ -2528,7 +2539,7 @@ __webpack_require__.r(__webpack_exports__);
     var allowedGlobals = makeMap(
       'Infinity,undefined,NaN,isFinite,isNaN,' +
       'parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,' +
-      'Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,' +
+      'Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,BigInt,' +
       'require' // for Webpack/Browserify
     );
 
@@ -3031,6 +3042,12 @@ __webpack_require__.r(__webpack_exports__);
 
   /*  */
 
+  function isAsyncPlaceholder (node) {
+    return node.isComment && node.asyncFactory
+  }
+
+  /*  */
+
   function normalizeScopedSlots (
     slots,
     normalSlots,
@@ -3087,9 +3104,10 @@ __webpack_require__.r(__webpack_exports__);
       res = res && typeof res === 'object' && !Array.isArray(res)
         ? [res] // single vnode
         : normalizeChildren(res);
+      var vnode = res && res[0];
       return res && (
-        res.length === 0 ||
-        (res.length === 1 && res[0].isComment) // #9658
+        !vnode ||
+        (res.length === 1 && vnode.isComment && !isAsyncPlaceholder(vnode)) // #9658, #10391
       ) ? undefined
         : res
     };
@@ -3162,26 +3180,28 @@ __webpack_require__.r(__webpack_exports__);
    */
   function renderSlot (
     name,
-    fallback,
+    fallbackRender,
     props,
     bindObject
   ) {
     var scopedSlotFn = this.$scopedSlots[name];
     var nodes;
-    if (scopedSlotFn) { // scoped slot
+    if (scopedSlotFn) {
+      // scoped slot
       props = props || {};
       if (bindObject) {
         if (!isObject(bindObject)) {
-          warn(
-            'slot v-bind without argument expects an Object',
-            this
-          );
+          warn('slot v-bind without argument expects an Object', this);
         }
         props = extend(extend({}, bindObject), props);
       }
-      nodes = scopedSlotFn(props) || fallback;
+      nodes =
+        scopedSlotFn(props) ||
+        (typeof fallbackRender === 'function' ? fallbackRender() : fallbackRender);
     } else {
-      nodes = this.$slots[name] || fallback;
+      nodes =
+        this.$slots[name] ||
+        (typeof fallbackRender === 'function' ? fallbackRender() : fallbackRender);
     }
 
     var target = props && props.slot;
@@ -3231,6 +3251,7 @@ __webpack_require__.r(__webpack_exports__);
     } else if (eventKeyName) {
       return hyphenate(eventKeyName) !== key
     }
+    return eventKeyCode === undefined
   }
 
   /*  */
@@ -3762,8 +3783,10 @@ __webpack_require__.r(__webpack_exports__);
   }
 
   function createComponentInstanceForVnode (
-    vnode, // we know it's MountedComponentVNode but flow doesn't
-    parent // activeInstance in lifecycle state
+    // we know it's MountedComponentVNode but flow doesn't
+    vnode,
+    // activeInstance in lifecycle state
+    parent
   ) {
     var options = {
       _isComponent: true,
@@ -3902,7 +3925,7 @@ __webpack_require__.r(__webpack_exports__);
       ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag);
       if (config.isReservedTag(tag)) {
         // platform built-in elements
-        if (isDef(data) && isDef(data.nativeOn)) {
+        if (isDef(data) && isDef(data.nativeOn) && data.tag !== 'component') {
           warn(
             ("The .native modifier for v-on is only valid on components but it was used on <" + tag + ">."),
             context
@@ -4224,12 +4247,6 @@ __webpack_require__.r(__webpack_exports__);
         ? factory.loadingComp
         : factory.resolved
     }
-  }
-
-  /*  */
-
-  function isAsyncPlaceholder (node) {
-    return node.isComment && node.asyncFactory
   }
 
   /*  */
@@ -4600,7 +4617,8 @@ __webpack_require__.r(__webpack_exports__);
     var hasDynamicScopedSlot = !!(
       (newScopedSlots && !newScopedSlots.$stable) ||
       (oldScopedSlots !== emptyObject && !oldScopedSlots.$stable) ||
-      (newScopedSlots && vm.$scopedSlots.$key !== newScopedSlots.$key)
+      (newScopedSlots && vm.$scopedSlots.$key !== newScopedSlots.$key) ||
+      (!newScopedSlots && vm.$scopedSlots.$key)
     );
 
     // Any static slot children from the parent may have changed during parent's
@@ -5052,11 +5070,8 @@ __webpack_require__.r(__webpack_exports__);
         var oldValue = this.value;
         this.value = value;
         if (this.user) {
-          try {
-            this.cb.call(this.vm, value, oldValue);
-          } catch (e) {
-            handleError(e, this.vm, ("callback for watcher \"" + (this.expression) + "\""));
-          }
+          var info = "callback for watcher \"" + (this.expression) + "\"";
+          invokeWithErrorHandling(this.cb, this.vm, [value, oldValue], this.vm, info);
         } else {
           this.cb.call(this.vm, value, oldValue);
         }
@@ -5278,6 +5293,8 @@ __webpack_require__.r(__webpack_exports__);
           warn(("The computed property \"" + key + "\" is already defined in data."), vm);
         } else if (vm.$options.props && key in vm.$options.props) {
           warn(("The computed property \"" + key + "\" is already defined as a prop."), vm);
+        } else if (vm.$options.methods && key in vm.$options.methods) {
+          warn(("The computed property \"" + key + "\" is already defined as a method."), vm);
         }
       }
     }
@@ -5430,11 +5447,10 @@ __webpack_require__.r(__webpack_exports__);
       options.user = true;
       var watcher = new Watcher(vm, expOrFn, cb, options);
       if (options.immediate) {
-        try {
-          cb.call(vm, watcher.value);
-        } catch (error) {
-          handleError(error, vm, ("callback for immediate watcher \"" + (watcher.expression) + "\""));
-        }
+        var info = "callback for immediate watcher \"" + (watcher.expression) + "\"";
+        pushTarget();
+        invokeWithErrorHandling(cb, vm, [watcher.value], vm, info);
+        popTarget();
       }
       return function unwatchFn () {
         watcher.teardown();
@@ -5732,6 +5748,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
   function getComponentName (opts) {
     return opts && (opts.Ctor.options.name || opts.tag)
   }
@@ -5753,9 +5771,9 @@ __webpack_require__.r(__webpack_exports__);
     var keys = keepAliveInstance.keys;
     var _vnode = keepAliveInstance._vnode;
     for (var key in cache) {
-      var cachedNode = cache[key];
-      if (cachedNode) {
-        var name = getComponentName(cachedNode.componentOptions);
+      var entry = cache[key];
+      if (entry) {
+        var name = entry.name;
         if (name && !filter(name)) {
           pruneCacheEntry(cache, key, keys, _vnode);
         }
@@ -5769,9 +5787,9 @@ __webpack_require__.r(__webpack_exports__);
     keys,
     current
   ) {
-    var cached$$1 = cache[key];
-    if (cached$$1 && (!current || cached$$1.tag !== current.tag)) {
-      cached$$1.componentInstance.$destroy();
+    var entry = cache[key];
+    if (entry && (!current || entry.tag !== current.tag)) {
+      entry.componentInstance.$destroy();
     }
     cache[key] = null;
     remove(keys, key);
@@ -5789,6 +5807,32 @@ __webpack_require__.r(__webpack_exports__);
       max: [String, Number]
     },
 
+    methods: {
+      cacheVNode: function cacheVNode() {
+        var ref = this;
+        var cache = ref.cache;
+        var keys = ref.keys;
+        var vnodeToCache = ref.vnodeToCache;
+        var keyToCache = ref.keyToCache;
+        if (vnodeToCache) {
+          var tag = vnodeToCache.tag;
+          var componentInstance = vnodeToCache.componentInstance;
+          var componentOptions = vnodeToCache.componentOptions;
+          cache[keyToCache] = {
+            name: getComponentName(componentOptions),
+            tag: tag,
+            componentInstance: componentInstance,
+          };
+          keys.push(keyToCache);
+          // prune oldest entry
+          if (this.max && keys.length > parseInt(this.max)) {
+            pruneCacheEntry(cache, keys[0], keys, this._vnode);
+          }
+          this.vnodeToCache = null;
+        }
+      }
+    },
+
     created: function created () {
       this.cache = Object.create(null);
       this.keys = [];
@@ -5803,12 +5847,17 @@ __webpack_require__.r(__webpack_exports__);
     mounted: function mounted () {
       var this$1 = this;
 
+      this.cacheVNode();
       this.$watch('include', function (val) {
         pruneCache(this$1, function (name) { return matches(val, name); });
       });
       this.$watch('exclude', function (val) {
         pruneCache(this$1, function (name) { return !matches(val, name); });
       });
+    },
+
+    updated: function updated () {
+      this.cacheVNode();
     },
 
     render: function render () {
@@ -5844,12 +5893,9 @@ __webpack_require__.r(__webpack_exports__);
           remove(keys, key);
           keys.push(key);
         } else {
-          cache[key] = vnode;
-          keys.push(key);
-          // prune oldest entry
-          if (this.max && keys.length > parseInt(this.max)) {
-            pruneCacheEntry(cache, keys[0], keys, this._vnode);
-          }
+          // delay setting the cache until update
+          this.vnodeToCache = vnode;
+          this.keyToCache = key;
         }
 
         vnode.data.keepAlive = true;
@@ -5932,7 +5978,7 @@ __webpack_require__.r(__webpack_exports__);
     value: FunctionalRenderContext
   });
 
-  Vue.version = '2.6.11';
+  Vue.version = '2.6.14';
 
   /*  */
 
@@ -5969,7 +6015,7 @@ __webpack_require__.r(__webpack_exports__);
     'default,defaultchecked,defaultmuted,defaultselected,defer,disabled,' +
     'enabled,formnovalidate,hidden,indeterminate,inert,ismap,itemscope,loop,multiple,' +
     'muted,nohref,noresize,noshade,novalidate,nowrap,open,pauseonexit,readonly,' +
-    'required,reversed,scoped,seamless,selected,sortable,translate,' +
+    'required,reversed,scoped,seamless,selected,sortable,' +
     'truespeed,typemustmatch,visible'
   );
 
@@ -6093,7 +6139,7 @@ __webpack_require__.r(__webpack_exports__);
   // contain child elements.
   var isSVG = makeMap(
     'svg,animate,circle,clippath,cursor,defs,desc,ellipse,filter,font-face,' +
-    'foreignObject,g,glyph,image,line,marker,mask,missing-glyph,path,pattern,' +
+    'foreignobject,g,glyph,image,line,marker,mask,missing-glyph,path,pattern,' +
     'polygon,polyline,rect,switch,symbol,text,textpath,tspan,use,view',
     true
   );
@@ -6298,7 +6344,8 @@ __webpack_require__.r(__webpack_exports__);
 
   function sameVnode (a, b) {
     return (
-      a.key === b.key && (
+      a.key === b.key &&
+      a.asyncFactory === b.asyncFactory && (
         (
           a.tag === b.tag &&
           a.isComment === b.isComment &&
@@ -6306,7 +6353,6 @@ __webpack_require__.r(__webpack_exports__);
           sameInputType(a, b)
         ) || (
           isTrue(a.isAsyncPlaceholder) &&
-          a.asyncFactory === b.asyncFactory &&
           isUndef(b.asyncFactory.error)
         )
       )
@@ -7194,7 +7240,7 @@ __webpack_require__.r(__webpack_exports__);
       cur = attrs[key];
       old = oldAttrs[key];
       if (old !== cur) {
-        setAttr(elm, key, cur);
+        setAttr(elm, key, cur, vnode.data.pre);
       }
     }
     // #4391: in IE9, setting type can reset value for input[type=radio]
@@ -7214,8 +7260,8 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 
-  function setAttr (el, key, value) {
-    if (el.tagName.indexOf('-') > -1) {
+  function setAttr (el, key, value, isInPre) {
+    if (isInPre || el.tagName.indexOf('-') > -1) {
       baseSetAttr(el, key, value);
     } else if (isBooleanAttr(key)) {
       // set attribute for blank value
@@ -8138,7 +8184,7 @@ __webpack_require__.r(__webpack_exports__);
         // skip the update if old and new VDOM state is the same.
         // `value` is handled separately because the DOM value may be temporarily
         // out of sync with VDOM state due to focus, composition and modifiers.
-        // This  #4521 by skipping the unnecesarry `checked` update.
+        // This  #4521 by skipping the unnecessary `checked` update.
         cur !== oldProps[key]
       ) {
         // some property updates can throw
@@ -9736,7 +9782,7 @@ __webpack_require__.r(__webpack_exports__);
 
   // Regular Expressions for parsing tags and attributes
   var attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
-  var dynamicArgAttribute = /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
+  var dynamicArgAttribute = /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+?\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
   var ncname = "[a-zA-Z_][\\-\\.0-9_a-zA-Z" + (unicodeRegExp.source) + "]*";
   var qnameCapture = "((?:" + ncname + "\\:)?" + ncname + ")";
   var startTagOpen = new RegExp(("^<" + qnameCapture));
@@ -10041,7 +10087,7 @@ __webpack_require__.r(__webpack_exports__);
   var slotRE = /^v-slot(:|$)|^#/;
 
   var lineBreakRE = /[\r\n]/;
-  var whitespaceRE$1 = /\s+/g;
+  var whitespaceRE$1 = /[ \f\t\r\n]+/g;
 
   var invalidAttributeRE = /[\s"'<>\/=]/;
 
@@ -10089,8 +10135,12 @@ __webpack_require__.r(__webpack_exports__);
     platformMustUseProp = options.mustUseProp || no;
     platformGetTagNamespace = options.getTagNamespace || no;
     var isReservedTag = options.isReservedTag || no;
-    maybeComponent = function (el) { return !!el.component || !isReservedTag(el.tag); };
-
+    maybeComponent = function (el) { return !!(
+      el.component ||
+      el.attrsMap[':is'] ||
+      el.attrsMap['v-bind:is'] ||
+      !(el.attrsMap.is ? isReservedTag(el.attrsMap.is) : isReservedTag(el.tag))
+    ); };
     transforms = pluckModuleFunction(options.modules, 'transformNode');
     preTransforms = pluckModuleFunction(options.modules, 'preTransformNode');
     postTransforms = pluckModuleFunction(options.modules, 'postTransformNode');
@@ -10383,7 +10433,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       },
       comment: function comment (text, start, end) {
-        // adding anyting as a sibling to the root node is forbidden
+        // adding anything as a sibling to the root node is forbidden
         // comments should still be allowed, but ignored
         if (currentParent) {
           var child = {
@@ -11339,9 +11389,9 @@ __webpack_require__.r(__webpack_exports__);
         code += genModifierCode;
       }
       var handlerCode = isMethodPath
-        ? ("return " + (handler.value) + "($event)")
+        ? ("return " + (handler.value) + ".apply(null, arguments)")
         : isFunctionExpression
-          ? ("return (" + (handler.value) + ")($event)")
+          ? ("return (" + (handler.value) + ").apply(null, arguments)")
           : isFunctionInvocation
             ? ("return " + (handler.value))
             : handler.value;
@@ -11427,7 +11477,8 @@ __webpack_require__.r(__webpack_exports__);
     options
   ) {
     var state = new CodegenState(options);
-    var code = ast ? genElement(ast, state) : '_c("div")';
+    // fix #11483, Root level <script> tags should not be rendered.
+    var code = ast ? (ast.tag === 'script' ? 'null' : genElement(ast, state)) : '_c("div")';
     return {
       render: ("with(this){return " + code + "}"),
       staticRenderFns: state.staticRenderFns
@@ -11889,7 +11940,7 @@ __webpack_require__.r(__webpack_exports__);
   function genSlot (el, state) {
     var slotName = el.slotName || '"default"';
     var children = genChildren(el, state);
-    var res = "_t(" + slotName + (children ? ("," + children) : '');
+    var res = "_t(" + slotName + (children ? (",function(){return " + children + "}") : '');
     var attrs = el.attrs || el.dynamicAttrs
       ? genProps((el.attrs || []).concat(el.dynamicAttrs || []).map(function (attr) { return ({
           // slot props are camelized
@@ -13111,98 +13162,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* AUTO-GENERATE
 (function() {
 
 /* GENERATED_BUILD_OUTPUT */
-var legacy_beautify_js =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
-/************************************************************************/
-/******/ ([
+var legacy_beautify_js;
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -13249,9 +13215,8 @@ module.exports.defaultOptions = function() {
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -13800,7 +13765,7 @@ Beautifier.prototype.handle_start_expr = function(current_token) {
       }
     }
 
-    if (!in_array(this._flags.last_token.type, [TOKEN.START_EXPR, TOKEN.END_EXPR, TOKEN.WORD, TOKEN.OPERATOR])) {
+    if (!in_array(this._flags.last_token.type, [TOKEN.START_EXPR, TOKEN.END_EXPR, TOKEN.WORD, TOKEN.OPERATOR, TOKEN.DOT])) {
       this._output.space_before_token = true;
     }
   } else {
@@ -13808,7 +13773,7 @@ Beautifier.prototype.handle_start_expr = function(current_token) {
       if (this._flags.last_token.text === 'for') {
         this._output.space_before_token = this._options.space_before_conditional;
         next_mode = MODE.ForInitializer;
-      } else if (in_array(this._flags.last_token.text, ['if', 'while'])) {
+      } else if (in_array(this._flags.last_token.text, ['if', 'while', 'switch'])) {
         this._output.space_before_token = this._options.space_before_conditional;
         next_mode = MODE.Conditional;
       } else if (in_array(this._flags.last_word, ['await', 'async'])) {
@@ -14311,7 +14276,9 @@ Beautifier.prototype.handle_semicolon = function(current_token) {
 };
 
 Beautifier.prototype.handle_string = function(current_token) {
-  if (this.start_of_statement(current_token)) {
+  if (current_token.text.startsWith("`") && current_token.newlines === 0 && current_token.whitespace_before === '' && (current_token.previous.text === ')' || this._flags.last_token.type === TOKEN.WORD)) {
+    //Conditional for detectign backtick strings
+  } else if (this.start_of_statement(current_token)) {
     // The conditional starts the statement if appropriate.
     // One difference - strings want at least a space before
     this._output.space_before_token = true;
@@ -14323,6 +14290,8 @@ Beautifier.prototype.handle_string = function(current_token) {
       if (!this.start_of_object_property()) {
         this.allow_wrap_or_preserved_newline(current_token);
       }
+    } else if ((current_token.text.startsWith("`") && this._flags.last_token.type === TOKEN.END_EXPR && (current_token.previous.text === ']' || current_token.previous.text === ')') && current_token.newlines === 0)) {
+      this._output.space_before_token = true;
     } else {
       this.print_newline();
     }
@@ -14711,9 +14680,8 @@ module.exports.Beautifier = Beautifier;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
   The MIT License (MIT)
@@ -15137,9 +15105,8 @@ module.exports.Output = Output;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -15198,9 +15165,8 @@ module.exports.Token = Token;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports) {
 
-"use strict";
 /* jshint node: true, curly: false */
 // Parts of this section of code is taken from acorn.
 //
@@ -15262,9 +15228,8 @@ exports.allLineBreaks = new RegExp(exports.lineBreak.source, 'g');
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -15362,9 +15327,8 @@ module.exports.Options = Options;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -15434,10 +15398,10 @@ function Options(options, merge_child_field) {
 
   this.indent_empty_lines = this._get_boolean('indent_empty_lines');
 
-  // valid templating languages ['django', 'erb', 'handlebars', 'php']
+  // valid templating languages ['django', 'erb', 'handlebars', 'php', 'smarty']
   // For now, 'auto' = all off for javascript, all on for html (and inline javascript).
   // other values ignored
-  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php'], ['auto']);
+  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php', 'smarty'], ['auto']);
 }
 
 Options.prototype._get_array = function(name, default_value) {
@@ -15562,9 +15526,8 @@ module.exports.mergeOpts = _mergeOpts;
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -15633,7 +15596,7 @@ var TOKEN = {
 
 var directives_core = new Directives(/\/\*/, /\*\//);
 
-var number_pattern = /0[xX][0123456789abcdefABCDEF]*|0[oO][01234567]*|0[bB][01]*|\d+n|(?:\.\d+|\d+\.?\d*)(?:[eE][+-]?\d+)?/;
+var number_pattern = /0[xX][0123456789abcdefABCDEF_]*n?|0[oO][01234567_]*n?|0[bB][01_]*n?|\d[\d_]*n|(?:\.\d[\d_]*|\d[\d_]*\.?[\d_]*)(?:[eE][+-]?[\d_]+)?/;
 
 var digit = /[0-9]/;
 
@@ -15642,7 +15605,7 @@ var dot_pattern = /[^\d\.]/;
 
 var positionable_operators = (
   ">>> === !== " +
-  "<< && >= ** != == <= >> || |> " +
+  "<< && >= ** != == <= >> || ?? |> " +
   "< / - + > : & % ? ^ | *").split(' ');
 
 // IMPORTANT: this must be sorted longest to shortest or tokenizing many not work.
@@ -15650,7 +15613,7 @@ var positionable_operators = (
 var punct =
   ">>>= " +
   "... >>= <<= === >>> !== **= " +
-  "=> ^= :: /= << <= == && -= >= >> != -- += ** || ++ %= &= *= |= |> " +
+  "=> ^= :: /= << <= == && -= >= >> != -- += ** || ?? ++ %= &= *= |= |> " +
   "= ! ? > < : / ^ - + * & % ~ |";
 
 punct = punct.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&");
@@ -15693,7 +15656,7 @@ var Tokenizer = function(input_string, options) {
     html_comment_end: pattern_reader.matching(/-->/),
     include: pattern_reader.starting_with(/#include/).until_after(acorn.lineBreak),
     shebang: pattern_reader.starting_with(/#!/).until_after(acorn.lineBreak),
-    xml: pattern_reader.matching(/[\s\S]*?<(\/?)([-a-zA-Z:0-9_.]+|{[\s\S]+?}|!\[CDATA\[[\s\S]*?\]\])(\s+{[\s\S]+?}|\s+[-a-zA-Z:0-9_.]+|\s+[-a-zA-Z:0-9_.]+\s*=\s*('[^']*'|"[^"]*"|{[\s\S]+?}))*\s*(\/?)\s*>/),
+    xml: pattern_reader.matching(/[\s\S]*?<(\/?)([-a-zA-Z:0-9_.]+|{[\s\S]+?}|!\[CDATA\[[\s\S]*?\]\]|)(\s+{[\s\S]+?}|\s+[-a-zA-Z:0-9_.]+|\s+[-a-zA-Z:0-9_.]+\s*=\s*('[^']*'|"[^"]*"|{[\s\S]+?}))*\s*(\/?)\s*>/),
     single_quote: templatable.until(/['\\\n\r\u2028\u2029]/),
     double_quote: templatable.until(/["\\\n\r\u2028\u2029]/),
     template_text: templatable.until(/[`\\$]/),
@@ -16135,9 +16098,8 @@ module.exports.line_starters = line_starters.slice();
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16334,9 +16296,8 @@ module.exports.InputScanner = InputScanner;
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16481,9 +16442,8 @@ module.exports.TOKEN = TOKEN;
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16566,9 +16526,8 @@ module.exports.TokenStream = TokenStream;
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16678,9 +16637,8 @@ module.exports.WhitespacePattern = WhitespacePattern;
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16779,9 +16737,8 @@ module.exports.Pattern = Pattern;
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16848,9 +16805,8 @@ module.exports.Directives = Directives;
 
 /***/ }),
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16888,7 +16844,8 @@ var template_names = {
   django: false,
   erb: false,
   handlebars: false,
-  php: false
+  php: false,
+  smarty: false
 };
 
 // This lets templates appear anywhere we would do a readUntil
@@ -16909,12 +16866,15 @@ function TemplatablePattern(input_scanner, parent) {
     handlebars_comment: pattern.starting_with(/{{!--/).until_after(/--}}/),
     handlebars_unescaped: pattern.starting_with(/{{{/).until_after(/}}}/),
     handlebars: pattern.starting_with(/{{/).until_after(/}}/),
-    php: pattern.starting_with(/<\?(?:[=]|php)/).until_after(/\?>/),
+    php: pattern.starting_with(/<\?(?:[= ]|php)/).until_after(/\?>/),
     erb: pattern.starting_with(/<%[^%]/).until_after(/[^%]%>/),
     // django coflicts with handlebars a bit.
     django: pattern.starting_with(/{%/).until_after(/%}/),
     django_value: pattern.starting_with(/{{/).until_after(/}}/),
-    django_comment: pattern.starting_with(/{#/).until_after(/#}/)
+    django_comment: pattern.starting_with(/{#/).until_after(/#}/),
+    smarty: pattern.starting_with(/{(?=[^}{\s\n])/).until_after(/[^\s\n]}/),
+    smarty_comment: pattern.starting_with(/{\*/).until_after(/\*}/),
+    smarty_literal: pattern.starting_with(/{literal}/).until_after(/{\/literal}/)
   };
 }
 TemplatablePattern.prototype = new Pattern();
@@ -16988,8 +16948,13 @@ TemplatablePattern.prototype.__set_templated_pattern = function() {
   }
   if (!this._disabled.django) {
     items.push(this.__patterns.django._starting_pattern.source);
+    // The starting pattern for django is more complex because it has different
+    // patterns for value, comment, and other sections
     items.push(this.__patterns.django_value._starting_pattern.source);
     items.push(this.__patterns.django_comment._starting_pattern.source);
+  }
+  if (!this._disabled.smarty) {
+    items.push(this.__patterns.smarty._starting_pattern.source);
   }
 
   if (this._until_pattern) {
@@ -17036,6 +17001,17 @@ TemplatablePattern.prototype._read_template = function() {
           this.__patterns.django.read();
       }
     }
+    if (!this._disabled.smarty) {
+      // smarty cannot be enabled with django or handlebars enabled
+      if (this._disabled.django && this._disabled.handlebars) {
+        resulting_string = resulting_string ||
+          this.__patterns.smarty_comment.read();
+        resulting_string = resulting_string ||
+          this.__patterns.smarty_literal.read();
+        resulting_string = resulting_string ||
+          this.__patterns.smarty.read();
+      }
+    }
   }
   return resulting_string;
 };
@@ -17045,7 +17021,42 @@ module.exports.TemplatablePattern = TemplatablePattern;
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	legacy_beautify_js = __webpack_exports__;
+/******/ 	
+/******/ })()
+;
 var js_beautify = legacy_beautify_js;
 /* Footer */
 if (true) {
@@ -17131,100 +17142,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* AUTO-GENERATE
 (function() {
 
 /* GENERATED_BUILD_OUTPUT */
-var legacy_beautify_css =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
-/******/ })
-/************************************************************************/
-/******/ ([
+var legacy_beautify_css;
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */,
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
   The MIT License (MIT)
@@ -17651,9 +17577,8 @@ module.exports.Output = Output;
 /* 4 */,
 /* 5 */,
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -17723,10 +17648,10 @@ function Options(options, merge_child_field) {
 
   this.indent_empty_lines = this._get_boolean('indent_empty_lines');
 
-  // valid templating languages ['django', 'erb', 'handlebars', 'php']
+  // valid templating languages ['django', 'erb', 'handlebars', 'php', 'smarty']
   // For now, 'auto' = all off for javascript, all on for html (and inline javascript).
   // other values ignored
-  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php'], ['auto']);
+  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php', 'smarty'], ['auto']);
 }
 
 Options.prototype._get_array = function(name, default_value) {
@@ -17852,9 +17777,8 @@ module.exports.mergeOpts = _mergeOpts;
 /***/ }),
 /* 7 */,
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18055,9 +17979,8 @@ module.exports.InputScanner = InputScanner;
 /* 11 */,
 /* 12 */,
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18125,9 +18048,8 @@ module.exports.Directives = Directives;
 /***/ }),
 /* 14 */,
 /* 15 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18174,9 +18096,8 @@ module.exports.defaultOptions = function() {
 
 /***/ }),
 /* 16 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18270,13 +18191,12 @@ Beautifier.prototype.eatString = function(endChars) {
 // the first newline will be output
 Beautifier.prototype.eatWhitespace = function(allowAtLeastOneNewLine) {
   var result = whitespaceChar.test(this._input.peek());
-  var isFirstNewLine = true;
-
+  var newline_count = 0;
   while (whitespaceChar.test(this._input.peek())) {
     this._ch = this._input.next();
     if (allowAtLeastOneNewLine && this._ch === '\n') {
-      if (this._options.preserve_newlines || isFirstNewLine) {
-        isFirstNewLine = false;
+      if (newline_count === 0 || newline_count < this._options.max_preserve_newlines) {
+        newline_count++;
         this._output.add_new_line(true);
       }
     }
@@ -18470,23 +18390,34 @@ Beautifier.prototype.beautify = function() {
         insidePropertyValue = false;
         this.outdent();
       }
-      this.indent();
-      this._output.space_before_token = true;
-      this.print_string(this._ch);
 
       // when entering conditional groups, only rulesets are allowed
       if (enteringConditionalGroup) {
         enteringConditionalGroup = false;
-        insideRule = (this._indentLevel > this._nestedLevel);
+        insideRule = (this._indentLevel >= this._nestedLevel);
       } else {
         // otherwise, declarations are also allowed
-        insideRule = (this._indentLevel >= this._nestedLevel);
+        insideRule = (this._indentLevel >= this._nestedLevel - 1);
       }
       if (this._options.newline_between_rules && insideRule) {
         if (this._output.previous_line && this._output.previous_line.item(-1) !== '{') {
           this._output.ensure_empty_line_above('/', ',');
         }
       }
+
+      this._output.space_before_token = true;
+
+      // The difference in print_string and indent order is necessary to indent the '{' correctly
+      if (this._options.brace_style === 'expand') {
+        this._output.add_new_line();
+        this.print_string(this._ch);
+        this.indent();
+        this._output.set_indent(this._indentLevel);
+      } else {
+        this.indent();
+        this.print_string(this._ch);
+      }
+
       this.eatWhitespace(true);
       this._output.add_new_line();
     } else if (this._ch === '}') {
@@ -18602,7 +18533,7 @@ Beautifier.prototype.beautify = function() {
     } else if (this._ch === ',') {
       this.print_string(this._ch);
       this.eatWhitespace(true);
-      if (this._options.selector_separator_newline && !insidePropertyValue && parenLevel === 0 && !insideAtImport) {
+      if (this._options.selector_separator_newline && !insidePropertyValue && parenLevel === 0 && !insideAtImport && !insideAtExtend) {
         this._output.add_new_line();
       } else {
         this._output.space_before_token = true;
@@ -18651,9 +18582,8 @@ module.exports.Beautifier = Beautifier;
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18694,6 +18624,16 @@ function Options(options) {
   var space_around_selector_separator = this._get_boolean('space_around_selector_separator');
   this.space_around_combinator = this._get_boolean('space_around_combinator') || space_around_selector_separator;
 
+  var brace_style_split = this._get_selection_list('brace_style', ['collapse', 'expand', 'end-expand', 'none', 'preserve-inline']);
+  this.brace_style = 'collapse';
+  for (var bs = 0; bs < brace_style_split.length; bs++) {
+    if (brace_style_split[bs] !== 'expand') {
+      // default to collapse, as only collapse|expand is implemented for now
+      this.brace_style = 'collapse';
+    } else {
+      this.brace_style = brace_style_split[bs];
+    }
+  }
 }
 Options.prototype = new BaseOptions();
 
@@ -18703,7 +18643,42 @@ module.exports.Options = Options;
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(15);
+/******/ 	legacy_beautify_css = __webpack_exports__;
+/******/ 	
+/******/ })()
+;
 var css_beautify = legacy_beautify_css;
 /* Footer */
 if (true) {
@@ -18800,100 +18775,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* AUTO-GENERATE
 (function() {
 
 /* GENERATED_BUILD_OUTPUT */
-var legacy_beautify_html =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
-/******/ })
-/************************************************************************/
-/******/ ([
+var legacy_beautify_html;
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */,
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
   The MIT License (MIT)
@@ -19317,9 +19207,8 @@ module.exports.Output = Output;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -19380,9 +19269,8 @@ module.exports.Token = Token;
 /* 4 */,
 /* 5 */,
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -19452,10 +19340,10 @@ function Options(options, merge_child_field) {
 
   this.indent_empty_lines = this._get_boolean('indent_empty_lines');
 
-  // valid templating languages ['django', 'erb', 'handlebars', 'php']
+  // valid templating languages ['django', 'erb', 'handlebars', 'php', 'smarty']
   // For now, 'auto' = all off for javascript, all on for html (and inline javascript).
   // other values ignored
-  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php'], ['auto']);
+  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php', 'smarty'], ['auto']);
 }
 
 Options.prototype._get_array = function(name, default_value) {
@@ -19581,9 +19469,8 @@ module.exports.mergeOpts = _mergeOpts;
 /***/ }),
 /* 7 */,
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -19780,9 +19667,8 @@ module.exports.InputScanner = InputScanner;
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -19927,9 +19813,8 @@ module.exports.TOKEN = TOKEN;
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20012,9 +19897,8 @@ module.exports.TokenStream = TokenStream;
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20124,9 +20008,8 @@ module.exports.WhitespacePattern = WhitespacePattern;
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20225,9 +20108,8 @@ module.exports.Pattern = Pattern;
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20294,9 +20176,8 @@ module.exports.Directives = Directives;
 
 /***/ }),
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20334,7 +20215,8 @@ var template_names = {
   django: false,
   erb: false,
   handlebars: false,
-  php: false
+  php: false,
+  smarty: false
 };
 
 // This lets templates appear anywhere we would do a readUntil
@@ -20355,12 +20237,15 @@ function TemplatablePattern(input_scanner, parent) {
     handlebars_comment: pattern.starting_with(/{{!--/).until_after(/--}}/),
     handlebars_unescaped: pattern.starting_with(/{{{/).until_after(/}}}/),
     handlebars: pattern.starting_with(/{{/).until_after(/}}/),
-    php: pattern.starting_with(/<\?(?:[=]|php)/).until_after(/\?>/),
+    php: pattern.starting_with(/<\?(?:[= ]|php)/).until_after(/\?>/),
     erb: pattern.starting_with(/<%[^%]/).until_after(/[^%]%>/),
     // django coflicts with handlebars a bit.
     django: pattern.starting_with(/{%/).until_after(/%}/),
     django_value: pattern.starting_with(/{{/).until_after(/}}/),
-    django_comment: pattern.starting_with(/{#/).until_after(/#}/)
+    django_comment: pattern.starting_with(/{#/).until_after(/#}/),
+    smarty: pattern.starting_with(/{(?=[^}{\s\n])/).until_after(/[^\s\n]}/),
+    smarty_comment: pattern.starting_with(/{\*/).until_after(/\*}/),
+    smarty_literal: pattern.starting_with(/{literal}/).until_after(/{\/literal}/)
   };
 }
 TemplatablePattern.prototype = new Pattern();
@@ -20434,8 +20319,13 @@ TemplatablePattern.prototype.__set_templated_pattern = function() {
   }
   if (!this._disabled.django) {
     items.push(this.__patterns.django._starting_pattern.source);
+    // The starting pattern for django is more complex because it has different
+    // patterns for value, comment, and other sections
     items.push(this.__patterns.django_value._starting_pattern.source);
     items.push(this.__patterns.django_comment._starting_pattern.source);
+  }
+  if (!this._disabled.smarty) {
+    items.push(this.__patterns.smarty._starting_pattern.source);
   }
 
   if (this._until_pattern) {
@@ -20482,6 +20372,17 @@ TemplatablePattern.prototype._read_template = function() {
           this.__patterns.django.read();
       }
     }
+    if (!this._disabled.smarty) {
+      // smarty cannot be enabled with django or handlebars enabled
+      if (this._disabled.django && this._disabled.handlebars) {
+        resulting_string = resulting_string ||
+          this.__patterns.smarty_comment.read();
+        resulting_string = resulting_string ||
+          this.__patterns.smarty_literal.read();
+        resulting_string = resulting_string ||
+          this.__patterns.smarty.read();
+      }
+    }
   }
   return resulting_string;
 };
@@ -20495,9 +20396,8 @@ module.exports.TemplatablePattern = TemplatablePattern;
 /* 16 */,
 /* 17 */,
 /* 18 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20544,9 +20444,8 @@ module.exports.defaultOptions = function() {
 
 /***/ }),
 /* 19 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -21095,6 +20994,7 @@ Beautifier.prototype._handle_tag_open = function(printer, raw_token, last_tag_to
   var parser_token = this._get_tag_open_token(raw_token);
 
   if ((last_tag_token.is_unformatted || last_tag_token.is_content_unformatted) &&
+    !last_tag_token.is_empty_element &&
     raw_token.type === TOKEN.TAG_OPEN && raw_token.text.indexOf('</') === 0) {
     // End element tags for unformatted or content_unformatted elements
     // are printed raw to keep any newlines inside them exactly the same.
@@ -21208,12 +21108,8 @@ Beautifier.prototype._set_tag_position = function(printer, raw_token, parser_tok
       // and do an ending needed
       if (this._do_optional_end_element(parser_token)) {
         if (!parser_token.is_inline_element) {
-          if (parser_token.parent) {
-            parser_token.parent.multiline_content = true;
-          }
           printer.print_newline(false);
         }
-
       }
 
       this._tag_stack.record_tag(parser_token); //push it on the tag stack
@@ -21250,21 +21146,28 @@ Beautifier.prototype._set_tag_position = function(printer, raw_token, parser_tok
     if (parser_token.tag_name === '!--' && last_token.type === TOKEN.TAG_CLOSE &&
       last_tag_token.is_end_tag && parser_token.text.indexOf('\n') === -1) {
       //Do nothing. Leave comments on same line.
-    } else if (!parser_token.is_inline_element && !parser_token.is_unformatted) {
-      printer.print_newline(false);
-    }
-  } else if (parser_token.is_unformatted || parser_token.is_content_unformatted) {
-    if (!parser_token.is_inline_element && !parser_token.is_unformatted) {
-      printer.print_newline(false);
+    } else {
+      if (!(parser_token.is_inline_element || parser_token.is_unformatted)) {
+        printer.print_newline(false);
+      }
+      this._calcluate_parent_multiline(printer, parser_token);
     }
   } else if (parser_token.is_end_tag) { //this tag is a double tag so check for tag-ending
-    if ((parser_token.start_tag_token && parser_token.start_tag_token.multiline_content) ||
-      !(parser_token.is_inline_element ||
-        (last_tag_token.is_inline_element) ||
-        (last_token.type === TOKEN.TAG_CLOSE &&
-          parser_token.start_tag_token === last_tag_token) ||
-        (last_token.type === 'TK_CONTENT')
-      )) {
+    var do_end_expand = false;
+
+    // deciding whether a block is multiline should not be this hard
+    do_end_expand = parser_token.start_tag_token && parser_token.start_tag_token.multiline_content;
+    do_end_expand = do_end_expand || (!parser_token.is_inline_element &&
+      !(last_tag_token.is_inline_element || last_tag_token.is_unformatted) &&
+      !(last_token.type === TOKEN.TAG_CLOSE && parser_token.start_tag_token === last_tag_token) &&
+      last_token.type !== 'TK_CONTENT'
+    );
+
+    if (parser_token.is_content_unformatted || parser_token.is_unformatted) {
+      do_end_expand = false;
+    }
+
+    if (do_end_expand) {
       printer.print_newline(false);
     }
   } else { // it's a start-tag
@@ -21280,12 +21183,19 @@ Beautifier.prototype._set_tag_position = function(printer, raw_token, parser_tok
       }
     }
 
-    if (!parser_token.is_inline_element && last_token.type !== 'TK_CONTENT') {
-      if (parser_token.parent) {
-        parser_token.parent.multiline_content = true;
-      }
+    if (!(parser_token.is_inline_element || parser_token.is_unformatted) &&
+      (last_token.type !== 'TK_CONTENT' || parser_token.is_content_unformatted)) {
       printer.print_newline(false);
     }
+
+    this._calcluate_parent_multiline(printer, parser_token);
+  }
+};
+
+Beautifier.prototype._calcluate_parent_multiline = function(printer, parser_token) {
+  if (parser_token.parent && printer._output.just_added_newline() &&
+    !((parser_token.is_inline_element || parser_token.is_unformatted) && parser_token.parent.is_inline_element)) {
+    parser_token.parent.multiline_content = true;
   }
 };
 
@@ -21405,9 +21315,8 @@ module.exports.Beautifier = Beautifier;
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -21503,9 +21412,8 @@ module.exports.Options = Options;
 
 /***/ }),
 /* 21 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -21630,8 +21538,8 @@ Tokenizer.prototype._get_next_token = function(previous_token, open_token) { // 
 
   token = token || this._read_open_handlebars(c, open_token);
   token = token || this._read_attribute(c, previous_token, open_token);
-  token = token || this._read_raw_content(c, previous_token, open_token);
   token = token || this._read_close(c, open_token);
+  token = token || this._read_raw_content(c, previous_token, open_token);
   token = token || this._read_content_word(c);
   token = token || this._read_comment_or_cdata(c);
   token = token || this._read_processing(c);
@@ -21794,7 +21702,9 @@ Tokenizer.prototype._read_raw_content = function(c, previous_token, open_token) 
   var resulting_string = '';
   if (open_token && open_token.text[0] === '{') {
     resulting_string = this.__patterns.handlebars_raw_close.read();
-  } else if (previous_token.type === TOKEN.TAG_CLOSE && (previous_token.opened.text[0] === '<')) {
+  } else if (previous_token.type === TOKEN.TAG_CLOSE &&
+    previous_token.opened.text[0] === '<' && previous_token.text[0] !== '/') {
+    // ^^ empty tag has no content 
     var tag_name = previous_token.opened.text.substr(1).toLowerCase();
     if (tag_name === 'script' || tag_name === 'style') {
       // Script and style tags are allowed to have comments wrapping their content
@@ -21806,6 +21716,7 @@ Tokenizer.prototype._read_raw_content = function(c, previous_token, open_token) 
       }
       resulting_string = this._input.readUntil(new RegExp('</' + tag_name + '[\\n\\r\\t ]*?>', 'ig'));
     } else if (this._is_content_unformatted(tag_name)) {
+
       resulting_string = this._input.readUntil(new RegExp('</' + tag_name + '[\\n\\r\\t ]*?>', 'ig'));
     }
   }
@@ -21838,7 +21749,42 @@ module.exports.TOKEN = TOKEN;
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(18);
+/******/ 	legacy_beautify_html = __webpack_exports__;
+/******/ 	
+/******/ })()
+;
 var style_html = legacy_beautify_html;
 /* Footer */
 if (true) {
@@ -21896,7 +21842,7 @@ if (true) {
   var mac_geMountainLion = /Mac OS X 1\d\D([8-9]|\d\d)\D/.test(userAgent);
   var phantom = /PhantomJS/.test(userAgent);
 
-  var ios = !edge && /AppleWebKit/.test(userAgent) && /Mobile\/\w+/.test(userAgent);
+  var ios = safari && (/Mobile\/\w+/.test(userAgent) || navigator.maxTouchPoints > 2);
   var android = /Android/.test(userAgent);
   // This is woefully incomplete. Suggestions for alternative methods welcome.
   var mobile = ios || android || /webOS|BlackBerry|Opera Mini|Opera Mobi|IEMobile/i.test(userAgent);
@@ -23175,6 +23121,7 @@ if (true) {
       if (span.marker == marker) { return span }
     } }
   }
+
   // Remove a span from an array, returning undefined if no spans are
   // left (we don't store arrays for lines without spans).
   function removeMarkedSpan(spans, span) {
@@ -23183,9 +23130,16 @@ if (true) {
       { if (spans[i] != span) { (r || (r = [])).push(spans[i]); } }
     return r
   }
+
   // Add a span to a line.
-  function addMarkedSpan(line, span) {
-    line.markedSpans = line.markedSpans ? line.markedSpans.concat([span]) : [span];
+  function addMarkedSpan(line, span, op) {
+    var inThisOp = op && window.WeakSet && (op.markedSpans || (op.markedSpans = new WeakSet));
+    if (inThisOp && inThisOp.has(line.markedSpans)) {
+      line.markedSpans.push(span);
+    } else {
+      line.markedSpans = line.markedSpans ? line.markedSpans.concat([span]) : [span];
+      if (inThisOp) { inThisOp.add(line.markedSpans); }
+    }
     span.marker.attachLine(line);
   }
 
@@ -23705,7 +23659,7 @@ if (true) {
       }
     }
     builder.trailingSpace = displayText.charCodeAt(text.length - 1) == 32;
-    if (style || startStyle || endStyle || mustWrap || css) {
+    if (style || startStyle || endStyle || mustWrap || css || attributes) {
       var fullStyle = style || "";
       if (startStyle) { fullStyle += startStyle; }
       if (endStyle) { fullStyle += endStyle; }
@@ -24050,6 +24004,7 @@ if (true) {
     if (cm.options.lineNumbers || markers) {
       var wrap$1 = ensureLineWrapped(lineView);
       var gutterWrap = lineView.gutter = elt("div", null, "CodeMirror-gutter-wrapper", ("left: " + (cm.options.fixedGutter ? dims.fixedPos : -dims.gutterTotalWidth) + "px"));
+      gutterWrap.setAttribute("aria-hidden", "true");
       cm.display.input.setUneditable(gutterWrap);
       wrap$1.insertBefore(gutterWrap, lineView.text);
       if (lineView.line.gutterClass)
@@ -24824,7 +24779,7 @@ if (true) {
     var x, y, space = display.lineSpace.getBoundingClientRect();
     // Fails unpredictably on IE[67] when mouse is dragged around quickly.
     try { x = e.clientX - space.left; y = e.clientY - space.top; }
-    catch (e) { return null }
+    catch (e$1) { return null }
     var coords = coordsChar(cm, x, y), line;
     if (forRect && coords.xRel > 0 && (line = getLine(cm.doc, coords.line).text).length == coords.ch) {
       var colDiff = countColumn(line, line.length, cm.options.tabSize) - line.length;
@@ -25027,6 +24982,11 @@ if (true) {
     cursor.style.top = pos.top + "px";
     cursor.style.height = Math.max(0, pos.bottom - pos.top) * cm.options.cursorHeight + "px";
 
+    if (/\bcm-fat-cursor\b/.test(cm.getWrapperElement().className)) {
+      var charPos = charCoords(cm, head, "div", null, null);
+      cursor.style.width = Math.max(0, charPos.right - charPos.left) + "px";
+    }
+
     if (pos.other) {
       // Secondary cursor, shown when on a 'jump' in bi-directional text
       var otherCursor = output.appendChild(elt("div", "\u00a0", "CodeMirror-cursor CodeMirror-secondarycursor"));
@@ -25140,26 +25100,31 @@ if (true) {
     var on = true;
     display.cursorDiv.style.visibility = "";
     if (cm.options.cursorBlinkRate > 0)
-      { display.blinker = setInterval(function () { return display.cursorDiv.style.visibility = (on = !on) ? "" : "hidden"; },
-        cm.options.cursorBlinkRate); }
+      { display.blinker = setInterval(function () {
+        if (!cm.hasFocus()) { onBlur(cm); }
+        display.cursorDiv.style.visibility = (on = !on) ? "" : "hidden";
+      }, cm.options.cursorBlinkRate); }
     else if (cm.options.cursorBlinkRate < 0)
       { display.cursorDiv.style.visibility = "hidden"; }
   }
 
   function ensureFocus(cm) {
-    if (!cm.state.focused) { cm.display.input.focus(); onFocus(cm); }
+    if (!cm.hasFocus()) {
+      cm.display.input.focus();
+      if (!cm.state.focused) { onFocus(cm); }
+    }
   }
 
   function delayBlurEvent(cm) {
     cm.state.delayingBlurEvent = true;
     setTimeout(function () { if (cm.state.delayingBlurEvent) {
       cm.state.delayingBlurEvent = false;
-      onBlur(cm);
+      if (cm.state.focused) { onBlur(cm); }
     } }, 100);
   }
 
   function onFocus(cm, e) {
-    if (cm.state.delayingBlurEvent) { cm.state.delayingBlurEvent = false; }
+    if (cm.state.delayingBlurEvent && !cm.state.draggingText) { cm.state.delayingBlurEvent = false; }
 
     if (cm.options.readOnly == "nocursor") { return }
     if (!cm.state.focused) {
@@ -25289,8 +25254,8 @@ if (true) {
       // Set pos and end to the cursor positions around the character pos sticks to
       // If pos.sticky == "before", that is around pos.ch - 1, otherwise around pos.ch
       // If pos == Pos(_, 0, "before"), pos and end are unchanged
-      pos = pos.ch ? Pos(pos.line, pos.sticky == "before" ? pos.ch - 1 : pos.ch, "after") : pos;
       end = pos.sticky == "before" ? Pos(pos.line, pos.ch + 1, "before") : pos;
+      pos = pos.ch ? Pos(pos.line, pos.sticky == "before" ? pos.ch - 1 : pos.ch, "after") : pos;
     }
     for (var limit = 0; limit < 5; limit++) {
       var changed = false;
@@ -25341,14 +25306,15 @@ if (true) {
       if (newTop != screentop) { result.scrollTop = newTop; }
     }
 
-    var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft;
-    var screenw = displayWidth(cm) - (cm.options.fixedGutter ? display.gutters.offsetWidth : 0);
+    var gutterSpace = cm.options.fixedGutter ? 0 : display.gutters.offsetWidth;
+    var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft - gutterSpace;
+    var screenw = displayWidth(cm) - display.gutters.offsetWidth;
     var tooWide = rect.right - rect.left > screenw;
     if (tooWide) { rect.right = rect.left + screenw; }
     if (rect.left < 10)
       { result.scrollLeft = 0; }
     else if (rect.left < screenleft)
-      { result.scrollLeft = Math.max(0, rect.left - (tooWide ? 0 : 10)); }
+      { result.scrollLeft = Math.max(0, rect.left + gutterSpace - (tooWide ? 0 : 10)); }
     else if (rect.right > screenw + screenleft - 3)
       { result.scrollLeft = rect.right + (tooWide ? 0 : 10) - screenw; }
     return result
@@ -25640,7 +25606,8 @@ if (true) {
       scrollLeft: null, scrollTop: null, // Intermediate scroll position, not pushed to DOM yet
       scrollToPos: null,       // Used to scroll to a specific position
       focus: false,
-      id: ++nextOpId           // Unique ID
+      id: ++nextOpId,          // Unique ID
+      markArrays: null         // Used by addMarkedSpan
     };
     pushOperation(cm.curOp);
   }
@@ -26093,6 +26060,8 @@ if (true) {
   function updateGutterSpace(display) {
     var width = display.gutters.offsetWidth;
     display.sizer.style.marginLeft = width + "px";
+    // Send an event to consumers responding to changes in gutter width.
+    signalLater(display, "gutterChanged", display);
   }
 
   function setDocumentHeight(cm, measure) {
@@ -26231,6 +26200,10 @@ if (true) {
     d.scroller.setAttribute("tabIndex", "-1");
     // The element in which the editor lives.
     d.wrapper = elt("div", [d.scrollbarFiller, d.gutterFiller, d.scroller], "CodeMirror");
+
+    // This attribute is respected by automatic translation systems such as Google Translate,
+    // and may also be respected by tools used by human translators.
+    d.wrapper.setAttribute('translate', 'no');
 
     // Work around IE7 z-index bug (not perfect, hence IE7 not really being supported)
     if (ie && ie_version < 8) { d.gutters.style.zIndex = -1; d.scroller.style.paddingRight = 0; }
@@ -26640,6 +26613,7 @@ if (true) {
     estimateLineHeights(cm);
     loadMode(cm);
     setDirectionClass(cm);
+    cm.options.direction = doc.direction;
     if (!cm.options.lineWrapping) { findMaxLine(cm); }
     cm.options.mode = doc.modeOption;
     regChange(cm);
@@ -26656,19 +26630,19 @@ if (true) {
     });
   }
 
-  function History(startGen) {
+  function History(prev) {
     // Arrays of change events and selections. Doing something adds an
     // event to done and clears undo. Undoing moves events from done
     // to undone, redoing moves them in the other direction.
     this.done = []; this.undone = [];
-    this.undoDepth = Infinity;
+    this.undoDepth = prev ? prev.undoDepth : Infinity;
     // Used to track when changes can be merged into a single undo
     // event
     this.lastModTime = this.lastSelTime = 0;
     this.lastOp = this.lastSelOp = null;
     this.lastOrigin = this.lastSelOrigin = null;
     // Used by the isClean() method
-    this.generation = this.maxGeneration = startGen || 1;
+    this.generation = this.maxGeneration = prev ? prev.maxGeneration : 1;
   }
 
   // Create a history change event from an updateDoc-style change
@@ -26973,7 +26947,7 @@ if (true) {
       (cmp(sel.primary().head, doc.sel.primary().head) < 0 ? -1 : 1);
     setSelectionInner(doc, skipAtomicInSelection(doc, sel, bias, true));
 
-    if (!(options && options.scroll === false) && doc.cm)
+    if (!(options && options.scroll === false) && doc.cm && doc.cm.getOption("readOnly") != "nocursor")
       { ensureCursorVisible(doc.cm); }
   }
 
@@ -27630,7 +27604,7 @@ if (true) {
     changeLine(doc, handle, "widget", function (line) {
       var widgets = line.widgets || (line.widgets = []);
       if (widget.insertAt == null) { widgets.push(widget); }
-      else { widgets.splice(Math.min(widgets.length - 1, Math.max(0, widget.insertAt)), 0, widget); }
+      else { widgets.splice(Math.min(widgets.length, Math.max(0, widget.insertAt)), 0, widget); }
       widget.line = line;
       if (cm && !lineIsHidden(doc, line)) {
         var aboveVisible = heightAtLine(line) < doc.scrollTop;
@@ -27816,7 +27790,7 @@ if (true) {
       if (marker.collapsed && curLine != from.line) { updateLineHeight(line, 0); }
       addMarkedSpan(line, new MarkedSpan(marker,
                                          curLine == from.line ? from.ch : null,
-                                         curLine == to.line ? to.ch : null));
+                                         curLine == to.line ? to.ch : null), doc.cm && doc.cm.curOp);
       ++curLine;
     });
     // lineIsHidden depends on the presence of the spans, so needs a second pass
@@ -27988,6 +27962,7 @@ if (true) {
     getRange: function(from, to, lineSep) {
       var lines = getBetween(this, clipPos(this, from), clipPos(this, to));
       if (lineSep === false) { return lines }
+      if (lineSep === '') { return lines.join('') }
       return lines.join(lineSep || this.lineSeparator())
     },
 
@@ -28039,7 +28014,7 @@ if (true) {
       var out = [];
       for (var i = 0; i < ranges.length; i++)
         { out[i] = new Range(clipPos(this, ranges[i].anchor),
-                           clipPos(this, ranges[i].head)); }
+                           clipPos(this, ranges[i].head || ranges[i].anchor)); }
       if (primary == null) { primary = Math.min(ranges.length - 1, this.sel.primIndex); }
       setSelection(this, normalizeSelection(this.cm, out, primary), options);
     }),
@@ -28102,7 +28077,7 @@ if (true) {
     clearHistory: function() {
       var this$1 = this;
 
-      this.history = new History(this.history.maxGeneration);
+      this.history = new History(this.history);
       linkedDocs(this, function (doc) { return doc.history = this$1.history; }, true);
     },
 
@@ -28123,7 +28098,7 @@ if (true) {
               undone: copyHistoryArray(this.history.undone)}
     },
     setHistory: function(histData) {
-      var hist = this.history = new History(this.history.maxGeneration);
+      var hist = this.history = new History(this.history);
       hist.done = copyHistoryArray(histData.done.slice(0), null, true);
       hist.undone = copyHistoryArray(histData.undone.slice(0), null, true);
     },
@@ -28409,7 +28384,7 @@ if (true) {
           cm.display.input.focus();
         }
       }
-      catch(e){}
+      catch(e$1){}
     }
   }
 
@@ -28505,7 +28480,7 @@ if (true) {
     46: "Delete", 59: ";", 61: "=", 91: "Mod", 92: "Mod", 93: "Mod",
     106: "*", 107: "=", 109: "-", 110: ".", 111: "/", 145: "ScrollLock",
     173: "-", 186: ";", 187: "=", 188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\",
-    221: "]", 222: "'", 63232: "Up", 63233: "Down", 63234: "Left", 63235: "Right", 63272: "Delete",
+    221: "]", 222: "'", 224: "Mod", 63232: "Up", 63233: "Down", 63234: "Left", 63235: "Right", 63272: "Delete",
     63273: "Home", 63275: "End", 63276: "PageUp", 63277: "PageDown", 63302: "Insert"
   };
 
@@ -28542,10 +28517,9 @@ if (true) {
   // Very basic readline/emacs-style bindings, which are standard on Mac.
   keyMap.emacsy = {
     "Ctrl-F": "goCharRight", "Ctrl-B": "goCharLeft", "Ctrl-P": "goLineUp", "Ctrl-N": "goLineDown",
-    "Alt-F": "goWordRight", "Alt-B": "goWordLeft", "Ctrl-A": "goLineStart", "Ctrl-E": "goLineEnd",
-    "Ctrl-V": "goPageDown", "Shift-Ctrl-V": "goPageUp", "Ctrl-D": "delCharAfter", "Ctrl-H": "delCharBefore",
-    "Alt-D": "delWordAfter", "Alt-Backspace": "delWordBefore", "Ctrl-K": "killLine", "Ctrl-T": "transposeChars",
-    "Ctrl-O": "openLine"
+    "Ctrl-A": "goLineStart", "Ctrl-E": "goLineEnd", "Ctrl-V": "goPageDown", "Shift-Ctrl-V": "goPageUp",
+    "Ctrl-D": "delCharAfter", "Ctrl-H": "delCharBefore", "Alt-Backspace": "delWordBefore", "Ctrl-K": "killLine",
+    "Ctrl-T": "transposeChars", "Ctrl-O": "openLine"
   };
   keyMap.macDefault = {
     "Cmd-A": "selectAll", "Cmd-D": "deleteLine", "Cmd-Z": "undo", "Shift-Cmd-Z": "redo", "Cmd-Y": "redo",
@@ -28640,7 +28614,7 @@ if (true) {
     var base = name;
     if (event.altKey && base != "Alt") { name = "Alt-" + name; }
     if ((flipCtrlCmd ? event.metaKey : event.ctrlKey) && base != "Ctrl") { name = "Ctrl-" + name; }
-    if ((flipCtrlCmd ? event.ctrlKey : event.metaKey) && base != "Cmd") { name = "Cmd-" + name; }
+    if ((flipCtrlCmd ? event.ctrlKey : event.metaKey) && base != "Mod") { name = "Cmd-" + name; }
     if (!noShift && event.shiftKey && base != "Shift") { name = "Shift-" + name; }
     return name
   }
@@ -28866,7 +28840,7 @@ if (true) {
     goGroupRight: function (cm) { return cm.moveH(1, "group"); },
     goGroupLeft: function (cm) { return cm.moveH(-1, "group"); },
     goWordRight: function (cm) { return cm.moveH(1, "word"); },
-    delCharBefore: function (cm) { return cm.deleteH(-1, "char"); },
+    delCharBefore: function (cm) { return cm.deleteH(-1, "codepoint"); },
     delCharAfter: function (cm) { return cm.deleteH(1, "char"); },
     delWordBefore: function (cm) { return cm.deleteH(-1, "word"); },
     delWordAfter: function (cm) { return cm.deleteH(1, "word"); },
@@ -29239,6 +29213,10 @@ if (true) {
     var dragEnd = operation(cm, function (e) {
       if (webkit) { display.scroller.draggable = false; }
       cm.state.draggingText = false;
+      if (cm.state.delayingBlurEvent) {
+        if (cm.hasFocus()) { cm.state.delayingBlurEvent = false; }
+        else { delayBlurEvent(cm); }
+      }
       off(display.wrapper.ownerDocument, "mouseup", dragEnd);
       off(display.wrapper.ownerDocument, "mousemove", mouseMove);
       off(display.scroller, "dragstart", dragStart);
@@ -29262,15 +29240,15 @@ if (true) {
     if (webkit) { display.scroller.draggable = true; }
     cm.state.draggingText = dragEnd;
     dragEnd.copy = !behavior.moveOnDrag;
-    // IE's approach to draggable
-    if (display.scroller.dragDrop) { display.scroller.dragDrop(); }
     on(display.wrapper.ownerDocument, "mouseup", dragEnd);
     on(display.wrapper.ownerDocument, "mousemove", mouseMove);
     on(display.scroller, "dragstart", dragStart);
     on(display.scroller, "drop", dragEnd);
 
-    delayBlurEvent(cm);
+    cm.state.delayingBlurEvent = true;
     setTimeout(function () { return display.input.focus(); }, 20);
+    // IE's approach to draggable
+    if (display.scroller.dragDrop) { display.scroller.dragDrop(); }
   }
 
   function rangeForUnit(cm, pos, unit) {
@@ -29283,6 +29261,7 @@ if (true) {
 
   // Normal selection, as opposed to text dragging.
   function leftButtonSelect(cm, event, start, behavior) {
+    if (ie) { delayBlurEvent(cm); }
     var display = cm.display, doc = cm.doc;
     e_preventDefault(event);
 
@@ -29461,7 +29440,7 @@ if (true) {
       mY = e.touches[0].clientY;
     } else {
       try { mX = e.clientX; mY = e.clientY; }
-      catch(e) { return false }
+      catch(e$1) { return false }
     }
     if (mX >= Math.floor(cm.display.gutters.getBoundingClientRect().right)) { return false }
     if (prevent) { e_preventDefault(e); }
@@ -29561,7 +29540,7 @@ if (true) {
       for (var i = newBreaks.length - 1; i >= 0; i--)
         { replaceRange(cm.doc, val, newBreaks[i], Pos(newBreaks[i].line, newBreaks[i].ch + val.length)); }
     });
-    option("specialChars", /[\u0000-\u001f\u007f-\u009f\u00ad\u061c\u200b-\u200f\u2028\u2029\ufeff\ufff9-\ufffc]/g, function (cm, val, old) {
+    option("specialChars", /[\u0000-\u001f\u007f-\u009f\u00ad\u061c\u200b\u200e\u200f\u2028\u2029\ufeff\ufff9-\ufffc]/g, function (cm, val, old) {
       cm.state.specialChars = new RegExp(val.source + (val.test("\t") ? "" : "|\t"), "g");
       if (old != Init) { cm.refresh(); }
     });
@@ -29741,7 +29720,9 @@ if (true) {
     attachDoc(this, doc);
 
     if ((options.autofocus && !mobile) || this.hasFocus())
-      { setTimeout(bind(onFocus, this), 20); }
+      { setTimeout(function () {
+        if (this$1.hasFocus() && !this$1.state.focused) { onFocus(this$1); }
+      }, 20); }
     else
       { onBlur(this); }
 
@@ -29981,7 +29962,7 @@ if (true) {
           { from = Pos(from.line, from.ch - deleted); }
         else if (cm.state.overwrite && !paste) // Handle overwrite
           { to = Pos(to.line, Math.min(getLine(doc, to.line).text.length, to.ch + lst(textLines).length)); }
-        else if (paste && lastCopied && lastCopied.lineWise && lastCopied.text.join("\n") == inserted)
+        else if (paste && lastCopied && lastCopied.lineWise && lastCopied.text.join("\n") == textLines.join("\n"))
           { from = to = Pos(from.line, 0); }
       }
       var changeEvent = {from: from, to: to, text: multiPaste ? multiPaste[i$1 % multiPaste.length] : textLines,
@@ -30504,14 +30485,14 @@ if (true) {
   }
 
   // Used for horizontal relative motion. Dir is -1 or 1 (left or
-  // right), unit can be "char", "column" (like char, but doesn't
-  // cross line boundaries), "word" (across next word), or "group" (to
-  // the start of next group of word or non-word-non-whitespace
-  // chars). The visually param controls whether, in right-to-left
-  // text, direction 1 means to move towards the next index in the
-  // string, or towards the character to the right of the current
-  // position. The resulting position will have a hitSide=true
-  // property if it reached the end of the document.
+  // right), unit can be "codepoint", "char", "column" (like char, but
+  // doesn't cross line boundaries), "word" (across next word), or
+  // "group" (to the start of next group of word or
+  // non-word-non-whitespace chars). The visually param controls
+  // whether, in right-to-left text, direction 1 means to move towards
+  // the next index in the string, or towards the character to the right
+  // of the current position. The resulting position will have a
+  // hitSide=true property if it reached the end of the document.
   function findPosH(doc, pos, dir, unit, visually) {
     var oldPos = pos;
     var origDir = dir;
@@ -30525,7 +30506,15 @@ if (true) {
     }
     function moveOnce(boundToLine) {
       var next;
-      if (visually) {
+      if (unit == "codepoint") {
+        var ch = lineObj.text.charCodeAt(pos.ch + (dir > 0 ? 0 : -1));
+        if (isNaN(ch)) {
+          next = null;
+        } else {
+          var astral = dir > 0 ? ch >= 0xD800 && ch < 0xDC00 : ch >= 0xDC00 && ch < 0xDFFF;
+          next = new Pos(pos.line, Math.max(0, Math.min(lineObj.text.length, pos.ch + dir * (astral ? 2 : 1))), -dir);
+        }
+      } else if (visually) {
         next = moveVisually(doc.cm, lineObj, pos, dir);
       } else {
         next = moveLogically(lineObj, pos, dir);
@@ -30541,7 +30530,7 @@ if (true) {
       return true
     }
 
-    if (unit == "char") {
+    if (unit == "char" || unit == "codepoint") {
       moveOnce();
     } else if (unit == "column") {
       moveOnce(true);
@@ -30609,6 +30598,7 @@ if (true) {
 
     var input = this, cm = input.cm;
     var div = input.div = display.lineDiv;
+    div.contentEditable = true;
     disableBrowserMagic(div, cm.options.spellcheck, cm.options.autocorrect, cm.options.autocapitalize);
 
     function belongsToInput(e) {
@@ -30675,7 +30665,7 @@ if (true) {
       var kludge = hiddenTextarea(), te = kludge.firstChild;
       cm.display.lineSpace.insertBefore(kludge, cm.display.lineSpace.firstChild);
       te.value = lastCopied.text.join("\n");
-      var hadFocus = document.activeElement;
+      var hadFocus = activeElt();
       selectInput(te);
       setTimeout(function () {
         cm.display.lineSpace.removeChild(kludge);
@@ -30698,7 +30688,7 @@ if (true) {
 
   ContentEditableInput.prototype.prepareSelection = function () {
     var result = prepareSelection(this.cm, false);
-    result.focus = document.activeElement == this.div;
+    result.focus = activeElt() == this.div;
     return result
   };
 
@@ -30794,7 +30784,7 @@ if (true) {
 
   ContentEditableInput.prototype.focus = function () {
     if (this.cm.options.readOnly != "nocursor") {
-      if (!this.selectionInEditor() || document.activeElement != this.div)
+      if (!this.selectionInEditor() || activeElt() != this.div)
         { this.showSelection(this.prepareSelection(), true); }
       this.div.focus();
     }
@@ -31485,6 +31475,7 @@ if (true) {
   TextareaInput.prototype.readOnlyChanged = function (val) {
     if (!val) { this.reset(); }
     this.textarea.disabled = val == "nocursor";
+    this.textarea.readOnly = !!val;
   };
 
   TextareaInput.prototype.setUneditable = function () {};
@@ -31635,7 +31626,7 @@ if (true) {
 
   addLegacyProps(CodeMirror);
 
-  CodeMirror.version = "5.54.0";
+  CodeMirror.version = "5.62.3";
 
   return CodeMirror;
 
@@ -31898,14 +31889,108 @@ function (modules) {
 
   return __webpack_require__(__webpack_require__.s = 0);
   /******/
-}(
-/************************************************************************/
+}([
+  /* 0 */
 
-/******/
-[
-/* 0 */
+  /***/
 
-/***/
+  /* 1 */
+
+  /***/
+
+  /* 2 */
+
+  /***/
+
+  /* 3 */
+
+  /***/
+
+  /* 4 */
+
+  /***/
+
+  /* 5 */
+
+  /***/
+
+  /* 6 */
+
+  /***/
+
+  /* 7 */
+
+  /***/
+
+  /* 8 */
+
+  /***/
+
+  /* 9 */
+
+  /***/
+
+  /* 10 */
+
+  /***/
+
+  /* 11 */
+
+  /***/
+
+  /* 12 */
+
+  /***/
+
+  /* 13 */
+
+  /***/
+
+  /* 14 */
+
+  /***/
+
+  /* 15 */
+
+  /***/
+
+  /* 16 */
+
+  /***/
+
+  /* 17 */
+
+  /***/
+
+  /* 18 */
+
+  /***/
+
+  /* 19 */
+
+  /***/
+
+  /* 20 */
+
+  /***/
+
+  /* 21 */
+
+  /***/
+
+  /* 22 */
+
+  /***/
+
+  /* 23 */
+
+  /***/
+
+  /* 24 */
+
+  /***/
+
+  /******/
 function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
@@ -31919,47 +32004,55 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _components_elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+  var _env_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
   /* harmony import */
 
 
-  var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+  var _env_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_env_js__WEBPACK_IMPORTED_MODULE_0__);
   /* harmony import */
 
 
-  var tiny_emitter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
+  var _components_elements_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
   /* harmony import */
 
 
-  var tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_2__);
+  var _common_pool_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
   /* harmony import */
 
 
-  var css_layout__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+  var tiny_emitter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
   /* harmony import */
 
 
-  var css_layout__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_3__);
+  var tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_3__);
   /* harmony import */
 
 
-  var _common_util_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
+  var css_layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
   /* harmony import */
 
 
-  var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
+  var css_layout__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_4__);
   /* harmony import */
 
 
-  var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5__);
+  var _common_util_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
   /* harmony import */
 
 
-  var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(13);
+  var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8);
   /* harmony import */
 
 
-  var _components_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(15);
+  var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__);
+  /* harmony import */
+
+
+  var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(14);
+  /* harmony import */
+
+
+  var _components_index_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(16);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -32045,6 +32138,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -32064,7 +32159,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -32080,18 +32175,34 @@ function (module, __webpack_exports__, __webpack_require__) {
   // 全局事件管道
 
 
-  var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_2___default.a();
-  var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('imgPool');
-  var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
+  var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default.a();
+  var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
+  var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('canvasPool');
   var constructorMap = {
-    view: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["View"],
-    text: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["Text"],
-    image: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["Image"],
-    scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["ScrollView"],
-    bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_7__["BitMapText"]
+    view: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["View"],
+    text: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["Text"],
+    image: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["Image"],
+    scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["ScrollView"],
+    bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["BitMapText"]
   };
 
-  var create = function create(node, style) {
+  function isPercent(data) {
+    return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
+  }
+
+  function convertPercent(data, parentData) {
+    if (typeof data === 'number') {
+      return data;
+    }
+
+    var matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
+
+    if (matchData) {
+      return parentData * matchData * 0.01;
+    }
+  }
+
+  var create = function create(node, style, parent) {
     var _this = this;
 
     var _constructor = constructorMap[node.name];
@@ -32129,10 +32240,37 @@ function (module, __webpack_exports__, __webpack_require__) {
 
     args.idName = id;
     args.className = attr["class"] || '';
+    var thisStyle = args.style;
+
+    if (thisStyle) {
+      var parentStyle;
+
+      if (parent) {
+        parentStyle = parent.style;
+      } else if (typeof sharedCanvas !== 'undefined') {
+        parentStyle = sharedCanvas;
+      } else if (typeof __env !== 'undefined') {
+        parentStyle = __env.getSharedCanvas();
+      } else {
+        parentStyle = {
+          width: 300,
+          height: 150
+        };
+      }
+
+      if (isPercent(thisStyle.width)) {
+        thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
+      }
+
+      if (isPercent(thisStyle.height)) {
+        thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
+      }
+    }
+
     var element = new _constructor(args);
     element.root = this;
     children.forEach(function (childNode) {
-      var childElement = create.call(_this, childNode, style);
+      var childElement = create.call(_this, childNode, style, args);
       element.add(childElement);
     });
     return element;
@@ -32183,7 +32321,8 @@ function (module, __webpack_exports__, __webpack_require__) {
         child.layoutBox.absoluteY = child.layoutBox.top;
       }
 
-      child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY; // 滚动列表的画板尺寸和主画板保持一致
+      child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+      child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX; // 滚动列表的画板尺寸和主画板保持一致
 
       if (child.type === 'ScrollView') {
         child.updateRenderPort(_this2.renderport);
@@ -32293,14 +32432,14 @@ function (module, __webpack_exports__, __webpack_require__) {
       _this3.touchMove = _this3.eventHandler('touchmove').bind(_assertThisInitialized(_this3));
       _this3.touchEnd = _this3.eventHandler('touchend').bind(_assertThisInitialized(_this3));
       _this3.touchCancel = _this3.eventHandler('touchcancel').bind(_assertThisInitialized(_this3));
-      _this3.version = '0.0.1';
+      _this3.version = '0.0.7';
       _this3.touchMsg = {};
       _this3.hasViewPortSet = false;
       _this3.realLayoutBox = {
         realX: 0,
         realY: 0
       };
-      _this3.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].UNINIT;
+      _this3.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].UNINIT;
       _this3.bitMapFonts = [];
       return _this3;
     }
@@ -32352,7 +32491,7 @@ function (module, __webpack_exports__, __webpack_require__) {
           parseConfig.attrValueProcessor = attrValueProcessor;
         }
 
-        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_5___default.a.parse(template, parseConfig, true);
+        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6___default.a.parse(template, parseConfig, true);
 
         var xmlTree = jsonObj.children[0];
         this.debugInfo.xmlTree = new Date() - start; // XML树生成渲染树
@@ -32370,7 +32509,7 @@ function (module, __webpack_exports__, __webpack_require__) {
           children: getChildren(this)
         }; // 计算布局树
 
-        css_layout__WEBPACK_IMPORTED_MODULE_3___default()(elementTree);
+        css_layout__WEBPACK_IMPORTED_MODULE_4___default()(elementTree);
         this.elementTree = elementTree;
         this.debugInfo.renderTree = new Date() - start;
         var rootEle = this.children[0];
@@ -32382,7 +32521,7 @@ function (module, __webpack_exports__, __webpack_require__) {
           this.renderport.height = rootEle.style.height;
         }
 
-        this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].INITED;
+        this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].INITED;
       }
     }, {
       key: "layout",
@@ -32406,7 +32545,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         renderChildren(this.children, context);
         this.debugInfo.renderChildren = new Date() - start;
         this.bindEvents();
-        this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].RENDERED;
+        this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].RENDERED;
       }
     }, {
       key: "initRepaint",
@@ -32416,15 +32555,14 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.on('repaint', function () {
           _this4.repaint();
         });
-        this.EE.on('one__image__render__done', function (img) {
+        this.EE.on('one__image__render__done', function () {
           _this4.repaint();
         });
       }
     }, {
       key: "repaint",
       value: function repaint() {
-        var start = new Date();
-        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["repaintChildren"])(this.children);
+        Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["repaintChildren"])(this.children);
         this.emit('repaint__done');
       }
     }, {
@@ -32472,7 +32610,7 @@ function (module, __webpack_exports__, __webpack_require__) {
             this.touchMsg[eventName] = touch;
           }
 
-          if (eventName === 'touchend' && Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["isClick"])(this.touchMsg)) {
+          if (eventName === 'touchend' && Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["isClick"])(this.touchMsg)) {
             item && item.emit('click', e);
           }
         };
@@ -32486,11 +32624,14 @@ function (module, __webpack_exports__, __webpack_require__) {
 
         this.hasEventHandler = true;
 
-        if (typeof wx !== 'undefined') {
-          wx.onTouchStart(this.touchStart);
-          wx.onTouchMove(this.touchMove);
-          wx.onTouchEnd(this.touchEnd);
-          wx.onTouchCancel(this.touchCancel);
+        if (typeof __env !== 'undefined') {
+          __env.onTouchStart(this.touchStart);
+
+          __env.onTouchMove(this.touchMove);
+
+          __env.onTouchEnd(this.touchEnd);
+
+          __env.onTouchCancel(this.touchCancel);
         } else {
           document.onmousedown = this.touchStart;
           document.onmousemove = this.touchMove;
@@ -32553,7 +32694,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.elementTree = null;
         this.children = [];
         this.layoutTree = {};
-        this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_4__["STATE"].CLEAR;
+        this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
         canvasPool.getList().forEach(function (item) {
           item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
           item.elements = [];
@@ -32564,10 +32705,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         if (this.renderContext) {
           this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
         }
-        /*['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(eventName => {
-          this.off(eventName);
-        });*/
-
 
         this.EE.off('image__render__done');
       }
@@ -32587,7 +32724,7 @@ function (module, __webpack_exports__, __webpack_require__) {
       key: "loadImgs",
       value: function loadImgs(arr) {
         arr.forEach(function (src) {
-          var img = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_4__["createImage"])();
+          var img = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["createImage"])();
           imgPool.set(src, img);
 
           img.onload = function () {
@@ -32601,13 +32738,13 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "registBitMapFont",
       value: function registBitMapFont(name, src, config) {
-        var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_6__["default"](name, src, config);
+        var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__["default"](name, src, config);
         this.bitMapFonts.push(font);
       }
     }]);
 
     return _Layout;
-  }(_components_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  }(_components_elements_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
   var Layout = new _Layout({
     style: {
@@ -32620,11 +32757,13 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   __webpack_exports__["default"] = Layout;
   /***/
-},
-/* 1 */
+}, function (module, exports) {
+  if (typeof GameGlobal !== "undefined") {
+    GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
+  }
+  /***/
 
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -32637,7 +32776,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _style_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+  var _style_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -32661,7 +32800,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     return Constructor;
   }
 
-  var Emitter = __webpack_require__(3); // 全局事件管道
+  var Emitter = __webpack_require__(4); // 全局事件管道
 
 
   var EE = new Emitter();
@@ -32688,7 +32827,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }
 
   var toEventName = function toEventName(event, id) {
-    var elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
+    var elementEvent = ["click", "touchstart", "touchmove", "touchend", "touchcancel"];
 
     if (elementEvent.indexOf(event) !== -1) {
       return "element-".concat(id, "-").concat(event);
@@ -32706,9 +32845,9 @@ function (module, __webpack_exports__, __webpack_require__) {
           _ref$props = _ref.props,
           props = _ref$props === void 0 ? {} : _ref$props,
           _ref$idName = _ref.idName,
-          idName = _ref$idName === void 0 ? '' : _ref$idName,
+          idName = _ref$idName === void 0 ? "" : _ref$idName,
           _ref$className = _ref.className,
-          className = _ref$className === void 0 ? '' : _ref$className,
+          className = _ref$className === void 0 ? "" : _ref$className,
           _ref$id = _ref.id,
           id = _ref$id === void 0 ? ++uuid : _ref$id;
 
@@ -32728,11 +32867,11 @@ function (module, __webpack_exports__, __webpack_require__) {
       this.isDestroyed = false;
       this.layoutBox = {};
 
-      if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
+      if (style.opacity !== undefined && style.color && style.color.indexOf("#") > -1) {
         style.color = getRgba(style.color, style.opacity);
       }
 
-      if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf('#') > -1) {
+      if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf("#") > -1) {
         style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
       }
 
@@ -32743,7 +32882,7 @@ function (module, __webpack_exports__, __webpack_require__) {
       } // 事件冒泡逻辑
 
 
-      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
+      ["touchstart", "touchmove", "touchcancel", "touchend", "click"].forEach(function (eventName) {
         _this.on(eventName, function (e, touchMsg) {
           _this.parent && _this.parent.emit(eventName, e, touchMsg);
         });
@@ -32756,8 +32895,8 @@ function (module, __webpack_exports__, __webpack_require__) {
       value: function initRepaint() {
         var _this2 = this;
 
-        this.on('repaint', function (e) {
-          _this2.parent && _this2.parent.emit('repaint', e);
+        this.on("repaint", function (e) {
+          _this2.parent && _this2.parent.emit("repaint", e);
         });
       } // 子类填充实现
 
@@ -32767,22 +32906,17 @@ function (module, __webpack_exports__, __webpack_require__) {
 
     }, {
       key: "insert",
-      value: function insert() {}
-    }, {
-      key: "checkNeedRender",
-      value: function checkNeedRender() {
-        return true;
-      } // 子类填充实现
+      value: function insert() {} // 子类填充实现
 
     }, {
       key: "destroy",
       value: function destroy() {
         var _this3 = this;
 
-        ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
+        ["touchstart", "touchmove", "touchcancel", "touchend", "click", "repaint"].forEach(function (eventName) {
           _this3.off(eventName);
         });
-        this.EE.off('image__render__done');
+        this.EE.off("image__render__done");
         this.isDestroyed = true;
         this.EE = null;
         /*this.root          = null;*/
@@ -32828,84 +32962,70 @@ function (module, __webpack_exports__, __webpack_require__) {
       key: "off",
       value: function off(event, callback) {
         EE.off(toEventName(event, this.id), callback);
-      } // 方便子类实现borderRadius
-
-    }, {
-      key: "roundRect",
-      value: function roundRect(ctx, layoutBox) {
-        var style = this.style || {};
-        var box = layoutBox || this.layoutBox;
-        var w = box.width;
-        var h = box.height;
-        var r = style.borderRadius;
-        var x = box.absoluteX;
-        var y = box.absoluteY;
-        ctx.moveTo(x + r, y);
-        ctx.arcTo(x + w, y, x + w, y + h, r);
-        ctx.arcTo(x + w, y + h, x, y + h, r);
-        ctx.arcTo(x, y + h, x, y, r);
-        ctx.arcTo(x, y, x + w, y, r);
-        ctx.clip();
       }
     }, {
       key: "renderBorder",
       value: function renderBorder(ctx, layoutBox) {
         var style = this.style || {};
-
-        if (style.borderRadius) {
-          this.roundRect(ctx, layoutBox);
-        }
-
-        ctx.save();
-        var box = layoutBox || this.layoutBox;
-        var borderWidth = style.borderWidth || 0;
-        var borderLeftWidth = style.borderLeftWidth || 0;
-        var borderRightWidth = style.borderRightWidth || 0;
-        var borderTopWidth = style.borderTopWidth || 0;
-        var borderBottomWidth = style.borderBottomWidth || 0;
         var radius = style.borderRadius || 0;
+        var _style$borderWidth = style.borderWidth,
+            borderWidth = _style$borderWidth === void 0 ? 0 : _style$borderWidth;
+        var borderTopLeftRadius = style.borderTopLeftRadius || radius;
+        var borderTopRightRadius = style.borderTopRightRadius || radius;
+        var borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
+        var borderBottomRightRadius = style.borderBottomRightRadius || radius;
+        var box = layoutBox || this.layoutBox;
         var borderColor = style.borderColor;
-        var drawX = box.absoluteX;
-        var drawY = box.absoluteY;
+        var x = box.absoluteX;
+        var y = box.absoluteY;
+        var width = box.width,
+            height = box.height;
+        var hasRadius = radius || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius; // borderWidth 和 radius 都没有，不需要执行后续逻辑，提升性能
+
+        if (!borderWidth && !hasRadius) {
+          return {
+            needClip: false,
+            needStroke: false
+          };
+        } // 左上角的点
+
+
         ctx.beginPath();
+        ctx.lineWidth = borderWidth;
+        ctx.strokeStyle = borderColor;
+        ctx.moveTo(x + borderTopLeftRadius, y);
+        ctx.lineTo(x + width - borderTopRightRadius, y); // 右上角的圆角
 
-        if (borderWidth && borderColor) {
-          ctx.lineWidth = borderWidth;
-          ctx.strokeStyle = borderColor;
-          ctx.strokeRect(drawX, drawY, box.width, box.height);
-        }
+        /*ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius);*/
 
-        if (borderTopWidth && (borderColor || style.borderTopColor)) {
-          ctx.lineWidth = borderTopWidth;
-          ctx.strokeStyle = style.borderTopColor || borderColor;
-          ctx.moveTo(radius ? drawX + radius : drawX, drawY + borderTopWidth / 2);
-          ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + borderTopWidth / 2);
-        }
+        ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius); // 右下角的点
 
-        if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
-          ctx.lineWidth = borderBottomWidth;
-          ctx.strokeStyle = style.borderBottomColor || borderColor;
-          ctx.moveTo(radius ? drawX + radius : drawX, drawY + box.height - borderBottomWidth / 2);
-          ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + box.height - borderBottomWidth / 2);
-        }
+        ctx.lineTo(x + width, y + height - borderBottomRightRadius); // 右下角的圆角
 
-        if (borderLeftWidth && (borderColor || style.borderLeftColor)) {
-          ctx.lineWidth = borderLeftWidth;
-          ctx.strokeStyle = style.borderLeftColor || borderColor;
-          ctx.moveTo(drawX + borderLeftWidth / 2, radius ? drawY + radius : drawY);
-          ctx.lineTo(drawX + borderLeftWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
-        }
+        /*ctx.quadraticCurveTo(
+          x + width,
+          y + height,
+          x + width - borderBottomRightRadius,
+          y + height
+        );*/
 
-        if (borderRightWidth && (borderColor || style.borderRightColor)) {
-          ctx.lineWidth = borderRightWidth;
-          ctx.strokeStyle = style.borderRightColor || borderColor;
-          ctx.moveTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + radius : drawY);
-          ctx.lineTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
-        }
+        ctx.arcTo(x + width, y + height, x + width - borderBottomRightRadius, y + height, borderBottomRightRadius); // 左下角的点
 
-        ctx.closePath();
-        ctx.stroke();
-        ctx.restore();
+        ctx.lineTo(x + borderBottomLeftRadius, y + height); // 左下角的圆角
+
+        /*ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius);*/
+
+        ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius); // 左上角的点
+
+        ctx.lineTo(x, y + borderTopLeftRadius); // 左上角的圆角
+
+        /*ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);*/
+
+        ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
+        return {
+          needClip: !!hasRadius,
+          needStroke: !!borderWidth
+        };
       }
     }]);
 
@@ -32913,11 +33033,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }();
   /***/
 
-},
-/* 2 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -32944,11 +33060,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   var scalableStyles = ['left', 'top', 'right', 'bottom', 'width', 'height', 'margin', 'marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'fontSize', 'lineHeight', 'borderRadius', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight'];
   var layoutAffectedStyles = ['margin', 'marginTop', 'marginBottom', 'marginLeft', 'marginRight', 'padding', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight', 'width', 'height'];
   /***/
-},
-/* 3 */
-
-/***/
-function (module, exports) {
+}, function (module, exports) {
   function E() {// Keep this empty so it's easier to inherit from
     // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
   }
@@ -33007,11 +33119,7 @@ function (module, exports) {
   module.exports = E;
   module.exports.TinyEmitter = E;
   /***/
-},
-/* 4 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -33091,11 +33199,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }();
   /***/
 
-},
-/* 5 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; // UMD (Universal Module Definition)
   // See https://github.com/umdjs/umd for reference
   //
@@ -34413,11 +34517,7 @@ function (module, exports, __webpack_require__) {
   });
   /***/
 
-},
-/* 6 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -34524,8 +34624,8 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   function createCanvas() {
     /* istanbul ignore if*/
-    if (typeof wx !== "undefined") {
-      return wx.createCanvas();
+    if (typeof __env !== "undefined") {
+      return __env.createCanvas();
     } else {
       return document.createElement('canvas');
     }
@@ -34533,20 +34633,39 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   function createImage() {
     /* istanbul ignore if*/
-    if (typeof wx !== "undefined") {
-      return wx.createImage();
+    if (typeof __env !== "undefined") {
+      return __env.createImage();
     } else {
       return document.createElement('img');
     }
   }
 
+  var _dpr; // only Baidu platform need to recieve system info from main context
+
+
+  if (typeof swan !== 'undefined') {
+    __env.onMessage(function (res) {
+      if (res && res.type === 'engine') {
+        if (res.event === 'systemInfo') {
+          _dpr = res.systemInfo.devicePixelRatio;
+        }
+      }
+    });
+  }
+
   function getDpr() {
-    /* istanbul ignore if*/
-    if (typeof wx !== "undefined") {
-      return wx.getSystemInfoSync().devicePixelRatio;
-    } else {
-      return window.devicePixelRatio;
+    if (typeof _dpr !== 'undefined') {
+      return _dpr;
     }
+
+    if (typeof __env !== "undefined" && __env.getSystemInfoSync) {
+      _dpr = __env.getSystemInfoSync().devicePixelRatio;
+    } else {
+      console.warn('failed to access device pixel ratio, fallback to 1');
+      _dpr = 1;
+    }
+
+    return _dpr;
   }
 
   var STATE = {
@@ -34572,22 +34691,18 @@ function (module, __webpack_exports__, __webpack_require__) {
   };
   /***/
 
-},
-/* 7 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
-  var nodeToJson = __webpack_require__(8);
+  var nodeToJson = __webpack_require__(9);
 
-  var xmlToNodeobj = __webpack_require__(10);
+  var xmlToNodeobj = __webpack_require__(11);
 
-  var x2xmlnode = __webpack_require__(10);
+  var x2xmlnode = __webpack_require__(11);
 
-  var buildOptions = __webpack_require__(9).buildOptions;
+  var buildOptions = __webpack_require__(10).buildOptions;
 
-  var validator = __webpack_require__(12);
+  var validator = __webpack_require__(13);
 
   exports.parse = function (xmlData, options, validationOption) {
     if (validationOption) {
@@ -34604,14 +34719,10 @@ function (module, exports, __webpack_require__) {
   };
   /***/
 
-},
-/* 8 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
-  var util = __webpack_require__(9);
+  var util = __webpack_require__(10);
 
   var convertToJson = function convertToJson(node, options) {
     var jObj = {
@@ -34666,11 +34777,7 @@ function (module, exports, __webpack_require__) {
 
   exports.convertToJson = convertToJson;
   /***/
-},
-/* 9 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
   var getAllMatches = function getAllMatches(string, regex) {
@@ -34767,18 +34874,14 @@ function (module, exports, __webpack_require__) {
   exports.doesNotMatch = doesNotMatch;
   exports.getAllMatches = getAllMatches;
   /***/
-},
-/* 10 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
-  var util = __webpack_require__(9);
+  var util = __webpack_require__(10);
 
-  var buildOptions = __webpack_require__(9).buildOptions;
+  var buildOptions = __webpack_require__(10).buildOptions;
 
-  var xmlNode = __webpack_require__(11);
+  var xmlNode = __webpack_require__(12);
 
   var TagType = {
     OPENING: 1,
@@ -35030,11 +35133,7 @@ function (module, exports, __webpack_require__) {
 
   exports.getTraversalObj = getTraversalObj;
   /***/
-},
-/* 11 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
   module.exports = function (tagname, parent, val) {
@@ -35060,14 +35159,10 @@ function (module, exports, __webpack_require__) {
   };
   /***/
 
-},
-/* 12 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
-  var util = __webpack_require__(9);
+  var util = __webpack_require__(10);
 
   var defaultOptions = {
     allowBooleanAttributes: false,
@@ -35448,11 +35543,7 @@ function (module, exports, __webpack_require__) {
   }
   /***/
 
-},
-/* 13 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -35465,11 +35556,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(14);
+  var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
   /* harmony import */
 
 
-  var _pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+  var _pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -35495,7 +35586,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
 
-  var Emitter = __webpack_require__(3);
+  var Emitter = __webpack_require__(4);
   /**
    * http://www.angelcode.com/products/bmfont/doc/file_format.html
    */
@@ -35577,22 +35668,18 @@ function (module, __webpack_exports__, __webpack_require__) {
   }();
   /***/
 
-},
-/* 14 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
   /* harmony import */
 
 
-  var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+  var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
   /* harmony import */
 
 
-  var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+  var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -35679,18 +35766,14 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   __webpack_exports__["default"] = new ImageManager();
   /***/
-},
-/* 15 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
   /* harmony import */
 
 
-  var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
+  var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(17);
   /* harmony reexport (safe) */
 
 
@@ -35700,7 +35783,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
+  var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
   /* harmony reexport (safe) */
 
 
@@ -35710,7 +35793,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
+  var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(19);
   /* harmony reexport (safe) */
 
 
@@ -35720,7 +35803,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
+  var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
   /* harmony reexport (safe) */
 
 
@@ -35730,7 +35813,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(21);
+  var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(24);
   /* harmony reexport (safe) */
 
 
@@ -35739,11 +35822,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   });
   /***/
 
-},
-/* 16 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -35756,7 +35835,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+  var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -35842,6 +35921,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -35861,7 +35942,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -35936,9 +36017,21 @@ function (module, __webpack_exports__, __webpack_require__) {
         var borderBottomWidth = style.borderBottomWidth || borderWidth;
         this.renderBorder(ctx, layoutBox);
 
+        var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+            needClip = _this$renderBorder.needClip,
+            needStroke = _this$renderBorder.needStroke;
+
+        if (needClip) {
+          ctx.clip();
+        }
+
         if (style.backgroundColor) {
           ctx.fillStyle = style.backgroundColor;
           ctx.fillRect(drawX + borderLeftWidth, drawY + borderRightWidth, box.width - (borderLeftWidth + borderRightWidth), box.height - (borderTopWidth + borderBottomWidth));
+        }
+
+        if (needStroke) {
+          ctx.stroke();
         }
 
         ctx.restore();
@@ -35973,11 +36066,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-},
-/* 17 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -35990,11 +36079,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+  var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
   /* harmony import */
 
 
-  var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
+  var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -36080,6 +36169,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36099,7 +36190,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -36128,11 +36219,11 @@ function (module, __webpack_exports__, __webpack_require__) {
           _opts$props = opts.props,
           props = _opts$props === void 0 ? {} : _opts$props,
           _opts$idName = opts.idName,
-          idName = _opts$idName === void 0 ? '' : _opts$idName,
+          idName = _opts$idName === void 0 ? "" : _opts$idName,
           _opts$className = opts.className,
-          className = _opts$className === void 0 ? '' : _opts$className,
+          className = _opts$className === void 0 ? "" : _opts$className,
           _opts$src = opts.src,
-          src = _opts$src === void 0 ? '' : _opts$src;
+          src = _opts$src === void 0 ? "" : _opts$src;
       _this = _super.call(this, {
         props: props,
         idName: idName,
@@ -36152,27 +36243,52 @@ function (module, __webpack_exports__, __webpack_require__) {
 
             _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
               _this2.img = img;
-              /*this.repaint();*/
 
-              _this2.emit('repaint');
+              _this2.emit("repaint");
             });
           }
         },
         enumerable: true,
         configurable: true
       });
-      _this.type = 'Image';
+      _this.type = "Image";
       _this.renderBoxes = [];
+      _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
+        if (fromCache) {
+          _this.img = img;
+        } else {
+          // 当图片加载完成，实例可能已经被销毁了
+          if (_this.img && _this.isScrollViewChild) {
+            _this.EE.emit("image__render__done", _assertThisInitialized(_this));
+          }
+        }
+      });
       return _this;
     }
 
     _createClass(Image, [{
+      key: "isScrollViewChild",
+      get: function get() {
+        var flag = false;
+        var parent = this.parent;
+
+        while (parent && !flag) {
+          if (parent.type === "ScrollView") {
+            flag = true;
+          } else {
+            parent = parent.parent;
+          }
+        }
+
+        return flag;
+      }
+    }, {
       key: "repaint",
       value: function repaint() {
         var _this3 = this;
 
         this.renderBoxes.forEach(function (item) {
-          _this3.renderImg(item.ctx, item.box, false);
+          _this3.render(item.ctx, item.box, false);
         });
       } // 子类填充实现
 
@@ -36185,10 +36301,8 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.root = null;
       }
     }, {
-      key: "renderImg",
-      value: function renderImg(ctx, layoutBox) {
-        var needEmitEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
+      key: "render",
+      value: function render(ctx, layoutBox) {
         if (!this.img) {
           return;
         }
@@ -36204,8 +36318,21 @@ function (module, __webpack_exports__, __webpack_require__) {
         ctx.lineWidth = style.borderWidth || 0;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
-        this.renderBorder(ctx, layoutBox);
+
+        var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+            needClip = _this$renderBorder.needClip,
+            needStroke = _this$renderBorder.needStroke;
+
+        if (needClip) {
+          ctx.clip();
+        }
+
         ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+
+        if (needStroke) {
+          ctx.stroke();
+        }
+
         ctx.restore();
       }
     }, {
@@ -36222,32 +36349,16 @@ function (module, __webpack_exports__, __webpack_require__) {
           if (fromCache) {
             _this4.img = img;
 
-            _this4.renderImg(ctx, box, false);
+            _this4.render(ctx, box, false);
           } else {
             // 当图片加载完成，实例可能已经被销毁了
             if (_this4.img) {
-              var eventName = _this4.isScrollViewChild ? 'image__render__done' : 'one__image__render__done';
+              var eventName = _this4.isScrollViewChild ? "image__render__done" : "one__image__render__done";
 
               _this4.EE.emit(eventName, _this4);
             }
           }
         });
-      }
-    }, {
-      key: "isScrollViewChild",
-      get: function get() {
-        var flag = false;
-        var parent = this.parent;
-
-        while (parent && !flag) {
-          if (parent.type === 'ScrollView') {
-            flag = true;
-          } else {
-            parent = parent.parent;
-          }
-        }
-
-        return flag;
       }
     }]);
 
@@ -36255,11 +36366,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-},
-/* 18 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -36272,11 +36379,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+  var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
   /* harmony import */
 
 
-  var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+  var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -36362,6 +36469,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36381,7 +36490,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -36546,11 +36655,22 @@ function (module, __webpack_exports__, __webpack_require__) {
         ctx.textAlign = this.textAlign;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
-        this.renderBorder(ctx, layoutBox);
+
+        var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+            needClip = _this$renderBorder.needClip,
+            needStroke = _this$renderBorder.needStroke;
+
+        if (needClip) {
+          ctx.clip();
+        }
 
         if (style.backgroundColor) {
           ctx.fillStyle = style.backgroundColor;
           ctx.fillRect(drawX, drawY, box.width, box.height);
+        }
+
+        if (needStroke) {
+          ctx.stroke();
         }
 
         ctx.fillStyle = this.fillStyle;
@@ -36575,11 +36695,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-},
-/* 19 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -36592,19 +36708,19 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
+  var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(17);
   /* harmony import */
 
 
-  var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+  var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
   /* harmony import */
 
 
-  var _common_touch_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(20);
+  var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(21);
   /* harmony import */
 
 
-  var _common_util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
+  var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -36690,6 +36806,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36709,7 +36827,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -36723,9 +36841,6 @@ function (module, __webpack_exports__, __webpack_require__) {
     return _getPrototypeOf(o);
   }
 
-  var id = 0;
-  var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('canvasPool');
-
   var ScrollView = /*#__PURE__*/function (_View) {
     _inherits(ScrollView, _View);
 
@@ -36738,31 +36853,41 @@ function (module, __webpack_exports__, __webpack_require__) {
           style = _ref$style === void 0 ? {} : _ref$style,
           _ref$props = _ref.props,
           props = _ref$props === void 0 ? {} : _ref$props,
-          _ref$name = _ref.name,
-          name = _ref$name === void 0 ? '' : _ref$name;
+          _ref$idName = _ref.idName,
+          idName = _ref$idName === void 0 ? "" : _ref$idName,
+          _ref$className = _ref.className,
+          className = _ref$className === void 0 ? "" : _ref$className,
+          _ref$scrollX = _ref.scrollX,
+          scrollX = _ref$scrollX === void 0 ? false : _ref$scrollX,
+          _ref$scrollY = _ref.scrollY,
+          scrollY = _ref$scrollY === void 0 ? false : _ref$scrollY;
 
       _classCallCheck(this, ScrollView);
 
       _this = _super.call(this, {
         props: props,
-        name: name,
-        style: style
+        style: style,
+        idName: idName,
+        className: className
       });
       _this.type = 'ScrollView'; // 当前列表滚动的值
 
-      _this.top = 0; // 滚动处理器
+      _this.scrollTop = 0;
+      _this.scrollLeft = 0;
+      _this.hasEventBind = false;
+      _this.currentEvent = null; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
 
-      _this.touch = new _common_touch_js__WEBPACK_IMPORTED_MODULE_2__["default"](); // canvas高度不能过高，在小游戏里面，对canvas尺寸是有限制的
-
-      _this.pageHeight = 2000; // 根据列表总高度和单页高度计算的分页数量
-
-      _this.pageCount = 1;
-      _this.canvasMap = {}; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
-
-      _this.throttleRepaint = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.clipRepaint, 16, _assertThisInitialized(_this));
-      _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["throttle"])(_this.childImageLoadDoneCbk, 32, _assertThisInitialized(_this));
-      _this.renderTimers = [];
+      _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["throttle"])(_this.childImageLoadDoneCbk, 32, _assertThisInitialized(_this));
+      _this.scrollCanvas = null;
+      _this.scrollCtx = null;
       _this.requestID = null;
+      _this._scrollX = scrollX;
+      _this._scrollY = scrollY;
+      _this._scrollerOption = {
+        scrollingX: _this._scrollX,
+        scrollingY: _this._scrollY
+      };
+      _this.sharedTexture = false;
       return _this;
     }
     /**
@@ -36772,260 +36897,6 @@ function (module, __webpack_exports__, __webpack_require__) {
 
 
     _createClass(ScrollView, [{
-      key: "repaint",
-      value: function repaint() {
-        var _this2 = this;
-
-        this.clear();
-        this.renderBoxes.forEach(function (item) {
-          _this2.render(item.ctx, item.box);
-        });
-      }
-      /**
-       * 列表子元素重绘之前先将所有的canvas擦除
-       */
-
-    }, {
-      key: "clear",
-      value: function clear() {
-        var _this3 = this;
-
-        Object.keys(this.canvasMap).forEach(function (key) {
-          var item = _this3.canvasMap[key];
-          item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
-        });
-      } // 与主canvas的尺寸保持一致
-
-    }, {
-      key: "updateRenderPort",
-      value: function updateRenderPort(renderport) {
-        this.renderport = renderport;
-      }
-      /**
-       * 计算分页数据
-       * 小游戏的canvas对尺寸有要求，如果如果高度过高，可能出现渲染不出来的情况
-       * 因此需要手动分页，列表过长的时候将数据绘制到几个canvas上面，这里预创建几个canvas
-       */
-
-    }, {
-      key: "calPageData",
-      value: function calPageData() {
-        this.pageCount = Math.ceil((this.scrollHeight + this.layoutBox.absoluteY) / this.pageHeight);
-
-        for (var i = 0; i < this.pageCount; i++) {
-          var cache = canvasPool.get(i);
-
-          if (cache) {
-            cache.context && cache.context.clearRect(0, 0, cache.canvas.width, cache.canvas.height);
-            cache.elements = [];
-            this.canvasMap[i] = cache;
-          } else {
-            this.canvasMap[i] = {
-              elements: []
-            };
-            canvasPool.set(i, this.canvasMap[i]);
-          }
-        }
-      }
-    }, {
-      key: "destroySelf",
-      value: function destroySelf() {
-        this.touch = null;
-        this.isDestroyed = true;
-        this.throttleRepaint = null;
-        this.renderTimers.forEach(function (timer) {
-          clearTimeout(timer);
-        });
-        this.root.off('repaint__done');
-        this.renderTimers = [];
-        this.canvasMap = {};
-        this.ctx = null;
-        this.children = null;
-        this.requestID && cancelAnimationFrame(this.requestID);
-        this.root = null;
-      }
-      /**
-       * 滚动列表重绘逻辑
-       * 将分页canvas按照滚动裁剪绘制到主canvas上面
-       */
-
-    }, {
-      key: "clipRepaint",
-      value: function clipRepaint(top) {
-        var _this4 = this;
-
-        if (this.isDestroyed) {
-          return;
-        }
-
-        this.requestID = requestAnimationFrame(function () {
-          top = -top;
-          _this4.top = top;
-          var box = _this4.layoutBox;
-          var abY = box.absoluteY;
-
-          if (_this4.isDestroyed || _this4.root.state === _common_util_js__WEBPACK_IMPORTED_MODULE_3__["STATE"].CLEAR) {
-            return;
-          } // 在主canvas上面将滚动列表区域擦除
-
-
-          _this4.ctx.clearRect(box.absoluteX, abY, box.width, box.height); // 背景填充
-
-
-          _this4.ctx.fillStyle = _this4.parent.style.backgroundColor || '#ffffff';
-
-          _this4.ctx.fillRect(box.absoluteX, abY, box.width, box.height);
-
-          for (var i = 0; i < _this4.pageCount; i++) {
-            var canvas = _this4.canvasMap[i].canvas; // 根据滚动值获取裁剪区域
-
-            var startY = abY + top;
-            var endY = abY + top + box.height; // 计算在裁剪区域内的canvas
-
-            if (startY < _this4.pageHeight * (i + 1) && endY > _this4.pageHeight * i) {
-              /**
-               * 这里不能按照box.width * box.height的区域去裁剪
-               * 在浏览器里面正常，但是在小游戏里面会出现诡异的渲染出错，所以裁剪canvas真实有效的区域
-               */
-              var clipY = abY + top - _this4.pageHeight * i;
-              var clipH = box.height;
-              var renderY = abY;
-
-              if (clipY > 0 && _this4.pageHeight - clipY < box.height) {
-                clipH = _this4.pageHeight - clipY;
-              } else if (clipY < 0) {
-                clipH = clipY + box.height;
-                renderY = renderY - clipY;
-                clipY = 0;
-              }
-
-              _this4.ctx.drawImage(canvas, box.absoluteX, clipY, box.width, clipH, box.absoluteX, renderY, box.width, clipH);
-            }
-          }
-        });
-      }
-    }, {
-      key: "renderChildren",
-      value: function renderChildren(tree) {
-        var _this5 = this;
-
-        var children = tree.children;
-        var height = this.pageHeight;
-        Object.keys(children).forEach(function (id) {
-          var child = children[id];
-          var originY = child.layoutBox.originalAbsoluteY;
-          var pageIndex = Math.floor(originY / height);
-          var nextPage = pageIndex + 1;
-          child.layoutBox.absoluteY -= _this5.pageHeight * pageIndex;
-
-          if (child.checkNeedRender()) {
-            _this5.canvasMap[pageIndex].elements.push({
-              element: child,
-              box: child.layoutBox
-            });
-          } // 对于跨界的元素，两边都绘制下
-
-
-          if (originY + child.layoutBox.height > height * nextPage) {
-            var tmpBox = Object.assign({}, child.layoutBox);
-            tmpBox.absoluteY = originY - _this5.pageHeight * nextPage;
-
-            if (child.checkNeedRender()) {
-              _this5.canvasMap[nextPage].elements.push({
-                element: child,
-                box: tmpBox
-              });
-            }
-          }
-
-          _this5.renderChildren(child);
-        });
-      }
-    }, {
-      key: "insertElements",
-      value: function insertElements(pageIndex) {
-        var _this6 = this;
-
-        var can = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["createCanvas"])();
-        var ctx = can.getContext('2d');
-        can.width = this.renderport.width;
-        can.height = this.pageHeight;
-        ctx.id = ++id;
-        this.canvasMap[pageIndex].canvas = can;
-        this.canvasMap[pageIndex].context = ctx;
-        this.canvasMap[pageIndex].elements.forEach(function (ele) {
-          ele.element.insert(ctx, ele.box);
-        });
-
-        if (pageIndex < this.pageCount - 1) {
-          var timer = setTimeout(function () {
-            _this6.insertElements(++pageIndex);
-          }, 250);
-          this.renderTimers.push(timer);
-        }
-      }
-    }, {
-      key: "childImageLoadDoneCbk",
-      value: function childImageLoadDoneCbk(img) {
-        var start = new Date();
-        var list = Object.values(this.canvasMap);
-        var pageIndex = -1;
-
-        for (var i = 0; i < list.length; i++) {
-          if (list[i].elements.find(function (item) {
-            return item.element === img;
-          })) {
-            pageIndex = i;
-            break;
-          }
-        }
-
-        if (pageIndex > -1) {
-          var _start = new Date();
-
-          var canItem = this.canvasMap[pageIndex];
-          var canvas = canItem.canvas;
-          var ctx = canItem.context;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          this.canvasMap[pageIndex].elements.forEach(function (ele) {
-            Object(_common_util_js__WEBPACK_IMPORTED_MODULE_3__["repaintTree"])(ele.element);
-          });
-        }
-        /*this.throttleRepaint(-this.top || 0);*/
-
-
-        this.clipRepaint(-this.top);
-      }
-    }, {
-      key: "insertScrollView",
-      value: function insertScrollView(context) {
-        var _this7 = this; // 绘制容器
-
-
-        this.insert(context);
-        this.root.on('repaint__done', function () {
-          _this7.clipRepaint(-_this7.top);
-        }); // 计算列表应该分割成几页
-
-        this.calPageData(); // 计算分页数据：每个元素应该坐落在哪个canvas
-
-        this.renderChildren(this);
-        this.insertElements(0);
-        this.clipRepaint(-this.top); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-
-        this.EE.on('image__render__done', function (img) {
-          _this7.throttleImageLoadDone(img);
-        });
-
-        if (this.scrollHeight > this.layoutBox.height) {
-          this.touch.setTouchRange(-(this.scrollHeight - this.layoutBox.height), 0, this.clipRepaint.bind(this)); // 监听触摸相关事件，将滚动处理逻辑交给相应的处理器处理
-
-          this.on('touchstart', this.touch.startFunc);
-          this.on('touchmove', this.touch.moveFunc);
-          this.on('touchend', this.touch.endFunc);
-        }
-      }
-    }, {
       key: "scrollHeight",
       get: function get() {
         // scrollview为空的情况
@@ -37036,230 +36907,1597 @@ function (module, __webpack_exports__, __webpack_require__) {
         var last = this.children[this.children.length - 1];
         return last.layoutBox.top + last.layoutBox.height;
       }
+    }, {
+      key: "scrollWidth",
+      get: function get() {
+        // scrollview为空的情况
+        if (!this.children.length) {
+          return 0;
+        }
+
+        var last = this.children[this.children.length - 1];
+        return last.layoutBox.left + last.layoutBox.width;
+      }
+    }, {
+      key: "scrollX",
+      get: function get() {
+        return this._scrollerOption.scrollingX;
+      },
+      set: function set(value) {
+        this.scrollerOption = {
+          scrollingX: value
+        };
+      }
+    }, {
+      key: "scrollY",
+      get: function get() {
+        return this._scrollerOption.scrollingY;
+      },
+      set: function set(value) {
+        this.scrollerOption = {
+          scrollingY: value
+        };
+      }
+    }, {
+      key: "scrollerOption",
+      get: function get() {
+        return this._scrollerOption;
+      },
+      set: function set(value) {
+        if (value === void 0) {
+          value = {};
+        }
+
+        Object.assign(this._scrollerOption, value);
+
+        if (this.scrollerObj) {
+          Object.assign(this.scrollerObj.options, this.scrollerOption);
+        }
+      }
+    }, {
+      key: "repaint",
+      value: function repaint() {
+        var _this2 = this;
+
+        this.clear();
+        this.renderBoxes.forEach(function (item) {
+          _this2.render(item.ctx, item.box);
+        });
+        this.scrollRender(this.scrollLeft, this.scrollTop);
+      }
+      /**
+       * 与主canvas的尺寸保持一致
+       */
+
+    }, {
+      key: "updateRenderPort",
+      value: function updateRenderPort(renderport) {
+        this.renderport = renderport;
+        this.scrollCanvas = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["createCanvas"])();
+        this.scrollCtx = this.scrollCanvas.getContext('2d');
+        this.scrollCanvas.width = this.renderport.width;
+        this.scrollCanvas.height = this.renderport.height;
+      }
+    }, {
+      key: "destroySelf",
+      value: function destroySelf() {
+        this.touch = null;
+        this.isDestroyed = true;
+        this.root.off('repaint__done');
+        this.ctx = null;
+        this.children = null;
+        this.root = null;
+        this.scrollCanvas = null;
+        this.scrollCtx = null;
+        this.requestID && cancelAnimationFrame(this.requestID);
+      }
+    }, {
+      key: "renderTreeWithTop",
+      value: function renderTreeWithTop(tree, top, left) {
+        var _this3 = this;
+
+        var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
+
+        layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+        layoutBox.absoluteX = layoutBox.originalAbsoluteX - left;
+        tree.render(this.scrollCtx, layoutBox);
+        tree.children.forEach(function (child) {
+          _this3.renderTreeWithTop(child, top, left);
+        });
+      }
+    }, {
+      key: "clear",
+      value: function clear() {
+        var box = this.layoutBox;
+        this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
+        this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
+      }
+    }, {
+      key: "scrollRenderHandler",
+      value: function scrollRenderHandler() {
+        var _this4 = this;
+
+        var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var box = this.layoutBox;
+        this.scrollTop = top;
+        this.scrollLeft = left; // scrollview在全局节点中的Y轴位置
+
+        var abY = box.absoluteY;
+        var abX = box.absoluteX; // 根据滚动值获取裁剪区域
+
+        var startY = abY + this.scrollTop;
+        var endY = abY + this.scrollTop + box.height;
+        var startX = abX + this.scrollLeft;
+        var endX = abX + this.scrollLeft + box.width; // 清理滚动画布和主屏画布
+
+        this.clear();
+        this.renderBoxes.forEach(function (item) {
+          _this4.render(item.ctx, item.box);
+        });
+        this.children.forEach(function (child) {
+          var layoutBox = child.layoutBox;
+          var height = layoutBox.height;
+          var width = layoutBox.width;
+          var originY = layoutBox.originalAbsoluteY;
+          var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
+
+          if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
+            _this4.renderTreeWithTop(child, _this4.scrollTop, _this4.scrollLeft);
+          }
+        });
+        this.ctx.drawImage(this.scrollCanvas, box.absoluteX, box.absoluteY, box.width, box.height, box.absoluteX, box.absoluteY, box.width, box.height);
+      }
+    }, {
+      key: "scrollRender",
+      value: function scrollRender(left, top) {
+        var _this5 = this;
+
+        if (this.sharedTexture) {
+          this.requestID = requestAnimationFrame(function () {
+            _this5.scrollRenderHandler(left, top);
+          });
+        } else {
+          this.scrollRenderHandler(left, top);
+        }
+      }
+    }, {
+      key: "childImageLoadDoneCbk",
+      value: function childImageLoadDoneCbk(img) {
+        var box = this.layoutBox; // 根据滚动值获取裁剪区域
+
+        var startY = box.absoluteY + this.scrollTop;
+        var endY = box.absoluteY + this.scrollTop + box.height;
+        var startX = box.absoluteX + this.scrollLeft;
+        var endX = box.absoluteX + this.scrollLeft + box.width;
+        var layoutBox = img.layoutBox;
+        var height = layoutBox.height;
+        var width = layoutBox.width;
+        var originY = layoutBox.originalAbsoluteY;
+        var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
+
+        if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
+          this.scrollRender(this.scrollLeft, this.scrollTop);
+        }
+      }
+    }, {
+      key: "insertScrollView",
+      value: function insertScrollView(context) {
+        var _this6 = this; // 绘制容器
+
+
+        this.insert(context); // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
+
+        this.root.on('repaint__done', function () {
+          _this6.scrollRender(_this6.scrollLeft, _this6.scrollTop);
+        });
+        this.scrollRender(0, 0); // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+
+        this.EE.on('image__render__done', function (img) {
+          _this6.throttleImageLoadDone(img);
+        });
+
+        if (this.hasEventBind) {
+          return;
+        }
+
+        this.hasEventBind = true;
+        this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
+          // 可能被销毁了或者节点树还没准备好
+          if (_this6.scrollActive && !_this6.isDestroyed) {
+            _this6.scrollRender(left, top);
+
+            if (_this6.currentEvent) {
+              /*this.currentEvent.type = 'scroll';*/
+
+              /*this.currentEvent.currentTarget = this;*/
+              _this6.emit('scroll', _this6.currentEvent);
+            }
+          }
+        }, this.scrollerOption);
+        this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+        var dpr = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getDpr"])();
+        this.scrollActive = false;
+        this.on('touchstart', function (e) {
+          _this6.scrollActive = true;
+
+          if (!e.touches) {
+            e.touches = [e];
+          }
+
+          e.touches.forEach(function (touch) {
+            if (dpr !== 1) {
+              touch.pageX *= dpr;
+              touch.pageY *= dpr;
+            }
+          });
+
+          _this6.scrollerObj.doTouchStart(e.touches, e.timeStamp);
+
+          _this6.currentEvent = e;
+        });
+        this.on('touchmove', function (e) {
+          if (!e.touches) {
+            e.touches = [e];
+          }
+
+          e.touches.forEach(function (touch) {
+            if (dpr !== 1) {
+              touch.pageX *= dpr;
+              touch.pageY *= dpr;
+            }
+          });
+
+          _this6.scrollerObj.doTouchMove(e.touches, e.timeStamp);
+
+          _this6.currentEvent = e;
+        }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
+
+        this.root.on('touchend', function (e) {
+          if (!e.touches) {
+            e.touches = [e];
+          }
+
+          e.touches.forEach(function (touch) {
+            if (dpr !== 1) {
+              touch.pageX *= dpr;
+              touch.pageY *= dpr;
+            }
+          });
+
+          _this6.scrollerObj.doTouchEnd(e.timeStamp);
+
+          _this6.currentEvent = e;
+        });
+      }
+    }, {
+      key: "scrollTo",
+      value: function scrollTo() {
+        var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var animate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+        this.scrollerObj.scrollTo(left, top, animate);
+      }
     }]);
 
     return ScrollView;
   }(_view_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-},
-/* 20 */
+}, function (module, exports, __webpack_require__) {
+  var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
-  "use strict";
-
-  __webpack_require__.r(__webpack_exports__);
-  /* harmony export (binding) */
-
-
-  __webpack_require__.d(__webpack_exports__, "default", function () {
-    return Touch;
+  (function (root, factory) {
+    if (true) {
+      // AMD
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(22), __webpack_require__(23)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+  })(this, function (exports, animate, Scroller) {
+    exports.animate = animate;
+    exports.Scroller = Scroller;
   });
-  /* harmony import */
+  /***/
+
+}, function (module, exports, __webpack_require__) {
+  var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+  /*
+  * Scroller
+  * http://github.com/zynga/scroller
+  *
+  * Copyright 2011, Zynga Inc.
+  * Licensed under the MIT License.
+  * https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
+  *
+  * Based on the work of: Unify Project (unify-project.org)
+  * http://unify-project.org
+  * Copyright 2011, Deutsche Telekom AG
+  * License: MIT + Apache (V2)
+  */
+
+  /**
+   * Generic animation class with support for dropped frames both optional easing and duration.
+   *
+   * Optional duration is useful when the lifetime is defined by another condition than time
+   * e.g. speed of an animating object, etc.
+   *
+   * Dropped frame logic allows to keep using the same updater logic independent from the actual
+   * rendering. This eases a lot of cases where it might be pretty complex to break down a state
+   * based on the pure time difference.
+   */
 
 
-  var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+  (function (root, factory) {
+    if (true) {
+      // AMD. Register as an anonymous module.
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+  })(this, function (exports) {
+    var global = typeof window === 'undefined' ? this : window;
 
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
+    var time = Date.now || function () {
+      return +new Date();
+    };
 
-  function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
+    var desiredFrames = 60;
+    var millisecondsPerSecond = 1000;
+    var running = {};
+    var counter = 1;
+    /**
+     * A requestAnimationFrame wrapper / polyfill.
+     *
+     * @param callback {Function} The callback to be invoked before the next repaint.
+     * @param root {HTMLElement} The root element for the repaint
+     */
 
-  function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-  }
+    exports.requestAnimationFrame = function () {
+      // Check for request animation Frame support
+      var requestFrame = global.requestAnimationFrame || global.webkitRequestAnimationFrame || global.mozRequestAnimationFrame || global.oRequestAnimationFrame;
+      var isNative = !!requestFrame;
 
-  var dpr = Object(_util_js__WEBPACK_IMPORTED_MODULE_0__["getDpr"])();
-
-  var Touch = /*#__PURE__*/function () {
-    function Touch() {
-      _classCallCheck(this, Touch);
-
-      this.needProcess = false;
-      this.startFunc = this.touchStartHandler.bind(this);
-      this.endFunc = this.touchEndHandler.bind(this);
-      this.moveFunc = this.touchMoveHandler.bind(this);
-    }
-
-    _createClass(Touch, [{
-      key: "reset",
-      value: function reset() {
-        this.touchTime = new Date();
-        this.touchStartX = 0;
-        this.touchStartY = 0; // 滚动区间
-
-        this.start = 0;
-        this.end = 0; // 当前位置
-
-        this.move = 0; // 目标位置
-
-        this.target = 0; // 滚动回调函数
-
-        this.scroll = null; // for istanbul
-
-        /* istanbul ignore if*/
-
-        if (typeof cancelAnimationFrame !== 'undefined') {
-          cancelAnimationFrame(this.animate);
-        }
+      if (requestFrame && !/requestAnimationFrame\(\)\s*\{\s*\[native code\]\s*\}/i.test(requestFrame.toString())) {
+        isNative = false;
       }
-    }, {
-      key: "enable",
-      value: function enable() {
-        this.reset();
-        this.needProcess = true;
+
+      if (isNative) {
+        return function (callback, root) {
+          requestFrame(callback, root);
+        };
       }
-    }, {
-      key: "disable",
-      value: function disable() {
-        this.needProcess = false;
-      } // 设置滚动区间，比如一个排行榜的滚动区间可能是[-300, 0]
 
-    }, {
-      key: "setTouchRange",
-      value: function setTouchRange(start, end, scroll) {
-        // 考虑到切换游戏的场景，每次设置的时候重置所有变量
-        this.enable();
-        this.start = start;
-        this.end = end;
+      var TARGET_FPS = 60;
+      var requests = {};
+      var requestCount = 0;
+      var rafHandle = 1;
+      var intervalHandle = null;
+      var lastActive = +new Date();
+      return function (callback, root) {
+        var callbackHandle = rafHandle++; // Store callback
 
-        if (start === 0 && end === 0) {
-          return;
-        }
+        requests[callbackHandle] = callback;
+        requestCount++; // Create timeout at first request
 
-        this.scroll = scroll; // this.animate = requestAnimationFrame(this.loop.bind(this));
-      } // 保证滚动目标位置在滚动区间内
+        if (intervalHandle === null) {
+          intervalHandle = setInterval(function () {
+            var time = +new Date();
+            var currentRequests = requests; // Reset data structure before executing callbacks
 
-    }, {
-      key: "limitTarget",
-      value: function limitTarget(target) {
-        var result = target;
+            requests = {};
+            requestCount = 0;
 
-        if (target > this.end) {
-          result = this.end;
-        } else if (target < this.start) {
-          result = this.start;
-        }
-
-        return result;
-      }
-    }, {
-      key: "touchStartHandler",
-      value: function touchStartHandler(e) {
-        var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
-
-        if (!touch || !touch.pageX || !touch.pageY) {
-          return;
-        }
-
-        this.touchStartX = touch.clientX * dpr;
-        this.touchStartY = touch.clientY * dpr;
-        this.touchTime = new Date();
-        this.isMoving = true;
-        this.needProcess = true;
-        this.animate = requestAnimationFrame(this.loop.bind(this));
-      }
-    }, {
-      key: "touchMoveHandler",
-      value: function touchMoveHandler(e) {
-        if (!this.isMoving) {
-          return;
-        }
-
-        var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
-
-        if (!touch || !touch.pageX || !touch.pageY) {
-          return;
-        }
-
-        var currY = touch.clientY * dpr;
-
-        if (this.touchStartY - currY > 2 || this.touchStartY - currY < -2) {
-          this.target -= this.touchStartY - currY;
-        }
-
-        this.target = this.limitTarget(this.target);
-        this.touchStartY = currY;
-      }
-    }, {
-      key: "touchEndHandler",
-      value: function touchEndHandler() {
-        this.isMoving = false;
-        var timeInS = (Date.now() - this.touchTime) / 1000;
-        /*console.log(Date.now(), this.touchTime.getTime(), Date.now() - this.touchTime);*/
-
-        if (timeInS < 0.9) {
-          /*console.log(1, timeInS, this.target, this.move);*/
-          this.target += (this.target - this.move) * 0.6 / (timeInS * 5);
-          /*console.log(2, this.target)*/
-
-          this.target = this.limitTarget(this.target);
-          /*console.log(3, this.target)*/
-        }
-      }
-    }, {
-      key: "loop",
-      value: function loop() {
-        if (this.needProcess) {
-          if (this.isMoving) {
-            if (this.move !== this.target) {
-              // 手指移动可能过快，切片以使得滑动流畅
-              if (Math.abs(this.target - this.move) > 1) {
-                this.move += (this.target - this.move) * 0.4;
-              } else {
-                this.move = this.target;
+            for (var key in currentRequests) {
+              if (currentRequests.hasOwnProperty(key)) {
+                currentRequests[key](time);
+                lastActive = time;
               }
+            } // Disable the timeout when nothing happens for a certain
+            // period of time
 
-              this.scroll && this.scroll(this.move);
+
+            if (time - lastActive > 2500) {
+              clearInterval(intervalHandle);
+              intervalHandle = null;
             }
-          } else {
-            if (this.move !== this.target) {
-              /**
-               * 如果滑动很快，为了滚动流畅，需要将滑动过程切片
-               */
-              if (Math.abs(this.target - this.move) > 1) {
-                this.move += (this.target - this.move) * 0.3;
-              } else {
-                this.move = this.target;
-              }
+          }, 1000 / TARGET_FPS);
+        }
 
-              this.scroll && this.scroll(this.move);
-            } else {
-              // 滑动结束，停止动画
-              this.needProcess = false;
+        return callbackHandle;
+      };
+    }();
+    /**
+     * Stops the given animation.
+     *
+     * @param id {Integer} Unique animation ID
+     * @return {Boolean} Whether the animation was stopped (aka, was running before)
+     */
+
+
+    exports.stop = function (id) {
+      var cleared = running[id] !== null;
+
+      if (cleared) {
+        running[id] = null;
+      }
+
+      return cleared;
+    };
+    /**
+     * Whether the given animation is still running.
+     *
+     * @param id {Integer} Unique animation ID
+     * @return {Boolean} Whether the animation is still running
+     */
+
+
+    exports.isRunning = function (id) {
+      return running[id] !== null;
+    };
+    /**
+     * Start the animation.
+     *
+     * @param stepCallback {Function} Pointer to function which is executed on every step.
+     *   Signature of the method should be `function(percent, now, virtual) { return continueWithAnimation; }`
+     * @param verifyCallback {Function} Executed before every animation step.
+     *   Signature of the method should be `function() { return continueWithAnimation; }`
+     * @param completedCallback {Function}
+     *   Signature of the method should be `function(droppedFrames, finishedAnimation, optional wasFinished) {}`
+     * @param duration {Integer} Milliseconds to run the animation
+     * @param easingMethod {Function} Pointer to easing function
+     *   Signature of the method should be `function(percent) { return modifiedValue; }`
+     * @param root {Element} Render root. Used for internal usage of requestAnimationFrame.
+     * @return {Integer} Identifier of animation. Can be used to stop it any time.
+     */
+
+
+    exports.start = function (stepCallback, verifyCallback, completedCallback, duration, easingMethod, root) {
+      var start = time();
+      var lastFrame = start;
+      var percent = 0;
+      var dropCounter = 0;
+      var id = counter++; // Compacting running db automatically every few new animations
+
+      if (id % 20 === 0) {
+        var newRunning = {};
+
+        for (var usedId in running) {
+          newRunning[usedId] = true;
+        }
+
+        running = newRunning;
+      } // This is the internal step method which is called every few milliseconds
+
+
+      var step = function step(virtual) {
+        // Normalize virtual value
+        var render = virtual !== true; // Get current time
+
+        var now = time(); // Verification is executed before next animation step
+
+        if (!running[id] || verifyCallback && !verifyCallback(id)) {
+          running[id] = null;
+          completedCallback(desiredFrames - dropCounter / ((now - start) / millisecondsPerSecond), id, false);
+          return;
+        } // For the current rendering to apply let's update omitted steps in memory.
+        // This is important to bring internal state variables up-to-date with progress in time.
+
+
+        if (render) {
+          var droppedFrames = Math.round((now - lastFrame) / (millisecondsPerSecond / desiredFrames)) - 1;
+
+          for (var j = 0; j < Math.min(droppedFrames, 4); j++) {
+            step(true);
+            dropCounter++;
+          }
+        } // Compute percent value
+
+
+        if (duration) {
+          percent = (now - start) / duration;
+
+          if (percent > 1) {
+            percent = 1;
+          }
+        } // Execute step callback, then...
+
+
+        var value = easingMethod ? easingMethod(percent) : percent;
+
+        if ((stepCallback(value, now, render) === false || percent === 1) && render) {
+          running[id] = null;
+          completedCallback(desiredFrames - dropCounter / ((now - start) / millisecondsPerSecond), id, percent === 1 || duration === undefined);
+        } else if (render) {
+          lastFrame = now;
+          exports.requestAnimationFrame(step, root);
+        }
+      }; // Mark as running
+
+
+      running[id] = true; // Init first step
+
+      exports.requestAnimationFrame(step, root); // Return unique animation ID
+
+      return id;
+    };
+  });
+  /***/
+
+}, function (module, exports, __webpack_require__) {
+  var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+  /*
+  * Scroller
+  * http://github.com/zynga/scroller
+  *
+  * Copyright 2011, Zynga Inc.
+  * Licensed under the MIT License.
+  * https://raw.github.com/zynga/scroller/master/MIT-LICENSE.txt
+  *
+  * Based on the work of: Unify Project (unify-project.org)
+  * http://unify-project.org
+  * Copyright 2011, Deutsche Telekom AG
+  * License: MIT + Apache (V2)
+  */
+
+
+  (function (root, factory) {
+    if (true) {
+      // AMD
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(22)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+  })(this, function (animate) {
+    var NOOP = function NOOP() {};
+    /**
+     * A pure logic 'component' for 'virtual' scrolling/zooming.
+     */
+
+
+    var Scroller = function Scroller(callback, options) {
+      this.__callback = callback;
+      this.options = {
+        /** Enable scrolling on x-axis */
+        scrollingX: true,
+
+        /** Enable scrolling on y-axis */
+        scrollingY: true,
+
+        /** Enable animations for deceleration, snap back, zooming and scrolling */
+        animating: true,
+
+        /** duration for animations triggered by scrollTo/zoomTo */
+        animationDuration: 250,
+
+        /** Enable bouncing (content can be slowly moved outside and jumps back after releasing) */
+        bouncing: true,
+
+        /** Enable locking to the main axis if user moves only slightly on one of them at start */
+        locking: true,
+
+        /** Enable pagination mode (switching between full page content panes) */
+        paging: false,
+
+        /** Enable snapping of content to a configured pixel grid */
+        snapping: false,
+
+        /** Enable zooming of content via API, fingers and mouse wheel */
+        zooming: false,
+
+        /** Minimum zoom level */
+        minZoom: 0.5,
+
+        /** Maximum zoom level */
+        maxZoom: 3,
+
+        /** Multiply or decrease scrolling speed **/
+        speedMultiplier: 1,
+
+        /** Callback that is fired on the later of touch end or deceleration end,
+            provided that another scrolling action has not begun. Used to know
+            when to fade out a scrollbar. */
+        scrollingComplete: NOOP,
+
+        /** This configures the amount of change applied to deceleration when reaching boundaries  **/
+        penetrationDeceleration: 0.03,
+
+        /** This configures the amount of change applied to acceleration when reaching boundaries  **/
+        penetrationAcceleration: 0.08
+      };
+
+      for (var key in options) {
+        this.options[key] = options[key];
+      }
+    }; // Easing Equations (c) 2003 Robert Penner, all rights reserved.
+    // Open source under the BSD License.
+
+    /**
+     * @param pos {Number} position between 0 (start of effect) and 1 (end of effect)
+     **/
+
+
+    var easeOutCubic = function easeOutCubic(pos) {
+      return Math.pow(pos - 1, 3) + 1;
+    };
+    /**
+     * @param pos {Number} position between 0 (start of effect) and 1 (end of effect)
+     **/
+
+
+    var easeInOutCubic = function easeInOutCubic(pos) {
+      if ((pos /= 0.5) < 1) {
+        return 0.5 * Math.pow(pos, 3);
+      }
+
+      return 0.5 * (Math.pow(pos - 2, 3) + 2);
+    };
+
+    Scroller.prototype = {
+      /*
+        ---------------------------------------------------------------------------
+        INTERNAL FIELDS :: STATUS
+        ---------------------------------------------------------------------------
+      */
+
+      /** {Boolean} Whether only a single finger is used in touch handling */
+      __isSingleTouch: false,
+
+      /** {Boolean} Whether a touch event sequence is in progress */
+      __isTracking: false,
+
+      /** {Boolean} Whether a deceleration animation went to completion. */
+      __didDecelerationComplete: false,
+
+      /**
+       * {Boolean} Whether a gesture zoom/rotate event is in progress. Activates when
+       * a gesturestart event happens. This has higher priority than dragging.
+       */
+      __isGesturing: false,
+
+      /**
+       * {Boolean} Whether the user has moved by such a distance that we have enabled
+       * dragging mode. Hint: It's only enabled after some pixels of movement to
+       * not interrupt with clicks etc.
+       */
+      __isDragging: false,
+
+      /**
+       * {Boolean} Not touching and dragging anymore, and smoothly animating the
+       * touch sequence using deceleration.
+       */
+      __isDecelerating: false,
+
+      /**
+       * {Boolean} Smoothly animating the currently configured change
+       */
+      __isAnimating: false,
+
+      /*
+        ---------------------------------------------------------------------------
+        INTERNAL FIELDS :: DIMENSIONS
+        ---------------------------------------------------------------------------
+      */
+
+      /** {Integer} Viewport left boundary */
+      __clientLeft: 0,
+
+      /** {Integer} Viewport right boundary */
+      __clientTop: 0,
+
+      /** {Integer} Viewport width */
+      __clientWidth: 0,
+
+      /** {Integer} Viewport height */
+      __clientHeight: 0,
+
+      /** {Integer} Full content's width */
+      __contentWidth: 0,
+
+      /** {Integer} Full content's height */
+      __contentHeight: 0,
+
+      /** {Integer} Snapping width for content */
+      __snapWidth: 100,
+
+      /** {Integer} Snapping height for content */
+      __snapHeight: 100,
+
+      /** {Number} Zoom level */
+      __zoomLevel: 1,
+
+      /** {Number} Scroll position on x-axis */
+      __scrollLeft: 0,
+
+      /** {Number} Scroll position on y-axis */
+      __scrollTop: 0,
+
+      /** {Integer} Maximum allowed scroll position on x-axis */
+      __maxScrollLeft: 0,
+
+      /** {Integer} Maximum allowed scroll position on y-axis */
+      __maxScrollTop: 0,
+
+      /* {Number} Scheduled left position (final position when animating) */
+      __scheduledLeft: 0,
+
+      /* {Number} Scheduled top position (final position when animating) */
+      __scheduledTop: 0,
+
+      /* {Number} Scheduled zoom level (final scale when animating) */
+      __scheduledZoom: 0,
+
+      /*
+        ---------------------------------------------------------------------------
+        INTERNAL FIELDS :: LAST POSITIONS
+        ---------------------------------------------------------------------------
+      */
+
+      /** {Number} Left position of finger at start */
+      __lastTouchLeft: null,
+
+      /** {Number} Top position of finger at start */
+      __lastTouchTop: null,
+
+      /** {Date} Timestamp of last move of finger. Used to limit tracking range for deceleration speed. */
+      __lastTouchMove: null,
+
+      /** {Array} List of positions, uses three indexes for each state: left, top, timestamp */
+      __positions: null,
+
+      /*
+        ---------------------------------------------------------------------------
+        INTERNAL FIELDS :: DECELERATION SUPPORT
+        ---------------------------------------------------------------------------
+      */
+
+      /** {Integer} Minimum left scroll position during deceleration */
+      __minDecelerationScrollLeft: null,
+
+      /** {Integer} Minimum top scroll position during deceleration */
+      __minDecelerationScrollTop: null,
+
+      /** {Integer} Maximum left scroll position during deceleration */
+      __maxDecelerationScrollLeft: null,
+
+      /** {Integer} Maximum top scroll position during deceleration */
+      __maxDecelerationScrollTop: null,
+
+      /** {Number} Current factor to modify horizontal scroll position with on every step */
+      __decelerationVelocityX: null,
+
+      /** {Number} Current factor to modify vertical scroll position with on every step */
+      __decelerationVelocityY: null,
+
+      /*
+        ---------------------------------------------------------------------------
+        PUBLIC API
+        ---------------------------------------------------------------------------
+      */
+
+      /**
+       * Configures the dimensions of the client (outer) and content (inner) elements.
+       * Requires the available space for the outer element and the outer size of the inner element.
+       * All values which are falsy (null or zero etc.) are ignored and the old value is kept.
+       *
+       * @param clientWidth {Integer ? null} Inner width of outer element
+       * @param clientHeight {Integer ? null} Inner height of outer element
+       * @param contentWidth {Integer ? null} Outer width of inner element
+       * @param contentHeight {Integer ? null} Outer height of inner element
+       */
+      setDimensions: function setDimensions(clientWidth, clientHeight, contentWidth, contentHeight) {
+        // Only update values which are defined
+        if (clientWidth !== null) {
+          this.__clientWidth = clientWidth;
+        }
+
+        if (clientHeight !== null) {
+          this.__clientHeight = clientHeight;
+        }
+
+        if (contentWidth !== null) {
+          this.__contentWidth = contentWidth;
+        }
+
+        if (contentHeight !== null) {
+          this.__contentHeight = contentHeight;
+        } // Refresh maximums
+
+
+        this.__computeScrollMax(); // Refresh scroll position
+
+
+        this.scrollTo(this.__scrollLeft, this.__scrollTop, true);
+      },
+
+      /**
+       * Sets the client coordinates in relation to the document.
+       *
+       * @param left {Integer ? 0} Left position of outer element
+       * @param top {Integer ? 0} Top position of outer element
+       */
+      setPosition: function setPosition(left, top) {
+        this.__clientLeft = left || 0;
+        this.__clientTop = top || 0;
+      },
+
+      /**
+       * Configures the snapping (when snapping is active)
+       *
+       * @param width {Integer} Snapping width
+       * @param height {Integer} Snapping height
+       */
+      setSnapSize: function setSnapSize(width, height) {
+        this.__snapWidth = width;
+        this.__snapHeight = height;
+      },
+
+      /**
+       * Returns the scroll position and zooming values
+       *
+       * @return {Map} `left` and `top` scroll position and `zoom` level
+       */
+      getValues: function getValues() {
+        return {
+          left: this.__scrollLeft,
+          top: this.__scrollTop,
+          right: this.__scrollLeft + this.__clientWidth / this.__zoomLevel,
+          bottom: this.__scrollTop + this.__clientHeight / this.__zoomLevel,
+          zoom: this.__zoomLevel
+        };
+      },
+
+      /**
+       * Get point in in content space from scroll coordinates.
+       */
+      getPoint: function getPoint(scrollLeft, scrollTop) {
+        var values = this.getValues();
+        return {
+          left: scrollLeft / values.zoom,
+          top: scrollTop / values.zoom
+        };
+      },
+
+      /**
+       * Returns the maximum scroll values
+       *
+       * @return {Map} `left` and `top` maximum scroll values
+       */
+      getScrollMax: function getScrollMax() {
+        return {
+          left: this.__maxScrollLeft,
+          top: this.__maxScrollTop
+        };
+      },
+
+      /**
+       * Zooms to the given level. Supports optional animation. Zooms
+       * the center when no coordinates are given.
+       *
+       * @param level {Number} Level to zoom to
+       * @param isAnimated {Boolean ? false} Whether to use animation
+       * @param fixedLeft {Number ? undefined} Stationary point's left coordinate (vector in client space)
+       * @param fixedTop {Number ? undefined} Stationary point's top coordinate (vector in client space)
+       * @param callback {Function ? null} A callback that gets fired when the zoom is complete.
+       */
+      zoomTo: function zoomTo(level, isAnimated, fixedLeft, fixedTop, callback) {
+        if (!this.options.zooming) {
+          throw new Error("Zooming is not enabled!");
+        } // Add callback if exists
+
+
+        if (callback) {
+          this.__zoomComplete = callback;
+        } // Stop deceleration
+
+
+        if (this.__isDecelerating) {
+          animate.stop(this.__isDecelerating);
+          this.__isDecelerating = false;
+        }
+
+        var oldLevel = this.__zoomLevel; // Normalize fixed point to center of viewport if not defined
+
+        if (fixedLeft === undefined) {
+          fixedLeft = this.__clientWidth / 2;
+        }
+
+        if (fixedTop === undefined) {
+          fixedTop = this.__clientHeight / 2;
+        } // Limit level according to configuration
+
+
+        level = Math.max(Math.min(level, this.options.maxZoom), this.options.minZoom); // Recompute maximum values while temporary tweaking maximum scroll ranges
+
+        this.__computeScrollMax(level); // Recompute left and top scroll positions based on new zoom level.
+        // Choosing the new viewport so that the origin's position remains
+        // fixed, we have central dilation about the origin.
+        // * Fixed point, $F$, remains stationary in content space and in the
+        // viewport.
+        // * Initial scroll position, $S_i$, in content space.
+        // * Final scroll position, $S_f$, in content space.
+        // * Initial scaling factor, $k_i$.
+        // * Final scaling factor, $k_f$.
+        //
+        // * $S_i \mapsto S_f$.
+        // * $(S_i - F) k_i = (S_f - F) k_f$.
+        // * $(S_i - F) k_i/k_f = (S_f - F)$.
+        // * $S_f = F + (S_i - F) k_i/k_f$.
+        //
+        // Fixed point location, $\vector{f} = (F - S_i) k_i$.
+        // * $F = S_i + \vector{f}/k_i$.
+        // * $S_f = S_i + \vector{f}/k_i + (S_i - S_i - \vector{f}/k_i) k_i/k_f$.
+        // * $S_f = S_i + \vector{f}/k_i - \vector{f}/k_f$.
+        // * $S_f k_f = S_i k_f + (k_f/k_i - 1)\vector{f}$.
+        // * $S_f k_f = (k_f/k_i)(S_i k_i) + (k_f/k_i - 1) \vector{f}$.
+
+
+        var k = level / oldLevel;
+        var left = k * (this.__scrollLeft + fixedLeft) - fixedLeft;
+        var top = k * (this.__scrollTop + fixedTop) - fixedTop; // Limit x-axis
+
+        if (left > this.__maxScrollLeft) {
+          left = this.__maxScrollLeft;
+        } else if (left < 0) {
+          left = 0;
+        } // Limit y-axis
+
+
+        if (top > this.__maxScrollTop) {
+          top = this.__maxScrollTop;
+        } else if (top < 0) {
+          top = 0;
+        } // Push values out
+
+
+        this.__publish(left, top, level, isAnimated);
+      },
+
+      /**
+       * Zooms the content by the given factor.
+       *
+       * @param factor {Number} Zoom by given factor
+       * @param isAnimated {Boolean ? false} Whether to use animation
+       * @param originLeft {Number ? 0} Zoom in at given left coordinate
+       * @param originTop {Number ? 0} Zoom in at given top coordinate
+       * @param callback {Function ? null} A callback that gets fired when the zoom is complete.
+       */
+      zoomBy: function zoomBy(factor, isAnimated, originLeft, originTop, callback) {
+        this.zoomTo(this.__zoomLevel * factor, isAnimated, originLeft, originTop, callback);
+      },
+
+      /**
+       * Scrolls to the given position. Respect limitations and snapping automatically.
+       *
+       * @param left {Number?null} Horizontal scroll position, keeps current if value is <code>null</code>
+       * @param top {Number?null} Vertical scroll position, keeps current if value is <code>null</code>
+       * @param isAnimated {Boolean?false} Whether the scrolling should happen using an animation
+       * @param zoom {Number} [1.0] Zoom level to go to
+       */
+      scrollTo: function scrollTo(left, top, isAnimated, zoom) {
+        // Stop deceleration
+        if (this.__isDecelerating) {
+          animate.stop(this.__isDecelerating);
+          this.__isDecelerating = false;
+        } // Correct coordinates based on new zoom level
+
+
+        if (zoom !== undefined && zoom !== this.__zoomLevel) {
+          if (!this.options.zooming) {
+            throw new Error("Zooming is not enabled!");
+          }
+
+          left *= zoom;
+          top *= zoom; // Recompute maximum values while temporary tweaking maximum scroll ranges
+
+          this.__computeScrollMax(zoom);
+        } else {
+          // Keep zoom when not defined
+          zoom = this.__zoomLevel;
+        }
+
+        if (!this.options.scrollingX) {
+          left = this.__scrollLeft;
+        } else {
+          if (this.options.paging) {
+            left = Math.round(left / this.__clientWidth) * this.__clientWidth;
+          } else if (this.options.snapping) {
+            left = Math.round(left / this.__snapWidth) * this.__snapWidth;
+          }
+        }
+
+        if (!this.options.scrollingY) {
+          top = this.__scrollTop;
+        } else {
+          if (this.options.paging) {
+            top = Math.round(top / this.__clientHeight) * this.__clientHeight;
+          } else if (this.options.snapping) {
+            top = Math.round(top / this.__snapHeight) * this.__snapHeight;
+          }
+        } // Limit for allowed ranges
+
+
+        left = Math.max(Math.min(this.__maxScrollLeft, left), 0);
+        top = Math.max(Math.min(this.__maxScrollTop, top), 0); // Don't animate when no change detected, still call publish to make sure
+        // that rendered position is really in-sync with internal data
+
+        if (left === this.__scrollLeft && top === this.__scrollTop) {
+          isAnimated = false;
+        } // Publish new values
+
+
+        this.__publish(left, top, zoom, isAnimated);
+      },
+
+      /**
+       * Scroll by the given offset
+       *
+       * @param left {Number ? 0} Scroll x-axis by given offset
+       * @param top {Number ? 0} Scroll x-axis by given offset
+       * @param isAnimated {Boolean ? false} Whether to animate the given change
+       */
+      scrollBy: function scrollBy(left, top, isAnimated) {
+        var startLeft = this.__isAnimating ? this.__scheduledLeft : this.__scrollLeft;
+        var startTop = this.__isAnimating ? this.__scheduledTop : this.__scrollTop;
+        this.scrollTo(startLeft + (left || 0), startTop + (top || 0), isAnimated);
+      },
+
+      /*
+        ---------------------------------------------------------------------------
+        EVENT CALLBACKS
+        ---------------------------------------------------------------------------
+      */
+
+      /**
+       * Mouse wheel handler for zooming support
+       */
+      doMouseZoom: function doMouseZoom(wheelDelta, timeStamp, pageX, pageY) {
+        var change = wheelDelta > 0 ? 0.97 : 1.03;
+        return this.zoomTo(this.__zoomLevel * change, false, pageX - this.__clientLeft, pageY - this.__clientTop);
+      },
+
+      /**
+       * Touch start handler for scrolling support
+       */
+      doTouchStart: function doTouchStart(touches, timeStamp) {
+        // Array-like check is enough here
+        if (touches.length === undefined) {
+          throw new Error("Invalid touch list: " + touches);
+        }
+
+        if (timeStamp instanceof Date) {
+          timeStamp = timeStamp.valueOf();
+        }
+
+        if (typeof timeStamp !== "number") {
+          throw new Error("Invalid timestamp value: " + timeStamp);
+        } // Reset interruptedAnimation flag
+
+
+        this.__interruptedAnimation = true; // Stop deceleration
+
+        if (this.__isDecelerating) {
+          animate.stop(this.__isDecelerating);
+          this.__isDecelerating = false;
+          this.__interruptedAnimation = true;
+        } // Stop animation
+
+
+        if (this.__isAnimating) {
+          animate.stop(this.__isAnimating);
+          this.__isAnimating = false;
+          this.__interruptedAnimation = true;
+        } // Use center point when dealing with two fingers
+
+
+        var currentTouchLeft, currentTouchTop;
+        var isSingleTouch = touches.length === 1;
+
+        if (isSingleTouch) {
+          currentTouchLeft = touches[0].pageX;
+          currentTouchTop = touches[0].pageY;
+        } else {
+          currentTouchLeft = Math.abs(touches[0].pageX + touches[1].pageX) / 2;
+          currentTouchTop = Math.abs(touches[0].pageY + touches[1].pageY) / 2;
+        } // Store initial positions
+
+
+        this.__initialTouchLeft = currentTouchLeft;
+        this.__initialTouchTop = currentTouchTop; // Store current zoom level
+
+        this.__zoomLevelStart = this.__zoomLevel; // Store initial touch positions
+
+        this.__lastTouchLeft = currentTouchLeft;
+        this.__lastTouchTop = currentTouchTop; // Store initial move time stamp
+
+        this.__lastTouchMove = timeStamp; // Reset initial scale
+
+        this.__lastScale = 1; // Reset locking flags
+
+        this.__enableScrollX = !isSingleTouch && this.options.scrollingX;
+        this.__enableScrollY = !isSingleTouch && this.options.scrollingY; // Reset tracking flag
+
+        this.__isTracking = true; // Reset deceleration complete flag
+
+        this.__didDecelerationComplete = false; // Dragging starts directly with two fingers, otherwise lazy with an offset
+
+        this.__isDragging = !isSingleTouch; // Some features are disabled in multi touch scenarios
+
+        this.__isSingleTouch = isSingleTouch; // Clearing data structure
+
+        this.__positions = [];
+      },
+
+      /**
+       * Touch move handler for scrolling support
+       * @param {Number} [1.0] scale - ....
+       */
+      doTouchMove: function doTouchMove(touches, timeStamp, scale) {
+        // Array-like check is enough here
+        if (touches.length === undefined) {
+          throw new Error("Invalid touch list: " + touches);
+        }
+
+        if (timeStamp instanceof Date) {
+          timeStamp = timeStamp.valueOf();
+        }
+
+        if (typeof timeStamp !== "number") {
+          throw new Error("Invalid timestamp value: " + timeStamp);
+        } // Ignore event when tracking is not enabled (event might be outside of element)
+
+
+        if (!this.__isTracking) {
+          return;
+        }
+
+        var currentTouchLeft, currentTouchTop; // Compute move based around of center of fingers
+
+        if (touches.length === 2) {
+          currentTouchLeft = Math.abs(touches[0].pageX + touches[1].pageX) / 2;
+          currentTouchTop = Math.abs(touches[0].pageY + touches[1].pageY) / 2;
+        } else {
+          currentTouchLeft = touches[0].pageX;
+          currentTouchTop = touches[0].pageY;
+        }
+
+        var positions = this.__positions; // Are we already is dragging mode?
+
+        if (this.__isDragging) {
+          // Compute move distance
+          var moveX = currentTouchLeft - this.__lastTouchLeft;
+          var moveY = currentTouchTop - this.__lastTouchTop; // Read previous scroll position and zooming
+
+          var scrollLeft = this.__scrollLeft;
+          var scrollTop = this.__scrollTop;
+          var level = this.__zoomLevel; // Work with scaling
+
+          if (scale !== undefined && this.options.zooming) {
+            var oldLevel = level; // Recompute level based on previous scale and new scale
+
+            level = level / this.__lastScale * scale; // Limit level according to configuration
+
+            level = Math.max(Math.min(level, this.options.maxZoom), this.options.minZoom); // Only do further compution when change happened
+
+            if (oldLevel !== level) {
+              // Compute relative event position to container
+              var currentTouchLeftRel = currentTouchLeft - this.__clientLeft;
+              var currentTouchTopRel = currentTouchTop - this.__clientTop; // Recompute left and top coordinates based on new zoom level
+
+              scrollLeft = (currentTouchLeftRel + scrollLeft) * level / oldLevel - currentTouchLeftRel;
+              scrollTop = (currentTouchTopRel + scrollTop) * level / oldLevel - currentTouchTopRel; // Recompute max scroll values
+
+              this.__computeScrollMax(level);
             }
           }
 
-          this.animate = requestAnimationFrame(this.loop.bind(this));
-        } else if (typeof cancelAnimationFrame !== 'undefined') {
-          cancelAnimationFrame(this.animate);
+          if (this.__enableScrollX) {
+            scrollLeft -= moveX * this.options.speedMultiplier;
+            var maxScrollLeft = this.__maxScrollLeft;
+
+            if (scrollLeft > maxScrollLeft || scrollLeft < 0) {
+              // Slow down on the edges
+              if (this.options.bouncing) {
+                scrollLeft += moveX / 2 * this.options.speedMultiplier;
+              } else if (scrollLeft > maxScrollLeft) {
+                scrollLeft = maxScrollLeft;
+              } else {
+                scrollLeft = 0;
+              }
+            }
+          } // Compute new vertical scroll position
+
+
+          if (this.__enableScrollY) {
+            scrollTop -= moveY * this.options.speedMultiplier;
+            var maxScrollTop = this.__maxScrollTop;
+
+            if (scrollTop > maxScrollTop || scrollTop < 0) {
+              // Slow down on the edges
+              if (this.options.bouncing) {
+                scrollTop += moveY / 2 * this.options.speedMultiplier;
+              } else if (scrollTop > maxScrollTop) {
+                scrollTop = maxScrollTop;
+              } else {
+                scrollTop = 0;
+              }
+            }
+          } // Keep list from growing infinitely (holding min 10, max 20 measure points)
+
+
+          if (positions.length > 60) {
+            positions.splice(0, 30);
+          } // Track scroll movement for decleration
+
+
+          positions.push(scrollLeft, scrollTop, timeStamp); // Sync scroll position
+
+          this.__publish(scrollLeft, scrollTop, level); // Otherwise figure out whether we are switching into dragging mode now.
+
+        } else {
+          var minimumTrackingForScroll = this.options.locking ? 3 : 0;
+          var minimumTrackingForDrag = 5;
+          var distanceX = Math.abs(currentTouchLeft - this.__initialTouchLeft);
+          var distanceY = Math.abs(currentTouchTop - this.__initialTouchTop);
+          this.__enableScrollX = this.options.scrollingX && distanceX >= minimumTrackingForScroll;
+          this.__enableScrollY = this.options.scrollingY && distanceY >= minimumTrackingForScroll;
+          positions.push(this.__scrollLeft, this.__scrollTop, timeStamp);
+          this.__isDragging = (this.__enableScrollX || this.__enableScrollY) && (distanceX >= minimumTrackingForDrag || distanceY >= minimumTrackingForDrag);
+
+          if (this.__isDragging) {
+            this.__interruptedAnimation = false;
+          }
+        } // Update last touch positions and time stamp for next event
+
+
+        this.__lastTouchLeft = currentTouchLeft;
+        this.__lastTouchTop = currentTouchTop;
+        this.__lastTouchMove = timeStamp;
+        this.__lastScale = scale;
+      },
+
+      /**
+       * Touch end handler for scrolling support
+       */
+      doTouchEnd: function doTouchEnd(timeStamp) {
+        if (timeStamp instanceof Date) {
+          timeStamp = timeStamp.valueOf();
+        }
+
+        if (typeof timeStamp !== "number") {
+          throw new Error("Invalid timestamp value: " + timeStamp);
+        } // Ignore event when tracking is not enabled (no touchstart event on element)
+        // This is required as this listener ('touchmove') sits on the document and not on the element itself.
+
+
+        if (!this.__isTracking) {
+          return;
+        } // Not touching anymore (when two finger hit the screen there are two touch end events)
+
+
+        this.__isTracking = false; // Be sure to reset the dragging flag now. Here we also detect whether
+        // the finger has moved fast enough to switch into a deceleration animation.
+
+        if (this.__isDragging) {
+          // Reset dragging flag
+          this.__isDragging = false; // Start deceleration
+          // Verify that the last move detected was in some relevant time frame
+
+          if (this.__isSingleTouch && this.options.animating && timeStamp - this.__lastTouchMove <= 100) {
+            // Then figure out what the scroll position was about 100ms ago
+            var positions = this.__positions;
+            var endPos = positions.length - 1;
+            var startPos = endPos; // Move pointer to position measured 100ms ago
+
+            for (var i = endPos; i > 0 && positions[i] > this.__lastTouchMove - 100; i -= 3) {
+              startPos = i;
+            } // If start and stop position is identical in a 100ms timeframe,
+            // we cannot compute any useful deceleration.
+
+
+            if (startPos !== endPos) {
+              // Compute relative movement between these two points
+              var timeOffset = positions[endPos] - positions[startPos];
+              var movedLeft = this.__scrollLeft - positions[startPos - 2];
+              var movedTop = this.__scrollTop - positions[startPos - 1]; // Based on 50ms compute the movement to apply for each render step
+
+              this.__decelerationVelocityX = movedLeft / timeOffset * (1000 / 60);
+              this.__decelerationVelocityY = movedTop / timeOffset * (1000 / 60); // How much velocity is required to start the deceleration
+
+              var minVelocityToStartDeceleration = this.options.paging || this.options.snapping ? 4 : 1; // Verify that we have enough velocity to start deceleration
+
+              if (Math.abs(this.__decelerationVelocityX) > minVelocityToStartDeceleration || Math.abs(this.__decelerationVelocityY) > minVelocityToStartDeceleration) {
+                this.__startDeceleration(timeStamp);
+              }
+            } else {
+              this.options.scrollingComplete();
+            }
+          } else if (timeStamp - this.__lastTouchMove > 100) {
+            this.options.scrollingComplete();
+          }
+        } // If this was a slower move it is per default non decelerated, but this
+        // still means that we want snap back to the bounds which is done here.
+        // This is placed outside the condition above to improve edge case stability
+        // e.g. touchend fired without enabled dragging. This should normally do not
+        // have modified the scroll positions or even showed the scrollbars though.
+
+
+        if (!this.__isDecelerating) {
+          if (this.__interruptedAnimation || this.__isDragging) {
+            this.options.scrollingComplete();
+          }
+
+          this.scrollTo(this.__scrollLeft, this.__scrollTop, true, this.__zoomLevel);
+        } // Fully cleanup list
+
+
+        this.__positions.length = 0;
+      },
+
+      /*
+        ---------------------------------------------------------------------------
+        PRIVATE API
+        ---------------------------------------------------------------------------
+      */
+
+      /**
+       * Applies the scroll position to the content element
+       *
+       * @param left {Number} Left scroll position
+       * @param top {Number} Top scroll position
+       * @param isAnimated {Boolean?false} Whether animation should be used to move to the new coordinates
+       */
+      __publish: function __publish(left, top, zoom, isAnimated) {
+        // Remember whether we had an animation, then we try to continue
+        // based on the current "drive" of the animation.
+        var wasAnimating = this.__isAnimating;
+
+        if (wasAnimating) {
+          animate.stop(wasAnimating);
+          this.__isAnimating = false;
+        }
+
+        if (isAnimated && this.options.animating) {
+          // Keep scheduled positions for scrollBy/zoomBy functionality.
+          this.__scheduledLeft = left;
+          this.__scheduledTop = top;
+          this.__scheduledZoom = zoom;
+          var oldLeft = this.__scrollLeft;
+          var oldTop = this.__scrollTop;
+          var oldZoom = this.__zoomLevel;
+          var diffLeft = left - oldLeft;
+          var diffTop = top - oldTop;
+          var diffZoom = zoom - oldZoom;
+
+          var step = function (percent, now, render) {
+            if (render) {
+              this.__scrollLeft = oldLeft + diffLeft * percent;
+              this.__scrollTop = oldTop + diffTop * percent;
+              this.__zoomLevel = oldZoom + diffZoom * percent; // Push values out
+
+              if (this.__callback) {
+                this.__callback(this.__scrollLeft, this.__scrollTop, this.__zoomLevel);
+              }
+            }
+          }.bind(this);
+
+          var verify = function (id) {
+            return this.__isAnimating === id;
+          }.bind(this);
+
+          var completed = function (renderedFramesPerSecond, animationId, wasFinished) {
+            if (animationId === this.__isAnimating) {
+              this.__isAnimating = false;
+            }
+
+            if (this.__didDecelerationComplete || wasFinished) {
+              this.options.scrollingComplete();
+            }
+
+            if (this.options.zooming) {
+              this.__computeScrollMax();
+
+              if (this.__zoomComplete) {
+                this.__zoomComplete();
+
+                this.__zoomComplete = null;
+              }
+            }
+          }.bind(this); // When continuing based on previous animation we choose an ease-out animation instead of ease-in-out
+
+
+          this.__isAnimating = animate.start(step, verify, completed, this.options.animationDuration, wasAnimating ? easeOutCubic : easeInOutCubic);
+        } else {
+          this.__scheduledLeft = this.__scrollLeft = left;
+          this.__scheduledTop = this.__scrollTop = top;
+          this.__scheduledZoom = this.__zoomLevel = zoom; // Push values out
+
+          if (this.__callback) {
+            this.__callback(left, top, zoom);
+          } // Fix max scroll ranges
+
+
+          if (this.options.zooming) {
+            this.__computeScrollMax();
+
+            if (this.__zoomComplete) {
+              this.__zoomComplete();
+
+              this.__zoomComplete = null;
+            }
+          }
+        }
+      },
+
+      /**
+       * Recomputes scroll minimum values based on client dimensions and content dimensions.
+       */
+      __computeScrollMax: function __computeScrollMax(zoomLevel) {
+        if (zoomLevel === undefined) {
+          zoomLevel = this.__zoomLevel;
+        }
+
+        this.__maxScrollLeft = Math.max(this.__contentWidth * zoomLevel - this.__clientWidth, 0);
+        this.__maxScrollTop = Math.max(this.__contentHeight * zoomLevel - this.__clientHeight, 0);
+      },
+
+      /*
+        ---------------------------------------------------------------------------
+        ANIMATION (DECELERATION) SUPPORT
+        ---------------------------------------------------------------------------
+      */
+
+      /**
+       * Called when a touch sequence end and the speed of the finger was high enough
+       * to switch into deceleration mode.
+       */
+      __startDeceleration: function __startDeceleration(timeStamp) {
+        if (this.options.paging) {
+          var scrollLeft = Math.max(Math.min(this.__scrollLeft, this.__maxScrollLeft), 0);
+          var scrollTop = Math.max(Math.min(this.__scrollTop, this.__maxScrollTop), 0);
+          var clientWidth = this.__clientWidth;
+          var clientHeight = this.__clientHeight; // We limit deceleration not to the min/max values of the allowed range, but to the size of the visible client area.
+          // Each page should have exactly the size of the client area.
+
+          this.__minDecelerationScrollLeft = Math.floor(scrollLeft / clientWidth) * clientWidth;
+          this.__minDecelerationScrollTop = Math.floor(scrollTop / clientHeight) * clientHeight;
+          this.__maxDecelerationScrollLeft = Math.ceil(scrollLeft / clientWidth) * clientWidth;
+          this.__maxDecelerationScrollTop = Math.ceil(scrollTop / clientHeight) * clientHeight;
+        } else {
+          this.__minDecelerationScrollLeft = 0;
+          this.__minDecelerationScrollTop = 0;
+          this.__maxDecelerationScrollLeft = this.__maxScrollLeft;
+          this.__maxDecelerationScrollTop = this.__maxScrollTop;
+        } // Wrap class method
+
+
+        var step = function (percent, now, render) {
+          this.__stepThroughDeceleration(render);
+        }.bind(this); // How much velocity is required to keep the deceleration running
+
+
+        var minVelocityToKeepDecelerating = this.options.snapping ? 4 : 0.1; // Detect whether it's still worth to continue animating steps
+        // If we are already slow enough to not being user perceivable anymore, we stop the whole process here.
+
+        var verify = function () {
+          var shouldContinue = Math.abs(this.__decelerationVelocityX) >= minVelocityToKeepDecelerating || Math.abs(this.__decelerationVelocityY) >= minVelocityToKeepDecelerating;
+
+          if (!shouldContinue) {
+            this.__didDecelerationComplete = true;
+          }
+
+          return shouldContinue;
+        }.bind(this);
+
+        var completed = function (renderedFramesPerSecond, animationId, wasFinished) {
+          this.__isDecelerating = false;
+
+          if (this.__didDecelerationComplete) {
+            this.options.scrollingComplete();
+          } // Animate to grid when snapping is active, otherwise just fix out-of-boundary positions
+
+
+          this.scrollTo(this.__scrollLeft, this.__scrollTop, this.options.snapping);
+        }.bind(this); // Start animation and switch on flag
+
+
+        this.__isDecelerating = animate.start(step, verify, completed);
+      },
+
+      /**
+       * Called on every step of the animation
+       *
+       * @param inMemory {Boolean?false} Whether to not render the current step, but keep it in memory only. Used internally only!
+       */
+      __stepThroughDeceleration: function __stepThroughDeceleration(render) {
+        //
+        // COMPUTE NEXT SCROLL POSITION
+        //
+        // Add deceleration to scroll position
+        var scrollLeft = this.__scrollLeft + this.__decelerationVelocityX;
+        var scrollTop = this.__scrollTop + this.__decelerationVelocityY; //
+        // HARD LIMIT SCROLL POSITION FOR NON BOUNCING MODE
+        //
+
+        if (!this.options.bouncing) {
+          var scrollLeftFixed = Math.max(Math.min(this.__maxDecelerationScrollLeft, scrollLeft), this.__minDecelerationScrollLeft);
+
+          if (scrollLeftFixed !== scrollLeft) {
+            scrollLeft = scrollLeftFixed;
+            this.__decelerationVelocityX = 0;
+          }
+
+          var scrollTopFixed = Math.max(Math.min(this.__maxDecelerationScrollTop, scrollTop), this.__minDecelerationScrollTop);
+
+          if (scrollTopFixed !== scrollTop) {
+            scrollTop = scrollTopFixed;
+            this.__decelerationVelocityY = 0;
+          }
+        } //
+        // UPDATE SCROLL POSITION
+        //
+
+
+        if (render) {
+          this.__publish(scrollLeft, scrollTop, this.__zoomLevel);
+        } else {
+          this.__scrollLeft = scrollLeft;
+          this.__scrollTop = scrollTop;
+        } //
+        // SLOW DOWN
+        //
+        // Slow down velocity on every iteration
+
+
+        if (!this.options.paging) {
+          // This is the factor applied to every iteration of the animation
+          // to slow down the process. This should emulate natural behavior where
+          // objects slow down when the initiator of the movement is removed
+          var frictionFactor = 0.95;
+          this.__decelerationVelocityX *= frictionFactor;
+          this.__decelerationVelocityY *= frictionFactor;
+        } //
+        // BOUNCING SUPPORT
+        //
+
+
+        if (this.options.bouncing) {
+          var scrollOutsideX = 0;
+          var scrollOutsideY = 0; // This configures the amount of change applied to deceleration/acceleration when reaching boundaries
+
+          var penetrationDeceleration = this.options.penetrationDeceleration;
+          var penetrationAcceleration = this.options.penetrationAcceleration; // Check limits
+
+          if (scrollLeft < this.__minDecelerationScrollLeft) {
+            scrollOutsideX = this.__minDecelerationScrollLeft - scrollLeft;
+          } else if (scrollLeft > this.__maxDecelerationScrollLeft) {
+            scrollOutsideX = this.__maxDecelerationScrollLeft - scrollLeft;
+          }
+
+          if (scrollTop < this.__minDecelerationScrollTop) {
+            scrollOutsideY = this.__minDecelerationScrollTop - scrollTop;
+          } else if (scrollTop > this.__maxDecelerationScrollTop) {
+            scrollOutsideY = this.__maxDecelerationScrollTop - scrollTop;
+          } // Slow down until slow enough, then flip back to snap position
+
+
+          if (scrollOutsideX !== 0) {
+            if (scrollOutsideX * this.__decelerationVelocityX <= 0) {
+              this.__decelerationVelocityX += scrollOutsideX * penetrationDeceleration;
+            } else {
+              this.__decelerationVelocityX = scrollOutsideX * penetrationAcceleration;
+            }
+          }
+
+          if (scrollOutsideY !== 0) {
+            if (scrollOutsideY * this.__decelerationVelocityY <= 0) {
+              this.__decelerationVelocityY += scrollOutsideY * penetrationDeceleration;
+            } else {
+              this.__decelerationVelocityY = scrollOutsideY * penetrationAcceleration;
+            }
+          }
         }
       }
-    }]);
-
-    return Touch;
-  }();
+    };
+    return Scroller;
+  });
   /***/
 
-},
-/* 21 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -37272,11 +38510,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+  var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
   /* harmony import */
 
 
-  var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+  var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -37362,6 +38600,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -37381,7 +38621,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -37525,7 +38765,15 @@ function (module, __webpack_exports__, __webpack_require__) {
         var bounds = this.getTextBounds();
         var defaultLineHeight = this.font.lineHeight;
         ctx.save();
-        this.renderBorder(ctx, layoutBox);
+
+        var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+            needClip = _this$renderBorder.needClip,
+            needStroke = _this$renderBorder.needStroke;
+
+        if (needClip) {
+          ctx.clip();
+        }
+
         var box = layoutBox || this.layoutBox;
         var style = this.style;
         var width = style.width,
@@ -37565,6 +38813,12 @@ function (module, __webpack_exports__, __webpack_require__) {
             x += cfg.w * scaleY;
           }
         }
+
+        if (needStroke) {
+          ctx.stroke();
+        }
+
+        ctx.restore();
       }
     }]);
 
@@ -37572,9 +38826,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-}
-/******/
-]);
+}]);
 
 /***/ }),
 /* 18 */
@@ -37732,6 +38984,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
 
+// declare global: DOMRect
+
 (function(mod) {
   if (true) // CommonJS
     mod(__webpack_require__(16));
@@ -37787,8 +39041,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     this.startPos = this.cm.getCursor("start");
     this.startLen = this.cm.getLine(this.startPos.line).length - this.cm.getSelection().length;
 
-    var self = this;
-    cm.on("cursorActivity", this.activityFunc = function() { self.cursorActivity(); });
+    if (this.options.updateOnCursorActivity) {
+      var self = this;
+      cm.on("cursorActivity", this.activityFunc = function() { self.cursorActivity(); });
+    }
   }
 
   var requestAnimationFrame = window.requestAnimationFrame || function(fn) {
@@ -37801,7 +39057,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
       if (!this.active()) return;
       this.cm.state.completionActive = null;
       this.tick = null;
-      this.cm.off("cursorActivity", this.activityFunc);
+      if (this.options.updateOnCursorActivity) {
+        this.cm.off("cursorActivity", this.activityFunc);
+      }
 
       if (this.widget && this.data) CodeMirror.signal(this.data, "close");
       if (this.widget) this.widget.close();
@@ -37822,8 +39080,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
                                completion.to || data.to, "complete");
         CodeMirror.signal(data, "pick", completion);
         self.cm.scrollIntoView();
-      })
-      this.close();
+      });
+      if (this.options.closeOnPick) {
+        this.close();
+      }
     },
 
     cursorActivity: function() {
@@ -37944,6 +39204,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
   }
 
   function Widget(completion, data) {
+    this.id = "cm-complete-" + Math.floor(Math.random(1e6))
     this.completion = completion;
     this.data = data;
     this.picked = false;
@@ -37952,6 +39213,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     var parentWindow = ownerDocument.defaultView || ownerDocument.parentWindow;
 
     var hints = this.hints = ownerDocument.createElement("ul");
+    hints.setAttribute("role", "listbox")
+    hints.setAttribute("aria-expanded", "true")
+    hints.id = this.id
     var theme = completion.cm.options.theme;
     hints.className = "CodeMirror-hints " + theme;
     this.selectedHint = data.selectedHint || 0;
@@ -37962,6 +39226,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
       var className = HINT_ELEMENT_CLASS + (i != this.selectedHint ? "" : " " + ACTIVE_HINT_ELEMENT_CLASS);
       if (cur.className != null) className = cur.className + " " + className;
       elt.className = className;
+      if (i == this.selectedHint) elt.setAttribute("aria-selected", "true")
+      elt.id = this.id + "-" + i
+      elt.setAttribute("role", "option")
       if (cur.render) cur.render(elt, data, cur);
       else elt.appendChild(ownerDocument.createTextNode(cur.displayText || getText(cur)));
       elt.hintId = i;
@@ -37987,10 +39254,18 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     var winW = parentWindow.innerWidth || Math.max(ownerDocument.body.offsetWidth, ownerDocument.documentElement.offsetWidth);
     var winH = parentWindow.innerHeight || Math.max(ownerDocument.body.offsetHeight, ownerDocument.documentElement.offsetHeight);
     container.appendChild(hints);
-    var box = hints.getBoundingClientRect(), overlapY = box.bottom - winH;
-    var scrolls = hints.scrollHeight > hints.clientHeight + 1
-    var startScroll = cm.getScrollInfo();
+    cm.getInputField().setAttribute("aria-autocomplete", "list")
+    cm.getInputField().setAttribute("aria-owns", this.id)
+    cm.getInputField().setAttribute("aria-activedescendant", this.id + "-" + this.selectedHint)
 
+    var box = completion.options.moveOnOverlap ? hints.getBoundingClientRect() : new DOMRect();
+    var scrolls = completion.options.paddingForScrollbar ? hints.scrollHeight > hints.clientHeight + 1 : false;
+
+    // Compute in the timeout to avoid reflow on init
+    var startScroll;
+    setTimeout(function() { startScroll = cm.getScrollInfo(); });
+
+    var overlapY = box.bottom - winH;
     if (overlapY > 0) {
       var height = box.bottom - box.top, curTop = pos.top - (pos.bottom - box.top);
       if (curTop - height > 0) { // Fits above cursor
@@ -38008,6 +39283,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
       }
     }
     var overlapX = box.right - winW;
+    if (scrolls) overlapX += cm.display.nativeBarWidth;
     if (overlapX > 0) {
       if (box.right - box.left > winW) {
         hints.style.width = (winW - 5) + "px";
@@ -38036,6 +39312,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
 
     cm.on("scroll", this.onScroll = function() {
       var curScroll = cm.getScrollInfo(), editor = cm.getWrapperElement().getBoundingClientRect();
+      if (!startScroll) startScroll = cm.getScrollInfo();
       var newTop = top + startScroll.top - curScroll.top;
       var point = newTop - (parentWindow.pageYOffset || (ownerDocument.documentElement || ownerDocument.body).scrollTop);
       if (!below) point += hints.offsetHeight;
@@ -38060,7 +39337,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     CodeMirror.on(hints, "mousedown", function() {
       setTimeout(function(){cm.focus();}, 20);
     });
-    this.scrollToActive()
+
+    // The first hint doesn't need to be scrolled to on init
+    var selectedHintRange = this.getSelectedHintRange();
+    if (selectedHintRange.from !== 0 || selectedHintRange.to !== 0) {
+      this.scrollToActive();
+    }
 
     CodeMirror.signal(data, "select", completions[this.selectedHint], hints.childNodes[this.selectedHint]);
     return true;
@@ -38070,8 +39352,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     close: function() {
       if (this.completion.widget != this) return;
       this.completion.widget = null;
-      this.hints.parentNode.removeChild(this.hints);
+      if (this.hints.parentNode) this.hints.parentNode.removeChild(this.hints);
       this.completion.cm.removeKeyMap(this.keyMap);
+      var input = this.completion.cm.getInputField()
+      input.removeAttribute("aria-activedescendant")
+      input.removeAttribute("aria-owns")
 
       var cm = this.completion.cm;
       if (this.completion.options.closeOnUnfocus) {
@@ -38099,24 +39384,39 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
         i = avoidWrap ? 0  : this.data.list.length - 1;
       if (this.selectedHint == i) return;
       var node = this.hints.childNodes[this.selectedHint];
-      if (node) node.className = node.className.replace(" " + ACTIVE_HINT_ELEMENT_CLASS, "");
+      if (node) {
+        node.className = node.className.replace(" " + ACTIVE_HINT_ELEMENT_CLASS, "");
+        node.removeAttribute("aria-selected")
+      }
       node = this.hints.childNodes[this.selectedHint = i];
       node.className += " " + ACTIVE_HINT_ELEMENT_CLASS;
+      node.setAttribute("aria-selected", "true")
+      this.completion.cm.getInputField().setAttribute("aria-activedescendant", node.id)
       this.scrollToActive()
       CodeMirror.signal(this.data, "select", this.data.list[this.selectedHint], node);
     },
 
     scrollToActive: function() {
-      var node = this.hints.childNodes[this.selectedHint]
+      var selectedHintRange = this.getSelectedHintRange();
+      var node1 = this.hints.childNodes[selectedHintRange.from];
+      var node2 = this.hints.childNodes[selectedHintRange.to];
       var firstNode = this.hints.firstChild;
-      if (node.offsetTop < this.hints.scrollTop)
-        this.hints.scrollTop = node.offsetTop - firstNode.offsetTop;
-      else if (node.offsetTop + node.offsetHeight > this.hints.scrollTop + this.hints.clientHeight)
-        this.hints.scrollTop = node.offsetTop + node.offsetHeight - this.hints.clientHeight + firstNode.offsetTop;
+      if (node1.offsetTop < this.hints.scrollTop)
+        this.hints.scrollTop = node1.offsetTop - firstNode.offsetTop;
+      else if (node2.offsetTop + node2.offsetHeight > this.hints.scrollTop + this.hints.clientHeight)
+        this.hints.scrollTop = node2.offsetTop + node2.offsetHeight - this.hints.clientHeight + firstNode.offsetTop;
     },
 
     screenAmount: function() {
       return Math.floor(this.hints.clientHeight / this.hints.firstChild.offsetHeight) || 1;
+    },
+
+    getSelectedHintRange: function() {
+      var margin = this.completion.options.scrollMargin || 0;
+      return {
+        from: Math.max(0, this.selectedHint - margin),
+        to: Math.min(this.data.list.length - 1, this.selectedHint + margin),
+      };
     }
   };
 
@@ -38194,11 +39494,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     completeSingle: true,
     alignWithWord: true,
     closeCharacters: /[\s()\[\]{};:>,]/,
+    closeOnPick: true,
     closeOnUnfocus: true,
+    updateOnCursorActivity: true,
     completeOnSingleClick: true,
     container: null,
     customKeys: null,
-    extraKeys: null
+    extraKeys: null,
+    paddingForScrollbar: true,
+    moveOnOverlap: true,
   };
 
   CodeMirror.defineOption("hintOptions", null);
@@ -38653,7 +39957,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
 
   function Context(state, tagName, startOfLine) {
     this.prev = state.context;
-    this.tagName = tagName;
+    this.tagName = tagName || "";
     this.indent = state.indented;
     this.startOfLine = startOfLine;
     if (config.doNotIndent.hasOwnProperty(tagName) || (state.context && state.context.noIndent))
@@ -38863,7 +40167,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
     xmlCurrentContext: function(state) {
       var context = []
       for (var cx = state.context; cx; cx = cx.prev)
-        if (cx.tagName) context.push(cx.tagName)
+        context.push(cx.tagName)
       return context.reverse()
     }
   };
@@ -38918,7 +40222,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
     if (config && config.strict && (dir > 0) != (pos == where.ch)) return null;
     var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));
 
-    var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, style || null, config);
+    var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, style, config);
     if (found == null) return null;
     return {from: Pos(where.line, pos), to: found && found.pos,
             match: found && found.ch == match.charAt(0), forward: dir > 0};
@@ -38947,7 +40251,8 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
       if (lineNo == where.line) pos = where.ch - (dir < 0 ? 1 : 0);
       for (; pos != end; pos += dir) {
         var ch = line.charAt(pos);
-        if (re.test(ch) && (style === undefined || cm.getTokenTypeAt(Pos(lineNo, pos + 1)) == style)) {
+        if (re.test(ch) && (style === undefined ||
+                            (cm.getTokenTypeAt(Pos(lineNo, pos + 1)) || "") == (style || ""))) {
           var match = matching[ch];
           if (match && (match.charAt(1) == ">") == (dir > 0)) stack.push(ch);
           else if (!stack.length) return {pos: Pos(lineNo, pos), ch: ch};
@@ -38960,11 +40265,12 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
   function matchBrackets(cm, autoclear, config) {
     // Disable brace matching in long lines, since it'll cause hugely slow updates
-    var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;
+    var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000,
+      highlightNonMatching = config && config.highlightNonMatching;
     var marks = [], ranges = cm.listSelections();
     for (var i = 0; i < ranges.length; i++) {
       var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, config);
-      if (match && cm.getLine(match.from.line).length <= maxHighlightLen) {
+      if (match && (match.match || highlightNonMatching !== false) && cm.getLine(match.from.line).length <= maxHighlightLen) {
         var style = match.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";
         marks.push(cm.markText(match.from, Pos(match.from.line, match.from.ch + 1), {className: style}));
         if (match.to && cm.getLine(match.to.line).length <= maxHighlightLen)
@@ -38974,7 +40280,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
     if (marks.length) {
       // Kludge to work around the IE bug from issue #1193, where text
-      // input stops going to the textare whever this fires.
+      // input stops going to the textarea whenever this fires.
       if (ie_lt8 && cm.state.focused) cm.focus();
 
       var clear = function() {
@@ -38997,25 +40303,25 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
     });
   }
 
-  CodeMirror.defineOption("matchBrackets", false, function(cm, val, old) {
-    function clear(cm) {
-      if (cm.state.matchBrackets && cm.state.matchBrackets.currentlyHighlighted) {
-        cm.state.matchBrackets.currentlyHighlighted();
-        cm.state.matchBrackets.currentlyHighlighted = null;
-      }
+  function clearHighlighted(cm) {
+    if (cm.state.matchBrackets && cm.state.matchBrackets.currentlyHighlighted) {
+      cm.state.matchBrackets.currentlyHighlighted();
+      cm.state.matchBrackets.currentlyHighlighted = null;
     }
+  }
 
+  CodeMirror.defineOption("matchBrackets", false, function(cm, val, old) {
     if (old && old != CodeMirror.Init) {
       cm.off("cursorActivity", doMatchBrackets);
       cm.off("focus", doMatchBrackets)
-      cm.off("blur", clear)
-      clear(cm);
+      cm.off("blur", clearHighlighted)
+      clearHighlighted(cm);
     }
     if (val) {
       cm.state.matchBrackets = typeof val == "object" ? val : {};
       cm.on("cursorActivity", doMatchBrackets);
       cm.on("focus", doMatchBrackets)
-      cm.on("blur", clear)
+      cm.on("blur", clearHighlighted)
     }
   });
 
@@ -39171,7 +40477,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
   var noOptions = {};
   var nonWS = /[^\s\u00a0]/;
-  var Pos = CodeMirror.Pos;
+  var Pos = CodeMirror.Pos, cmp = CodeMirror.cmpPos;
 
   function firstNonWS(str) {
     var found = str.search(nonWS);
@@ -39284,7 +40590,9 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
           if (i != end || lastLineHasText)
             self.replaceRange(lead + pad, Pos(i, 0));
       } else {
+        var atCursor = cmp(self.getCursor("to"), to) == 0, empty = !self.somethingSelected()
         self.replaceRange(endString, to);
+        if (atCursor) self.setSelection(empty ? to : self.getCursor("from"), to)
         self.replaceRange(startString, from);
       }
     });
@@ -39386,6 +40694,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   var statementIndent = parserConfig.statementIndent;
   var jsonldMode = parserConfig.jsonld;
   var jsonMode = parserConfig.json || jsonldMode;
+  var trackScope = parserConfig.trackScope !== false
   var isTS = parserConfig.typescript;
   var wordRE = parserConfig.wordCharacters || /[\w$\xa1-\uffff]/;
 
@@ -39473,14 +40782,15 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       return ret("meta", "meta");
     } else if (ch == "#" && stream.eatWhile(wordRE)) {
       return ret("variable", "property")
-    } else if (ch == "<" && stream.match("!--") || ch == "-" && stream.match("->")) {
+    } else if (ch == "<" && stream.match("!--") ||
+               (ch == "-" && stream.match("->") && !/\S/.test(stream.string.slice(0, stream.start)))) {
       stream.skipToEnd()
       return ret("comment", "comment")
     } else if (isOperatorChar.test(ch)) {
       if (ch != ">" || !state.lexical || state.lexical.type != ">") {
         if (stream.eat("=")) {
           if (ch == "!" || ch == "=") stream.eat("=")
-        } else if (/[<>*+\-]/.test(ch)) {
+        } else if (/[<>*+\-|&?]/.test(ch)) {
           stream.eat(ch)
           if (ch == ">") stream.eat(ch)
         }
@@ -39495,7 +40805,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
           var kw = keywords[word]
           return ret(kw.type, kw.style, word)
         }
-        if (word == "async" && stream.match(/^(\s|\/\*.*?\*\/)*[\[\(\w]/, false))
+        if (word == "async" && stream.match(/^(\s|\/\*([^*]|\*(?!\/))*?\*\/)*[\[\(\w]/, false))
           return ret("async", "keyword", word)
       }
       return ret("variable", "variable", word)
@@ -39587,7 +40897,8 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
 
   // Parser
 
-  var atomicTypes = {"atom": true, "number": true, "variable": true, "string": true, "regexp": true, "this": true, "jsonld-keyword": true};
+  var atomicTypes = {"atom": true, "number": true, "variable": true, "string": true,
+                     "regexp": true, "this": true, "import": true, "jsonld-keyword": true};
 
   function JSLexical(indented, column, type, align, prev, info) {
     this.indented = indented;
@@ -39599,6 +40910,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   }
 
   function inScope(state, varname) {
+    if (!trackScope) return false
     for (var v = state.localVars; v; v = v.next)
       if (v.name == varname) return true;
     for (var cx = state.context; cx; cx = cx.prev) {
@@ -39645,6 +40957,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   function register(varname) {
     var state = cx.state;
     cx.marked = "def";
+    if (!trackScope) return
     if (state.context) {
       if (state.lexical.info == "var" && state.context && state.context.block) {
         // FIXME function decls are also not block scoped
@@ -39744,7 +41057,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       return cont(pushlex("form"), parenExpr, statement, poplex, maybeelse);
     }
     if (type == "function") return cont(functiondef);
-    if (type == "for") return cont(pushlex("form"), forspec, statement, poplex);
+    if (type == "for") return cont(pushlex("form"), pushblockcontext, forspec, statement, popcontext, poplex);
     if (type == "class" || (isTS && value == "interface")) {
       cx.marked = "keyword"
       return cont(pushlex("form", type == "class" ? type : value), className, poplex)
@@ -39810,7 +41123,6 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     if (type == "{") return contCommasep(objprop, "}", null, maybeop);
     if (type == "quasi") return pass(quasi, maybeop);
     if (type == "new") return cont(maybeTarget(noComma));
-    if (type == "import") return cont(expression);
     return cont();
   }
   function maybeexpression(type) {
@@ -39848,7 +41160,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   function quasi(type, value) {
     if (type != "quasi") return pass();
     if (value.slice(value.length - 2) != "${") return cont(quasi);
-    return cont(expression, continueQuasi);
+    return cont(maybeexpression, continueQuasi);
   }
   function continueQuasi(type) {
     if (type == "}") {
@@ -39974,7 +41286,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     }
   }
   function typeexpr(type, value) {
-    if (value == "keyof" || value == "typeof" || value == "infer") {
+    if (value == "keyof" || value == "typeof" || value == "infer" || value == "readonly") {
       cx.marked = "keyword"
       return cont(value == "typeof" ? expressionNoComma : typeexpr)
     }
@@ -39985,12 +41297,18 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     if (value == "|" || value == "&") return cont(typeexpr)
     if (type == "string" || type == "number" || type == "atom") return cont(afterType);
     if (type == "[") return cont(pushlex("]"), commasep(typeexpr, "]", ","), poplex, afterType)
-    if (type == "{") return cont(pushlex("}"), commasep(typeprop, "}", ",;"), poplex, afterType)
+    if (type == "{") return cont(pushlex("}"), typeprops, poplex, afterType)
     if (type == "(") return cont(commasep(typearg, ")"), maybeReturnType, afterType)
     if (type == "<") return cont(commasep(typeexpr, ">"), typeexpr)
+    if (type == "quasi") { return pass(quasiType, afterType); }
   }
   function maybeReturnType(type) {
     if (type == "=>") return cont(typeexpr)
+  }
+  function typeprops(type) {
+    if (type.match(/[\}\)\]]/)) return cont()
+    if (type == "," || type == ";") return cont(typeprops)
+    return pass(typeprop, typeprops)
   }
   function typeprop(type, value) {
     if (type == "variable" || cx.style == "keyword") {
@@ -40004,6 +41322,20 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       return cont(expect("variable"), maybetypeOrIn, expect("]"), typeprop)
     } else if (type == "(") {
       return pass(functiondecl, typeprop)
+    } else if (!type.match(/[;\}\)\],]/)) {
+      return cont()
+    }
+  }
+  function quasiType(type, value) {
+    if (type != "quasi") return pass();
+    if (value.slice(value.length - 2) != "${") return cont(quasiType);
+    return cont(typeexpr, continueQuasiType);
+  }
+  function continueQuasiType(type) {
+    if (type == "}") {
+      cx.marked = "string-2";
+      cx.state.tokenize = tokenQuasi;
+      return cont(quasiType);
     }
   }
   function typearg(type, value) {
@@ -40145,6 +41477,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     if (value == "@") return cont(expression, classBody)
   }
   function classfield(type, value) {
+    if (value == "!") return cont(classfield)
     if (value == "?") return cont(classfield)
     if (type == ":") return cont(typeexpr, maybeAssign)
     if (value == "=") return cont(expressionNoComma)
@@ -40164,6 +41497,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   function afterImport(type) {
     if (type == "string") return cont();
     if (type == "(") return pass(expression);
+    if (type == ".") return pass(maybeoperatorComma);
     return pass(importSpec, maybeMoreImports, maybeFrom);
   }
   function importSpec(type, value) {
@@ -40237,14 +41571,14 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     },
 
     indent: function(state, textAfter) {
-      if (state.tokenize == tokenComment) return CodeMirror.Pass;
+      if (state.tokenize == tokenComment || state.tokenize == tokenQuasi) return CodeMirror.Pass;
       if (state.tokenize != tokenBase) return 0;
       var firstChar = textAfter && textAfter.charAt(0), lexical = state.lexical, top
       // Kludge to prevent 'maybelse' from blocking lexical scope pops
       if (!/^\s*else\b/.test(textAfter)) for (var i = state.cc.length - 1; i >= 0; --i) {
         var c = state.cc[i];
         if (c == poplex) lexical = lexical.prev;
-        else if (c != maybeelse) break;
+        else if (c != maybeelse && c != popcontext) break;
       }
       while ((lexical.type == "stat" || lexical.type == "form") &&
              (firstChar == "}" || ((top = state.cc[state.cc.length - 1]) &&
@@ -40281,8 +41615,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     expressionAllowed: expressionAllowed,
 
     skipExpression: function(state) {
-      var top = state.cc[state.cc.length - 1]
-      if (top == expression || top == expressionNoComma) state.cc.pop()
+      parseJS(state, "atom", "atom", "true", new CodeMirror.StringStream("", 2, null))
     }
   };
 });
@@ -40294,9 +41627,10 @@ CodeMirror.defineMIME("text/ecmascript", "javascript");
 CodeMirror.defineMIME("application/javascript", "javascript");
 CodeMirror.defineMIME("application/x-javascript", "javascript");
 CodeMirror.defineMIME("application/ecmascript", "javascript");
-CodeMirror.defineMIME("application/json", {name: "javascript", json: true});
-CodeMirror.defineMIME("application/x-json", {name: "javascript", json: true});
-CodeMirror.defineMIME("application/ld+json", {name: "javascript", jsonld: true});
+CodeMirror.defineMIME("application/json", { name: "javascript", json: true });
+CodeMirror.defineMIME("application/x-json", { name: "javascript", json: true });
+CodeMirror.defineMIME("application/manifest+json", { name: "javascript", json: true })
+CodeMirror.defineMIME("application/ld+json", { name: "javascript", jsonld: true });
 CodeMirror.defineMIME("text/typescript", { name: "javascript", typescript: true });
 CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript: true });
 
