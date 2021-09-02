@@ -64,9 +64,11 @@ export default
     },
 
     listHeadImg: {
-        borderRadius: 6,
         width: 90,
         height: 90,
+        borderRadius: 15,
+      	borderWidth: 5,
+      	borderColor: 'red',
     },
 
     listItemScore: {

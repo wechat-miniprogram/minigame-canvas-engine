@@ -119,7 +119,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -284,7 +284,8 @@ function layoutChildren(dataArray, children) {
       child.layoutBox.absoluteY = child.layoutBox.top;
     }
 
-    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY; // 滚动列表的画板尺寸和主画板保持一致
+    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX; // 滚动列表的画板尺寸和主画板保持一致
 
     if (child.type === 'ScrollView') {
       child.updateRenderPort(_this2.renderport);
@@ -394,7 +395,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
     _this3.touchMove = _this3.eventHandler('touchmove').bind(_assertThisInitialized(_this3));
     _this3.touchEnd = _this3.eventHandler('touchend').bind(_assertThisInitialized(_this3));
     _this3.touchCancel = _this3.eventHandler('touchcancel').bind(_assertThisInitialized(_this3));
-    _this3.version = '0.0.1';
+    _this3.version = '0.0.7';
     _this3.touchMsg = {};
     _this3.hasViewPortSet = false;
     _this3.realLayoutBox = {
@@ -846,12 +847,7 @@ var Element = /*#__PURE__*/function () {
 
   }, {
     key: "insert",
-    value: function insert() {}
-  }, {
-    key: "checkNeedRender",
-    value: function checkNeedRender() {
-      return true;
-    } // 子类填充实现
+    value: function insert() {} // 子类填充实现
 
   }, {
     key: "destroy",
@@ -907,28 +903,10 @@ var Element = /*#__PURE__*/function () {
     key: "off",
     value: function off(event, callback) {
       EE.off(toEventName(event, this.id), callback);
-    } // 方便子类实现borderRadius
-
-  }, {
-    key: "roundRect",
-    value: function roundRect(ctx, layoutBox) {
-      var style = this.style || {};
-      var box = layoutBox || this.layoutBox;
-      var w = box.width;
-      var h = box.height;
-      var r = style.borderRadius;
-      var x = box.absoluteX;
-      var y = box.absoluteY;
-      ctx.moveTo(x + r, y);
-      ctx.arcTo(x + w, y, x + w, y + h, r);
-      ctx.arcTo(x + w, y + h, x, y + h, r);
-      ctx.arcTo(x, y + h, x, y, r);
-      ctx.arcTo(x, y, x + w, y, r);
-      ctx.clip();
     }
   }, {
-    key: "renderBorder2",
-    value: function renderBorder2(ctx, layoutBox) {
+    key: "renderBorder",
+    value: function renderBorder(ctx, layoutBox) {
       var style = this.style || {};
       var radius = style.borderRadius || 0;
       var _style$borderWidth = style.borderWidth,
@@ -943,97 +921,52 @@ var Element = /*#__PURE__*/function () {
       var y = box.absoluteY;
       var width = box.width,
           height = box.height;
+      var hasRadius = radius || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius; // borderWidth 和 radius 都没有，不需要执行后续逻辑，提升性能
 
-      if (!borderWidth) {
-        return;
-      }
+      if (!borderWidth && !hasRadius) {
+        return {
+          needClip: false,
+          needStroke: false
+        };
+      } // 左上角的点
 
-      ctx.lineWidth = borderWidth;
-      ctx.strokeStyle = borderColor; // 左上角的点
 
       ctx.beginPath();
+      ctx.lineWidth = borderWidth;
+      ctx.strokeStyle = borderColor;
       ctx.moveTo(x + borderTopLeftRadius, y);
       ctx.lineTo(x + width - borderTopRightRadius, y); // 右上角的圆角
 
-      ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius); // 右下角的点
+      /*ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius);*/
+
+      ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius); // 右下角的点
 
       ctx.lineTo(x + width, y + height - borderBottomRightRadius); // 右下角的圆角
 
-      ctx.quadraticCurveTo(x + width, y + height, x + width - borderBottomRightRadius, y + height); // 左下角的点
+      /*ctx.quadraticCurveTo(
+        x + width,
+        y + height,
+        x + width - borderBottomRightRadius,
+        y + height
+      );*/
+
+      ctx.arcTo(x + width, y + height, x + width - borderBottomRightRadius, y + height, borderBottomRightRadius); // 左下角的点
 
       ctx.lineTo(x + borderBottomLeftRadius, y + height); // 左下角的圆角
 
-      ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius); // 左上角的点
+      /*ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius);*/
+
+      ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius); // 左上角的点
 
       ctx.lineTo(x, y + borderTopLeftRadius); // 左上角的圆角
 
-      ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);
-      ctx.stroke();
-    } // https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-using-html-canvas
+      /*ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);*/
 
-  }, {
-    key: "renderBorder",
-    value: function renderBorder(ctx, layoutBox) {
-      var needStroke = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-      var style = this.style || {};
-      ctx.save();
-      var box = layoutBox || this.layoutBox;
-      var borderWidth = style.borderWidth || 0;
-      var borderLeftWidth = style.borderLeftWidth || style.borderWidth || 0;
-      var borderRightWidth = style.borderRightWidth || style.borderWidth || 0;
-      var borderTopWidth = style.borderTopWidth || style.borderWidth || 0;
-      var borderBottomWidth = style.borderBottomWidth || style.borderWidth || 0;
-      var radius = style.borderRadius || 0;
-      var borderColor = style.borderColor;
-      var drawX = box.absoluteX;
-      var drawY = box.absoluteY;
-      ctx.beginPath();
-
-      if (borderColor) {
-        if (borderWidth) {
-          ctx.lineWidth = borderWidth;
-          ctx.strokeStyle = borderColor;
-          ctx.strokeRect(drawX, drawY, box.width, box.height);
-        }
-
-        if (borderTopWidth && (borderColor || style.borderTopColor)) {
-          ctx.lineWidth = borderTopWidth;
-          ctx.strokeStyle = style.borderTopColor || borderColor;
-          ctx.moveTo(radius ? drawX + radius : drawX, drawY + borderTopWidth / 2);
-          ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + borderTopWidth / 2);
-        }
-
-        if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
-          ctx.lineWidth = borderBottomWidth;
-          ctx.strokeStyle = style.borderBottomColor || borderColor;
-          ctx.moveTo(radius ? drawX + radius : drawX, drawY + box.height - borderBottomWidth / 2);
-          ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + box.height - borderBottomWidth / 2);
-        }
-
-        if (borderLeftWidth && (borderColor || style.borderLeftColor)) {
-          ctx.lineWidth = borderLeftWidth;
-          ctx.strokeStyle = style.borderLeftColor || borderColor;
-          ctx.moveTo(drawX - borderLeftWidth / 2, radius ? drawY + radius : drawY);
-          ctx.lineTo(drawX - borderLeftWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
-        }
-
-        if (borderRightWidth && (borderColor || style.borderRightColor)) {
-          ctx.lineWidth = borderRightWidth;
-          ctx.strokeStyle = style.borderRightColor || borderColor;
-          ctx.moveTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + radius : drawY);
-          ctx.lineTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
-        }
-      }
-
-      ctx.closePath();
-
-      if (needStroke) {
-        ctx.stroke();
-      } else {
-        ctx.clip();
-      }
-
-      ctx.restore();
+      ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
+      return {
+        needClip: !!hasRadius,
+        needStroke: !!borderWidth
+      };
     }
   }]);
 
@@ -3629,7 +3562,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -3700,9 +3633,21 @@ var View = /*#__PURE__*/function (_Element) {
       var borderBottomWidth = style.borderBottomWidth || borderWidth;
       this.renderBorder(ctx, layoutBox);
 
+      var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+          needClip = _this$renderBorder.needClip,
+          needStroke = _this$renderBorder.needStroke;
+
+      if (needClip) {
+        ctx.clip();
+      }
+
       if (style.backgroundColor) {
         ctx.fillStyle = style.backgroundColor;
         ctx.fillRect(drawX + borderLeftWidth, drawY + borderRightWidth, box.width - (borderLeftWidth + borderRightWidth), box.height - (borderTopWidth + borderBottomWidth));
+      }
+
+      if (needStroke) {
+        ctx.stroke();
       }
 
       ctx.restore();
@@ -3761,7 +3706,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -3885,11 +3830,20 @@ var Image = /*#__PURE__*/function (_Element) {
       ctx.lineWidth = style.borderWidth || 0;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
-      ctx.save();
-      this.renderBorder2(ctx, layoutBox); // ctx.clip();
-      // ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
-      // ctx.stroke();
-      // this.renderBorder(ctx, layoutBox, true);
+
+      var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+          needClip = _this$renderBorder.needClip,
+          needStroke = _this$renderBorder.needStroke;
+
+      if (needClip) {
+        ctx.clip();
+      }
+
+      ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+
+      if (needStroke) {
+        ctx.stroke();
+      }
 
       ctx.restore();
     }
@@ -3948,7 +3902,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -4109,11 +4063,22 @@ var Text = /*#__PURE__*/function (_Element) {
       ctx.textAlign = this.textAlign;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
-      this.renderBorder(ctx, layoutBox);
+
+      var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+          needClip = _this$renderBorder.needClip,
+          needStroke = _this$renderBorder.needStroke;
+
+      if (needClip) {
+        ctx.clip();
+      }
 
       if (style.backgroundColor) {
         ctx.fillStyle = style.backgroundColor;
         ctx.fillRect(drawX, drawY, box.width, box.height);
+      }
+
+      if (needStroke) {
+        ctx.stroke();
       }
 
       ctx.fillStyle = this.fillStyle;
@@ -4164,7 +4129,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -4188,15 +4153,22 @@ var ScrollView = /*#__PURE__*/function (_View) {
         style = _ref$style === void 0 ? {} : _ref$style,
         _ref$props = _ref.props,
         props = _ref$props === void 0 ? {} : _ref$props,
-        _ref$name = _ref.name,
-        name = _ref$name === void 0 ? '' : _ref$name;
+        _ref$idName = _ref.idName,
+        idName = _ref$idName === void 0 ? "" : _ref$idName,
+        _ref$className = _ref.className,
+        className = _ref$className === void 0 ? "" : _ref$className,
+        _ref$scrollX = _ref.scrollX,
+        scrollX = _ref$scrollX === void 0 ? false : _ref$scrollX,
+        _ref$scrollY = _ref.scrollY,
+        scrollY = _ref$scrollY === void 0 ? false : _ref$scrollY;
 
     _classCallCheck(this, ScrollView);
 
     _this = _super.call(this, {
       props: props,
-      name: name,
-      style: style
+      style: style,
+      idName: idName,
+      className: className
     });
     _this.type = 'ScrollView'; // 当前列表滚动的值
 
@@ -4209,6 +4181,12 @@ var ScrollView = /*#__PURE__*/function (_View) {
     _this.scrollCanvas = null;
     _this.scrollCtx = null;
     _this.requestID = null;
+    _this._scrollX = scrollX;
+    _this._scrollY = scrollY;
+    _this._scrollerOption = {
+      scrollingX: _this._scrollX,
+      scrollingY: _this._scrollY
+    };
     _this.sharedTexture = false;
     return _this;
   }
@@ -4241,19 +4219,36 @@ var ScrollView = /*#__PURE__*/function (_View) {
       return last.layoutBox.left + last.layoutBox.width;
     }
   }, {
+    key: "scrollX",
+    get: function get() {
+      return this._scrollerOption.scrollingX;
+    },
+    set: function set(value) {
+      this.scrollerOption = {
+        scrollingX: value
+      };
+    }
+  }, {
+    key: "scrollY",
+    get: function get() {
+      return this._scrollerOption.scrollingY;
+    },
+    set: function set(value) {
+      this.scrollerOption = {
+        scrollingY: value
+      };
+    }
+  }, {
     key: "scrollerOption",
     get: function get() {
-      return Object.assign({
-        scrollingY: !!(this.scrollHeight > this.layoutBox.height),
-        scrollingX: !!(this.scrollWidth > this.layoutBox.width)
-      }, this._scrollerOption);
+      return this._scrollerOption;
     },
     set: function set(value) {
       if (value === void 0) {
         value = {};
       }
 
-      this._scrollerOption = value;
+      Object.assign(this._scrollerOption, value);
 
       if (this.scrollerObj) {
         Object.assign(this.scrollerObj.options, this.scrollerOption);
@@ -4298,15 +4293,16 @@ var ScrollView = /*#__PURE__*/function (_View) {
     }
   }, {
     key: "renderTreeWithTop",
-    value: function renderTreeWithTop(tree, top) {
+    value: function renderTreeWithTop(tree, top, left) {
       var _this3 = this;
 
       var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
 
       layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+      layoutBox.absoluteX = layoutBox.originalAbsoluteX - left;
       tree.render(this.scrollCtx, layoutBox);
       tree.children.forEach(function (child) {
-        _this3.renderTreeWithTop(child, top);
+        _this3.renderTreeWithTop(child, top, left);
       });
     }
   }, {
@@ -4327,10 +4323,13 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.scrollTop = top;
       this.scrollLeft = left; // scrollview在全局节点中的Y轴位置
 
-      var abY = box.absoluteY; // 根据滚动值获取裁剪区域
+      var abY = box.absoluteY;
+      var abX = box.absoluteX; // 根据滚动值获取裁剪区域
 
       var startY = abY + this.scrollTop;
-      var endY = abY + this.scrollTop + box.height; // 清理滚动画布和主屏画布
+      var endY = abY + this.scrollTop + box.height;
+      var startX = abX + this.scrollLeft;
+      var endX = abX + this.scrollLeft + box.width; // 清理滚动画布和主屏画布
 
       this.clear();
       this.renderBoxes.forEach(function (item) {
@@ -4339,10 +4338,12 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.children.forEach(function (child) {
         var layoutBox = child.layoutBox;
         var height = layoutBox.height;
-        var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
+        var width = layoutBox.width;
+        var originY = layoutBox.originalAbsoluteY;
+        var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
 
-        if (originY + height >= startY && originY <= endY) {
-          _this4.renderTreeWithTop(child, _this4.scrollTop);
+        if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
+          _this4.renderTreeWithTop(child, _this4.scrollTop, _this4.scrollLeft);
         }
       });
       this.ctx.drawImage(this.scrollCanvas, box.absoluteX, box.absoluteY, box.width, box.height, box.absoluteX, box.absoluteY, box.width, box.height);
@@ -4367,11 +4368,15 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
       var startY = box.absoluteY + this.scrollTop;
       var endY = box.absoluteY + this.scrollTop + box.height;
+      var startX = box.absoluteX + this.scrollLeft;
+      var endX = box.absoluteX + this.scrollLeft + box.width;
       var layoutBox = img.layoutBox;
       var height = layoutBox.height;
-      var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
+      var width = layoutBox.width;
+      var originY = layoutBox.originalAbsoluteY;
+      var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
 
-      if (originY + height >= startY && originY <= endY) {
+      if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
         this.scrollRender(this.scrollLeft, this.scrollTop);
       }
     }
@@ -4400,14 +4405,16 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
         // 可能被销毁了或者节点树还没准备好
         if (_this6.scrollActive && !_this6.isDestroyed) {
-          _this6.scrollRender(left, top); // if (this.currentEvent) {
-          //   this.currentEvent.type = 'scroll';
-          //   this.currentEvent.currentTarget = this;
-          //   this.emit('scroll', this.currentEvent);
-          // }
+          _this6.scrollRender(left, top);
 
+          if (_this6.currentEvent) {
+            /*this.currentEvent.type = 'scroll';*/
+
+            /*this.currentEvent.currentTarget = this;*/
+            _this6.emit('scroll', _this6.currentEvent);
+          }
         }
-      }, this.scrollerOpt);
+      }, this.scrollerOption);
       this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
       var dpr = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getDpr"])();
       this.scrollActive = false;
@@ -4462,6 +4469,14 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
         _this6.currentEvent = e;
       });
+    }
+  }, {
+    key: "scrollTo",
+    value: function scrollTo() {
+      var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var animate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      this.scrollerObj.scrollTo(left, top, animate);
     }
   }]);
 
@@ -5900,7 +5915,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -6040,7 +6055,15 @@ var BitMapText = /*#__PURE__*/function (_Element) {
       var bounds = this.getTextBounds();
       var defaultLineHeight = this.font.lineHeight;
       ctx.save();
-      this.renderBorder(ctx, layoutBox);
+
+      var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+          needClip = _this$renderBorder.needClip,
+          needStroke = _this$renderBorder.needStroke;
+
+      if (needClip) {
+        ctx.clip();
+      }
+
       var box = layoutBox || this.layoutBox;
       var style = this.style;
       var width = style.width,
@@ -6080,6 +6103,12 @@ var BitMapText = /*#__PURE__*/function (_Element) {
           x += cfg.w * scaleY;
         }
       }
+
+      if (needStroke) {
+        ctx.stroke();
+      }
+
+      ctx.restore();
     }
   }]);
 

@@ -18,5 +18,30 @@
 
 <img :src="$withBase('/imgs/canting.png')" width=300>
 
+## 微信小游戏插件
+### 安装使用
+1.在game.json配置插件引用:
+```
+{
+    "deviceOrientation": "portrait",
+    "openDataContext": "sub",
+    "plugins": {
+      "Layout": {
+        "version": "0.0.7",
+        "provider": "wx7a727ff7d940bb3f",
+        "contexts":[{"type":"openDataContext"}]
+      }
+    }
+}
+
+```
+
+2.在开放数据域内引用插件：
+```
+const Layout = requirePlugin('Layout').default;
+```
+
+3. 正常使用Layout来进行渲染
+
 ## 更新日志
 详见[CHANGELOG.md](CHANGELOG.md)

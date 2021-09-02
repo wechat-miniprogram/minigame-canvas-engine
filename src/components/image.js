@@ -101,17 +101,17 @@ export default class Image extends Element {
     let drawX = box.absoluteX;
     let drawY = box.absoluteY;
 
-    ctx.save();
+    const {needClip, needStroke} = this.renderBorder(ctx, layoutBox);
 
-    this.renderBorder2(ctx, layoutBox);
-    // ctx.clip();
+    if (needClip) {
+      ctx.clip();
+    }
 
+    ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
 
-    // ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
-
-    // ctx.stroke();
-
-    // this.renderBorder(ctx, layoutBox, true);
+    if (needStroke) {
+      ctx.stroke();
+    }
 
     ctx.restore();
   }

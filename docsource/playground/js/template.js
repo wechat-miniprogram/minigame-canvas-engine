@@ -5,7 +5,7 @@ export default
     <bitmaptext font="fnt_number-export" class="title" value="等级"></bitmaptext>
   </view>
   <view class="rankList">
-        <scrollview class="list">
+        <scrollview class="list" scrollY="true">
             {{~it.data :item:index}}
                 {{? index % 2 === 1 }}
                 <view class="listItem listItemOld">

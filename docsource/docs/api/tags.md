@@ -50,6 +50,12 @@ view标签用来页面布局，布局严格遵循[CSS Flex布局](https://develo
 
 ## scrollview标签
 滚动内容的容器，滚动的前提是正确调用[updateViewPort](/api/api.html#updateviewport)
+### 特殊样式
+|      属性      |  类型  | 是否必填 |          说明          |
+|----------------|--------|--------|------------------------|
+| scrollX | string |   否  |  是否需要横向滚动，支持 "true"和"false"，默认值为 "false" |
+| scrollY | string |   否  | 是否需要纵向滚动，支持 "true"和"false", 默认值为"false" |
+
 
 ## bitmapfont
 在游戏开发里面，为了更好的视觉效果，经常要将一些常用文字经过设计成图片，然后打包成特殊的字体，称为BitmapFont，基本上所有的游戏引擎都支持了这种技术。
@@ -65,15 +71,15 @@ view标签用来页面布局，布局严格遵循[CSS Flex布局](https://develo
 ```
 ``` js
 title: {
-        width: 144,
-        fontSize: 48,
-        height: 120,
-        lineHeight: 50,
-        textAlign: 'center',
-      	verticalAlign: 'top',
-        fontWeight: 'bold',
-        borderBottomWidth: 6,
-        borderColor: '#000000',
+  width: 144,
+  fontSize: 48,
+  height: 120,
+  lineHeight: 50,
+  textAlign: 'center',
+  verticalAlign: 'top',
+  fontWeight: 'bold',
+  borderBottomWidth: 6,
+  borderColor: '#000000',
 }
 
 ```

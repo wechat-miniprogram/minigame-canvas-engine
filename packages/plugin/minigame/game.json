@@ -3,7 +3,7 @@
     "openDataContext": "sub",
     "plugins": {
       "Layout": {
-        "version": "dev",
+        "version": "0.0.7",
         "provider": "wx7a727ff7d940bb3f",
         "contexts":[{"type":"openDataContext"}]
       }

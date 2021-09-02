@@ -1,21 +1,31 @@
-import View                from './view.js';
-import {throttle, createCanvas, getDpr} from '../common/util.js';
+import View from './view.js';
+import {
+  throttle,
+  createCanvas,
+  getDpr
+} from '../common/util.js';
 
-import {Scroller} from 'scroller';
+import {
+  Scroller
+} from 'scroller';
 
 export default class ScrollView extends View {
   constructor({
-    style={},
-    props={},
-    name ='',
+    style = {},
+    props = {},
+    idName = "",
+    className = "",
+    scrollX = false,
+    scrollY = false
   }) {
     super({
       props,
-      name,
       style,
+      idName,
+      className
     });
 
-    this.type            = 'ScrollView';
+    this.type = 'ScrollView';
 
     // 当前列表滚动的值
     this.scrollTop = 0;
@@ -31,6 +41,14 @@ export default class ScrollView extends View {
 
     this.requestID = null;
 
+    this._scrollX = scrollX;
+    this._scrollY = scrollY;
+
+    this._scrollerOption = {
+      scrollingX: this._scrollX,
+      scrollingY: this._scrollY,
+    }
+
     this.sharedTexture = false;
   }
 
@@ -38,7 +56,7 @@ export default class ScrollView extends View {
    * 获取滚动列表内所有元素的高度和
    * 这里不能简单将所有子元素的高度累加，因为每个元素之间可能是有空隙的
    */
-   get scrollHeight() {
+  get scrollHeight() {
     // scrollview为空的情况
     if (!this.children.length) {
       return 0;
@@ -60,15 +78,32 @@ export default class ScrollView extends View {
     return last.layoutBox.left + last.layoutBox.width;
   }
 
+  get scrollX() {
+    return this._scrollerOption.scrollingX;
+  }
+
+  set scrollX(value) {
+    this.scrollerOption = {
+      scrollingX: value 
+    }
+  }
+
+  get scrollY() {
+    return this._scrollerOption.scrollingY;
+  }
+
+  set scrollY(value) {
+    this.scrollerOption = {
+      scrollingY: value 
+    }
+  }
+
   get scrollerOption() {
-    return Object.assign({
-      scrollingY: !!(this.scrollHeight > this.layoutBox.height),
-      scrollingX: !!(this.scrollWidth > this.layoutBox.width)
-    }, this._scrollerOption);
+    return this._scrollerOption;
   }
 
   set scrollerOption(value = {}) {
-    this._scrollerOption = value;
+    Object.assign(this._scrollerOption, value);
 
     if (this.scrollerObj) {
       Object.assign(this.scrollerObj.options, this.scrollerOption);
@@ -78,7 +113,7 @@ export default class ScrollView extends View {
   repaint() {
     this.clear();
 
-    this.renderBoxes.forEach( item => {
+    this.renderBoxes.forEach(item => {
       this.render(item.ctx, item.box);
     });
 
@@ -92,20 +127,20 @@ export default class ScrollView extends View {
     this.renderport = renderport;
 
     this.scrollCanvas = createCanvas();
-    this.scrollCtx    = this.scrollCanvas.getContext('2d');
+    this.scrollCtx = this.scrollCanvas.getContext('2d');
 
-    this.scrollCanvas.width  = this.renderport.width;
+    this.scrollCanvas.width = this.renderport.width;
     this.scrollCanvas.height = this.renderport.height;
   }
 
   destroySelf() {
-    this.touch           = null;
-    this.isDestroyed     = true;
+    this.touch = null;
+    this.isDestroyed = true;
 
     this.root.off('repaint__done');
-    this.ctx             = null;
-    this.children        = null;
-    this.root            = null;
+    this.ctx = null;
+    this.children = null;
+    this.root = null;
 
     this.scrollCanvas = null;
     this.scrollCtx = null;
@@ -113,51 +148,58 @@ export default class ScrollView extends View {
     this.requestID && cancelAnimationFrame(this.requestID)
   }
 
-  renderTreeWithTop(tree, top) {
+  renderTreeWithTop(tree, top, left) {
     const layoutBox = tree.layoutBox;
     // 计算实际渲染的Y轴位置
     layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+    layoutBox.absoluteX = layoutBox.originalAbsoluteX - left;
 
     tree.render(this.scrollCtx, layoutBox);
 
-    tree.children.forEach( child => {
-      this.renderTreeWithTop(child, top);
+    tree.children.forEach(child => {
+      this.renderTreeWithTop(child, top, left);
     });
   }
 
   clear() {
-    const box   = this.layoutBox;
+    const box = this.layoutBox;
     this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
     this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height)
   }
 
   scrollRenderHandler(left = 0, top = 0) {
-    const box   = this.layoutBox;
+    const box = this.layoutBox;
     this.scrollTop = top;
     this.scrollLeft = left;
 
     // scrollview在全局节点中的Y轴位置
-    const abY   = box.absoluteY;
+    const abY = box.absoluteY;
+    const abX = box.absoluteX;
 
     // 根据滚动值获取裁剪区域
     const startY = abY + this.scrollTop;
-    const endY   = abY + this.scrollTop + box.height;
+    const endY = abY + this.scrollTop + box.height;
+    const startX = abX + this.scrollLeft;
+    const endX = abX + this.scrollLeft + box.width;
 
     // 清理滚动画布和主屏画布
     this.clear();
 
-    this.renderBoxes.forEach( item => {
+    this.renderBoxes.forEach(item => {
       this.render(item.ctx, item.box);
     });
 
     this.children.forEach(child => {
       const layoutBox = child.layoutBox;
       const height = layoutBox.height;
-      let originY   = layoutBox.originalAbsoluteY;
+      const width = layoutBox.width;
+      let originY = layoutBox.originalAbsoluteY;
+      let originX = layoutBox.originalAbsoluteX;
 
       // 判断处于可视窗口内的子节点，渲染该子节点
-      if (originY + height >= startY && originY <= endY) {
-        this.renderTreeWithTop(child, this.scrollTop);
+      if (originY + height >= startY && originY <= endY 
+        && originX + width >= startX && originX <= endX) {
+        this.renderTreeWithTop(child, this.scrollTop, this.scrollLeft);
       }
     });
 
@@ -181,18 +223,23 @@ export default class ScrollView extends View {
   }
 
   childImageLoadDoneCbk(img) {
-    const box   = this.layoutBox;
+    const box = this.layoutBox;
 
     // 根据滚动值获取裁剪区域
     const startY = box.absoluteY + this.scrollTop;
-    const endY   = box.absoluteY + this.scrollTop + box.height;
+    const endY = box.absoluteY + this.scrollTop + box.height;
+    const startX = box.absoluteX + this.scrollLeft;
+    const endX = box.absoluteX + this.scrollLeft + box.width;
 
     const layoutBox = img.layoutBox;
     const height = layoutBox.height;
-    let originY   = layoutBox.originalAbsoluteY;
+    const width = layoutBox.width;
+    let originY = layoutBox.originalAbsoluteY;
+    let originX = layoutBox.originalAbsoluteX;
 
     // 判断处于可视窗口内的子节点，渲染该子节点
-    if (originY + height >= startY && originY <= endY) {
+    if (originY + height >= startY && originY <= endY 
+      && originX + width >= startX && originX <= endX) {
       this.scrollRender(this.scrollLeft, this.scrollTop);
     }
   }
@@ -224,13 +271,13 @@ export default class ScrollView extends View {
       if (this.scrollActive && !this.isDestroyed) {
         this.scrollRender(left, top);
 
-        // if (this.currentEvent) {
-        //   this.currentEvent.type = 'scroll';
-        //   this.currentEvent.currentTarget = this;
-        //   this.emit('scroll', this.currentEvent);
-        // }
+        if (this.currentEvent) {
+          /*this.currentEvent.type = 'scroll';*/
+          /*this.currentEvent.currentTarget = this;*/
+          this.emit('scroll', this.currentEvent);
+        }
       }
-    }, this.scrollerOpt);
+    }, this.scrollerOption);
 
     this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
@@ -245,7 +292,7 @@ export default class ScrollView extends View {
       e.touches.forEach(touch => {
         if (dpr !== 1) {
           touch.pageX *= dpr;
-          touch.pageY *= dpr;            
+          touch.pageY *= dpr;
         }
       });
       this.scrollerObj.doTouchStart(e.touches, e.timeStamp);
@@ -260,7 +307,7 @@ export default class ScrollView extends View {
       e.touches.forEach(touch => {
         if (dpr !== 1) {
           touch.pageX *= dpr;
-          touch.pageY *= dpr;  
+          touch.pageY *= dpr;
         }
       });
       this.scrollerObj.doTouchMove(e.touches, e.timeStamp);
@@ -275,12 +322,15 @@ export default class ScrollView extends View {
       e.touches.forEach(touch => {
         if (dpr !== 1) {
           touch.pageX *= dpr;
-          touch.pageY *= dpr;  
+          touch.pageY *= dpr;
         }
       });
       this.scrollerObj.doTouchEnd(e.timeStamp);
       this.currentEvent = e;
     });
   }
-}
 
+  scrollTo(left = 0, top = 0, animate = true) {
+    this.scrollerObj.scrollTo(left, top, animate);
+  }
+}

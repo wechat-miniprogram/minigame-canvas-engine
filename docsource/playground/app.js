@@ -347,6 +347,8 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
   },
   methods: {
     createProj: function createProj(name, xml, css, js) {
+      console.log(name);
+
       if (!name) {
         name = prompt("项目名称", "新项目");
       }
@@ -439,7 +441,7 @@ var app = new vue_dist_vue_js__WEBPACK_IMPORTED_MODULE_6___default.a({
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("\n<view class=\"container\" id=\"main\">\n  <view class=\"header\">\n    <bitmaptext font=\"fnt_number-export\" class=\"title\" value=\"\u7B49\u7EA7\"></bitmaptext>\n  </view>\n  <view class=\"rankList\">\n        <scrollview class=\"list\">\n            {{~it.data :item:index}}\n                {{? index % 2 === 1 }}\n                <view class=\"listItem listItemOld\">\n                {{?}}\n                {{? index % 2 === 0 }}\n                <view class=\"listItem\">\n                {{?}}\n                    <bitmaptext font=\"fnt_number-export\" class=\"listItemNum\" value=\"{{= index + 1}}\"></bitmaptext>\n                    <image class=\"listHeadImg\" src=\"{{= item.avatarUrl }}\"></image>\n                  <text class=\"listItemName\" value=\"{{= item.nickname}}\"></text>\n                  <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n                  <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n                </view>\n            {{~}}\n        </scrollview>\n        <text class=\"listTips\" value=\"\u4EC5\u5C55\u793A\u524D50\u4F4D\u597D\u53CB\u6392\u540D\"></text>\n\n        <view class=\"listItem selfListItem\">\n            <bitmaptext font=\"fnt_number-export\" class=\"listItemNum\" value=\"{{= it.selfIndex}}\"></bitmaptext>\n            <image class=\"listHeadImg\" src=\"{{= it.self.avatarUrl }}\"></image>\n            <text class=\"listItemName\" value=\"{{= it.self.nickname}}\"></text>\n            <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n            <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n        </view>\n    </view>\n</view>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("\n<view class=\"container\" id=\"main\">\n  <view class=\"header\">\n    <bitmaptext font=\"fnt_number-export\" class=\"title\" value=\"\u7B49\u7EA7\"></bitmaptext>\n  </view>\n  <view class=\"rankList\">\n        <scrollview class=\"list\" scrollY=\"true\">\n            {{~it.data :item:index}}\n                {{? index % 2 === 1 }}\n                <view class=\"listItem listItemOld\">\n                {{?}}\n                {{? index % 2 === 0 }}\n                <view class=\"listItem\">\n                {{?}}\n                    <bitmaptext font=\"fnt_number-export\" class=\"listItemNum\" value=\"{{= index + 1}}\"></bitmaptext>\n                    <image class=\"listHeadImg\" src=\"{{= item.avatarUrl }}\"></image>\n                  <text class=\"listItemName\" value=\"{{= item.nickname}}\"></text>\n                  <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n                  <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n                </view>\n            {{~}}\n        </scrollview>\n        <text class=\"listTips\" value=\"\u4EC5\u5C55\u793A\u524D50\u4F4D\u597D\u53CB\u6392\u540D\"></text>\n\n        <view class=\"listItem selfListItem\">\n            <bitmaptext font=\"fnt_number-export\" class=\"listItemNum\" value=\"{{= it.selfIndex}}\"></bitmaptext>\n            <image class=\"listHeadImg\" src=\"{{= it.self.avatarUrl }}\"></image>\n            <text class=\"listItemName\" value=\"{{= it.self.nickname}}\"></text>\n            <text class=\"listItemScore\" value=\"{{= item.rankScore}}\"></text>\n            <text class=\"listScoreUnit\" value=\"\u5206\"></text>\n        </view>\n    </view>\n</view>\n");
 
 /***/ }),
 /* 2 */
@@ -447,7 +449,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("window.styleValue = {\n    container: {\n        width: 960,\n        height: 1410,\n        borderRadius: 12,\n    },\n\n    header: {\n        height: 120,\n        width: 960,\n        flexDirection: 'column',\n        alignItems: 'center',\n      \tbackgroundColor: '#ffffff',\n        borderBottomWidth: 0.5,\n        borderColor: 'rgba(0, 0, 0, 0.3)',\n    },\n\n    title: {\n        width: 144,\n        fontSize: 48,\n        height: 120,\n        lineHeight: 50,\n        textAlign: 'center',\n        fontWeight: 'bold',\n        borderBottomWidth: 6,\n        borderColor: '#000000',\n      \tverticalAlign: 'middle'\n    },\n\n    rankList: {\n        width: 960,\n        height: 1000,\n      \tbackgroundColor: '#ffffff',\n    },\n\n    list: {\n        width          : 960,\n        height         : 950,\n      \tbackgroundColor: '#ffffff',\n        marginTop: 30,\n    },\n\n    listItem: {\n        backgroundColor: '#F7F7F7',\n        width: 960,\n        height: 150,\n        flexDirection: 'row',\n        alignItems: 'center',\n    },\n\n    listItemOld: {\n       backgroundColor: '#ffffff',\n    },\n\n    listItemNum: {\n        fontSize: 32,\n        fontWeight: 'bold',\n        lineHeight: 45,\n        height: 150,\n        textAlign: 'center',\n        width: 120,\n      \tverticalAlign: 'middle'\n    },\n\n    listHeadImg: {\n        borderRadius: 6,\n        width: 90,\n        height: 90,\n    },\n\n    listItemScore: {\n        fontSize: 48,\n        fontWeight: 'bold',\n        marginLeft : 10,\n        height: 150,\n        lineHeight: 150,\n        width: 300,\n        textAlign: 'right',\n    },\n\n    listItemName:{\n        fontSize: 36,\n        height: 150,\n        lineHeight: 150,\n        width: 350,\n        marginLeft: 30,\n    },\n\n    listScoreUnit: {\n        opacity: 0.5,\n        color: '#000000',\n        fontSize: 30,\n        height: 150,\n        lineHeight: 150,\n        marginLeft: 8,\n    },\n\n    selfListItem: {\n        borderRadius: 20,\n        marginTop: 50,\n        backgroundColor: '#ffffff',\n    },\n\n  \tlistTips: {\n      \twidth: 960,\n        height: 90,\n      \tlineHeight: 90,\n      \ttextAlign: 'center',\n      \tfontSize: 30,\n      \tcolor: 'rgba(0,0,0,0.5)',\n      \tbackgroundColor: '#ffffff',\n        borderRadius: 10,\n    }\n}");
+/* harmony default export */ __webpack_exports__["default"] = ("window.styleValue = {\n    container: {\n        width: 960,\n        height: 1410,\n        borderRadius: 12,\n    },\n\n    header: {\n        height: 120,\n        width: 960,\n        flexDirection: 'column',\n        alignItems: 'center',\n      \tbackgroundColor: '#ffffff',\n        borderBottomWidth: 0.5,\n        borderColor: 'rgba(0, 0, 0, 0.3)',\n    },\n\n    title: {\n        width: 144,\n        fontSize: 48,\n        height: 120,\n        lineHeight: 50,\n        textAlign: 'center',\n        fontWeight: 'bold',\n        borderBottomWidth: 6,\n        borderColor: '#000000',\n      \tverticalAlign: 'middle'\n    },\n\n    rankList: {\n        width: 960,\n        height: 1000,\n      \tbackgroundColor: '#ffffff',\n    },\n\n    list: {\n        width          : 960,\n        height         : 950,\n      \tbackgroundColor: '#ffffff',\n        marginTop: 30,\n    },\n\n    listItem: {\n        backgroundColor: '#F7F7F7',\n        width: 960,\n        height: 150,\n        flexDirection: 'row',\n        alignItems: 'center',\n    },\n\n    listItemOld: {\n       backgroundColor: '#ffffff',\n    },\n\n    listItemNum: {\n        fontSize: 32,\n        fontWeight: 'bold',\n        lineHeight: 45,\n        height: 150,\n        textAlign: 'center',\n        width: 120,\n      \tverticalAlign: 'middle'\n    },\n\n    listHeadImg: {\n        width: 90,\n        height: 90,\n        borderRadius: 15,\n      \tborderWidth: 5,\n      \tborderColor: 'red',\n    },\n\n    listItemScore: {\n        fontSize: 48,\n        fontWeight: 'bold',\n        marginLeft : 10,\n        height: 150,\n        lineHeight: 150,\n        width: 300,\n        textAlign: 'right',\n    },\n\n    listItemName:{\n        fontSize: 36,\n        height: 150,\n        lineHeight: 150,\n        width: 350,\n        marginLeft: 30,\n    },\n\n    listScoreUnit: {\n        opacity: 0.5,\n        color: '#000000',\n        fontSize: 30,\n        height: 150,\n        lineHeight: 150,\n        marginLeft: 8,\n    },\n\n    selfListItem: {\n        borderRadius: 20,\n        marginTop: 50,\n        backgroundColor: '#ffffff',\n    },\n\n  \tlistTips: {\n      \twidth: 960,\n        height: 90,\n      \tlineHeight: 90,\n      \ttextAlign: 'center',\n      \tfontSize: 30,\n      \tcolor: 'rgba(0,0,0,0.5)',\n      \tbackgroundColor: '#ffffff',\n        borderRadius: 10,\n    }\n}");
 
 /***/ }),
 /* 3 */
@@ -32136,6 +32138,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -32317,7 +32321,8 @@ function (module, __webpack_exports__, __webpack_require__) {
         child.layoutBox.absoluteY = child.layoutBox.top;
       }
 
-      child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY; // 滚动列表的画板尺寸和主画板保持一致
+      child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+      child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX; // 滚动列表的画板尺寸和主画板保持一致
 
       if (child.type === 'ScrollView') {
         child.updateRenderPort(_this2.renderport);
@@ -32427,7 +32432,7 @@ function (module, __webpack_exports__, __webpack_require__) {
       _this3.touchMove = _this3.eventHandler('touchmove').bind(_assertThisInitialized(_this3));
       _this3.touchEnd = _this3.eventHandler('touchend').bind(_assertThisInitialized(_this3));
       _this3.touchCancel = _this3.eventHandler('touchcancel').bind(_assertThisInitialized(_this3));
-      _this3.version = '0.0.1';
+      _this3.version = '0.0.7';
       _this3.touchMsg = {};
       _this3.hasViewPortSet = false;
       _this3.realLayoutBox = {
@@ -32901,12 +32906,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
     }, {
       key: "insert",
-      value: function insert() {}
-    }, {
-      key: "checkNeedRender",
-      value: function checkNeedRender() {
-        return true;
-      } // 子类填充实现
+      value: function insert() {} // 子类填充实现
 
     }, {
       key: "destroy",
@@ -32962,28 +32962,10 @@ function (module, __webpack_exports__, __webpack_require__) {
       key: "off",
       value: function off(event, callback) {
         EE.off(toEventName(event, this.id), callback);
-      } // 方便子类实现borderRadius
-
-    }, {
-      key: "roundRect",
-      value: function roundRect(ctx, layoutBox) {
-        var style = this.style || {};
-        var box = layoutBox || this.layoutBox;
-        var w = box.width;
-        var h = box.height;
-        var r = style.borderRadius;
-        var x = box.absoluteX;
-        var y = box.absoluteY;
-        ctx.moveTo(x + r, y);
-        ctx.arcTo(x + w, y, x + w, y + h, r);
-        ctx.arcTo(x + w, y + h, x, y + h, r);
-        ctx.arcTo(x, y + h, x, y, r);
-        ctx.arcTo(x, y, x + w, y, r);
-        ctx.clip();
       }
     }, {
-      key: "renderBorder2",
-      value: function renderBorder2(ctx, layoutBox) {
+      key: "renderBorder",
+      value: function renderBorder(ctx, layoutBox) {
         var style = this.style || {};
         var radius = style.borderRadius || 0;
         var _style$borderWidth = style.borderWidth,
@@ -32998,97 +32980,52 @@ function (module, __webpack_exports__, __webpack_require__) {
         var y = box.absoluteY;
         var width = box.width,
             height = box.height;
+        var hasRadius = radius || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius; // borderWidth 和 radius 都没有，不需要执行后续逻辑，提升性能
 
-        if (!borderWidth) {
-          return;
-        }
+        if (!borderWidth && !hasRadius) {
+          return {
+            needClip: false,
+            needStroke: false
+          };
+        } // 左上角的点
 
-        ctx.lineWidth = borderWidth;
-        ctx.strokeStyle = borderColor; // 左上角的点
 
         ctx.beginPath();
+        ctx.lineWidth = borderWidth;
+        ctx.strokeStyle = borderColor;
         ctx.moveTo(x + borderTopLeftRadius, y);
         ctx.lineTo(x + width - borderTopRightRadius, y); // 右上角的圆角
 
-        ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius); // 右下角的点
+        /*ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius);*/
+
+        ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius); // 右下角的点
 
         ctx.lineTo(x + width, y + height - borderBottomRightRadius); // 右下角的圆角
 
-        ctx.quadraticCurveTo(x + width, y + height, x + width - borderBottomRightRadius, y + height); // 左下角的点
+        /*ctx.quadraticCurveTo(
+          x + width,
+          y + height,
+          x + width - borderBottomRightRadius,
+          y + height
+        );*/
+
+        ctx.arcTo(x + width, y + height, x + width - borderBottomRightRadius, y + height, borderBottomRightRadius); // 左下角的点
 
         ctx.lineTo(x + borderBottomLeftRadius, y + height); // 左下角的圆角
 
-        ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius); // 左上角的点
+        /*ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius);*/
+
+        ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius); // 左上角的点
 
         ctx.lineTo(x, y + borderTopLeftRadius); // 左上角的圆角
 
-        ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);
-        ctx.stroke();
-      } // https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-using-html-canvas
+        /*ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);*/
 
-    }, {
-      key: "renderBorder",
-      value: function renderBorder(ctx, layoutBox) {
-        var needStroke = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-        var style = this.style || {};
-        ctx.save();
-        var box = layoutBox || this.layoutBox;
-        var borderWidth = style.borderWidth || 0;
-        var borderLeftWidth = style.borderLeftWidth || style.borderWidth || 0;
-        var borderRightWidth = style.borderRightWidth || style.borderWidth || 0;
-        var borderTopWidth = style.borderTopWidth || style.borderWidth || 0;
-        var borderBottomWidth = style.borderBottomWidth || style.borderWidth || 0;
-        var radius = style.borderRadius || 0;
-        var borderColor = style.borderColor;
-        var drawX = box.absoluteX;
-        var drawY = box.absoluteY;
-        ctx.beginPath();
-
-        if (borderColor) {
-          if (borderWidth) {
-            ctx.lineWidth = borderWidth;
-            ctx.strokeStyle = borderColor;
-            ctx.strokeRect(drawX, drawY, box.width, box.height);
-          }
-
-          if (borderTopWidth && (borderColor || style.borderTopColor)) {
-            ctx.lineWidth = borderTopWidth;
-            ctx.strokeStyle = style.borderTopColor || borderColor;
-            ctx.moveTo(radius ? drawX + radius : drawX, drawY + borderTopWidth / 2);
-            ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + borderTopWidth / 2);
-          }
-
-          if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
-            ctx.lineWidth = borderBottomWidth;
-            ctx.strokeStyle = style.borderBottomColor || borderColor;
-            ctx.moveTo(radius ? drawX + radius : drawX, drawY + box.height - borderBottomWidth / 2);
-            ctx.lineTo(radius ? drawX + box.width - radius : drawX + box.width, drawY + box.height - borderBottomWidth / 2);
-          }
-
-          if (borderLeftWidth && (borderColor || style.borderLeftColor)) {
-            ctx.lineWidth = borderLeftWidth;
-            ctx.strokeStyle = style.borderLeftColor || borderColor;
-            ctx.moveTo(drawX - borderLeftWidth / 2, radius ? drawY + radius : drawY);
-            ctx.lineTo(drawX - borderLeftWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
-          }
-
-          if (borderRightWidth && (borderColor || style.borderRightColor)) {
-            ctx.lineWidth = borderRightWidth;
-            ctx.strokeStyle = style.borderRightColor || borderColor;
-            ctx.moveTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + radius : drawY);
-            ctx.lineTo(drawX + box.width - borderRightWidth / 2, radius ? drawY + box.height - radius : drawY + box.height);
-          }
-        }
-
-        ctx.closePath();
-
-        if (needStroke) {
-          ctx.stroke();
-        } else {
-          ctx.clip();
-        }
-
-        ctx.restore();
+        ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
+        return {
+          needClip: !!hasRadius,
+          needStroke: !!borderWidth
+        };
       }
     }]);
 
@@ -35984,6 +35921,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36078,9 +36017,21 @@ function (module, __webpack_exports__, __webpack_require__) {
         var borderBottomWidth = style.borderBottomWidth || borderWidth;
         this.renderBorder(ctx, layoutBox);
 
+        var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+            needClip = _this$renderBorder.needClip,
+            needStroke = _this$renderBorder.needStroke;
+
+        if (needClip) {
+          ctx.clip();
+        }
+
         if (style.backgroundColor) {
           ctx.fillStyle = style.backgroundColor;
           ctx.fillRect(drawX + borderLeftWidth, drawY + borderRightWidth, box.width - (borderLeftWidth + borderRightWidth), box.height - (borderTopWidth + borderBottomWidth));
+        }
+
+        if (needStroke) {
+          ctx.stroke();
         }
 
         ctx.restore();
@@ -36218,6 +36169,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36365,11 +36318,20 @@ function (module, __webpack_exports__, __webpack_require__) {
         ctx.lineWidth = style.borderWidth || 0;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
-        ctx.save();
-        this.renderBorder2(ctx, layoutBox); // ctx.clip();
-        // ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
-        // ctx.stroke();
-        // this.renderBorder(ctx, layoutBox, true);
+
+        var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+            needClip = _this$renderBorder.needClip,
+            needStroke = _this$renderBorder.needStroke;
+
+        if (needClip) {
+          ctx.clip();
+        }
+
+        ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+
+        if (needStroke) {
+          ctx.stroke();
+        }
 
         ctx.restore();
       }
@@ -36507,6 +36469,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36691,11 +36655,22 @@ function (module, __webpack_exports__, __webpack_require__) {
         ctx.textAlign = this.textAlign;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
-        this.renderBorder(ctx, layoutBox);
+
+        var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+            needClip = _this$renderBorder.needClip,
+            needStroke = _this$renderBorder.needStroke;
+
+        if (needClip) {
+          ctx.clip();
+        }
 
         if (style.backgroundColor) {
           ctx.fillStyle = style.backgroundColor;
           ctx.fillRect(drawX, drawY, box.width, box.height);
+        }
+
+        if (needStroke) {
+          ctx.stroke();
         }
 
         ctx.fillStyle = this.fillStyle;
@@ -36831,6 +36806,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36876,15 +36853,22 @@ function (module, __webpack_exports__, __webpack_require__) {
           style = _ref$style === void 0 ? {} : _ref$style,
           _ref$props = _ref.props,
           props = _ref$props === void 0 ? {} : _ref$props,
-          _ref$name = _ref.name,
-          name = _ref$name === void 0 ? '' : _ref$name;
+          _ref$idName = _ref.idName,
+          idName = _ref$idName === void 0 ? "" : _ref$idName,
+          _ref$className = _ref.className,
+          className = _ref$className === void 0 ? "" : _ref$className,
+          _ref$scrollX = _ref.scrollX,
+          scrollX = _ref$scrollX === void 0 ? false : _ref$scrollX,
+          _ref$scrollY = _ref.scrollY,
+          scrollY = _ref$scrollY === void 0 ? false : _ref$scrollY;
 
       _classCallCheck(this, ScrollView);
 
       _this = _super.call(this, {
         props: props,
-        name: name,
-        style: style
+        style: style,
+        idName: idName,
+        className: className
       });
       _this.type = 'ScrollView'; // 当前列表滚动的值
 
@@ -36897,6 +36881,12 @@ function (module, __webpack_exports__, __webpack_require__) {
       _this.scrollCanvas = null;
       _this.scrollCtx = null;
       _this.requestID = null;
+      _this._scrollX = scrollX;
+      _this._scrollY = scrollY;
+      _this._scrollerOption = {
+        scrollingX: _this._scrollX,
+        scrollingY: _this._scrollY
+      };
       _this.sharedTexture = false;
       return _this;
     }
@@ -36929,19 +36919,36 @@ function (module, __webpack_exports__, __webpack_require__) {
         return last.layoutBox.left + last.layoutBox.width;
       }
     }, {
+      key: "scrollX",
+      get: function get() {
+        return this._scrollerOption.scrollingX;
+      },
+      set: function set(value) {
+        this.scrollerOption = {
+          scrollingX: value
+        };
+      }
+    }, {
+      key: "scrollY",
+      get: function get() {
+        return this._scrollerOption.scrollingY;
+      },
+      set: function set(value) {
+        this.scrollerOption = {
+          scrollingY: value
+        };
+      }
+    }, {
       key: "scrollerOption",
       get: function get() {
-        return Object.assign({
-          scrollingY: !!(this.scrollHeight > this.layoutBox.height),
-          scrollingX: !!(this.scrollWidth > this.layoutBox.width)
-        }, this._scrollerOption);
+        return this._scrollerOption;
       },
       set: function set(value) {
         if (value === void 0) {
           value = {};
         }
 
-        this._scrollerOption = value;
+        Object.assign(this._scrollerOption, value);
 
         if (this.scrollerObj) {
           Object.assign(this.scrollerObj.options, this.scrollerOption);
@@ -36986,15 +36993,16 @@ function (module, __webpack_exports__, __webpack_require__) {
       }
     }, {
       key: "renderTreeWithTop",
-      value: function renderTreeWithTop(tree, top) {
+      value: function renderTreeWithTop(tree, top, left) {
         var _this3 = this;
 
         var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
 
         layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
+        layoutBox.absoluteX = layoutBox.originalAbsoluteX - left;
         tree.render(this.scrollCtx, layoutBox);
         tree.children.forEach(function (child) {
-          _this3.renderTreeWithTop(child, top);
+          _this3.renderTreeWithTop(child, top, left);
         });
       }
     }, {
@@ -37015,10 +37023,13 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.scrollTop = top;
         this.scrollLeft = left; // scrollview在全局节点中的Y轴位置
 
-        var abY = box.absoluteY; // 根据滚动值获取裁剪区域
+        var abY = box.absoluteY;
+        var abX = box.absoluteX; // 根据滚动值获取裁剪区域
 
         var startY = abY + this.scrollTop;
-        var endY = abY + this.scrollTop + box.height; // 清理滚动画布和主屏画布
+        var endY = abY + this.scrollTop + box.height;
+        var startX = abX + this.scrollLeft;
+        var endX = abX + this.scrollLeft + box.width; // 清理滚动画布和主屏画布
 
         this.clear();
         this.renderBoxes.forEach(function (item) {
@@ -37027,10 +37038,12 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.children.forEach(function (child) {
           var layoutBox = child.layoutBox;
           var height = layoutBox.height;
-          var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
+          var width = layoutBox.width;
+          var originY = layoutBox.originalAbsoluteY;
+          var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
 
-          if (originY + height >= startY && originY <= endY) {
-            _this4.renderTreeWithTop(child, _this4.scrollTop);
+          if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
+            _this4.renderTreeWithTop(child, _this4.scrollTop, _this4.scrollLeft);
           }
         });
         this.ctx.drawImage(this.scrollCanvas, box.absoluteX, box.absoluteY, box.width, box.height, box.absoluteX, box.absoluteY, box.width, box.height);
@@ -37055,11 +37068,15 @@ function (module, __webpack_exports__, __webpack_require__) {
 
         var startY = box.absoluteY + this.scrollTop;
         var endY = box.absoluteY + this.scrollTop + box.height;
+        var startX = box.absoluteX + this.scrollLeft;
+        var endX = box.absoluteX + this.scrollLeft + box.width;
         var layoutBox = img.layoutBox;
         var height = layoutBox.height;
-        var originY = layoutBox.originalAbsoluteY; // 判断处于可视窗口内的子节点，渲染该子节点
+        var width = layoutBox.width;
+        var originY = layoutBox.originalAbsoluteY;
+        var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
 
-        if (originY + height >= startY && originY <= endY) {
+        if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
           this.scrollRender(this.scrollLeft, this.scrollTop);
         }
       }
@@ -37088,14 +37105,16 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
           // 可能被销毁了或者节点树还没准备好
           if (_this6.scrollActive && !_this6.isDestroyed) {
-            _this6.scrollRender(left, top); // if (this.currentEvent) {
-            //   this.currentEvent.type = 'scroll';
-            //   this.currentEvent.currentTarget = this;
-            //   this.emit('scroll', this.currentEvent);
-            // }
+            _this6.scrollRender(left, top);
 
+            if (_this6.currentEvent) {
+              /*this.currentEvent.type = 'scroll';*/
+
+              /*this.currentEvent.currentTarget = this;*/
+              _this6.emit('scroll', _this6.currentEvent);
+            }
           }
-        }, this.scrollerOpt);
+        }, this.scrollerOption);
         this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
         var dpr = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getDpr"])();
         this.scrollActive = false;
@@ -37150,6 +37169,14 @@ function (module, __webpack_exports__, __webpack_require__) {
 
           _this6.currentEvent = e;
         });
+      }
+    }, {
+      key: "scrollTo",
+      value: function scrollTo() {
+        var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var animate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+        this.scrollerObj.scrollTo(left, top, animate);
       }
     }]);
 
@@ -38573,6 +38600,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -38736,7 +38765,15 @@ function (module, __webpack_exports__, __webpack_require__) {
         var bounds = this.getTextBounds();
         var defaultLineHeight = this.font.lineHeight;
         ctx.save();
-        this.renderBorder(ctx, layoutBox);
+
+        var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+            needClip = _this$renderBorder.needClip,
+            needStroke = _this$renderBorder.needStroke;
+
+        if (needClip) {
+          ctx.clip();
+        }
+
         var box = layoutBox || this.layoutBox;
         var style = this.style;
         var width = style.width,
@@ -38776,6 +38813,12 @@ function (module, __webpack_exports__, __webpack_require__) {
             x += cfg.w * scaleY;
           }
         }
+
+        if (needStroke) {
+          ctx.stroke();
+        }
+
+        ctx.restore();
       }
     }]);
 

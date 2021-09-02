@@ -113,10 +113,6 @@ export default class Element {
   // 子类填充实现
   insert() {}
 
-  checkNeedRender() {
-    return true;
-  }
-
   // 子类填充实现
   destroy() {
     [
@@ -169,27 +165,7 @@ export default class Element {
     EE.off(toEventName(event, this.id), callback);
   }
 
-  // 方便子类实现borderRadius
-  roundRect(ctx, layoutBox) {
-    const style = this.style || {};
-    const box = layoutBox || this.layoutBox;
-
-    const w = box.width;
-    const h = box.height;
-    const r = style.borderRadius;
-    const x = box.absoluteX;
-    const y = box.absoluteY;
-
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
-
-    ctx.clip();
-  }
-
-  renderBorder2(ctx, layoutBox) {
+  renderBorder(ctx, layoutBox) {
     const style = this.style || {};
     const radius = style.borderRadius || 0;
     const { borderWidth = 0 } = style;
@@ -203,137 +179,58 @@ export default class Element {
     let y = box.absoluteY;
     const { width, height } = box;
 
-    if (!borderWidth) {
-      return;
+    const hasRadius = radius || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius;
+
+    // borderWidth 和 radius 都没有，不需要执行后续逻辑，提升性能
+    if (!borderWidth && !hasRadius) {
+      return { needClip: false, needStroke: false};
     }
+
+    // 左上角的点
+    ctx.beginPath();
 
     ctx.lineWidth = borderWidth;
     ctx.strokeStyle = borderColor;
 
-    // 左上角的点
-    ctx.beginPath();
     ctx.moveTo(x + borderTopLeftRadius, y);
     ctx.lineTo(x + width - borderTopRightRadius, y);
 
     // 右上角的圆角
-    ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius);
+    /*ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius);*/
+    ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius);
 
     // 右下角的点
     ctx.lineTo(x + width, y + height - borderBottomRightRadius);
 
     // 右下角的圆角
-    ctx.quadraticCurveTo(
+    /*ctx.quadraticCurveTo(
       x + width,
       y + height,
       x + width - borderBottomRightRadius,
       y + height
+    );*/
+    ctx.arcTo(
+      x + width,
+      y + height,
+      x + width - borderBottomRightRadius,
+      y + height,
+      borderBottomRightRadius,
     );
 
     // 左下角的点
     ctx.lineTo(x + borderBottomLeftRadius, y + height);
 
     // 左下角的圆角
-    ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius);
+    /*ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius);*/
+    ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius);
 
     // 左上角的点
     ctx.lineTo(x, y + borderTopLeftRadius);
 
     // 左上角的圆角
-    ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);
-    ctx.stroke();
-  }
+    /*ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);*/
+    ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
 
-  // https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-using-html-canvas
-  renderBorder(ctx, layoutBox, needStroke = true) {
-    const style = this.style || {};
-
-    ctx.save();
-
-    const box = layoutBox || this.layoutBox;
-    const borderWidth = style.borderWidth || 0;
-    const borderLeftWidth = style.borderLeftWidth || style.borderWidth || 0;
-    const borderRightWidth = style.borderRightWidth || style.borderWidth || 0;
-    const borderTopWidth = style.borderTopWidth || style.borderWidth || 0;
-    const borderBottomWidth = style.borderBottomWidth || style.borderWidth || 0;
-    const radius = style.borderRadius || 0;
-    const borderColor = style.borderColor;
-    let drawX = box.absoluteX;
-    let drawY = box.absoluteY;
-
-    ctx.beginPath();
-
-    if (borderColor) {
-      if (borderWidth) {
-        ctx.lineWidth = borderWidth;
-        ctx.strokeStyle = borderColor;
-        ctx.strokeRect(drawX, drawY, box.width, box.height);
-      }
-
-      if (borderTopWidth && (borderColor || style.borderTopColor)) {
-        ctx.lineWidth = borderTopWidth;
-        ctx.strokeStyle = style.borderTopColor || borderColor;
-
-        ctx.moveTo(radius ? drawX + radius : drawX, drawY + borderTopWidth / 2);
-
-        ctx.lineTo(
-          radius ? drawX + box.width - radius : drawX + box.width,
-          drawY + borderTopWidth / 2
-        );
-      }
-
-      if (borderBottomWidth && (borderColor || style.borderBottomColor)) {
-        ctx.lineWidth = borderBottomWidth;
-        ctx.strokeStyle = style.borderBottomColor || borderColor;
-
-        ctx.moveTo(
-          radius ? drawX + radius : drawX,
-          drawY + box.height - borderBottomWidth / 2
-        );
-
-        ctx.lineTo(
-          radius ? drawX + box.width - radius : drawX + box.width,
-          drawY + box.height - borderBottomWidth / 2
-        );
-      }
-
-      if (borderLeftWidth && (borderColor || style.borderLeftColor)) {
-        ctx.lineWidth = borderLeftWidth;
-        ctx.strokeStyle = style.borderLeftColor || borderColor;
-
-        ctx.moveTo(
-          drawX - borderLeftWidth / 2,
-          radius ? drawY + radius : drawY
-        );
-
-        ctx.lineTo(
-          drawX - borderLeftWidth / 2,
-          radius ? drawY + box.height - radius : drawY + box.height
-        );
-      }
-
-      if (borderRightWidth && (borderColor || style.borderRightColor)) {
-        ctx.lineWidth = borderRightWidth;
-        ctx.strokeStyle = style.borderRightColor || borderColor;
-
-        ctx.moveTo(
-          drawX + box.width - borderRightWidth / 2,
-          radius ? drawY + radius : drawY
-        );
-
-        ctx.lineTo(
-          drawX + box.width - borderRightWidth / 2,
-          radius ? drawY + box.height - radius : drawY + box.height
-        );
-      }
-    }
-
-    ctx.closePath();
-    if (needStroke) {
-      ctx.stroke();
-    } else {
-      ctx.clip();
-    }
-
-    ctx.restore();
+    return { needClip: !!hasRadius, needStroke: !!borderWidth}
   }
 }

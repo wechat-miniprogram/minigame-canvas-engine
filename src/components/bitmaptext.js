@@ -104,7 +104,12 @@ export default class BitMapText extends Element {
     let defaultLineHeight = this.font.lineHeight;
 
     ctx.save();
-    this.renderBorder(ctx, layoutBox);
+
+    const {needClip, needStroke} = this.renderBorder(ctx, layoutBox);
+
+    if (needClip) {
+      ctx.clip();
+    }
 
     const box = layoutBox || this.layoutBox;
     const style = this.style;
@@ -161,6 +166,12 @@ export default class BitMapText extends Element {
         x += cfg.w * scaleY;
       }
     }
+
+    if (needStroke) {
+      ctx.stroke();
+    }
+    
+    ctx.restore();
   }
 }
 

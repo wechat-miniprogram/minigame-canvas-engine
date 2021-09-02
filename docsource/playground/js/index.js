@@ -236,6 +236,7 @@ var app = new Vue({
 
     methods: {
         createProj(name, xml, css, js) {
+            console.log(name)
             if (!name) {
               name = prompt("项目名称", "新项目");
             }

@@ -62,7 +62,7 @@ export default {
     },
 
     listHeadImg: {
-        borderRadius: 6,
+        // borderRadius: 6,
         width: 90,
         height: 90,
     },

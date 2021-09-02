@@ -4,7 +4,7 @@
 本插件将[minigame-canvas-engine](https://wechat-miniprogram.github.io/minigame-canvas-engine/)发布成引擎插件。
 
 ## 安装使用
-1.在game.json配置插件引用了；
+1.在game.json配置插件引用:
 ```
 {
     "deviceOrientation": "portrait",
@@ -20,7 +20,7 @@
 
 ```
 
-2.在开放数据域内引用插件；
+2.在开放数据域内引用插件:
 ```
 const Layout = requirePlugin('Layout').default;
 ```

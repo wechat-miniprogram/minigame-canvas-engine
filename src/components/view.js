@@ -54,15 +54,24 @@ export default class View extends Element {
     const borderBottomWidth = style.borderBottomWidth || borderWidth;
 
     this.renderBorder(ctx, layoutBox);
+    const {needClip, needStroke} = this.renderBorder(ctx, layoutBox);
 
-    if ( style.backgroundColor ) {
-      ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(
-        drawX + borderLeftWidth,
-        drawY + borderRightWidth,
-        box.width - (borderLeftWidth + borderRightWidth),
-        box.height - (borderTopWidth + borderBottomWidth)
-      )
+     if (needClip) {
+       ctx.clip();
+     }
+
+     if ( style.backgroundColor ) {
+       ctx.fillStyle = style.backgroundColor;
+       ctx.fillRect(
+         drawX + borderLeftWidth,
+         drawY + borderRightWidth,
+         box.width - (borderLeftWidth + borderRightWidth),
+         box.height - (borderTopWidth + borderBottomWidth)
+       )
+     }
+
+    if (needStroke) {
+      ctx.stroke();
     }
 
     ctx.restore();

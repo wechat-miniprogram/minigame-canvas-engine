@@ -4,7 +4,7 @@ const template = `
     <text class="title" value="排行榜"></text>
   </view>
   <view class="rankList">
-        <scrollview class="list">
+        <scrollview class="list" scrollY="true">
             {{~it.data :item:index}}
                 {{? index % 2 === 1 }}
                 <view class="listItem listItemOld">

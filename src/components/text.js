@@ -146,11 +146,19 @@ export default class Text extends Element {
     let drawX = box.absoluteX;
     let drawY = box.absoluteY;
 
-    this.renderBorder(ctx, layoutBox);
+    const {needClip, needStroke} = this.renderBorder(ctx, layoutBox);
+
+    if (needClip) {
+      ctx.clip();
+    }
 
     if ( style.backgroundColor ) {
       ctx.fillStyle = style.backgroundColor;
       ctx.fillRect(drawX, drawY, box.width, box.height)
+    }
+
+    if (needStroke) {
+      ctx.stroke();
     }
 
     ctx.fillStyle = this.fillStyle;

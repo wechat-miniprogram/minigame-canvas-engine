@@ -160,6 +160,7 @@ function layoutChildren (dataArray, children) {
     }
 
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
 
     // 滚动列表的画板尺寸和主画板保持一致
     if ( child.type === 'ScrollView' ) {
@@ -257,7 +258,7 @@ class _Layout extends Element {
     this.touchEnd    = this.eventHandler('touchend').bind(this);
     this.touchCancel = this.eventHandler('touchcancel').bind(this);
 
-    this.version = '0.0.1';
+    this.version = '0.0.7';
 
     this.touchMsg = {};
 

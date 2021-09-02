@@ -95,9 +95,8 @@ kernings count=0`
 
 ```
 
-
 ## 事件API
-通过getElementsById或者getElementsByClassName获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`,示例如下：
+通过getElementsById或者getElementsByClassName获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`、`scroll(只有scrollview支持）`示例如下：
 ``` js
 const list = Layout.getElementsByClassName('listItem');
 
