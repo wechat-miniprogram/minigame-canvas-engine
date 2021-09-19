@@ -32138,8 +32138,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
-    } else if (call !== void 0) {
-      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -32343,7 +32341,23 @@ function (module, __webpack_exports__, __webpack_require__) {
       });
 
       if (child.parent) {
-        child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+        // child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+        Object.defineProperty(child.realLayoutBox, 'realX', {
+          configurable: true,
+          enumerable: true,
+          get: function get() {
+            var res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+            /**
+             * 滚动列表事件处理
+             */
+
+            if (child.parent && child.parent.type === 'ScrollView') {
+              res -= child.parent.scrollLeft * scale;
+            }
+
+            return res;
+          }
+        });
         Object.defineProperty(child.realLayoutBox, 'realY', {
           configurable: true,
           enumerable: true,
@@ -32354,7 +32368,7 @@ function (module, __webpack_exports__, __webpack_require__) {
              */
 
             if (child.parent && child.parent.type === 'ScrollView') {
-              res -= child.parent.top * scale;
+              res -= child.parent.scrollTop * scale;
             }
 
             return res;
@@ -35921,8 +35935,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
-    } else if (call !== void 0) {
-      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36169,8 +36181,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
-    } else if (call !== void 0) {
-      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36469,8 +36479,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
-    } else if (call !== void 0) {
-      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36806,8 +36814,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
-    } else if (call !== void 0) {
-      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -38600,8 +38606,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
-    } else if (call !== void 0) {
-      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);

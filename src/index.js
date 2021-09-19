@@ -182,7 +182,25 @@ const updateRealLayout = (dataArray, children, scale) => {
     });
 
     if ( child.parent ) {
-      child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+      // child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+
+      Object.defineProperty(child.realLayoutBox, 'realX', {
+        configurable: true,
+        enumerable  : true,
+        get: () => {
+          let res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+
+          /**
+           * 滚动列表事件处理
+           */
+          if ( child.parent && child.parent.type === 'ScrollView' ) {
+            res -= (child.parent.scrollLeft * scale);
+          }
+
+          return res;
+        },
+      });
+
       Object.defineProperty(child.realLayoutBox, 'realY', {
         configurable: true,
         enumerable  : true,
@@ -193,7 +211,7 @@ const updateRealLayout = (dataArray, children, scale) => {
            * 滚动列表事件处理
            */
           if ( child.parent && child.parent.type === 'ScrollView' ) {
-            res -= (child.parent.top * scale);
+            res -= (child.parent.scrollTop * scale);
           }
 
           return res;
