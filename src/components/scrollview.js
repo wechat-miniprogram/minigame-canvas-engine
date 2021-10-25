@@ -301,8 +301,8 @@ export default class ScrollView extends View {
         e.touches = [e];
       }
 
-      /*const touches = copyTouchArray(e.touches);*/
-      const touches = e.touches;
+      const touches = copyTouchArray(e.touches);
+      /*const touches = e.touches;*/
 
       touches.forEach(touch => {
         if (dpr !== 1) {
@@ -320,8 +320,8 @@ export default class ScrollView extends View {
         e.touches = [e];
       }
 
-      /*const touches = copyTouchArray(e.touches);*/
-      const touches = e.touches;
+      const touches = copyTouchArray(e.touches);
+      /*const touches = e.touches;*/
 
       touches.forEach(touch => {
         if (dpr !== 1) {

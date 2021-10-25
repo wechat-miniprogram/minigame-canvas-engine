@@ -66,7 +66,6 @@ function loadFriendDataAndRender(key, info, needRender = true) {
 
         let scores = Layout.getElementsByClassName('listItemScore');
 
-        console.log(scores)
         scores.forEach(score => {
             score.on('click', () => {
                 console.log(score, score.value)
