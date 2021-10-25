@@ -30,22 +30,26 @@ export default class App extends PIXI.Application {
         this.timer = +new Date();
         this.aniId = window.requestAnimationFrame(this.bindLoop);
 
-        let icon = this.createBtn({
-            img    : 'http://wximg.qq.com/wxgame/tmp/zimyuan/gamebtn.png',
-            x      : GAME_WIDTH / 2,
-            y      : GAME_HEIGHT / 2,
-            text   : '',
-            onclick: () => {
-                this.showRank();
-            }
-        });
-        this.stage.addChild(icon);
+        // let icon = this.createBtn({
+        //     img    : 'https://wximg.qq.com/wxgame/tmp/zimyuan/gamebtn.png',
+        //     x      : GAME_WIDTH / 2,
+        //     y      : GAME_HEIGHT / 2,
+        //     text   : '',
+        //     onclick: () => {
+        //         // this.showRank();
+        //     }
+        // });
+        // this.stage.addChild(icon);
 
-        this.initShareCanvas();
-
-        // setTimeout(()=> {
+        // this.initShareCanvas();
+        // this.showRank();
+        // setTimeout(() => {
         //     this.showRank();
-        // }, 30)
+        // }, 100)
+        // setTimeout(()=> {
+            
+        //     this.showRank();
+        // }, 10000)
     }
 
     showRank() {
@@ -69,6 +73,9 @@ export default class App extends PIXI.Application {
         this.sharedCanvas.width  = 960;
         this.sharedCanvas.height = 1410;
 
+        // this.sharedCanvas.width  = 200;
+        // this.sharedCanvas.height = 200;
+
         const realWidth  = this.sharedCanvas.width / GAME_WIDTH * info.windowWidth;
         const realHeight = this.sharedCanvas.height / GAME_HEIGHT * info.windowHeight;
 
@@ -81,6 +88,25 @@ export default class App extends PIXI.Application {
                 y      : ( info.windowHeight - realHeight ) / 2,
             }
         });
+
+        let texture = PIXI.Texture.fromCanvas(this.sharedCanvas);
+        texture.update();
+        let shared = new PIXI.Sprite(texture);
+        shared.name = 'shared';
+
+        /**
+         * 根据dpr改变子域展示区域的大小
+         * 记得要更新真实渲染位置的大小
+         */
+        shared.width  *= 1.2;
+        shared.height *= 1.2;
+
+        shared.x = GAME_WIDTH / 2 - shared.width / 2;
+        shared.y = GAME_HEIGHT / 2 - shared.height / 2;
+
+        this.stage.addChild(shared);
+
+        this.texture = texture;
     }
 
     createBtn(options) {
@@ -112,43 +138,51 @@ export default class App extends PIXI.Application {
     }
 
     renderFriendRank() {
-        let texture = PIXI.Texture.fromCanvas(this.sharedCanvas);
-        texture.update();
-        let shared = new PIXI.Sprite(texture);
-        shared.name = 'shared';
+        if (!this.texture) {
+            let texture = PIXI.Texture.fromCanvas(this.sharedCanvas);
+            texture.update();
+            let shared = new PIXI.Sprite(texture);
+            shared.name = 'shared';
 
-        /**
-         * 根据dpr改变子域展示区域的大小
-         * 记得要更新真实渲染位置的大小
-         */
-        shared.width  *= 1.2;
-        shared.height *= 1.2;
+            /**
+             * 根据dpr改变子域展示区域的大小
+             * 记得要更新真实渲染位置的大小
+             */
+            shared.width  *= 1.2;
+            shared.height *= 1.2;
 
-        shared.x = GAME_WIDTH / 2 - shared.width / 2;
-        shared.y = GAME_HEIGHT / 2 - shared.height / 2;
+            shared.x = GAME_WIDTH / 2 - shared.width / 2;
+            shared.y = GAME_HEIGHT / 2 - shared.height / 2;
 
-        this.stage.addChild(shared);
+            this.stage.addChild(shared);
+        } else {
+            this.texture.update();
+        }   
     }
 
     _update(dt) {
         // 每一帧都先清除子域
-        let sub = this.stage.getChildByName('shared');
-        if ( sub ) {
-            this.stage.removeChild(sub);
-        }
+        // let sub = this.stage.getChildByName('shared');
+        // if ( sub ) {
+        //     this.stage.removeChild(sub);
+        // }
 
         // 如果需要展示好友排行榜，将最新的子域绘制出来
-        if ( this.friendRankShow ) {
-            this.renderFriendRank();
-        }
+        // let start = new Date()
+        // if ( this.friendRankShow ) {
+        //     this.renderFriendRank();
+        // }
+        // console.log('render cost', new Date() - start)
+        // console.log(dt)
     }
 
     loop() {
         let time = +new Date();
         this._update(time - this.timer);
         this.timer = time;
-        this.renderer.render(this.stage);
-        this.aniId = window.requestAnimationFrame(this.bindLoop);
+        // this.renderer.render(this.stage);
+        this.aniId = requestAnimationFrame(this.bindLoop);
     }
 }
 
+console.log('game window', window, GameGlobal)

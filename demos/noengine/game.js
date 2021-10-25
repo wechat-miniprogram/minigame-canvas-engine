@@ -48,8 +48,6 @@ function initSharedCanvas() {
   y = GAME_HEIGHT / 2 - sharedCanvas.height / 2;
   
   flag = true;
-
-  console.log(flag)
 }
 
 function loop() {
@@ -66,8 +64,3 @@ function loop() {
 
 loop()
 initSharedCanvas();
-
-const img = wx.createImage()
-img.src = 'https://7465-test-0grsj1hfc9630cf7-1306937484.tcb.qcloud.la/Character/slick.png'
-
-console.log(111, img)

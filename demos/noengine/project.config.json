@@ -36,8 +36,8 @@
     "useStaticServer": false
   },
   "compileType": "game",
-  "libVersion": "2.20.0",
-  "appid": "wxb44e2096fe38c90d",
+  "libVersion": "2.20.1",
+  "appid": "wx7a727ff7d940bb3f",
   "projectname": "aircraft-war",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},

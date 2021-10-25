@@ -306,7 +306,23 @@ var updateRealLayout = function updateRealLayout(dataArray, children, scale) {
     });
 
     if (child.parent) {
-      child.realLayoutBox.realX = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+      // Scrollview支持横向滚动和纵向滚动，realX和realY需要动态计算
+      Object.defineProperty(child.realLayoutBox, 'realX', {
+        configurable: true,
+        enumerable: true,
+        get: function get() {
+          var res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+          /**
+           * 滚动列表事件处理
+           */
+
+          if (child.parent && child.parent.type === 'ScrollView') {
+            res -= child.parent.scrollLeft * scale;
+          }
+
+          return res;
+        }
+      });
       Object.defineProperty(child.realLayoutBox, 'realY', {
         configurable: true,
         enumerable: true,
@@ -317,7 +333,7 @@ var updateRealLayout = function updateRealLayout(dataArray, children, scale) {
            */
 
           if (child.parent && child.parent.type === 'ScrollView') {
-            res -= child.parent.top * scale;
+            res -= child.parent.scrollTop * scale;
           }
 
           return res;
@@ -564,6 +580,8 @@ var _Layout = /*#__PURE__*/function (_Element) {
         if (!touch.timeStamp) {
           touch.timeStamp = e.timeStamp;
         }
+        /*console.log(touch.pageX, touch.pageY);*/
+
 
         var item = touch && this.getChildByPos(this, touch.pageX, touch.pageY);
         item && item.emit(eventName, e);
@@ -4141,6 +4159,18 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+function copyTouchArray(touches) {
+  return touches.map(function (touch) {
+    return {
+      identifier: touch.identifier,
+      pageX: touch.pageX,
+      pageY: touch.pageY,
+      clientX: touch.clientX,
+      clientY: touch.clientY
+    };
+  });
+}
+
 var ScrollView = /*#__PURE__*/function (_View) {
   _inherits(ScrollView, _View);
 
@@ -4404,7 +4434,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.hasEventBind = true;
       this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
         // 可能被销毁了或者节点树还没准备好
-        if (_this6.scrollActive && !_this6.isDestroyed) {
+        if (!_this6.isDestroyed) {
           _this6.scrollRender(left, top);
 
           if (_this6.currentEvent) {
@@ -4417,22 +4447,25 @@ var ScrollView = /*#__PURE__*/function (_View) {
       }, this.scrollerOption);
       this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
       var dpr = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getDpr"])();
-      this.scrollActive = false;
-      this.on('touchstart', function (e) {
-        _this6.scrollActive = true;
+      /* this.scrollActive = true; */
 
+      this.on('touchstart', function (e) {
+        // this.scrollActive = true;
         if (!e.touches) {
           e.touches = [e];
         }
+        /*const touches = copyTouchArray(e.touches);*/
 
-        e.touches.forEach(function (touch) {
+
+        var touches = e.touches;
+        touches.forEach(function (touch) {
           if (dpr !== 1) {
             touch.pageX *= dpr;
             touch.pageY *= dpr;
           }
         });
 
-        _this6.scrollerObj.doTouchStart(e.touches, e.timeStamp);
+        _this6.scrollerObj.doTouchStart(touches, e.timeStamp);
 
         _this6.currentEvent = e;
       });
@@ -4440,31 +4473,23 @@ var ScrollView = /*#__PURE__*/function (_View) {
         if (!e.touches) {
           e.touches = [e];
         }
+        /*const touches = copyTouchArray(e.touches);*/
 
-        e.touches.forEach(function (touch) {
+
+        var touches = e.touches;
+        touches.forEach(function (touch) {
           if (dpr !== 1) {
             touch.pageX *= dpr;
             touch.pageY *= dpr;
           }
         });
 
-        _this6.scrollerObj.doTouchMove(e.touches, e.timeStamp);
+        _this6.scrollerObj.doTouchMove(touches, e.timeStamp);
 
         _this6.currentEvent = e;
       }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
 
       this.root.on('touchend', function (e) {
-        if (!e.touches) {
-          e.touches = [e];
-        }
-
-        e.touches.forEach(function (touch) {
-          if (dpr !== 1) {
-            touch.pageX *= dpr;
-            touch.pageY *= dpr;
-          }
-        });
-
         _this6.scrollerObj.doTouchEnd(e.timeStamp);
 
         _this6.currentEvent = e;

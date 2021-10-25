@@ -64,13 +64,14 @@ function loadFriendDataAndRender(key, info, needRender = true) {
             draw(data, selfData, currentMaxScore);
         }
 
-        let btnList = Layout.getElementsByClassName('giftBtn');
-        for (let i = 0;i < btnList.length;i ++) {
-            btnList[i].on('click',(e) => {
-                let img = Layout.getElementsById('img' + i);
-                img[0].src = img[0].src === "sub/Buffet_icon_GiftPlate_0.png" ? "sub/Buffet_icon_GiftPlate.png":  "sub/Buffet_icon_GiftPlate_0.png"
-            });
-        }
+        let scores = Layout.getElementsByClassName('listItemScore');
+
+        console.log(scores)
+        scores.forEach(score => {
+            score.on('click', () => {
+                console.log(score, score.value)
+            })
+        })
     });
 }
 

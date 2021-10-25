@@ -1,5 +1,9 @@
 
-/*import './template.js';*/
+/**
+ * xml经过doT.js编译出的模板函数
+ * 因为小游戏不支持new Function，模板函数只能外部编译
+ * 可直接拷贝本函数到小游戏中使用
+ */
 export default function anonymous(it) {
   var out = '<view class="container" id="main"> <view class="header"> <text class="title" value="排行榜"></text> </view> <view class="rankList"> <scrollview class="list" scrollY="true"> ';
   var arr1 = it.data;

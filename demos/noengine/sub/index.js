@@ -18,8 +18,6 @@ let key             = 'rankScore';
 let currentMaxScore = 0;
 let cacheRankData   = [];
 
-console.log(console)
-
 let sharedCanvas  = wx.getSharedCanvas();
 let sharedContext = sharedCanvas.getContext('2d');
 function draw(data = []) {
@@ -31,14 +29,6 @@ function draw(data = []) {
     Layout.clear();
     Layout.init(template, style);
     Layout.layout(sharedContext);
-
-    console.log(8888)
-
-    setTimeout(() => {
-      Layout.repaint();
-      console.log(wx)
-      console.log(wx.getSystemInfoSync())
-    }, 10000);
 }
 
 function loadFriendDataAndRender(key, info, needRender = true) {
@@ -68,7 +58,6 @@ function loadFriendDataAndRender(key, info, needRender = true) {
              data[i] = JSON.parse(JSON.stringify(data[0]));
              data[i].rank = i;
              data[i].rankScore = Math.floor(Math.random()*1000+1)
-            //  data[i].avatarUrl = 'https://7465-test-0grsj1hfc9630cf7-1306937484.tcb.qcloud.la/Hoverboard/normal.png'
         }
 
         if ( needRender ) {
@@ -92,7 +81,6 @@ function init() {
     wx.onMessage(data => {
         console.log('onMessage', data);
         if ( data.event === 'updateViewPort' ) {
-            console.log(11111, data)
             Layout.updateViewPort(data.box);
             getUserInfo((info) => {
                 userinfo = info;

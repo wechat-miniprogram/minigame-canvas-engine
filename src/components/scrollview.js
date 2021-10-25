@@ -9,6 +9,18 @@ import {
   Scroller
 } from 'scroller';
 
+function copyTouchArray(touches) {
+  return touches.map(function (touch) {
+    return {
+      identifier: touch.identifier,
+      pageX: touch.pageX,
+      pageY: touch.pageY,
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+    }
+  })
+}
+
 export default class ScrollView extends View {
   constructor({
     style = {},
@@ -84,7 +96,7 @@ export default class ScrollView extends View {
 
   set scrollX(value) {
     this.scrollerOption = {
-      scrollingX: value 
+      scrollingX: value
     }
   }
 
@@ -94,7 +106,7 @@ export default class ScrollView extends View {
 
   set scrollY(value) {
     this.scrollerOption = {
-      scrollingY: value 
+      scrollingY: value
     }
   }
 
@@ -197,7 +209,7 @@ export default class ScrollView extends View {
       let originX = layoutBox.originalAbsoluteX;
 
       // 判断处于可视窗口内的子节点，渲染该子节点
-      if (originY + height >= startY && originY <= endY 
+      if (originY + height >= startY && originY <= endY
         && originX + width >= startX && originX <= endX) {
         this.renderTreeWithTop(child, this.scrollTop, this.scrollLeft);
       }
@@ -238,7 +250,7 @@ export default class ScrollView extends View {
     let originX = layoutBox.originalAbsoluteX;
 
     // 判断处于可视窗口内的子节点，渲染该子节点
-    if (originY + height >= startY && originY <= endY 
+    if (originY + height >= startY && originY <= endY
       && originX + width >= startX && originX <= endX) {
       this.scrollRender(this.scrollLeft, this.scrollTop);
     }
@@ -268,7 +280,7 @@ export default class ScrollView extends View {
 
     this.scrollerObj = new Scroller((left, top) => {
       // 可能被销毁了或者节点树还没准备好
-      if (this.scrollActive && !this.isDestroyed) {
+      if (!this.isDestroyed) {
         this.scrollRender(left, top);
 
         if (this.currentEvent) {
@@ -282,49 +294,47 @@ export default class ScrollView extends View {
     this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
     const dpr = getDpr();
-    this.scrollActive = false;
+    /* this.scrollActive = true; */
     this.on('touchstart', (e) => {
-      this.scrollActive = true;
+      // this.scrollActive = true;
       if (!e.touches) {
         e.touches = [e];
       }
 
-      e.touches.forEach(touch => {
+      /*const touches = copyTouchArray(e.touches);*/
+      const touches = e.touches;
+
+      touches.forEach(touch => {
         if (dpr !== 1) {
           touch.pageX *= dpr;
           touch.pageY *= dpr;
         }
       });
-      this.scrollerObj.doTouchStart(e.touches, e.timeStamp);
+      this.scrollerObj.doTouchStart(touches, e.timeStamp);
       this.currentEvent = e;
     });
 
     this.on('touchmove', (e) => {
+
       if (!e.touches) {
         e.touches = [e];
       }
 
-      e.touches.forEach(touch => {
+      /*const touches = copyTouchArray(e.touches);*/
+      const touches = e.touches;
+
+      touches.forEach(touch => {
         if (dpr !== 1) {
           touch.pageX *= dpr;
           touch.pageY *= dpr;
         }
       });
-      this.scrollerObj.doTouchMove(e.touches, e.timeStamp);
+      this.scrollerObj.doTouchMove(touches, e.timeStamp);
       this.currentEvent = e;
     });
 
     // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
     this.root.on('touchend', (e) => {
-      if (!e.touches) {
-        e.touches = [e];
-      }
-      e.touches.forEach(touch => {
-        if (dpr !== 1) {
-          touch.pageX *= dpr;
-          touch.pageY *= dpr;
-        }
-      });
       this.scrollerObj.doTouchEnd(e.timeStamp);
       this.currentEvent = e;
     });
