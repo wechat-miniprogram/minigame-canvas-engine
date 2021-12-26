@@ -123,7 +123,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -543,9 +543,14 @@ var _Layout = /*#__PURE__*/function (_Element) {
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["repaintChildren"])(this.children);
       this.emit('repaint__done');
     }
+    /**
+     * 给定节点树和触摸坐标，遍历节点树，查询被点中的所有节点
+     * 之所以要查询所有节点是因为先渲染的节点层级更低，最后一个查询到的节点才是最上面的被点中的节点
+     */
+
   }, {
     key: "getChildByPos",
-    value: function getChildByPos(tree, x, y) {
+    value: function getChildByPos(tree, x, y, itemList) {
       var list = Object.keys(tree.children);
 
       for (var i = 0; i < list.length; i++) {
@@ -554,14 +559,12 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
         if (box.realX <= x && x <= box.realX + box.width && box.realY <= y && y <= box.realY + box.height) {
           if (Object.keys(child.children).length) {
-            return this.getChildByPos(child, x, y);
+            this.getChildByPos(child, x, y, itemList);
           } else {
-            return child;
+            itemList.push(child);
           }
         }
       }
-
-      return tree;
     }
   }, {
     key: "eventHandler",
@@ -580,10 +583,18 @@ var _Layout = /*#__PURE__*/function (_Element) {
         if (!touch.timeStamp) {
           touch.timeStamp = e.timeStamp;
         }
-        /*console.log(touch.pageX, touch.pageY);*/
 
+        var list = [];
 
-        var item = touch && this.getChildByPos(this, touch.pageX, touch.pageY);
+        if (touch) {
+          this.getChildByPos(this, touch.pageX, touch.pageY, list);
+        }
+
+        if (!list.length) {
+          list.push(this);
+        }
+
+        var item = list[list.length - 1];
         item && item.emit(eventName, e);
 
         if (eventName === 'touchstart' || eventName === 'touchend') {
@@ -3584,7 +3595,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3728,7 +3739,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3797,6 +3808,22 @@ var Image = /*#__PURE__*/function (_Element) {
   }
 
   _createClass(Image, [{
+    key: "isScrollViewChild",
+    get: function get() {
+      var flag = false;
+      var parent = this.parent;
+
+      while (parent && !flag) {
+        if (parent.type === "ScrollView") {
+          flag = true;
+        } else {
+          parent = parent.parent;
+        }
+      }
+
+      return flag;
+    }
+  }, {
     key: "repaint",
     value: function repaint() {
       var _this3 = this;
@@ -3874,22 +3901,6 @@ var Image = /*#__PURE__*/function (_Element) {
         }
       });
     }
-  }, {
-    key: "isScrollViewChild",
-    get: function get() {
-      var flag = false;
-      var parent = this.parent;
-
-      while (parent && !flag) {
-        if (parent.type === "ScrollView") {
-          flag = true;
-        } else {
-          parent = parent.parent;
-        }
-      }
-
-      return flag;
-    }
   }]);
 
   return Image;
@@ -3924,7 +3935,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -4151,7 +4162,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -4227,6 +4238,64 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
 
   _createClass(ScrollView, [{
+    key: "scrollHeight",
+    get: function get() {
+      // scrollview为空的情况
+      if (!this.children.length) {
+        return 0;
+      }
+
+      var last = this.children[this.children.length - 1];
+      return last.layoutBox.top + last.layoutBox.height;
+    }
+  }, {
+    key: "scrollWidth",
+    get: function get() {
+      // scrollview为空的情况
+      if (!this.children.length) {
+        return 0;
+      }
+
+      var last = this.children[this.children.length - 1];
+      return last.layoutBox.left + last.layoutBox.width;
+    }
+  }, {
+    key: "scrollX",
+    get: function get() {
+      return this._scrollerOption.scrollingX;
+    },
+    set: function set(value) {
+      this.scrollerOption = {
+        scrollingX: value
+      };
+    }
+  }, {
+    key: "scrollY",
+    get: function get() {
+      return this._scrollerOption.scrollingY;
+    },
+    set: function set(value) {
+      this.scrollerOption = {
+        scrollingY: value
+      };
+    }
+  }, {
+    key: "scrollerOption",
+    get: function get() {
+      return this._scrollerOption;
+    },
+    set: function set(value) {
+      if (value === void 0) {
+        value = {};
+      }
+
+      Object.assign(this._scrollerOption, value);
+
+      if (this.scrollerObj) {
+        Object.assign(this.scrollerObj.options, this.scrollerOption);
+      }
+    }
+  }, {
     key: "repaint",
     value: function repaint() {
       var _this2 = this;
@@ -4444,61 +4513,6 @@ var ScrollView = /*#__PURE__*/function (_View) {
       var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       var animate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       this.scrollerObj.scrollTo(left, top, animate);
-    }
-  }, {
-    key: "scrollHeight",
-    get: function get() {
-      // scrollview为空的情况
-      if (!this.children.length) {
-        return 0;
-      }
-
-      var last = this.children[this.children.length - 1];
-      return last.layoutBox.top + last.layoutBox.height;
-    }
-  }, {
-    key: "scrollWidth",
-    get: function get() {
-      // scrollview为空的情况
-      if (!this.children.length) {
-        return 0;
-      }
-
-      var last = this.children[this.children.length - 1];
-      return last.layoutBox.left + last.layoutBox.width;
-    }
-  }, {
-    key: "scrollX",
-    get: function get() {
-      return this._scrollerOption.scrollingX;
-    },
-    set: function set(value) {
-      this.scrollerOption = {
-        scrollingX: value
-      };
-    }
-  }, {
-    key: "scrollY",
-    get: function get() {
-      return this._scrollerOption.scrollingY;
-    },
-    set: function set(value) {
-      this.scrollerOption = {
-        scrollingY: value
-      };
-    }
-  }, {
-    key: "scrollerOption",
-    get: function get() {
-      return this._scrollerOption;
-    },
-    set: function set() {
-      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      Object.assign(this._scrollerOption, value);
-
-      if (this.scrollerObj) {
-        Object.assign(this.scrollerObj.options, this.scrollerOption);
-      }
     }
   }]);
 
@@ -5941,7 +5955,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 

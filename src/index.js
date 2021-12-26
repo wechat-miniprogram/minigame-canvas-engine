@@ -417,7 +417,11 @@ class _Layout extends Element {
     this.emit('repaint__done');
   }
 
-  getChildByPos(tree, x, y) {
+  /**
+   * 给定节点树和触摸坐标，遍历节点树，查询被点中的所有节点
+   * 之所以要查询所有节点是因为先渲染的节点层级更低，最后一个查询到的节点才是最上面的被点中的节点
+   */
+  getChildByPos(tree, x, y, itemList) {
     let list = Object.keys(tree.children);
 
     for ( let i = 0; i < list.length;i++ ) {
@@ -427,14 +431,12 @@ class _Layout extends Element {
       if (   ( box.realX <= x && x <= box.realX + box.width  )
         && ( box.realY <= y && y <= box.realY + box.height ) ) {
         if ( Object.keys(child.children).length ) {
-          return this.getChildByPos(child, x, y);
+          this.getChildByPos(child, x, y, itemList);
         } else {
-          return child;
+          itemList.push(child);
         }
       }
     }
-
-    return tree;
   }
 
   eventHandler(eventName) {
@@ -452,10 +454,16 @@ class _Layout extends Element {
         touch.timeStamp = e.timeStamp;
       }
 
-      /*console.log(touch.pageX, touch.pageY);*/
+      const list = [];
+      if (touch) {
+        this.getChildByPos(this, touch.pageX, touch.pageY, list);
+      }
 
-      const item  = touch && this.getChildByPos(this, touch.pageX, touch.pageY);
+      if (!list.length) {
+        list.push(this);
+      }
 
+      const item = list[list.length - 1];
       item && item.emit(eventName, e);
 
       if ( eventName === 'touchstart' || eventName === 'touchend' ) {

@@ -1,3 +1,10 @@
+#### 2021.12.6
+1. `F` 修复点击层级的问题；
+2. `U` 小游戏插件发布 0.0.8 版本
+#### 2021.9.19
+1. `F` 修复文档拼写错误；
+2. `U` npm 发布1.0.6版本；
+3. `F` 修复点击事件不准确[问题](https://github.com/wechat-miniprogram/minigame-canvas-engine/issues/6);
 #### 2021.9.2
 1. `U` 重写Scrollview，引用[scroller](https://github.com/pbakaus/scroller)，支持横向滚动和纵向滚动，体验更好；
 2. `A` Scrollview 新增scrollX和scrollY配置，用于标识是否需要横向滚动和纵向滚动；
