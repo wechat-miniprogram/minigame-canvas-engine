@@ -40,9 +40,9 @@ export default class BitMapText extends Element {
       configurable : true
     });
 
-    this.font= bitMapPool.get(font)
+    this.font = bitMapPool.get(font)
     if ( !this.font ) {
-      console.error('Please invoke API `registBitMapFont` before using `BitMapText`')
+      console.error(`Missing BitmapFont "${font}", please invoke API "registBitMapFont" before using "BitMapText"`);
     }
   }
 
@@ -146,9 +146,17 @@ export default class BitMapText extends Element {
       }
     }
 
+    // 记录上一个字符，方便处理 kerning
+    let prevCharCode = null;
+    
+
     for ( let i = 0; i < this.value.length; i++ ) {
       let char = this.value[i];
       let cfg = this.font.chars[char]
+      
+      if (prevCharCode && cfg.kerning[prevCharCode]) {
+        x += cfg.kerning[prevCharCode];
+      }
 
       if ( cfg ) {
         ctx.drawImage(
@@ -163,7 +171,9 @@ export default class BitMapText extends Element {
           cfg.h * scaleY
         )
 
-        x += cfg.w * scaleY;
+        x += cfg.xadvance * scaleY;
+
+        prevCharCode = char;
       }
     }
 
