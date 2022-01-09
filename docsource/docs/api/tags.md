@@ -92,6 +92,7 @@ title: {
 | lineHeight | Number|   否   | 渲染文字的行高，默认为配置文件里面的lineHeight|
 | textAlign| String |   否  | 文字水平居中方式，默认left，支持right、center |
 | verticalAlign| String |   否  | 文字垂直居中的方式，默认为middle，支持top和bottom|
+| letterSpacing | Number|   否   | 字符间距|
 
 
 ### 示例

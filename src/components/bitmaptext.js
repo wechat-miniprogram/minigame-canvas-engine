@@ -119,7 +119,8 @@ export default class BitMapText extends Element {
       height, // 没有设置则采用计算出来的宽度
       lineHeight = defaultLineHeight, // 没有设置则采用计算出来的高度
       textAlign, // 文字左右对齐方式
-      verticalAlign
+      verticalAlign,
+      letterSpacing = 0,
     } =  style;
 
     // 元素包围盒的左上角坐标
@@ -171,7 +172,7 @@ export default class BitMapText extends Element {
           cfg.h * scaleY
         )
 
-        x += cfg.xadvance * scaleY;
+        x += (cfg.xadvance * scaleY + letterSpacing);
 
         prevCharCode = char;
       }

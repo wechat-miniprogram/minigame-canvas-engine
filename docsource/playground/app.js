@@ -491,8 +491,8 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.6.11
- * (c) 2014-2019 Evan You
+ * Vue.js v2.6.14
+ * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -2195,13 +2195,14 @@ __webpack_require__.r(__webpack_exports__);
         type = [type];
       }
       for (var i = 0; i < type.length && !valid; i++) {
-        var assertedType = assertType(value, type[i]);
+        var assertedType = assertType(value, type[i], vm);
         expectedTypes.push(assertedType.expectedType || '');
         valid = assertedType.valid;
       }
     }
 
-    if (!valid) {
+    var haveExpectedTypes = expectedTypes.some(function (t) { return t; });
+    if (!valid && haveExpectedTypes) {
       warn(
         getInvalidTypeMessage(name, value, expectedTypes),
         vm
@@ -2219,9 +2220,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 
-  var simpleCheckRE = /^(String|Number|Boolean|Function|Symbol)$/;
+  var simpleCheckRE = /^(String|Number|Boolean|Function|Symbol|BigInt)$/;
 
-  function assertType (value, type) {
+  function assertType (value, type, vm) {
     var valid;
     var expectedType = getType(type);
     if (simpleCheckRE.test(expectedType)) {
@@ -2236,7 +2237,12 @@ __webpack_require__.r(__webpack_exports__);
     } else if (expectedType === 'Array') {
       valid = Array.isArray(value);
     } else {
-      valid = value instanceof type;
+      try {
+        valid = value instanceof type;
+      } catch (e) {
+        warn('Invalid prop type: "' + String(type) + '" is not a constructor', vm);
+        valid = false;
+      }
     }
     return {
       valid: valid,
@@ -2244,13 +2250,15 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 
+  var functionTypeCheckRE = /^\s*function (\w+)/;
+
   /**
    * Use function string name to check built-in types,
    * because a simple equality check will fail when running
    * across different vms / iframes.
    */
   function getType (fn) {
-    var match = fn && fn.toString().match(/^\s*function (\w+)/);
+    var match = fn && fn.toString().match(functionTypeCheckRE);
     return match ? match[1] : ''
   }
 
@@ -2275,18 +2283,19 @@ __webpack_require__.r(__webpack_exports__);
       " Expected " + (expectedTypes.map(capitalize).join(', '));
     var expectedType = expectedTypes[0];
     var receivedType = toRawType(value);
-    var expectedValue = styleValue(value, expectedType);
-    var receivedValue = styleValue(value, receivedType);
     // check if we need to specify expected value
-    if (expectedTypes.length === 1 &&
-        isExplicable(expectedType) &&
-        !isBoolean(expectedType, receivedType)) {
-      message += " with value " + expectedValue;
+    if (
+      expectedTypes.length === 1 &&
+      isExplicable(expectedType) &&
+      isExplicable(typeof value) &&
+      !isBoolean(expectedType, receivedType)
+    ) {
+      message += " with value " + (styleValue(value, expectedType));
     }
     message += ", got " + receivedType + " ";
     // check if we need to specify received value
     if (isExplicable(receivedType)) {
-      message += "with value " + receivedValue + ".";
+      message += "with value " + (styleValue(value, receivedType)) + ".";
     }
     return message
   }
@@ -2301,9 +2310,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 
+  var EXPLICABLE_TYPES = ['string', 'number', 'boolean'];
   function isExplicable (value) {
-    var explicitTypes = ['string', 'number', 'boolean'];
-    return explicitTypes.some(function (elem) { return value.toLowerCase() === elem; })
+    return EXPLICABLE_TYPES.some(function (elem) { return value.toLowerCase() === elem; })
   }
 
   function isBoolean () {
@@ -2530,7 +2539,7 @@ __webpack_require__.r(__webpack_exports__);
     var allowedGlobals = makeMap(
       'Infinity,undefined,NaN,isFinite,isNaN,' +
       'parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,' +
-      'Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,' +
+      'Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,BigInt,' +
       'require' // for Webpack/Browserify
     );
 
@@ -3033,6 +3042,12 @@ __webpack_require__.r(__webpack_exports__);
 
   /*  */
 
+  function isAsyncPlaceholder (node) {
+    return node.isComment && node.asyncFactory
+  }
+
+  /*  */
+
   function normalizeScopedSlots (
     slots,
     normalSlots,
@@ -3089,9 +3104,10 @@ __webpack_require__.r(__webpack_exports__);
       res = res && typeof res === 'object' && !Array.isArray(res)
         ? [res] // single vnode
         : normalizeChildren(res);
+      var vnode = res && res[0];
       return res && (
-        res.length === 0 ||
-        (res.length === 1 && res[0].isComment) // #9658
+        !vnode ||
+        (res.length === 1 && vnode.isComment && !isAsyncPlaceholder(vnode)) // #9658, #10391
       ) ? undefined
         : res
     };
@@ -3164,26 +3180,28 @@ __webpack_require__.r(__webpack_exports__);
    */
   function renderSlot (
     name,
-    fallback,
+    fallbackRender,
     props,
     bindObject
   ) {
     var scopedSlotFn = this.$scopedSlots[name];
     var nodes;
-    if (scopedSlotFn) { // scoped slot
+    if (scopedSlotFn) {
+      // scoped slot
       props = props || {};
       if (bindObject) {
         if (!isObject(bindObject)) {
-          warn(
-            'slot v-bind without argument expects an Object',
-            this
-          );
+          warn('slot v-bind without argument expects an Object', this);
         }
         props = extend(extend({}, bindObject), props);
       }
-      nodes = scopedSlotFn(props) || fallback;
+      nodes =
+        scopedSlotFn(props) ||
+        (typeof fallbackRender === 'function' ? fallbackRender() : fallbackRender);
     } else {
-      nodes = this.$slots[name] || fallback;
+      nodes =
+        this.$slots[name] ||
+        (typeof fallbackRender === 'function' ? fallbackRender() : fallbackRender);
     }
 
     var target = props && props.slot;
@@ -3233,6 +3251,7 @@ __webpack_require__.r(__webpack_exports__);
     } else if (eventKeyName) {
       return hyphenate(eventKeyName) !== key
     }
+    return eventKeyCode === undefined
   }
 
   /*  */
@@ -3764,8 +3783,10 @@ __webpack_require__.r(__webpack_exports__);
   }
 
   function createComponentInstanceForVnode (
-    vnode, // we know it's MountedComponentVNode but flow doesn't
-    parent // activeInstance in lifecycle state
+    // we know it's MountedComponentVNode but flow doesn't
+    vnode,
+    // activeInstance in lifecycle state
+    parent
   ) {
     var options = {
       _isComponent: true,
@@ -3904,7 +3925,7 @@ __webpack_require__.r(__webpack_exports__);
       ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag);
       if (config.isReservedTag(tag)) {
         // platform built-in elements
-        if (isDef(data) && isDef(data.nativeOn)) {
+        if (isDef(data) && isDef(data.nativeOn) && data.tag !== 'component') {
           warn(
             ("The .native modifier for v-on is only valid on components but it was used on <" + tag + ">."),
             context
@@ -4226,12 +4247,6 @@ __webpack_require__.r(__webpack_exports__);
         ? factory.loadingComp
         : factory.resolved
     }
-  }
-
-  /*  */
-
-  function isAsyncPlaceholder (node) {
-    return node.isComment && node.asyncFactory
   }
 
   /*  */
@@ -4602,7 +4617,8 @@ __webpack_require__.r(__webpack_exports__);
     var hasDynamicScopedSlot = !!(
       (newScopedSlots && !newScopedSlots.$stable) ||
       (oldScopedSlots !== emptyObject && !oldScopedSlots.$stable) ||
-      (newScopedSlots && vm.$scopedSlots.$key !== newScopedSlots.$key)
+      (newScopedSlots && vm.$scopedSlots.$key !== newScopedSlots.$key) ||
+      (!newScopedSlots && vm.$scopedSlots.$key)
     );
 
     // Any static slot children from the parent may have changed during parent's
@@ -5054,11 +5070,8 @@ __webpack_require__.r(__webpack_exports__);
         var oldValue = this.value;
         this.value = value;
         if (this.user) {
-          try {
-            this.cb.call(this.vm, value, oldValue);
-          } catch (e) {
-            handleError(e, this.vm, ("callback for watcher \"" + (this.expression) + "\""));
-          }
+          var info = "callback for watcher \"" + (this.expression) + "\"";
+          invokeWithErrorHandling(this.cb, this.vm, [value, oldValue], this.vm, info);
         } else {
           this.cb.call(this.vm, value, oldValue);
         }
@@ -5280,6 +5293,8 @@ __webpack_require__.r(__webpack_exports__);
           warn(("The computed property \"" + key + "\" is already defined in data."), vm);
         } else if (vm.$options.props && key in vm.$options.props) {
           warn(("The computed property \"" + key + "\" is already defined as a prop."), vm);
+        } else if (vm.$options.methods && key in vm.$options.methods) {
+          warn(("The computed property \"" + key + "\" is already defined as a method."), vm);
         }
       }
     }
@@ -5432,11 +5447,10 @@ __webpack_require__.r(__webpack_exports__);
       options.user = true;
       var watcher = new Watcher(vm, expOrFn, cb, options);
       if (options.immediate) {
-        try {
-          cb.call(vm, watcher.value);
-        } catch (error) {
-          handleError(error, vm, ("callback for immediate watcher \"" + (watcher.expression) + "\""));
-        }
+        var info = "callback for immediate watcher \"" + (watcher.expression) + "\"";
+        pushTarget();
+        invokeWithErrorHandling(cb, vm, [watcher.value], vm, info);
+        popTarget();
       }
       return function unwatchFn () {
         watcher.teardown();
@@ -5734,6 +5748,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
   function getComponentName (opts) {
     return opts && (opts.Ctor.options.name || opts.tag)
   }
@@ -5755,9 +5771,9 @@ __webpack_require__.r(__webpack_exports__);
     var keys = keepAliveInstance.keys;
     var _vnode = keepAliveInstance._vnode;
     for (var key in cache) {
-      var cachedNode = cache[key];
-      if (cachedNode) {
-        var name = getComponentName(cachedNode.componentOptions);
+      var entry = cache[key];
+      if (entry) {
+        var name = entry.name;
         if (name && !filter(name)) {
           pruneCacheEntry(cache, key, keys, _vnode);
         }
@@ -5771,9 +5787,9 @@ __webpack_require__.r(__webpack_exports__);
     keys,
     current
   ) {
-    var cached$$1 = cache[key];
-    if (cached$$1 && (!current || cached$$1.tag !== current.tag)) {
-      cached$$1.componentInstance.$destroy();
+    var entry = cache[key];
+    if (entry && (!current || entry.tag !== current.tag)) {
+      entry.componentInstance.$destroy();
     }
     cache[key] = null;
     remove(keys, key);
@@ -5791,6 +5807,32 @@ __webpack_require__.r(__webpack_exports__);
       max: [String, Number]
     },
 
+    methods: {
+      cacheVNode: function cacheVNode() {
+        var ref = this;
+        var cache = ref.cache;
+        var keys = ref.keys;
+        var vnodeToCache = ref.vnodeToCache;
+        var keyToCache = ref.keyToCache;
+        if (vnodeToCache) {
+          var tag = vnodeToCache.tag;
+          var componentInstance = vnodeToCache.componentInstance;
+          var componentOptions = vnodeToCache.componentOptions;
+          cache[keyToCache] = {
+            name: getComponentName(componentOptions),
+            tag: tag,
+            componentInstance: componentInstance,
+          };
+          keys.push(keyToCache);
+          // prune oldest entry
+          if (this.max && keys.length > parseInt(this.max)) {
+            pruneCacheEntry(cache, keys[0], keys, this._vnode);
+          }
+          this.vnodeToCache = null;
+        }
+      }
+    },
+
     created: function created () {
       this.cache = Object.create(null);
       this.keys = [];
@@ -5805,12 +5847,17 @@ __webpack_require__.r(__webpack_exports__);
     mounted: function mounted () {
       var this$1 = this;
 
+      this.cacheVNode();
       this.$watch('include', function (val) {
         pruneCache(this$1, function (name) { return matches(val, name); });
       });
       this.$watch('exclude', function (val) {
         pruneCache(this$1, function (name) { return !matches(val, name); });
       });
+    },
+
+    updated: function updated () {
+      this.cacheVNode();
     },
 
     render: function render () {
@@ -5846,12 +5893,9 @@ __webpack_require__.r(__webpack_exports__);
           remove(keys, key);
           keys.push(key);
         } else {
-          cache[key] = vnode;
-          keys.push(key);
-          // prune oldest entry
-          if (this.max && keys.length > parseInt(this.max)) {
-            pruneCacheEntry(cache, keys[0], keys, this._vnode);
-          }
+          // delay setting the cache until update
+          this.vnodeToCache = vnode;
+          this.keyToCache = key;
         }
 
         vnode.data.keepAlive = true;
@@ -5934,7 +5978,7 @@ __webpack_require__.r(__webpack_exports__);
     value: FunctionalRenderContext
   });
 
-  Vue.version = '2.6.11';
+  Vue.version = '2.6.14';
 
   /*  */
 
@@ -5971,7 +6015,7 @@ __webpack_require__.r(__webpack_exports__);
     'default,defaultchecked,defaultmuted,defaultselected,defer,disabled,' +
     'enabled,formnovalidate,hidden,indeterminate,inert,ismap,itemscope,loop,multiple,' +
     'muted,nohref,noresize,noshade,novalidate,nowrap,open,pauseonexit,readonly,' +
-    'required,reversed,scoped,seamless,selected,sortable,translate,' +
+    'required,reversed,scoped,seamless,selected,sortable,' +
     'truespeed,typemustmatch,visible'
   );
 
@@ -6095,7 +6139,7 @@ __webpack_require__.r(__webpack_exports__);
   // contain child elements.
   var isSVG = makeMap(
     'svg,animate,circle,clippath,cursor,defs,desc,ellipse,filter,font-face,' +
-    'foreignObject,g,glyph,image,line,marker,mask,missing-glyph,path,pattern,' +
+    'foreignobject,g,glyph,image,line,marker,mask,missing-glyph,path,pattern,' +
     'polygon,polyline,rect,switch,symbol,text,textpath,tspan,use,view',
     true
   );
@@ -6300,7 +6344,8 @@ __webpack_require__.r(__webpack_exports__);
 
   function sameVnode (a, b) {
     return (
-      a.key === b.key && (
+      a.key === b.key &&
+      a.asyncFactory === b.asyncFactory && (
         (
           a.tag === b.tag &&
           a.isComment === b.isComment &&
@@ -6308,7 +6353,6 @@ __webpack_require__.r(__webpack_exports__);
           sameInputType(a, b)
         ) || (
           isTrue(a.isAsyncPlaceholder) &&
-          a.asyncFactory === b.asyncFactory &&
           isUndef(b.asyncFactory.error)
         )
       )
@@ -7196,7 +7240,7 @@ __webpack_require__.r(__webpack_exports__);
       cur = attrs[key];
       old = oldAttrs[key];
       if (old !== cur) {
-        setAttr(elm, key, cur);
+        setAttr(elm, key, cur, vnode.data.pre);
       }
     }
     // #4391: in IE9, setting type can reset value for input[type=radio]
@@ -7216,8 +7260,8 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 
-  function setAttr (el, key, value) {
-    if (el.tagName.indexOf('-') > -1) {
+  function setAttr (el, key, value, isInPre) {
+    if (isInPre || el.tagName.indexOf('-') > -1) {
       baseSetAttr(el, key, value);
     } else if (isBooleanAttr(key)) {
       // set attribute for blank value
@@ -8140,7 +8184,7 @@ __webpack_require__.r(__webpack_exports__);
         // skip the update if old and new VDOM state is the same.
         // `value` is handled separately because the DOM value may be temporarily
         // out of sync with VDOM state due to focus, composition and modifiers.
-        // This  #4521 by skipping the unnecesarry `checked` update.
+        // This  #4521 by skipping the unnecessary `checked` update.
         cur !== oldProps[key]
       ) {
         // some property updates can throw
@@ -9738,7 +9782,7 @@ __webpack_require__.r(__webpack_exports__);
 
   // Regular Expressions for parsing tags and attributes
   var attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
-  var dynamicArgAttribute = /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
+  var dynamicArgAttribute = /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+?\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
   var ncname = "[a-zA-Z_][\\-\\.0-9_a-zA-Z" + (unicodeRegExp.source) + "]*";
   var qnameCapture = "((?:" + ncname + "\\:)?" + ncname + ")";
   var startTagOpen = new RegExp(("^<" + qnameCapture));
@@ -10043,7 +10087,7 @@ __webpack_require__.r(__webpack_exports__);
   var slotRE = /^v-slot(:|$)|^#/;
 
   var lineBreakRE = /[\r\n]/;
-  var whitespaceRE$1 = /\s+/g;
+  var whitespaceRE$1 = /[ \f\t\r\n]+/g;
 
   var invalidAttributeRE = /[\s"'<>\/=]/;
 
@@ -10091,8 +10135,12 @@ __webpack_require__.r(__webpack_exports__);
     platformMustUseProp = options.mustUseProp || no;
     platformGetTagNamespace = options.getTagNamespace || no;
     var isReservedTag = options.isReservedTag || no;
-    maybeComponent = function (el) { return !!el.component || !isReservedTag(el.tag); };
-
+    maybeComponent = function (el) { return !!(
+      el.component ||
+      el.attrsMap[':is'] ||
+      el.attrsMap['v-bind:is'] ||
+      !(el.attrsMap.is ? isReservedTag(el.attrsMap.is) : isReservedTag(el.tag))
+    ); };
     transforms = pluckModuleFunction(options.modules, 'transformNode');
     preTransforms = pluckModuleFunction(options.modules, 'preTransformNode');
     postTransforms = pluckModuleFunction(options.modules, 'postTransformNode');
@@ -10385,7 +10433,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       },
       comment: function comment (text, start, end) {
-        // adding anyting as a sibling to the root node is forbidden
+        // adding anything as a sibling to the root node is forbidden
         // comments should still be allowed, but ignored
         if (currentParent) {
           var child = {
@@ -11341,9 +11389,9 @@ __webpack_require__.r(__webpack_exports__);
         code += genModifierCode;
       }
       var handlerCode = isMethodPath
-        ? ("return " + (handler.value) + "($event)")
+        ? ("return " + (handler.value) + ".apply(null, arguments)")
         : isFunctionExpression
-          ? ("return (" + (handler.value) + ")($event)")
+          ? ("return (" + (handler.value) + ").apply(null, arguments)")
           : isFunctionInvocation
             ? ("return " + (handler.value))
             : handler.value;
@@ -11429,7 +11477,8 @@ __webpack_require__.r(__webpack_exports__);
     options
   ) {
     var state = new CodegenState(options);
-    var code = ast ? genElement(ast, state) : '_c("div")';
+    // fix #11483, Root level <script> tags should not be rendered.
+    var code = ast ? (ast.tag === 'script' ? 'null' : genElement(ast, state)) : '_c("div")';
     return {
       render: ("with(this){return " + code + "}"),
       staticRenderFns: state.staticRenderFns
@@ -11891,7 +11940,7 @@ __webpack_require__.r(__webpack_exports__);
   function genSlot (el, state) {
     var slotName = el.slotName || '"default"';
     var children = genChildren(el, state);
-    var res = "_t(" + slotName + (children ? ("," + children) : '');
+    var res = "_t(" + slotName + (children ? (",function(){return " + children + "}") : '');
     var attrs = el.attrs || el.dynamicAttrs
       ? genProps((el.attrs || []).concat(el.dynamicAttrs || []).map(function (attr) { return ({
           // slot props are camelized
@@ -13113,98 +13162,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* AUTO-GENERATE
 (function() {
 
 /* GENERATED_BUILD_OUTPUT */
-var legacy_beautify_js =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
-/************************************************************************/
-/******/ ([
+var legacy_beautify_js;
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -13251,9 +13215,8 @@ module.exports.defaultOptions = function() {
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -13802,7 +13765,7 @@ Beautifier.prototype.handle_start_expr = function(current_token) {
       }
     }
 
-    if (!in_array(this._flags.last_token.type, [TOKEN.START_EXPR, TOKEN.END_EXPR, TOKEN.WORD, TOKEN.OPERATOR])) {
+    if (!in_array(this._flags.last_token.type, [TOKEN.START_EXPR, TOKEN.END_EXPR, TOKEN.WORD, TOKEN.OPERATOR, TOKEN.DOT])) {
       this._output.space_before_token = true;
     }
   } else {
@@ -13810,7 +13773,7 @@ Beautifier.prototype.handle_start_expr = function(current_token) {
       if (this._flags.last_token.text === 'for') {
         this._output.space_before_token = this._options.space_before_conditional;
         next_mode = MODE.ForInitializer;
-      } else if (in_array(this._flags.last_token.text, ['if', 'while'])) {
+      } else if (in_array(this._flags.last_token.text, ['if', 'while', 'switch'])) {
         this._output.space_before_token = this._options.space_before_conditional;
         next_mode = MODE.Conditional;
       } else if (in_array(this._flags.last_word, ['await', 'async'])) {
@@ -14313,7 +14276,9 @@ Beautifier.prototype.handle_semicolon = function(current_token) {
 };
 
 Beautifier.prototype.handle_string = function(current_token) {
-  if (this.start_of_statement(current_token)) {
+  if (current_token.text.startsWith("`") && current_token.newlines === 0 && current_token.whitespace_before === '' && (current_token.previous.text === ')' || this._flags.last_token.type === TOKEN.WORD)) {
+    //Conditional for detectign backtick strings
+  } else if (this.start_of_statement(current_token)) {
     // The conditional starts the statement if appropriate.
     // One difference - strings want at least a space before
     this._output.space_before_token = true;
@@ -14325,6 +14290,8 @@ Beautifier.prototype.handle_string = function(current_token) {
       if (!this.start_of_object_property()) {
         this.allow_wrap_or_preserved_newline(current_token);
       }
+    } else if ((current_token.text.startsWith("`") && this._flags.last_token.type === TOKEN.END_EXPR && (current_token.previous.text === ']' || current_token.previous.text === ')') && current_token.newlines === 0)) {
+      this._output.space_before_token = true;
     } else {
       this.print_newline();
     }
@@ -14713,9 +14680,8 @@ module.exports.Beautifier = Beautifier;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
   The MIT License (MIT)
@@ -15139,9 +15105,8 @@ module.exports.Output = Output;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -15200,9 +15165,8 @@ module.exports.Token = Token;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports) {
 
-"use strict";
 /* jshint node: true, curly: false */
 // Parts of this section of code is taken from acorn.
 //
@@ -15264,9 +15228,8 @@ exports.allLineBreaks = new RegExp(exports.lineBreak.source, 'g');
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -15364,9 +15327,8 @@ module.exports.Options = Options;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -15436,10 +15398,10 @@ function Options(options, merge_child_field) {
 
   this.indent_empty_lines = this._get_boolean('indent_empty_lines');
 
-  // valid templating languages ['django', 'erb', 'handlebars', 'php']
+  // valid templating languages ['django', 'erb', 'handlebars', 'php', 'smarty']
   // For now, 'auto' = all off for javascript, all on for html (and inline javascript).
   // other values ignored
-  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php'], ['auto']);
+  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php', 'smarty'], ['auto']);
 }
 
 Options.prototype._get_array = function(name, default_value) {
@@ -15564,9 +15526,8 @@ module.exports.mergeOpts = _mergeOpts;
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -15635,7 +15596,7 @@ var TOKEN = {
 
 var directives_core = new Directives(/\/\*/, /\*\//);
 
-var number_pattern = /0[xX][0123456789abcdefABCDEF]*|0[oO][01234567]*|0[bB][01]*|\d+n|(?:\.\d+|\d+\.?\d*)(?:[eE][+-]?\d+)?/;
+var number_pattern = /0[xX][0123456789abcdefABCDEF_]*n?|0[oO][01234567_]*n?|0[bB][01_]*n?|\d[\d_]*n|(?:\.\d[\d_]*|\d[\d_]*\.?[\d_]*)(?:[eE][+-]?[\d_]+)?/;
 
 var digit = /[0-9]/;
 
@@ -15644,7 +15605,7 @@ var dot_pattern = /[^\d\.]/;
 
 var positionable_operators = (
   ">>> === !== " +
-  "<< && >= ** != == <= >> || |> " +
+  "<< && >= ** != == <= >> || ?? |> " +
   "< / - + > : & % ? ^ | *").split(' ');
 
 // IMPORTANT: this must be sorted longest to shortest or tokenizing many not work.
@@ -15652,7 +15613,7 @@ var positionable_operators = (
 var punct =
   ">>>= " +
   "... >>= <<= === >>> !== **= " +
-  "=> ^= :: /= << <= == && -= >= >> != -- += ** || ++ %= &= *= |= |> " +
+  "=> ^= :: /= << <= == && -= >= >> != -- += ** || ?? ++ %= &= *= |= |> " +
   "= ! ? > < : / ^ - + * & % ~ |";
 
 punct = punct.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&");
@@ -15695,7 +15656,7 @@ var Tokenizer = function(input_string, options) {
     html_comment_end: pattern_reader.matching(/-->/),
     include: pattern_reader.starting_with(/#include/).until_after(acorn.lineBreak),
     shebang: pattern_reader.starting_with(/#!/).until_after(acorn.lineBreak),
-    xml: pattern_reader.matching(/[\s\S]*?<(\/?)([-a-zA-Z:0-9_.]+|{[\s\S]+?}|!\[CDATA\[[\s\S]*?\]\])(\s+{[\s\S]+?}|\s+[-a-zA-Z:0-9_.]+|\s+[-a-zA-Z:0-9_.]+\s*=\s*('[^']*'|"[^"]*"|{[\s\S]+?}))*\s*(\/?)\s*>/),
+    xml: pattern_reader.matching(/[\s\S]*?<(\/?)([-a-zA-Z:0-9_.]+|{[\s\S]+?}|!\[CDATA\[[\s\S]*?\]\]|)(\s+{[\s\S]+?}|\s+[-a-zA-Z:0-9_.]+|\s+[-a-zA-Z:0-9_.]+\s*=\s*('[^']*'|"[^"]*"|{[\s\S]+?}))*\s*(\/?)\s*>/),
     single_quote: templatable.until(/['\\\n\r\u2028\u2029]/),
     double_quote: templatable.until(/["\\\n\r\u2028\u2029]/),
     template_text: templatable.until(/[`\\$]/),
@@ -16137,9 +16098,8 @@ module.exports.line_starters = line_starters.slice();
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16336,9 +16296,8 @@ module.exports.InputScanner = InputScanner;
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16483,9 +16442,8 @@ module.exports.TOKEN = TOKEN;
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16568,9 +16526,8 @@ module.exports.TokenStream = TokenStream;
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16680,9 +16637,8 @@ module.exports.WhitespacePattern = WhitespacePattern;
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16781,9 +16737,8 @@ module.exports.Pattern = Pattern;
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16850,9 +16805,8 @@ module.exports.Directives = Directives;
 
 /***/ }),
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -16890,7 +16844,8 @@ var template_names = {
   django: false,
   erb: false,
   handlebars: false,
-  php: false
+  php: false,
+  smarty: false
 };
 
 // This lets templates appear anywhere we would do a readUntil
@@ -16911,12 +16866,15 @@ function TemplatablePattern(input_scanner, parent) {
     handlebars_comment: pattern.starting_with(/{{!--/).until_after(/--}}/),
     handlebars_unescaped: pattern.starting_with(/{{{/).until_after(/}}}/),
     handlebars: pattern.starting_with(/{{/).until_after(/}}/),
-    php: pattern.starting_with(/<\?(?:[=]|php)/).until_after(/\?>/),
+    php: pattern.starting_with(/<\?(?:[= ]|php)/).until_after(/\?>/),
     erb: pattern.starting_with(/<%[^%]/).until_after(/[^%]%>/),
     // django coflicts with handlebars a bit.
     django: pattern.starting_with(/{%/).until_after(/%}/),
     django_value: pattern.starting_with(/{{/).until_after(/}}/),
-    django_comment: pattern.starting_with(/{#/).until_after(/#}/)
+    django_comment: pattern.starting_with(/{#/).until_after(/#}/),
+    smarty: pattern.starting_with(/{(?=[^}{\s\n])/).until_after(/[^\s\n]}/),
+    smarty_comment: pattern.starting_with(/{\*/).until_after(/\*}/),
+    smarty_literal: pattern.starting_with(/{literal}/).until_after(/{\/literal}/)
   };
 }
 TemplatablePattern.prototype = new Pattern();
@@ -16990,8 +16948,13 @@ TemplatablePattern.prototype.__set_templated_pattern = function() {
   }
   if (!this._disabled.django) {
     items.push(this.__patterns.django._starting_pattern.source);
+    // The starting pattern for django is more complex because it has different
+    // patterns for value, comment, and other sections
     items.push(this.__patterns.django_value._starting_pattern.source);
     items.push(this.__patterns.django_comment._starting_pattern.source);
+  }
+  if (!this._disabled.smarty) {
+    items.push(this.__patterns.smarty._starting_pattern.source);
   }
 
   if (this._until_pattern) {
@@ -17038,6 +17001,17 @@ TemplatablePattern.prototype._read_template = function() {
           this.__patterns.django.read();
       }
     }
+    if (!this._disabled.smarty) {
+      // smarty cannot be enabled with django or handlebars enabled
+      if (this._disabled.django && this._disabled.handlebars) {
+        resulting_string = resulting_string ||
+          this.__patterns.smarty_comment.read();
+        resulting_string = resulting_string ||
+          this.__patterns.smarty_literal.read();
+        resulting_string = resulting_string ||
+          this.__patterns.smarty.read();
+      }
+    }
   }
   return resulting_string;
 };
@@ -17047,7 +17021,42 @@ module.exports.TemplatablePattern = TemplatablePattern;
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	legacy_beautify_js = __webpack_exports__;
+/******/ 	
+/******/ })()
+;
 var js_beautify = legacy_beautify_js;
 /* Footer */
 if (true) {
@@ -17133,100 +17142,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* AUTO-GENERATE
 (function() {
 
 /* GENERATED_BUILD_OUTPUT */
-var legacy_beautify_css =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
-/******/ })
-/************************************************************************/
-/******/ ([
+var legacy_beautify_css;
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */,
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
   The MIT License (MIT)
@@ -17653,9 +17577,8 @@ module.exports.Output = Output;
 /* 4 */,
 /* 5 */,
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -17725,10 +17648,10 @@ function Options(options, merge_child_field) {
 
   this.indent_empty_lines = this._get_boolean('indent_empty_lines');
 
-  // valid templating languages ['django', 'erb', 'handlebars', 'php']
+  // valid templating languages ['django', 'erb', 'handlebars', 'php', 'smarty']
   // For now, 'auto' = all off for javascript, all on for html (and inline javascript).
   // other values ignored
-  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php'], ['auto']);
+  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php', 'smarty'], ['auto']);
 }
 
 Options.prototype._get_array = function(name, default_value) {
@@ -17854,9 +17777,8 @@ module.exports.mergeOpts = _mergeOpts;
 /***/ }),
 /* 7 */,
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18057,9 +17979,8 @@ module.exports.InputScanner = InputScanner;
 /* 11 */,
 /* 12 */,
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18127,9 +18048,8 @@ module.exports.Directives = Directives;
 /***/ }),
 /* 14 */,
 /* 15 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18176,9 +18096,8 @@ module.exports.defaultOptions = function() {
 
 /***/ }),
 /* 16 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18272,13 +18191,12 @@ Beautifier.prototype.eatString = function(endChars) {
 // the first newline will be output
 Beautifier.prototype.eatWhitespace = function(allowAtLeastOneNewLine) {
   var result = whitespaceChar.test(this._input.peek());
-  var isFirstNewLine = true;
-
+  var newline_count = 0;
   while (whitespaceChar.test(this._input.peek())) {
     this._ch = this._input.next();
     if (allowAtLeastOneNewLine && this._ch === '\n') {
-      if (this._options.preserve_newlines || isFirstNewLine) {
-        isFirstNewLine = false;
+      if (newline_count === 0 || newline_count < this._options.max_preserve_newlines) {
+        newline_count++;
         this._output.add_new_line(true);
       }
     }
@@ -18472,23 +18390,34 @@ Beautifier.prototype.beautify = function() {
         insidePropertyValue = false;
         this.outdent();
       }
-      this.indent();
-      this._output.space_before_token = true;
-      this.print_string(this._ch);
 
       // when entering conditional groups, only rulesets are allowed
       if (enteringConditionalGroup) {
         enteringConditionalGroup = false;
-        insideRule = (this._indentLevel > this._nestedLevel);
+        insideRule = (this._indentLevel >= this._nestedLevel);
       } else {
         // otherwise, declarations are also allowed
-        insideRule = (this._indentLevel >= this._nestedLevel);
+        insideRule = (this._indentLevel >= this._nestedLevel - 1);
       }
       if (this._options.newline_between_rules && insideRule) {
         if (this._output.previous_line && this._output.previous_line.item(-1) !== '{') {
           this._output.ensure_empty_line_above('/', ',');
         }
       }
+
+      this._output.space_before_token = true;
+
+      // The difference in print_string and indent order is necessary to indent the '{' correctly
+      if (this._options.brace_style === 'expand') {
+        this._output.add_new_line();
+        this.print_string(this._ch);
+        this.indent();
+        this._output.set_indent(this._indentLevel);
+      } else {
+        this.indent();
+        this.print_string(this._ch);
+      }
+
       this.eatWhitespace(true);
       this._output.add_new_line();
     } else if (this._ch === '}') {
@@ -18604,7 +18533,7 @@ Beautifier.prototype.beautify = function() {
     } else if (this._ch === ',') {
       this.print_string(this._ch);
       this.eatWhitespace(true);
-      if (this._options.selector_separator_newline && !insidePropertyValue && parenLevel === 0 && !insideAtImport) {
+      if (this._options.selector_separator_newline && !insidePropertyValue && parenLevel === 0 && !insideAtImport && !insideAtExtend) {
         this._output.add_new_line();
       } else {
         this._output.space_before_token = true;
@@ -18653,9 +18582,8 @@ module.exports.Beautifier = Beautifier;
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -18696,6 +18624,16 @@ function Options(options) {
   var space_around_selector_separator = this._get_boolean('space_around_selector_separator');
   this.space_around_combinator = this._get_boolean('space_around_combinator') || space_around_selector_separator;
 
+  var brace_style_split = this._get_selection_list('brace_style', ['collapse', 'expand', 'end-expand', 'none', 'preserve-inline']);
+  this.brace_style = 'collapse';
+  for (var bs = 0; bs < brace_style_split.length; bs++) {
+    if (brace_style_split[bs] !== 'expand') {
+      // default to collapse, as only collapse|expand is implemented for now
+      this.brace_style = 'collapse';
+    } else {
+      this.brace_style = brace_style_split[bs];
+    }
+  }
 }
 Options.prototype = new BaseOptions();
 
@@ -18705,7 +18643,42 @@ module.exports.Options = Options;
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(15);
+/******/ 	legacy_beautify_css = __webpack_exports__;
+/******/ 	
+/******/ })()
+;
 var css_beautify = legacy_beautify_css;
 /* Footer */
 if (true) {
@@ -18802,100 +18775,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* AUTO-GENERATE
 (function() {
 
 /* GENERATED_BUILD_OUTPUT */
-var legacy_beautify_html =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
-/******/ })
-/************************************************************************/
-/******/ ([
+var legacy_beautify_html;
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */,
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
   The MIT License (MIT)
@@ -19319,9 +19207,8 @@ module.exports.Output = Output;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -19382,9 +19269,8 @@ module.exports.Token = Token;
 /* 4 */,
 /* 5 */,
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -19454,10 +19340,10 @@ function Options(options, merge_child_field) {
 
   this.indent_empty_lines = this._get_boolean('indent_empty_lines');
 
-  // valid templating languages ['django', 'erb', 'handlebars', 'php']
+  // valid templating languages ['django', 'erb', 'handlebars', 'php', 'smarty']
   // For now, 'auto' = all off for javascript, all on for html (and inline javascript).
   // other values ignored
-  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php'], ['auto']);
+  this.templating = this._get_selection_list('templating', ['auto', 'none', 'django', 'erb', 'handlebars', 'php', 'smarty'], ['auto']);
 }
 
 Options.prototype._get_array = function(name, default_value) {
@@ -19583,9 +19469,8 @@ module.exports.mergeOpts = _mergeOpts;
 /***/ }),
 /* 7 */,
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -19782,9 +19667,8 @@ module.exports.InputScanner = InputScanner;
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -19929,9 +19813,8 @@ module.exports.TOKEN = TOKEN;
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20014,9 +19897,8 @@ module.exports.TokenStream = TokenStream;
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20126,9 +20008,8 @@ module.exports.WhitespacePattern = WhitespacePattern;
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20227,9 +20108,8 @@ module.exports.Pattern = Pattern;
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20296,9 +20176,8 @@ module.exports.Directives = Directives;
 
 /***/ }),
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20336,7 +20215,8 @@ var template_names = {
   django: false,
   erb: false,
   handlebars: false,
-  php: false
+  php: false,
+  smarty: false
 };
 
 // This lets templates appear anywhere we would do a readUntil
@@ -20357,12 +20237,15 @@ function TemplatablePattern(input_scanner, parent) {
     handlebars_comment: pattern.starting_with(/{{!--/).until_after(/--}}/),
     handlebars_unescaped: pattern.starting_with(/{{{/).until_after(/}}}/),
     handlebars: pattern.starting_with(/{{/).until_after(/}}/),
-    php: pattern.starting_with(/<\?(?:[=]|php)/).until_after(/\?>/),
+    php: pattern.starting_with(/<\?(?:[= ]|php)/).until_after(/\?>/),
     erb: pattern.starting_with(/<%[^%]/).until_after(/[^%]%>/),
     // django coflicts with handlebars a bit.
     django: pattern.starting_with(/{%/).until_after(/%}/),
     django_value: pattern.starting_with(/{{/).until_after(/}}/),
-    django_comment: pattern.starting_with(/{#/).until_after(/#}/)
+    django_comment: pattern.starting_with(/{#/).until_after(/#}/),
+    smarty: pattern.starting_with(/{(?=[^}{\s\n])/).until_after(/[^\s\n]}/),
+    smarty_comment: pattern.starting_with(/{\*/).until_after(/\*}/),
+    smarty_literal: pattern.starting_with(/{literal}/).until_after(/{\/literal}/)
   };
 }
 TemplatablePattern.prototype = new Pattern();
@@ -20436,8 +20319,13 @@ TemplatablePattern.prototype.__set_templated_pattern = function() {
   }
   if (!this._disabled.django) {
     items.push(this.__patterns.django._starting_pattern.source);
+    // The starting pattern for django is more complex because it has different
+    // patterns for value, comment, and other sections
     items.push(this.__patterns.django_value._starting_pattern.source);
     items.push(this.__patterns.django_comment._starting_pattern.source);
+  }
+  if (!this._disabled.smarty) {
+    items.push(this.__patterns.smarty._starting_pattern.source);
   }
 
   if (this._until_pattern) {
@@ -20484,6 +20372,17 @@ TemplatablePattern.prototype._read_template = function() {
           this.__patterns.django.read();
       }
     }
+    if (!this._disabled.smarty) {
+      // smarty cannot be enabled with django or handlebars enabled
+      if (this._disabled.django && this._disabled.handlebars) {
+        resulting_string = resulting_string ||
+          this.__patterns.smarty_comment.read();
+        resulting_string = resulting_string ||
+          this.__patterns.smarty_literal.read();
+        resulting_string = resulting_string ||
+          this.__patterns.smarty.read();
+      }
+    }
   }
   return resulting_string;
 };
@@ -20497,9 +20396,8 @@ module.exports.TemplatablePattern = TemplatablePattern;
 /* 16 */,
 /* 17 */,
 /* 18 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -20546,9 +20444,8 @@ module.exports.defaultOptions = function() {
 
 /***/ }),
 /* 19 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -21097,6 +20994,7 @@ Beautifier.prototype._handle_tag_open = function(printer, raw_token, last_tag_to
   var parser_token = this._get_tag_open_token(raw_token);
 
   if ((last_tag_token.is_unformatted || last_tag_token.is_content_unformatted) &&
+    !last_tag_token.is_empty_element &&
     raw_token.type === TOKEN.TAG_OPEN && raw_token.text.indexOf('</') === 0) {
     // End element tags for unformatted or content_unformatted elements
     // are printed raw to keep any newlines inside them exactly the same.
@@ -21210,12 +21108,8 @@ Beautifier.prototype._set_tag_position = function(printer, raw_token, parser_tok
       // and do an ending needed
       if (this._do_optional_end_element(parser_token)) {
         if (!parser_token.is_inline_element) {
-          if (parser_token.parent) {
-            parser_token.parent.multiline_content = true;
-          }
           printer.print_newline(false);
         }
-
       }
 
       this._tag_stack.record_tag(parser_token); //push it on the tag stack
@@ -21252,21 +21146,28 @@ Beautifier.prototype._set_tag_position = function(printer, raw_token, parser_tok
     if (parser_token.tag_name === '!--' && last_token.type === TOKEN.TAG_CLOSE &&
       last_tag_token.is_end_tag && parser_token.text.indexOf('\n') === -1) {
       //Do nothing. Leave comments on same line.
-    } else if (!parser_token.is_inline_element && !parser_token.is_unformatted) {
-      printer.print_newline(false);
-    }
-  } else if (parser_token.is_unformatted || parser_token.is_content_unformatted) {
-    if (!parser_token.is_inline_element && !parser_token.is_unformatted) {
-      printer.print_newline(false);
+    } else {
+      if (!(parser_token.is_inline_element || parser_token.is_unformatted)) {
+        printer.print_newline(false);
+      }
+      this._calcluate_parent_multiline(printer, parser_token);
     }
   } else if (parser_token.is_end_tag) { //this tag is a double tag so check for tag-ending
-    if ((parser_token.start_tag_token && parser_token.start_tag_token.multiline_content) ||
-      !(parser_token.is_inline_element ||
-        (last_tag_token.is_inline_element) ||
-        (last_token.type === TOKEN.TAG_CLOSE &&
-          parser_token.start_tag_token === last_tag_token) ||
-        (last_token.type === 'TK_CONTENT')
-      )) {
+    var do_end_expand = false;
+
+    // deciding whether a block is multiline should not be this hard
+    do_end_expand = parser_token.start_tag_token && parser_token.start_tag_token.multiline_content;
+    do_end_expand = do_end_expand || (!parser_token.is_inline_element &&
+      !(last_tag_token.is_inline_element || last_tag_token.is_unformatted) &&
+      !(last_token.type === TOKEN.TAG_CLOSE && parser_token.start_tag_token === last_tag_token) &&
+      last_token.type !== 'TK_CONTENT'
+    );
+
+    if (parser_token.is_content_unformatted || parser_token.is_unformatted) {
+      do_end_expand = false;
+    }
+
+    if (do_end_expand) {
       printer.print_newline(false);
     }
   } else { // it's a start-tag
@@ -21282,12 +21183,19 @@ Beautifier.prototype._set_tag_position = function(printer, raw_token, parser_tok
       }
     }
 
-    if (!parser_token.is_inline_element && last_token.type !== 'TK_CONTENT') {
-      if (parser_token.parent) {
-        parser_token.parent.multiline_content = true;
-      }
+    if (!(parser_token.is_inline_element || parser_token.is_unformatted) &&
+      (last_token.type !== 'TK_CONTENT' || parser_token.is_content_unformatted)) {
       printer.print_newline(false);
     }
+
+    this._calcluate_parent_multiline(printer, parser_token);
+  }
+};
+
+Beautifier.prototype._calcluate_parent_multiline = function(printer, parser_token) {
+  if (parser_token.parent && printer._output.just_added_newline() &&
+    !((parser_token.is_inline_element || parser_token.is_unformatted) && parser_token.parent.is_inline_element)) {
+    parser_token.parent.multiline_content = true;
   }
 };
 
@@ -21407,9 +21315,8 @@ module.exports.Beautifier = Beautifier;
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -21505,9 +21412,8 @@ module.exports.Options = Options;
 
 /***/ }),
 /* 21 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-"use strict";
 /*jshint node:true */
 /*
 
@@ -21632,8 +21538,8 @@ Tokenizer.prototype._get_next_token = function(previous_token, open_token) { // 
 
   token = token || this._read_open_handlebars(c, open_token);
   token = token || this._read_attribute(c, previous_token, open_token);
-  token = token || this._read_raw_content(c, previous_token, open_token);
   token = token || this._read_close(c, open_token);
+  token = token || this._read_raw_content(c, previous_token, open_token);
   token = token || this._read_content_word(c);
   token = token || this._read_comment_or_cdata(c);
   token = token || this._read_processing(c);
@@ -21796,7 +21702,9 @@ Tokenizer.prototype._read_raw_content = function(c, previous_token, open_token) 
   var resulting_string = '';
   if (open_token && open_token.text[0] === '{') {
     resulting_string = this.__patterns.handlebars_raw_close.read();
-  } else if (previous_token.type === TOKEN.TAG_CLOSE && (previous_token.opened.text[0] === '<')) {
+  } else if (previous_token.type === TOKEN.TAG_CLOSE &&
+    previous_token.opened.text[0] === '<' && previous_token.text[0] !== '/') {
+    // ^^ empty tag has no content 
     var tag_name = previous_token.opened.text.substr(1).toLowerCase();
     if (tag_name === 'script' || tag_name === 'style') {
       // Script and style tags are allowed to have comments wrapping their content
@@ -21808,6 +21716,7 @@ Tokenizer.prototype._read_raw_content = function(c, previous_token, open_token) 
       }
       resulting_string = this._input.readUntil(new RegExp('</' + tag_name + '[\\n\\r\\t ]*?>', 'ig'));
     } else if (this._is_content_unformatted(tag_name)) {
+
       resulting_string = this._input.readUntil(new RegExp('</' + tag_name + '[\\n\\r\\t ]*?>', 'ig'));
     }
   }
@@ -21840,7 +21749,42 @@ module.exports.TOKEN = TOKEN;
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(18);
+/******/ 	legacy_beautify_html = __webpack_exports__;
+/******/ 	
+/******/ })()
+;
 var style_html = legacy_beautify_html;
 /* Footer */
 if (true) {
@@ -21898,7 +21842,7 @@ if (true) {
   var mac_geMountainLion = /Mac OS X 1\d\D([8-9]|\d\d)\D/.test(userAgent);
   var phantom = /PhantomJS/.test(userAgent);
 
-  var ios = !edge && /AppleWebKit/.test(userAgent) && /Mobile\/\w+/.test(userAgent);
+  var ios = safari && (/Mobile\/\w+/.test(userAgent) || navigator.maxTouchPoints > 2);
   var android = /Android/.test(userAgent);
   // This is woefully incomplete. Suggestions for alternative methods welcome.
   var mobile = ios || android || /webOS|BlackBerry|Opera Mini|Opera Mobi|IEMobile/i.test(userAgent);
@@ -23177,6 +23121,7 @@ if (true) {
       if (span.marker == marker) { return span }
     } }
   }
+
   // Remove a span from an array, returning undefined if no spans are
   // left (we don't store arrays for lines without spans).
   function removeMarkedSpan(spans, span) {
@@ -23185,9 +23130,16 @@ if (true) {
       { if (spans[i] != span) { (r || (r = [])).push(spans[i]); } }
     return r
   }
+
   // Add a span to a line.
-  function addMarkedSpan(line, span) {
-    line.markedSpans = line.markedSpans ? line.markedSpans.concat([span]) : [span];
+  function addMarkedSpan(line, span, op) {
+    var inThisOp = op && window.WeakSet && (op.markedSpans || (op.markedSpans = new WeakSet));
+    if (inThisOp && inThisOp.has(line.markedSpans)) {
+      line.markedSpans.push(span);
+    } else {
+      line.markedSpans = line.markedSpans ? line.markedSpans.concat([span]) : [span];
+      if (inThisOp) { inThisOp.add(line.markedSpans); }
+    }
     span.marker.attachLine(line);
   }
 
@@ -23707,7 +23659,7 @@ if (true) {
       }
     }
     builder.trailingSpace = displayText.charCodeAt(text.length - 1) == 32;
-    if (style || startStyle || endStyle || mustWrap || css) {
+    if (style || startStyle || endStyle || mustWrap || css || attributes) {
       var fullStyle = style || "";
       if (startStyle) { fullStyle += startStyle; }
       if (endStyle) { fullStyle += endStyle; }
@@ -24052,6 +24004,7 @@ if (true) {
     if (cm.options.lineNumbers || markers) {
       var wrap$1 = ensureLineWrapped(lineView);
       var gutterWrap = lineView.gutter = elt("div", null, "CodeMirror-gutter-wrapper", ("left: " + (cm.options.fixedGutter ? dims.fixedPos : -dims.gutterTotalWidth) + "px"));
+      gutterWrap.setAttribute("aria-hidden", "true");
       cm.display.input.setUneditable(gutterWrap);
       wrap$1.insertBefore(gutterWrap, lineView.text);
       if (lineView.line.gutterClass)
@@ -24208,12 +24161,14 @@ if (true) {
   function mapFromLineView(lineView, line, lineN) {
     if (lineView.line == line)
       { return {map: lineView.measure.map, cache: lineView.measure.cache} }
-    for (var i = 0; i < lineView.rest.length; i++)
-      { if (lineView.rest[i] == line)
-        { return {map: lineView.measure.maps[i], cache: lineView.measure.caches[i]} } }
-    for (var i$1 = 0; i$1 < lineView.rest.length; i$1++)
-      { if (lineNo(lineView.rest[i$1]) > lineN)
-        { return {map: lineView.measure.maps[i$1], cache: lineView.measure.caches[i$1], before: true} } }
+    if (lineView.rest) {
+      for (var i = 0; i < lineView.rest.length; i++)
+        { if (lineView.rest[i] == line)
+          { return {map: lineView.measure.maps[i], cache: lineView.measure.caches[i]} } }
+      for (var i$1 = 0; i$1 < lineView.rest.length; i$1++)
+        { if (lineNo(lineView.rest[i$1]) > lineN)
+          { return {map: lineView.measure.maps[i$1], cache: lineView.measure.caches[i$1], before: true} } }
+    }
   }
 
   // Render a line into the hidden node display.externalMeasured. Used
@@ -24826,7 +24781,7 @@ if (true) {
     var x, y, space = display.lineSpace.getBoundingClientRect();
     // Fails unpredictably on IE[67] when mouse is dragged around quickly.
     try { x = e.clientX - space.left; y = e.clientY - space.top; }
-    catch (e) { return null }
+    catch (e$1) { return null }
     var coords = coordsChar(cm, x, y), line;
     if (forRect && coords.xRel > 0 && (line = getLine(cm.doc, coords.line).text).length == coords.ch) {
       var colDiff = countColumn(line, line.length, cm.options.tabSize) - line.length;
@@ -25007,13 +24962,19 @@ if (true) {
     var curFragment = result.cursors = document.createDocumentFragment();
     var selFragment = result.selection = document.createDocumentFragment();
 
+    var customCursor = cm.options.$customCursor;
+    if (customCursor) { primary = true; }
     for (var i = 0; i < doc.sel.ranges.length; i++) {
       if (!primary && i == doc.sel.primIndex) { continue }
       var range = doc.sel.ranges[i];
       if (range.from().line >= cm.display.viewTo || range.to().line < cm.display.viewFrom) { continue }
       var collapsed = range.empty();
-      if (collapsed || cm.options.showCursorWhenSelecting)
-        { drawSelectionCursor(cm, range.head, curFragment); }
+      if (customCursor) {
+        var head = customCursor(cm, range);
+        if (head) { drawSelectionCursor(cm, head, curFragment); }
+      } else if (collapsed || cm.options.showCursorWhenSelecting) {
+        drawSelectionCursor(cm, range.head, curFragment);
+      }
       if (!collapsed)
         { drawSelectionRange(cm, range, selFragment); }
     }
@@ -25028,6 +24989,12 @@ if (true) {
     cursor.style.left = pos.left + "px";
     cursor.style.top = pos.top + "px";
     cursor.style.height = Math.max(0, pos.bottom - pos.top) * cm.options.cursorHeight + "px";
+
+    if (/\bcm-fat-cursor\b/.test(cm.getWrapperElement().className)) {
+      var charPos = charCoords(cm, head, "div", null, null);
+      var width = charPos.right - charPos.left;
+      cursor.style.width = (width > 0 ? width : cm.defaultCharWidth()) + "px";
+    }
 
     if (pos.other) {
       // Secondary cursor, shown when on a 'jump' in bi-directional text
@@ -25142,26 +25109,31 @@ if (true) {
     var on = true;
     display.cursorDiv.style.visibility = "";
     if (cm.options.cursorBlinkRate > 0)
-      { display.blinker = setInterval(function () { return display.cursorDiv.style.visibility = (on = !on) ? "" : "hidden"; },
-        cm.options.cursorBlinkRate); }
+      { display.blinker = setInterval(function () {
+        if (!cm.hasFocus()) { onBlur(cm); }
+        display.cursorDiv.style.visibility = (on = !on) ? "" : "hidden";
+      }, cm.options.cursorBlinkRate); }
     else if (cm.options.cursorBlinkRate < 0)
       { display.cursorDiv.style.visibility = "hidden"; }
   }
 
   function ensureFocus(cm) {
-    if (!cm.state.focused) { cm.display.input.focus(); onFocus(cm); }
+    if (!cm.hasFocus()) {
+      cm.display.input.focus();
+      if (!cm.state.focused) { onFocus(cm); }
+    }
   }
 
   function delayBlurEvent(cm) {
     cm.state.delayingBlurEvent = true;
     setTimeout(function () { if (cm.state.delayingBlurEvent) {
       cm.state.delayingBlurEvent = false;
-      onBlur(cm);
+      if (cm.state.focused) { onBlur(cm); }
     } }, 100);
   }
 
   function onFocus(cm, e) {
-    if (cm.state.delayingBlurEvent) { cm.state.delayingBlurEvent = false; }
+    if (cm.state.delayingBlurEvent && !cm.state.draggingText) { cm.state.delayingBlurEvent = false; }
 
     if (cm.options.readOnly == "nocursor") { return }
     if (!cm.state.focused) {
@@ -25196,10 +25168,14 @@ if (true) {
   function updateHeightsInViewport(cm) {
     var display = cm.display;
     var prevBottom = display.lineDiv.offsetTop;
+    var viewTop = Math.max(0, display.scroller.getBoundingClientRect().top);
+    var oldHeight = display.lineDiv.getBoundingClientRect().top;
+    var mustScroll = 0;
     for (var i = 0; i < display.view.length; i++) {
       var cur = display.view[i], wrapping = cm.options.lineWrapping;
       var height = (void 0), width = 0;
       if (cur.hidden) { continue }
+      oldHeight += cur.line.height;
       if (ie && ie_version < 8) {
         var bot = cur.node.offsetTop + cur.node.offsetHeight;
         height = bot - prevBottom;
@@ -25214,6 +25190,7 @@ if (true) {
       }
       var diff = cur.line.height - height;
       if (diff > .005 || diff < -.005) {
+        if (oldHeight < viewTop) { mustScroll -= diff; }
         updateLineHeight(cur.line, height);
         updateWidgetHeight(cur.line);
         if (cur.rest) { for (var j = 0; j < cur.rest.length; j++)
@@ -25228,6 +25205,7 @@ if (true) {
         }
       }
     }
+    if (Math.abs(mustScroll) > 2) { display.scroller.scrollTop += mustScroll; }
   }
 
   // Read and store the height of line widgets associated with the
@@ -25291,8 +25269,8 @@ if (true) {
       // Set pos and end to the cursor positions around the character pos sticks to
       // If pos.sticky == "before", that is around pos.ch - 1, otherwise around pos.ch
       // If pos == Pos(_, 0, "before"), pos and end are unchanged
-      pos = pos.ch ? Pos(pos.line, pos.sticky == "before" ? pos.ch - 1 : pos.ch, "after") : pos;
       end = pos.sticky == "before" ? Pos(pos.line, pos.ch + 1, "before") : pos;
+      pos = pos.ch ? Pos(pos.line, pos.sticky == "before" ? pos.ch - 1 : pos.ch, "after") : pos;
     }
     for (var limit = 0; limit < 5; limit++) {
       var changed = false;
@@ -25343,14 +25321,15 @@ if (true) {
       if (newTop != screentop) { result.scrollTop = newTop; }
     }
 
-    var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft;
-    var screenw = displayWidth(cm) - (cm.options.fixedGutter ? display.gutters.offsetWidth : 0);
+    var gutterSpace = cm.options.fixedGutter ? 0 : display.gutters.offsetWidth;
+    var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft - gutterSpace;
+    var screenw = displayWidth(cm) - display.gutters.offsetWidth;
     var tooWide = rect.right - rect.left > screenw;
     if (tooWide) { rect.right = rect.left + screenw; }
     if (rect.left < 10)
       { result.scrollLeft = 0; }
     else if (rect.left < screenleft)
-      { result.scrollLeft = Math.max(0, rect.left - (tooWide ? 0 : 10)); }
+      { result.scrollLeft = Math.max(0, rect.left + gutterSpace - (tooWide ? 0 : 10)); }
     else if (rect.right > screenw + screenleft - 3)
       { result.scrollLeft = rect.right + (tooWide ? 0 : 10) - screenw; }
     return result
@@ -25487,6 +25466,7 @@ if (true) {
       this.vert.firstChild.style.height =
         Math.max(0, measure.scrollHeight - measure.clientHeight + totalHeight) + "px";
     } else {
+      this.vert.scrollTop = 0;
       this.vert.style.display = "";
       this.vert.firstChild.style.height = "0";
     }
@@ -25642,7 +25622,8 @@ if (true) {
       scrollLeft: null, scrollTop: null, // Intermediate scroll position, not pushed to DOM yet
       scrollToPos: null,       // Used to scroll to a specific position
       focus: false,
-      id: ++nextOpId           // Unique ID
+      id: ++nextOpId,          // Unique ID
+      markArrays: null         // Used by addMarkedSpan
     };
     pushOperation(cm.curOp);
   }
@@ -26095,6 +26076,8 @@ if (true) {
   function updateGutterSpace(display) {
     var width = display.gutters.offsetWidth;
     display.sizer.style.marginLeft = width + "px";
+    // Send an event to consumers responding to changes in gutter width.
+    signalLater(display, "gutterChanged", display);
   }
 
   function setDocumentHeight(cm, measure) {
@@ -26234,6 +26217,10 @@ if (true) {
     // The element in which the editor lives.
     d.wrapper = elt("div", [d.scrollbarFiller, d.gutterFiller, d.scroller], "CodeMirror");
 
+    // This attribute is respected by automatic translation systems such as Google Translate,
+    // and may also be respected by tools used by human translators.
+    d.wrapper.setAttribute('translate', 'no');
+
     // Work around IE7 z-index bug (not perfect, hence IE7 not really being supported)
     if (ie && ie_version < 8) { d.gutters.style.zIndex = -1; d.scroller.style.paddingRight = 0; }
     if (!webkit && !(gecko && mobile)) { d.scroller.draggable = true; }
@@ -26331,6 +26318,12 @@ if (true) {
 
   function onScrollWheel(cm, e) {
     var delta = wheelEventDelta(e), dx = delta.x, dy = delta.y;
+    var pixelsPerUnit = wheelPixelsPerUnit;
+    if (e.deltaMode === 0) {
+      dx = e.deltaX;
+      dy = e.deltaY;
+      pixelsPerUnit = 1;
+    }
 
     var display = cm.display, scroll = display.scroller;
     // Quit if there's nothing to scroll here
@@ -26359,10 +26352,10 @@ if (true) {
     // estimated pixels/delta value, we just handle horizontal
     // scrolling entirely here. It'll be slightly off from native, but
     // better than glitching out.
-    if (dx && !gecko && !presto && wheelPixelsPerUnit != null) {
+    if (dx && !gecko && !presto && pixelsPerUnit != null) {
       if (dy && canScrollY)
-        { updateScrollTop(cm, Math.max(0, scroll.scrollTop + dy * wheelPixelsPerUnit)); }
-      setScrollLeft(cm, Math.max(0, scroll.scrollLeft + dx * wheelPixelsPerUnit));
+        { updateScrollTop(cm, Math.max(0, scroll.scrollTop + dy * pixelsPerUnit)); }
+      setScrollLeft(cm, Math.max(0, scroll.scrollLeft + dx * pixelsPerUnit));
       // Only prevent default scrolling if vertical scrolling is
       // actually possible. Otherwise, it causes vertical scroll
       // jitter on OSX trackpads when deltaX is small and deltaY
@@ -26375,15 +26368,15 @@ if (true) {
 
     // 'Project' the visible viewport to cover the area that is being
     // scrolled into view (if we know enough to estimate it).
-    if (dy && wheelPixelsPerUnit != null) {
-      var pixels = dy * wheelPixelsPerUnit;
+    if (dy && pixelsPerUnit != null) {
+      var pixels = dy * pixelsPerUnit;
       var top = cm.doc.scrollTop, bot = top + display.wrapper.clientHeight;
       if (pixels < 0) { top = Math.max(0, top + pixels - 50); }
       else { bot = Math.min(cm.doc.height, bot + pixels + 50); }
       updateDisplaySimple(cm, {top: top, bottom: bot});
     }
 
-    if (wheelSamples < 20) {
+    if (wheelSamples < 20 && e.deltaMode !== 0) {
       if (display.wheelStartX == null) {
         display.wheelStartX = scroll.scrollLeft; display.wheelStartY = scroll.scrollTop;
         display.wheelDX = dx; display.wheelDY = dy;
@@ -26642,6 +26635,7 @@ if (true) {
     estimateLineHeights(cm);
     loadMode(cm);
     setDirectionClass(cm);
+    cm.options.direction = doc.direction;
     if (!cm.options.lineWrapping) { findMaxLine(cm); }
     cm.options.mode = doc.modeOption;
     regChange(cm);
@@ -26658,19 +26652,19 @@ if (true) {
     });
   }
 
-  function History(startGen) {
+  function History(prev) {
     // Arrays of change events and selections. Doing something adds an
     // event to done and clears undo. Undoing moves events from done
     // to undone, redoing moves them in the other direction.
     this.done = []; this.undone = [];
-    this.undoDepth = Infinity;
+    this.undoDepth = prev ? prev.undoDepth : Infinity;
     // Used to track when changes can be merged into a single undo
     // event
     this.lastModTime = this.lastSelTime = 0;
     this.lastOp = this.lastSelOp = null;
     this.lastOrigin = this.lastSelOrigin = null;
     // Used by the isClean() method
-    this.generation = this.maxGeneration = startGen || 1;
+    this.generation = this.maxGeneration = prev ? prev.maxGeneration : 1;
   }
 
   // Create a history change event from an updateDoc-style change
@@ -26975,7 +26969,7 @@ if (true) {
       (cmp(sel.primary().head, doc.sel.primary().head) < 0 ? -1 : 1);
     setSelectionInner(doc, skipAtomicInSelection(doc, sel, bias, true));
 
-    if (!(options && options.scroll === false) && doc.cm)
+    if (!(options && options.scroll === false) && doc.cm && doc.cm.getOption("readOnly") != "nocursor")
       { ensureCursorVisible(doc.cm); }
   }
 
@@ -27632,7 +27626,7 @@ if (true) {
     changeLine(doc, handle, "widget", function (line) {
       var widgets = line.widgets || (line.widgets = []);
       if (widget.insertAt == null) { widgets.push(widget); }
-      else { widgets.splice(Math.min(widgets.length - 1, Math.max(0, widget.insertAt)), 0, widget); }
+      else { widgets.splice(Math.min(widgets.length, Math.max(0, widget.insertAt)), 0, widget); }
       widget.line = line;
       if (cm && !lineIsHidden(doc, line)) {
         var aboveVisible = heightAtLine(line) < doc.scrollTop;
@@ -27818,7 +27812,7 @@ if (true) {
       if (marker.collapsed && curLine != from.line) { updateLineHeight(line, 0); }
       addMarkedSpan(line, new MarkedSpan(marker,
                                          curLine == from.line ? from.ch : null,
-                                         curLine == to.line ? to.ch : null));
+                                         curLine == to.line ? to.ch : null), doc.cm && doc.cm.curOp);
       ++curLine;
     });
     // lineIsHidden depends on the presence of the spans, so needs a second pass
@@ -27990,6 +27984,7 @@ if (true) {
     getRange: function(from, to, lineSep) {
       var lines = getBetween(this, clipPos(this, from), clipPos(this, to));
       if (lineSep === false) { return lines }
+      if (lineSep === '') { return lines.join('') }
       return lines.join(lineSep || this.lineSeparator())
     },
 
@@ -28041,7 +28036,7 @@ if (true) {
       var out = [];
       for (var i = 0; i < ranges.length; i++)
         { out[i] = new Range(clipPos(this, ranges[i].anchor),
-                           clipPos(this, ranges[i].head)); }
+                           clipPos(this, ranges[i].head || ranges[i].anchor)); }
       if (primary == null) { primary = Math.min(ranges.length - 1, this.sel.primIndex); }
       setSelection(this, normalizeSelection(this.cm, out, primary), options);
     }),
@@ -28104,7 +28099,7 @@ if (true) {
     clearHistory: function() {
       var this$1 = this;
 
-      this.history = new History(this.history.maxGeneration);
+      this.history = new History(this.history);
       linkedDocs(this, function (doc) { return doc.history = this$1.history; }, true);
     },
 
@@ -28125,7 +28120,7 @@ if (true) {
               undone: copyHistoryArray(this.history.undone)}
     },
     setHistory: function(histData) {
-      var hist = this.history = new History(this.history.maxGeneration);
+      var hist = this.history = new History(this.history);
       hist.done = copyHistoryArray(histData.done.slice(0), null, true);
       hist.undone = copyHistoryArray(histData.undone.slice(0), null, true);
     },
@@ -28411,7 +28406,7 @@ if (true) {
           cm.display.input.focus();
         }
       }
-      catch(e){}
+      catch(e$1){}
     }
   }
 
@@ -28507,7 +28502,7 @@ if (true) {
     46: "Delete", 59: ";", 61: "=", 91: "Mod", 92: "Mod", 93: "Mod",
     106: "*", 107: "=", 109: "-", 110: ".", 111: "/", 145: "ScrollLock",
     173: "-", 186: ";", 187: "=", 188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\",
-    221: "]", 222: "'", 63232: "Up", 63233: "Down", 63234: "Left", 63235: "Right", 63272: "Delete",
+    221: "]", 222: "'", 224: "Mod", 63232: "Up", 63233: "Down", 63234: "Left", 63235: "Right", 63272: "Delete",
     63273: "Home", 63275: "End", 63276: "PageUp", 63277: "PageDown", 63302: "Insert"
   };
 
@@ -28544,10 +28539,9 @@ if (true) {
   // Very basic readline/emacs-style bindings, which are standard on Mac.
   keyMap.emacsy = {
     "Ctrl-F": "goCharRight", "Ctrl-B": "goCharLeft", "Ctrl-P": "goLineUp", "Ctrl-N": "goLineDown",
-    "Alt-F": "goWordRight", "Alt-B": "goWordLeft", "Ctrl-A": "goLineStart", "Ctrl-E": "goLineEnd",
-    "Ctrl-V": "goPageDown", "Shift-Ctrl-V": "goPageUp", "Ctrl-D": "delCharAfter", "Ctrl-H": "delCharBefore",
-    "Alt-D": "delWordAfter", "Alt-Backspace": "delWordBefore", "Ctrl-K": "killLine", "Ctrl-T": "transposeChars",
-    "Ctrl-O": "openLine"
+    "Ctrl-A": "goLineStart", "Ctrl-E": "goLineEnd", "Ctrl-V": "goPageDown", "Shift-Ctrl-V": "goPageUp",
+    "Ctrl-D": "delCharAfter", "Ctrl-H": "delCharBefore", "Alt-Backspace": "delWordBefore", "Ctrl-K": "killLine",
+    "Ctrl-T": "transposeChars", "Ctrl-O": "openLine"
   };
   keyMap.macDefault = {
     "Cmd-A": "selectAll", "Cmd-D": "deleteLine", "Cmd-Z": "undo", "Shift-Cmd-Z": "redo", "Cmd-Y": "redo",
@@ -28642,7 +28636,7 @@ if (true) {
     var base = name;
     if (event.altKey && base != "Alt") { name = "Alt-" + name; }
     if ((flipCtrlCmd ? event.metaKey : event.ctrlKey) && base != "Ctrl") { name = "Ctrl-" + name; }
-    if ((flipCtrlCmd ? event.ctrlKey : event.metaKey) && base != "Cmd") { name = "Cmd-" + name; }
+    if ((flipCtrlCmd ? event.ctrlKey : event.metaKey) && base != "Mod") { name = "Cmd-" + name; }
     if (!noShift && event.shiftKey && base != "Shift") { name = "Shift-" + name; }
     return name
   }
@@ -28868,7 +28862,7 @@ if (true) {
     goGroupRight: function (cm) { return cm.moveH(1, "group"); },
     goGroupLeft: function (cm) { return cm.moveH(-1, "group"); },
     goWordRight: function (cm) { return cm.moveH(1, "word"); },
-    delCharBefore: function (cm) { return cm.deleteH(-1, "char"); },
+    delCharBefore: function (cm) { return cm.deleteH(-1, "codepoint"); },
     delCharAfter: function (cm) { return cm.deleteH(1, "char"); },
     delWordBefore: function (cm) { return cm.deleteH(-1, "word"); },
     delWordAfter: function (cm) { return cm.deleteH(1, "word"); },
@@ -29241,6 +29235,10 @@ if (true) {
     var dragEnd = operation(cm, function (e) {
       if (webkit) { display.scroller.draggable = false; }
       cm.state.draggingText = false;
+      if (cm.state.delayingBlurEvent) {
+        if (cm.hasFocus()) { cm.state.delayingBlurEvent = false; }
+        else { delayBlurEvent(cm); }
+      }
       off(display.wrapper.ownerDocument, "mouseup", dragEnd);
       off(display.wrapper.ownerDocument, "mousemove", mouseMove);
       off(display.scroller, "dragstart", dragStart);
@@ -29264,15 +29262,15 @@ if (true) {
     if (webkit) { display.scroller.draggable = true; }
     cm.state.draggingText = dragEnd;
     dragEnd.copy = !behavior.moveOnDrag;
-    // IE's approach to draggable
-    if (display.scroller.dragDrop) { display.scroller.dragDrop(); }
     on(display.wrapper.ownerDocument, "mouseup", dragEnd);
     on(display.wrapper.ownerDocument, "mousemove", mouseMove);
     on(display.scroller, "dragstart", dragStart);
     on(display.scroller, "drop", dragEnd);
 
-    delayBlurEvent(cm);
+    cm.state.delayingBlurEvent = true;
     setTimeout(function () { return display.input.focus(); }, 20);
+    // IE's approach to draggable
+    if (display.scroller.dragDrop) { display.scroller.dragDrop(); }
   }
 
   function rangeForUnit(cm, pos, unit) {
@@ -29285,6 +29283,7 @@ if (true) {
 
   // Normal selection, as opposed to text dragging.
   function leftButtonSelect(cm, event, start, behavior) {
+    if (ie) { delayBlurEvent(cm); }
     var display = cm.display, doc = cm.doc;
     e_preventDefault(event);
 
@@ -29463,7 +29462,7 @@ if (true) {
       mY = e.touches[0].clientY;
     } else {
       try { mX = e.clientX; mY = e.clientY; }
-      catch(e) { return false }
+      catch(e$1) { return false }
     }
     if (mX >= Math.floor(cm.display.gutters.getBoundingClientRect().right)) { return false }
     if (prevent) { e_preventDefault(e); }
@@ -29563,7 +29562,7 @@ if (true) {
       for (var i = newBreaks.length - 1; i >= 0; i--)
         { replaceRange(cm.doc, val, newBreaks[i], Pos(newBreaks[i].line, newBreaks[i].ch + val.length)); }
     });
-    option("specialChars", /[\u0000-\u001f\u007f-\u009f\u00ad\u061c\u200b-\u200f\u2028\u2029\ufeff\ufff9-\ufffc]/g, function (cm, val, old) {
+    option("specialChars", /[\u0000-\u001f\u007f-\u009f\u00ad\u061c\u200b\u200e\u200f\u2028\u2029\ufeff\ufff9-\ufffc]/g, function (cm, val, old) {
       cm.state.specialChars = new RegExp(val.source + (val.test("\t") ? "" : "|\t"), "g");
       if (old != Init) { cm.refresh(); }
     });
@@ -29743,7 +29742,9 @@ if (true) {
     attachDoc(this, doc);
 
     if ((options.autofocus && !mobile) || this.hasFocus())
-      { setTimeout(bind(onFocus, this), 20); }
+      { setTimeout(function () {
+        if (this$1.hasFocus() && !this$1.state.focused) { onFocus(this$1); }
+      }, 20); }
     else
       { onBlur(this); }
 
@@ -29983,7 +29984,7 @@ if (true) {
           { from = Pos(from.line, from.ch - deleted); }
         else if (cm.state.overwrite && !paste) // Handle overwrite
           { to = Pos(to.line, Math.min(getLine(doc, to.line).text.length, to.ch + lst(textLines).length)); }
-        else if (paste && lastCopied && lastCopied.lineWise && lastCopied.text.join("\n") == inserted)
+        else if (paste && lastCopied && lastCopied.lineWise && lastCopied.text.join("\n") == textLines.join("\n"))
           { from = to = Pos(from.line, 0); }
       }
       var changeEvent = {from: from, to: to, text: multiPaste ? multiPaste[i$1 % multiPaste.length] : textLines,
@@ -30052,7 +30053,7 @@ if (true) {
   }
 
   function hiddenTextarea() {
-    var te = elt("textarea", null, null, "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; outline: none");
+    var te = elt("textarea", null, null, "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; min-height: 1em; outline: none");
     var div = elt("div", [te], null, "overflow: hidden; position: relative; width: 3px; height: 0px;");
     // The textarea is kept positioned near the cursor to prevent the
     // fact that it'll be scrolled into view on input from scrolling
@@ -30506,14 +30507,14 @@ if (true) {
   }
 
   // Used for horizontal relative motion. Dir is -1 or 1 (left or
-  // right), unit can be "char", "column" (like char, but doesn't
-  // cross line boundaries), "word" (across next word), or "group" (to
-  // the start of next group of word or non-word-non-whitespace
-  // chars). The visually param controls whether, in right-to-left
-  // text, direction 1 means to move towards the next index in the
-  // string, or towards the character to the right of the current
-  // position. The resulting position will have a hitSide=true
-  // property if it reached the end of the document.
+  // right), unit can be "codepoint", "char", "column" (like char, but
+  // doesn't cross line boundaries), "word" (across next word), or
+  // "group" (to the start of next group of word or
+  // non-word-non-whitespace chars). The visually param controls
+  // whether, in right-to-left text, direction 1 means to move towards
+  // the next index in the string, or towards the character to the right
+  // of the current position. The resulting position will have a
+  // hitSide=true property if it reached the end of the document.
   function findPosH(doc, pos, dir, unit, visually) {
     var oldPos = pos;
     var origDir = dir;
@@ -30527,7 +30528,15 @@ if (true) {
     }
     function moveOnce(boundToLine) {
       var next;
-      if (visually) {
+      if (unit == "codepoint") {
+        var ch = lineObj.text.charCodeAt(pos.ch + (dir > 0 ? 0 : -1));
+        if (isNaN(ch)) {
+          next = null;
+        } else {
+          var astral = dir > 0 ? ch >= 0xD800 && ch < 0xDC00 : ch >= 0xDC00 && ch < 0xDFFF;
+          next = new Pos(pos.line, Math.max(0, Math.min(lineObj.text.length, pos.ch + dir * (astral ? 2 : 1))), -dir);
+        }
+      } else if (visually) {
         next = moveVisually(doc.cm, lineObj, pos, dir);
       } else {
         next = moveLogically(lineObj, pos, dir);
@@ -30543,7 +30552,7 @@ if (true) {
       return true
     }
 
-    if (unit == "char") {
+    if (unit == "char" || unit == "codepoint") {
       moveOnce();
     } else if (unit == "column") {
       moveOnce(true);
@@ -30611,6 +30620,7 @@ if (true) {
 
     var input = this, cm = input.cm;
     var div = input.div = display.lineDiv;
+    div.contentEditable = true;
     disableBrowserMagic(div, cm.options.spellcheck, cm.options.autocorrect, cm.options.autocapitalize);
 
     function belongsToInput(e) {
@@ -30677,7 +30687,7 @@ if (true) {
       var kludge = hiddenTextarea(), te = kludge.firstChild;
       cm.display.lineSpace.insertBefore(kludge, cm.display.lineSpace.firstChild);
       te.value = lastCopied.text.join("\n");
-      var hadFocus = document.activeElement;
+      var hadFocus = activeElt();
       selectInput(te);
       setTimeout(function () {
         cm.display.lineSpace.removeChild(kludge);
@@ -30700,7 +30710,7 @@ if (true) {
 
   ContentEditableInput.prototype.prepareSelection = function () {
     var result = prepareSelection(this.cm, false);
-    result.focus = document.activeElement == this.div;
+    result.focus = activeElt() == this.div;
     return result
   };
 
@@ -30796,7 +30806,7 @@ if (true) {
 
   ContentEditableInput.prototype.focus = function () {
     if (this.cm.options.readOnly != "nocursor") {
-      if (!this.selectionInEditor() || document.activeElement != this.div)
+      if (!this.selectionInEditor() || activeElt() != this.div)
         { this.showSelection(this.prepareSelection(), true); }
       this.div.focus();
     }
@@ -30807,9 +30817,11 @@ if (true) {
   ContentEditableInput.prototype.supportsTouch = function () { return true };
 
   ContentEditableInput.prototype.receivedFocus = function () {
+      var this$1 = this;
+
     var input = this;
     if (this.selectionInEditor())
-      { this.pollSelection(); }
+      { setTimeout(function () { return this$1.pollSelection(); }, 20); }
     else
       { runInOp(this.cm, function () { return input.cm.curOp.selectionChanged = true; }); }
 
@@ -31487,6 +31499,7 @@ if (true) {
   TextareaInput.prototype.readOnlyChanged = function (val) {
     if (!val) { this.reset(); }
     this.textarea.disabled = val == "nocursor";
+    this.textarea.readOnly = !!val;
   };
 
   TextareaInput.prototype.setUneditable = function () {};
@@ -31637,7 +31650,7 @@ if (true) {
 
   addLegacyProps(CodeMirror);
 
-  CodeMirror.version = "5.54.0";
+  CodeMirror.version = "5.65.0";
 
   return CodeMirror;
 
@@ -31648,7 +31661,7 @@ if (true) {
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-function _typeof2(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
+function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof2(obj); }
 
 module.exports =
 /******/
@@ -31900,11 +31913,11 @@ function (modules) {
 
   return __webpack_require__(__webpack_require__.s = 0);
   /******/
-}(
+}
 /************************************************************************/
 
 /******/
-[
+([
 /* 0 */
 
 /***/
@@ -31974,17 +31987,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -32006,6 +32013,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -32020,6 +32030,9 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
+    });
+    Object.defineProperty(subClass, "prototype", {
+      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -32055,6 +32068,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -32074,7 +32089,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -32496,9 +32511,14 @@ function (module, __webpack_exports__, __webpack_require__) {
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["repaintChildren"])(this.children);
         this.emit('repaint__done');
       }
+      /**
+       * 给定节点树和触摸坐标，遍历节点树，查询被点中的所有节点
+       * 之所以要查询所有节点是因为先渲染的节点层级更低，最后一个查询到的节点才是最上面的被点中的节点
+       */
+
     }, {
       key: "getChildByPos",
-      value: function getChildByPos(tree, x, y) {
+      value: function getChildByPos(tree, x, y, itemList) {
         var list = Object.keys(tree.children);
 
         for (var i = 0; i < list.length; i++) {
@@ -32507,14 +32527,12 @@ function (module, __webpack_exports__, __webpack_require__) {
 
           if (box.realX <= x && x <= box.realX + box.width && box.realY <= y && y <= box.realY + box.height) {
             if (Object.keys(child.children).length) {
-              return this.getChildByPos(child, x, y);
+              this.getChildByPos(child, x, y, itemList);
             } else {
-              return child;
+              itemList.push(child);
             }
           }
         }
-
-        return tree;
       }
     }, {
       key: "eventHandler",
@@ -32533,10 +32551,18 @@ function (module, __webpack_exports__, __webpack_require__) {
           if (!touch.timeStamp) {
             touch.timeStamp = e.timeStamp;
           }
-          /*console.log(touch.pageX, touch.pageY);*/
 
+          var list = [];
 
-          var item = touch && this.getChildByPos(this, touch.pageX, touch.pageY);
+          if (touch) {
+            this.getChildByPos(this, touch.pageX, touch.pageY, list);
+          }
+
+          if (!list.length) {
+            list.push(this);
+          }
+
+          var item = list[list.length - 1];
           item && item.emit(eventName, e);
 
           if (eventName === 'touchstart' || eventName === 'touchend') {
@@ -32738,6 +32764,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -33102,6 +33131,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -35570,6 +35602,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -35614,31 +35649,84 @@ function (module, __webpack_exports__, __webpack_require__) {
       value: function parseConfig(fntText) {
         fntText = fntText.split("\r\n").join("\n");
         var lines = fntText.split("\n");
-        var charsCount = this.getConfigByKey(lines[3], "count");
-        this.lineHeight = this.getConfigByKey(lines[1], 'lineHeight');
-        this.fontSize = this.getConfigByKey(lines[0], 'size');
+        var linesParsed = lines.map(function (line) {
+          return line.split(" ");
+        });
+        var charsLine = this.getConfigByLineName(linesParsed, 'chars');
+        var charsCount = this.getConfigByKeyInOneLine(charsLine.line, "count");
+        var commonLine = this.getConfigByLineName(linesParsed, 'common');
+        this.lineHeight = this.getConfigByKeyInOneLine(commonLine.line, 'lineHeight');
+        var infoLine = this.getConfigByLineName(linesParsed, 'info');
+        this.fontSize = this.getConfigByKeyInOneLine(infoLine.line, 'size'); // 接卸 kernings
+
+        var kerningsLine = this.getConfigByLineName(linesParsed, 'kernings');
+        var kerningsCount = 0;
+        var kerningsStart = -1;
+
+        if (kerningsLine.line) {
+          kerningsCount = this.getConfigByKeyInOneLine(kerningsLine.line, 'count');
+          kerningsStart = kerningsLine.index + 1;
+        }
+
         var chars = {};
 
         for (var i = 4; i < 4 + charsCount; i++) {
           var charText = lines[i];
-          var letter = String.fromCharCode(this.getConfigByKey(charText, "id"));
+          var letter = String.fromCharCode(this.getConfigByKeyInOneLine(charText, "id"));
           var c = {};
           chars[letter] = c;
-          c["x"] = this.getConfigByKey(charText, "x");
-          c["y"] = this.getConfigByKey(charText, "y");
-          c["w"] = this.getConfigByKey(charText, "width");
-          c["h"] = this.getConfigByKey(charText, "height");
-          c["offX"] = this.getConfigByKey(charText, "xoffset");
-          c["offY"] = this.getConfigByKey(charText, "yoffset");
-          c["xadvance"] = this.getConfigByKey(charText, "xadvance");
+          c["x"] = this.getConfigByKeyInOneLine(charText, "x");
+          c["y"] = this.getConfigByKeyInOneLine(charText, "y");
+          c["w"] = this.getConfigByKeyInOneLine(charText, "width");
+          c["h"] = this.getConfigByKeyInOneLine(charText, "height");
+          c["offX"] = this.getConfigByKeyInOneLine(charText, "xoffset");
+          c["offY"] = this.getConfigByKeyInOneLine(charText, "yoffset");
+          c["xadvance"] = this.getConfigByKeyInOneLine(charText, "xadvance");
+          c["kerning"] = {};
+        } // parse kernings
+
+
+        if (kerningsCount) {
+          for (var _i = kerningsStart; _i <= kerningsStart + kerningsCount; _i++) {
+            var line = linesParsed[_i];
+            var first = String.fromCharCode(this.getConfigByKeyInOneLine(line, "first"));
+            var second = String.fromCharCode(this.getConfigByKeyInOneLine(line, "second"));
+            var amount = this.getConfigByKeyInOneLine(line, "amount");
+
+            if (chars[second]) {
+              chars[second].kerning[first] = amount;
+            }
+          }
         }
 
         return chars;
       }
     }, {
-      key: "getConfigByKey",
-      value: function getConfigByKey(configText, key) {
-        var itemConfigTextList = configText.split(" ");
+      key: "getConfigByLineName",
+      value: function getConfigByLineName(linesParsed) {
+        var lineName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+        var index = -1;
+        var line = null;
+        var len = linesParsed.length;
+
+        for (var i = 0; i < len; i++) {
+          var item = linesParsed[i];
+
+          if (item[0] === lineName) {
+            index = i;
+            line = item;
+          }
+        }
+
+        return {
+          line: line,
+          index: index
+        };
+      }
+    }, {
+      key: "getConfigByKeyInOneLine",
+      value: function getConfigByKeyInOneLine(configText, key) {
+        var itemConfigTextList = Array.isArray(configText) ? configText : configText.split(" ");
 
         for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
           var itemConfigText = itemConfigTextList[i];
@@ -35693,6 +35781,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -35841,17 +35932,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -35873,6 +35958,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -35887,6 +35975,9 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
+    });
+    Object.defineProperty(subClass, "prototype", {
+      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -35922,6 +36013,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -35941,7 +36034,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -36091,17 +36184,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -36123,6 +36210,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -36137,6 +36227,9 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
+    });
+    Object.defineProperty(subClass, "prototype", {
+      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -36172,6 +36265,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36191,7 +36286,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -36268,6 +36363,22 @@ function (module, __webpack_exports__, __webpack_require__) {
     }
 
     _createClass(Image, [{
+      key: "isScrollViewChild",
+      get: function get() {
+        var flag = false;
+        var parent = this.parent;
+
+        while (parent && !flag) {
+          if (parent.type === "ScrollView") {
+            flag = true;
+          } else {
+            parent = parent.parent;
+          }
+        }
+
+        return flag;
+      }
+    }, {
       key: "repaint",
       value: function repaint() {
         var _this3 = this;
@@ -36345,22 +36456,6 @@ function (module, __webpack_exports__, __webpack_require__) {
           }
         });
       }
-    }, {
-      key: "isScrollViewChild",
-      get: function get() {
-        var flag = false;
-        var parent = this.parent;
-
-        while (parent && !flag) {
-          if (parent.type === "ScrollView") {
-            flag = true;
-          } else {
-            parent = parent.parent;
-          }
-        }
-
-        return flag;
-      }
     }]);
 
     return Image;
@@ -36393,17 +36488,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -36425,6 +36514,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -36439,6 +36531,9 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
+    });
+    Object.defineProperty(subClass, "prototype", {
+      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -36474,6 +36569,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36493,7 +36590,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -36732,17 +36829,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -36764,6 +36855,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -36778,6 +36872,9 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
+    });
+    Object.defineProperty(subClass, "prototype", {
+      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -36813,6 +36910,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -36832,7 +36931,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -36914,6 +37013,64 @@ function (module, __webpack_exports__, __webpack_require__) {
 
 
     _createClass(ScrollView, [{
+      key: "scrollHeight",
+      get: function get() {
+        // scrollview为空的情况
+        if (!this.children.length) {
+          return 0;
+        }
+
+        var last = this.children[this.children.length - 1];
+        return last.layoutBox.top + last.layoutBox.height;
+      }
+    }, {
+      key: "scrollWidth",
+      get: function get() {
+        // scrollview为空的情况
+        if (!this.children.length) {
+          return 0;
+        }
+
+        var last = this.children[this.children.length - 1];
+        return last.layoutBox.left + last.layoutBox.width;
+      }
+    }, {
+      key: "scrollX",
+      get: function get() {
+        return this._scrollerOption.scrollingX;
+      },
+      set: function set(value) {
+        this.scrollerOption = {
+          scrollingX: value
+        };
+      }
+    }, {
+      key: "scrollY",
+      get: function get() {
+        return this._scrollerOption.scrollingY;
+      },
+      set: function set(value) {
+        this.scrollerOption = {
+          scrollingY: value
+        };
+      }
+    }, {
+      key: "scrollerOption",
+      get: function get() {
+        return this._scrollerOption;
+      },
+      set: function set(value) {
+        if (value === void 0) {
+          value = {};
+        }
+
+        Object.assign(this._scrollerOption, value);
+
+        if (this.scrollerObj) {
+          Object.assign(this.scrollerObj.options, this.scrollerOption);
+        }
+      }
+    }, {
       key: "repaint",
       value: function repaint() {
         var _this2 = this;
@@ -37131,61 +37288,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
         var animate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
         this.scrollerObj.scrollTo(left, top, animate);
-      }
-    }, {
-      key: "scrollHeight",
-      get: function get() {
-        // scrollview为空的情况
-        if (!this.children.length) {
-          return 0;
-        }
-
-        var last = this.children[this.children.length - 1];
-        return last.layoutBox.top + last.layoutBox.height;
-      }
-    }, {
-      key: "scrollWidth",
-      get: function get() {
-        // scrollview为空的情况
-        if (!this.children.length) {
-          return 0;
-        }
-
-        var last = this.children[this.children.length - 1];
-        return last.layoutBox.left + last.layoutBox.width;
-      }
-    }, {
-      key: "scrollX",
-      get: function get() {
-        return this._scrollerOption.scrollingX;
-      },
-      set: function set(value) {
-        this.scrollerOption = {
-          scrollingX: value
-        };
-      }
-    }, {
-      key: "scrollY",
-      get: function get() {
-        return this._scrollerOption.scrollingY;
-      },
-      set: function set(value) {
-        this.scrollerOption = {
-          scrollingY: value
-        };
-      }
-    }, {
-      key: "scrollerOption",
-      get: function get() {
-        return this._scrollerOption;
-      },
-      set: function set() {
-        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        Object.assign(this._scrollerOption, value);
-
-        if (this.scrollerObj) {
-          Object.assign(this.scrollerObj.options, this.scrollerOption);
-        }
       }
     }]);
 
@@ -38544,17 +38646,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -38576,6 +38672,9 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -38590,6 +38689,9 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
+    });
+    Object.defineProperty(subClass, "prototype", {
+      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -38625,6 +38727,8 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
@@ -38644,7 +38748,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -38708,7 +38812,7 @@ function (module, __webpack_exports__, __webpack_require__) {
       _this.font = bitMapPool.get(font);
 
       if (!_this.font) {
-        console.error('Please invoke API `registBitMapFont` before using `BitMapText`');
+        console.error("Missing BitmapFont \"".concat(font, "\", please invoke API \"registBitMapFont\" before using \"BitMapText\""));
       }
 
       return _this;
@@ -38804,7 +38908,9 @@ function (module, __webpack_exports__, __webpack_require__) {
             _style$lineHeight = style.lineHeight,
             lineHeight = _style$lineHeight === void 0 ? defaultLineHeight : _style$lineHeight,
             textAlign = style.textAlign,
-            verticalAlign = style.verticalAlign; // 元素包围盒的左上角坐标
+            verticalAlign = style.verticalAlign,
+            _style$letterSpacing2 = style.letterSpacing,
+            letterSpacing = _style$letterSpacing2 === void 0 ? 0 : _style$letterSpacing2; // 元素包围盒的左上角坐标
 
         var x = box.absoluteX;
         var y = box.absoluteY;
@@ -38825,15 +38931,23 @@ function (module, __webpack_exports__, __webpack_require__) {
           } else if (textAlign === 'right') {
             x += width - realWidth;
           }
-        }
+        } // 记录上一个字符，方便处理 kerning
+
+
+        var prevCharCode = null;
 
         for (var i = 0; i < this.value.length; i++) {
           var _char2 = this.value[i];
           var cfg = this.font.chars[_char2];
 
+          if (prevCharCode && cfg.kerning[prevCharCode]) {
+            x += cfg.kerning[prevCharCode];
+          }
+
           if (cfg) {
             ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX * scaleY, y + cfg.offY * scaleY, cfg.w * scaleY, cfg.h * scaleY);
-            x += cfg.w * scaleY;
+            x += cfg.xadvance * scaleY + letterSpacing;
+            prevCharCode = _char2;
           }
         }
 
@@ -39009,6 +39123,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
 
+// declare global: DOMRect
+
 (function(mod) {
   if (true) // CommonJS
     mod(__webpack_require__(16));
@@ -39064,8 +39180,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     this.startPos = this.cm.getCursor("start");
     this.startLen = this.cm.getLine(this.startPos.line).length - this.cm.getSelection().length;
 
-    var self = this;
-    cm.on("cursorActivity", this.activityFunc = function() { self.cursorActivity(); });
+    if (this.options.updateOnCursorActivity) {
+      var self = this;
+      cm.on("cursorActivity", this.activityFunc = function() { self.cursorActivity(); });
+    }
   }
 
   var requestAnimationFrame = window.requestAnimationFrame || function(fn) {
@@ -39078,7 +39196,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
       if (!this.active()) return;
       this.cm.state.completionActive = null;
       this.tick = null;
-      this.cm.off("cursorActivity", this.activityFunc);
+      if (this.options.updateOnCursorActivity) {
+        this.cm.off("cursorActivity", this.activityFunc);
+      }
 
       if (this.widget && this.data) CodeMirror.signal(this.data, "close");
       if (this.widget) this.widget.close();
@@ -39099,8 +39219,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
                                completion.to || data.to, "complete");
         CodeMirror.signal(data, "pick", completion);
         self.cm.scrollIntoView();
-      })
-      this.close();
+      });
+      if (this.options.closeOnPick) {
+        this.close();
+      }
     },
 
     cursorActivity: function() {
@@ -39221,6 +39343,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
   }
 
   function Widget(completion, data) {
+    this.id = "cm-complete-" + Math.floor(Math.random(1e6))
     this.completion = completion;
     this.data = data;
     this.picked = false;
@@ -39229,6 +39352,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     var parentWindow = ownerDocument.defaultView || ownerDocument.parentWindow;
 
     var hints = this.hints = ownerDocument.createElement("ul");
+    hints.setAttribute("role", "listbox")
+    hints.setAttribute("aria-expanded", "true")
+    hints.id = this.id
     var theme = completion.cm.options.theme;
     hints.className = "CodeMirror-hints " + theme;
     this.selectedHint = data.selectedHint || 0;
@@ -39239,6 +39365,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
       var className = HINT_ELEMENT_CLASS + (i != this.selectedHint ? "" : " " + ACTIVE_HINT_ELEMENT_CLASS);
       if (cur.className != null) className = cur.className + " " + className;
       elt.className = className;
+      if (i == this.selectedHint) elt.setAttribute("aria-selected", "true")
+      elt.id = this.id + "-" + i
+      elt.setAttribute("role", "option")
       if (cur.render) cur.render(elt, data, cur);
       else elt.appendChild(ownerDocument.createTextNode(cur.displayText || getText(cur)));
       elt.hintId = i;
@@ -39264,10 +39393,18 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     var winW = parentWindow.innerWidth || Math.max(ownerDocument.body.offsetWidth, ownerDocument.documentElement.offsetWidth);
     var winH = parentWindow.innerHeight || Math.max(ownerDocument.body.offsetHeight, ownerDocument.documentElement.offsetHeight);
     container.appendChild(hints);
-    var box = hints.getBoundingClientRect(), overlapY = box.bottom - winH;
-    var scrolls = hints.scrollHeight > hints.clientHeight + 1
-    var startScroll = cm.getScrollInfo();
+    cm.getInputField().setAttribute("aria-autocomplete", "list")
+    cm.getInputField().setAttribute("aria-owns", this.id)
+    cm.getInputField().setAttribute("aria-activedescendant", this.id + "-" + this.selectedHint)
 
+    var box = completion.options.moveOnOverlap ? hints.getBoundingClientRect() : new DOMRect();
+    var scrolls = completion.options.paddingForScrollbar ? hints.scrollHeight > hints.clientHeight + 1 : false;
+
+    // Compute in the timeout to avoid reflow on init
+    var startScroll;
+    setTimeout(function() { startScroll = cm.getScrollInfo(); });
+
+    var overlapY = box.bottom - winH;
     if (overlapY > 0) {
       var height = box.bottom - box.top, curTop = pos.top - (pos.bottom - box.top);
       if (curTop - height > 0) { // Fits above cursor
@@ -39285,6 +39422,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
       }
     }
     var overlapX = box.right - winW;
+    if (scrolls) overlapX += cm.display.nativeBarWidth;
     if (overlapX > 0) {
       if (box.right - box.left > winW) {
         hints.style.width = (winW - 5) + "px";
@@ -39313,6 +39451,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
 
     cm.on("scroll", this.onScroll = function() {
       var curScroll = cm.getScrollInfo(), editor = cm.getWrapperElement().getBoundingClientRect();
+      if (!startScroll) startScroll = cm.getScrollInfo();
       var newTop = top + startScroll.top - curScroll.top;
       var point = newTop - (parentWindow.pageYOffset || (ownerDocument.documentElement || ownerDocument.body).scrollTop);
       if (!below) point += hints.offsetHeight;
@@ -39337,7 +39476,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     CodeMirror.on(hints, "mousedown", function() {
       setTimeout(function(){cm.focus();}, 20);
     });
-    this.scrollToActive()
+
+    // The first hint doesn't need to be scrolled to on init
+    var selectedHintRange = this.getSelectedHintRange();
+    if (selectedHintRange.from !== 0 || selectedHintRange.to !== 0) {
+      this.scrollToActive();
+    }
 
     CodeMirror.signal(data, "select", completions[this.selectedHint], hints.childNodes[this.selectedHint]);
     return true;
@@ -39347,8 +39491,11 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     close: function() {
       if (this.completion.widget != this) return;
       this.completion.widget = null;
-      this.hints.parentNode.removeChild(this.hints);
+      if (this.hints.parentNode) this.hints.parentNode.removeChild(this.hints);
       this.completion.cm.removeKeyMap(this.keyMap);
+      var input = this.completion.cm.getInputField()
+      input.removeAttribute("aria-activedescendant")
+      input.removeAttribute("aria-owns")
 
       var cm = this.completion.cm;
       if (this.completion.options.closeOnUnfocus) {
@@ -39376,24 +39523,39 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
         i = avoidWrap ? 0  : this.data.list.length - 1;
       if (this.selectedHint == i) return;
       var node = this.hints.childNodes[this.selectedHint];
-      if (node) node.className = node.className.replace(" " + ACTIVE_HINT_ELEMENT_CLASS, "");
+      if (node) {
+        node.className = node.className.replace(" " + ACTIVE_HINT_ELEMENT_CLASS, "");
+        node.removeAttribute("aria-selected")
+      }
       node = this.hints.childNodes[this.selectedHint = i];
       node.className += " " + ACTIVE_HINT_ELEMENT_CLASS;
+      node.setAttribute("aria-selected", "true")
+      this.completion.cm.getInputField().setAttribute("aria-activedescendant", node.id)
       this.scrollToActive()
       CodeMirror.signal(this.data, "select", this.data.list[this.selectedHint], node);
     },
 
     scrollToActive: function() {
-      var node = this.hints.childNodes[this.selectedHint]
+      var selectedHintRange = this.getSelectedHintRange();
+      var node1 = this.hints.childNodes[selectedHintRange.from];
+      var node2 = this.hints.childNodes[selectedHintRange.to];
       var firstNode = this.hints.firstChild;
-      if (node.offsetTop < this.hints.scrollTop)
-        this.hints.scrollTop = node.offsetTop - firstNode.offsetTop;
-      else if (node.offsetTop + node.offsetHeight > this.hints.scrollTop + this.hints.clientHeight)
-        this.hints.scrollTop = node.offsetTop + node.offsetHeight - this.hints.clientHeight + firstNode.offsetTop;
+      if (node1.offsetTop < this.hints.scrollTop)
+        this.hints.scrollTop = node1.offsetTop - firstNode.offsetTop;
+      else if (node2.offsetTop + node2.offsetHeight > this.hints.scrollTop + this.hints.clientHeight)
+        this.hints.scrollTop = node2.offsetTop + node2.offsetHeight - this.hints.clientHeight + firstNode.offsetTop;
     },
 
     screenAmount: function() {
       return Math.floor(this.hints.clientHeight / this.hints.firstChild.offsetHeight) || 1;
+    },
+
+    getSelectedHintRange: function() {
+      var margin = this.completion.options.scrollMargin || 0;
+      return {
+        from: Math.max(0, this.selectedHint - margin),
+        to: Math.min(this.data.list.length - 1, this.selectedHint + margin),
+      };
     }
   };
 
@@ -39471,11 +39633,15 @@ var __WEBPACK_AMD_DEFINE_RESULT__;// doT.js
     completeSingle: true,
     alignWithWord: true,
     closeCharacters: /[\s()\[\]{};:>,]/,
+    closeOnPick: true,
     closeOnUnfocus: true,
+    updateOnCursorActivity: true,
     completeOnSingleClick: true,
     container: null,
     customKeys: null,
-    extraKeys: null
+    extraKeys: null,
+    paddingForScrollbar: true,
+    moveOnOverlap: true,
   };
 
   CodeMirror.defineOption("hintOptions", null);
@@ -39928,9 +40094,13 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
     };
   }
 
+  function lower(tagName) {
+    return tagName && tagName.toLowerCase();
+  }
+
   function Context(state, tagName, startOfLine) {
     this.prev = state.context;
-    this.tagName = tagName;
+    this.tagName = tagName || "";
     this.indent = state.indented;
     this.startOfLine = startOfLine;
     if (config.doNotIndent.hasOwnProperty(tagName) || (state.context && state.context.noIndent))
@@ -39946,8 +40116,8 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
         return;
       }
       parentTagName = state.context.tagName;
-      if (!config.contextGrabbers.hasOwnProperty(parentTagName) ||
-          !config.contextGrabbers[parentTagName].hasOwnProperty(nextTagName)) {
+      if (!config.contextGrabbers.hasOwnProperty(lower(parentTagName)) ||
+          !config.contextGrabbers[lower(parentTagName)].hasOwnProperty(lower(nextTagName))) {
         return;
       }
       popContext(state);
@@ -39981,7 +40151,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
     if (type == "word") {
       var tagName = stream.current();
       if (state.context && state.context.tagName != tagName &&
-          config.implicitlyClosed.hasOwnProperty(state.context.tagName))
+          config.implicitlyClosed.hasOwnProperty(lower(state.context.tagName)))
         popContext(state);
       if ((state.context && state.context.tagName == tagName) || config.matchClosing === false) {
         setStyle = "tag";
@@ -40020,7 +40190,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
       var tagName = state.tagName, tagStart = state.tagStart;
       state.tagName = state.tagStart = null;
       if (type == "selfcloseTag" ||
-          config.autoSelfClosers.hasOwnProperty(tagName)) {
+          config.autoSelfClosers.hasOwnProperty(lower(tagName))) {
         maybePopContext(state, tagName);
       } else {
         maybePopContext(state, tagName);
@@ -40100,7 +40270,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
           if (context.tagName == tagAfter[2]) {
             context = context.prev;
             break;
-          } else if (config.implicitlyClosed.hasOwnProperty(context.tagName)) {
+          } else if (config.implicitlyClosed.hasOwnProperty(lower(context.tagName))) {
             context = context.prev;
           } else {
             break;
@@ -40108,8 +40278,8 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
         }
       } else if (tagAfter) { // Opening tag spotted
         while (context) {
-          var grabbers = config.contextGrabbers[context.tagName];
-          if (grabbers && grabbers.hasOwnProperty(tagAfter[2]))
+          var grabbers = config.contextGrabbers[lower(context.tagName)];
+          if (grabbers && grabbers.hasOwnProperty(lower(tagAfter[2])))
             context = context.prev;
           else
             break;
@@ -40140,7 +40310,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
     xmlCurrentContext: function(state) {
       var context = []
       for (var cx = state.context; cx; cx = cx.prev)
-        if (cx.tagName) context.push(cx.tagName)
+        context.push(cx.tagName)
       return context.reverse()
     }
   };
@@ -40195,7 +40365,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
     if (config && config.strict && (dir > 0) != (pos == where.ch)) return null;
     var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));
 
-    var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, style || null, config);
+    var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, style, config);
     if (found == null) return null;
     return {from: Pos(where.line, pos), to: found && found.pos,
             match: found && found.ch == match.charAt(0), forward: dir > 0};
@@ -40224,7 +40394,8 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
       if (lineNo == where.line) pos = where.ch - (dir < 0 ? 1 : 0);
       for (; pos != end; pos += dir) {
         var ch = line.charAt(pos);
-        if (re.test(ch) && (style === undefined || cm.getTokenTypeAt(Pos(lineNo, pos + 1)) == style)) {
+        if (re.test(ch) && (style === undefined ||
+                            (cm.getTokenTypeAt(Pos(lineNo, pos + 1)) || "") == (style || ""))) {
           var match = matching[ch];
           if (match && (match.charAt(1) == ">") == (dir > 0)) stack.push(ch);
           else if (!stack.length) return {pos: Pos(lineNo, pos), ch: ch};
@@ -40237,11 +40408,12 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
   function matchBrackets(cm, autoclear, config) {
     // Disable brace matching in long lines, since it'll cause hugely slow updates
-    var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;
+    var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000,
+      highlightNonMatching = config && config.highlightNonMatching;
     var marks = [], ranges = cm.listSelections();
     for (var i = 0; i < ranges.length; i++) {
       var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, config);
-      if (match && cm.getLine(match.from.line).length <= maxHighlightLen) {
+      if (match && (match.match || highlightNonMatching !== false) && cm.getLine(match.from.line).length <= maxHighlightLen) {
         var style = match.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";
         marks.push(cm.markText(match.from, Pos(match.from.line, match.from.ch + 1), {className: style}));
         if (match.to && cm.getLine(match.to.line).length <= maxHighlightLen)
@@ -40251,7 +40423,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
     if (marks.length) {
       // Kludge to work around the IE bug from issue #1193, where text
-      // input stops going to the textare whever this fires.
+      // input stops going to the textarea whenever this fires.
       if (ie_lt8 && cm.state.focused) cm.focus();
 
       var clear = function() {
@@ -40274,25 +40446,25 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
     });
   }
 
-  CodeMirror.defineOption("matchBrackets", false, function(cm, val, old) {
-    function clear(cm) {
-      if (cm.state.matchBrackets && cm.state.matchBrackets.currentlyHighlighted) {
-        cm.state.matchBrackets.currentlyHighlighted();
-        cm.state.matchBrackets.currentlyHighlighted = null;
-      }
+  function clearHighlighted(cm) {
+    if (cm.state.matchBrackets && cm.state.matchBrackets.currentlyHighlighted) {
+      cm.state.matchBrackets.currentlyHighlighted();
+      cm.state.matchBrackets.currentlyHighlighted = null;
     }
+  }
 
+  CodeMirror.defineOption("matchBrackets", false, function(cm, val, old) {
     if (old && old != CodeMirror.Init) {
       cm.off("cursorActivity", doMatchBrackets);
       cm.off("focus", doMatchBrackets)
-      cm.off("blur", clear)
-      clear(cm);
+      cm.off("blur", clearHighlighted)
+      clearHighlighted(cm);
     }
     if (val) {
       cm.state.matchBrackets = typeof val == "object" ? val : {};
       cm.on("cursorActivity", doMatchBrackets);
       cm.on("focus", doMatchBrackets)
-      cm.on("blur", clear)
+      cm.on("blur", clearHighlighted)
     }
   });
 
@@ -40448,7 +40620,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
   var noOptions = {};
   var nonWS = /[^\s\u00a0]/;
-  var Pos = CodeMirror.Pos;
+  var Pos = CodeMirror.Pos, cmp = CodeMirror.cmpPos;
 
   function firstNonWS(str) {
     var found = str.search(nonWS);
@@ -40561,7 +40733,9 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
           if (i != end || lastLineHasText)
             self.replaceRange(lead + pad, Pos(i, 0));
       } else {
+        var atCursor = cmp(self.getCursor("to"), to) == 0, empty = !self.somethingSelected()
         self.replaceRange(endString, to);
+        if (atCursor) self.setSelection(empty ? to : self.getCursor("from"), to)
         self.replaceRange(startString, from);
       }
     });
@@ -40663,6 +40837,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   var statementIndent = parserConfig.statementIndent;
   var jsonldMode = parserConfig.jsonld;
   var jsonMode = parserConfig.json || jsonldMode;
+  var trackScope = parserConfig.trackScope !== false
   var isTS = parserConfig.typescript;
   var wordRE = parserConfig.wordCharacters || /[\w$\xa1-\uffff]/;
 
@@ -40750,14 +40925,15 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       return ret("meta", "meta");
     } else if (ch == "#" && stream.eatWhile(wordRE)) {
       return ret("variable", "property")
-    } else if (ch == "<" && stream.match("!--") || ch == "-" && stream.match("->")) {
+    } else if (ch == "<" && stream.match("!--") ||
+               (ch == "-" && stream.match("->") && !/\S/.test(stream.string.slice(0, stream.start)))) {
       stream.skipToEnd()
       return ret("comment", "comment")
     } else if (isOperatorChar.test(ch)) {
       if (ch != ">" || !state.lexical || state.lexical.type != ">") {
         if (stream.eat("=")) {
           if (ch == "!" || ch == "=") stream.eat("=")
-        } else if (/[<>*+\-]/.test(ch)) {
+        } else if (/[<>*+\-|&?]/.test(ch)) {
           stream.eat(ch)
           if (ch == ">") stream.eat(ch)
         }
@@ -40772,7 +40948,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
           var kw = keywords[word]
           return ret(kw.type, kw.style, word)
         }
-        if (word == "async" && stream.match(/^(\s|\/\*.*?\*\/)*[\[\(\w]/, false))
+        if (word == "async" && stream.match(/^(\s|\/\*([^*]|\*(?!\/))*?\*\/)*[\[\(\w]/, false))
           return ret("async", "keyword", word)
       }
       return ret("variable", "variable", word)
@@ -40864,7 +41040,8 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
 
   // Parser
 
-  var atomicTypes = {"atom": true, "number": true, "variable": true, "string": true, "regexp": true, "this": true, "jsonld-keyword": true};
+  var atomicTypes = {"atom": true, "number": true, "variable": true, "string": true,
+                     "regexp": true, "this": true, "import": true, "jsonld-keyword": true};
 
   function JSLexical(indented, column, type, align, prev, info) {
     this.indented = indented;
@@ -40876,6 +41053,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   }
 
   function inScope(state, varname) {
+    if (!trackScope) return false
     for (var v = state.localVars; v; v = v.next)
       if (v.name == varname) return true;
     for (var cx = state.context; cx; cx = cx.prev) {
@@ -40922,6 +41100,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   function register(varname) {
     var state = cx.state;
     cx.marked = "def";
+    if (!trackScope) return
     if (state.context) {
       if (state.lexical.info == "var" && state.context && state.context.block) {
         // FIXME function decls are also not block scoped
@@ -41021,7 +41200,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       return cont(pushlex("form"), parenExpr, statement, poplex, maybeelse);
     }
     if (type == "function") return cont(functiondef);
-    if (type == "for") return cont(pushlex("form"), forspec, statement, poplex);
+    if (type == "for") return cont(pushlex("form"), pushblockcontext, forspec, statement, popcontext, poplex);
     if (type == "class" || (isTS && value == "interface")) {
       cx.marked = "keyword"
       return cont(pushlex("form", type == "class" ? type : value), className, poplex)
@@ -41087,7 +41266,6 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     if (type == "{") return contCommasep(objprop, "}", null, maybeop);
     if (type == "quasi") return pass(quasi, maybeop);
     if (type == "new") return cont(maybeTarget(noComma));
-    if (type == "import") return cont(expression);
     return cont();
   }
   function maybeexpression(type) {
@@ -41125,7 +41303,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   function quasi(type, value) {
     if (type != "quasi") return pass();
     if (value.slice(value.length - 2) != "${") return cont(quasi);
-    return cont(expression, continueQuasi);
+    return cont(maybeexpression, continueQuasi);
   }
   function continueQuasi(type) {
     if (type == "}") {
@@ -41251,7 +41429,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     }
   }
   function typeexpr(type, value) {
-    if (value == "keyof" || value == "typeof" || value == "infer") {
+    if (value == "keyof" || value == "typeof" || value == "infer" || value == "readonly") {
       cx.marked = "keyword"
       return cont(value == "typeof" ? expressionNoComma : typeexpr)
     }
@@ -41262,12 +41440,18 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     if (value == "|" || value == "&") return cont(typeexpr)
     if (type == "string" || type == "number" || type == "atom") return cont(afterType);
     if (type == "[") return cont(pushlex("]"), commasep(typeexpr, "]", ","), poplex, afterType)
-    if (type == "{") return cont(pushlex("}"), commasep(typeprop, "}", ",;"), poplex, afterType)
+    if (type == "{") return cont(pushlex("}"), typeprops, poplex, afterType)
     if (type == "(") return cont(commasep(typearg, ")"), maybeReturnType, afterType)
     if (type == "<") return cont(commasep(typeexpr, ">"), typeexpr)
+    if (type == "quasi") { return pass(quasiType, afterType); }
   }
   function maybeReturnType(type) {
     if (type == "=>") return cont(typeexpr)
+  }
+  function typeprops(type) {
+    if (type.match(/[\}\)\]]/)) return cont()
+    if (type == "," || type == ";") return cont(typeprops)
+    return pass(typeprop, typeprops)
   }
   function typeprop(type, value) {
     if (type == "variable" || cx.style == "keyword") {
@@ -41281,6 +41465,20 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       return cont(expect("variable"), maybetypeOrIn, expect("]"), typeprop)
     } else if (type == "(") {
       return pass(functiondecl, typeprop)
+    } else if (!type.match(/[;\}\)\],]/)) {
+      return cont()
+    }
+  }
+  function quasiType(type, value) {
+    if (type != "quasi") return pass();
+    if (value.slice(value.length - 2) != "${") return cont(quasiType);
+    return cont(typeexpr, continueQuasiType);
+  }
+  function continueQuasiType(type) {
+    if (type == "}") {
+      cx.marked = "string-2";
+      cx.state.tokenize = tokenQuasi;
+      return cont(quasiType);
     }
   }
   function typearg(type, value) {
@@ -41422,6 +41620,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     if (value == "@") return cont(expression, classBody)
   }
   function classfield(type, value) {
+    if (value == "!") return cont(classfield)
     if (value == "?") return cont(classfield)
     if (type == ":") return cont(typeexpr, maybeAssign)
     if (value == "=") return cont(expressionNoComma)
@@ -41441,6 +41640,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   function afterImport(type) {
     if (type == "string") return cont();
     if (type == "(") return pass(expression);
+    if (type == ".") return pass(maybeoperatorComma);
     return pass(importSpec, maybeMoreImports, maybeFrom);
   }
   function importSpec(type, value) {
@@ -41514,14 +41714,14 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     },
 
     indent: function(state, textAfter) {
-      if (state.tokenize == tokenComment) return CodeMirror.Pass;
+      if (state.tokenize == tokenComment || state.tokenize == tokenQuasi) return CodeMirror.Pass;
       if (state.tokenize != tokenBase) return 0;
       var firstChar = textAfter && textAfter.charAt(0), lexical = state.lexical, top
       // Kludge to prevent 'maybelse' from blocking lexical scope pops
       if (!/^\s*else\b/.test(textAfter)) for (var i = state.cc.length - 1; i >= 0; --i) {
         var c = state.cc[i];
         if (c == poplex) lexical = lexical.prev;
-        else if (c != maybeelse) break;
+        else if (c != maybeelse && c != popcontext) break;
       }
       while ((lexical.type == "stat" || lexical.type == "form") &&
              (firstChar == "}" || ((top = state.cc[state.cc.length - 1]) &&
@@ -41558,8 +41758,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     expressionAllowed: expressionAllowed,
 
     skipExpression: function(state) {
-      var top = state.cc[state.cc.length - 1]
-      if (top == expression || top == expressionNoComma) state.cc.pop()
+      parseJS(state, "atom", "atom", "true", new CodeMirror.StringStream("", 2, null))
     }
   };
 });
@@ -41571,9 +41770,10 @@ CodeMirror.defineMIME("text/ecmascript", "javascript");
 CodeMirror.defineMIME("application/javascript", "javascript");
 CodeMirror.defineMIME("application/x-javascript", "javascript");
 CodeMirror.defineMIME("application/ecmascript", "javascript");
-CodeMirror.defineMIME("application/json", {name: "javascript", json: true});
-CodeMirror.defineMIME("application/x-json", {name: "javascript", json: true});
-CodeMirror.defineMIME("application/ld+json", {name: "javascript", jsonld: true});
+CodeMirror.defineMIME("application/json", { name: "javascript", json: true });
+CodeMirror.defineMIME("application/x-json", { name: "javascript", json: true });
+CodeMirror.defineMIME("application/manifest+json", { name: "javascript", json: true })
+CodeMirror.defineMIME("application/ld+json", { name: "javascript", jsonld: true });
 CodeMirror.defineMIME("text/typescript", { name: "javascript", typescript: true });
 CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript: true });
 

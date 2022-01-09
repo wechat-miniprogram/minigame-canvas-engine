@@ -41,6 +41,7 @@
 | color           | string              | #000000     |
 | backgroundColor | string              | transparent |
 | textOverflow    | ellipsis, clip       | 默认为空，出于性能考虑，只有显式指定textOverflow属性的时候才会对文字进行截断处理 |
+| letterSpacing   | number              | 默认值为0，只对 bitmaptext 标签生效          |
 
 ## 容器
 
