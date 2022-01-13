@@ -20,7 +20,6 @@
     "checkSiteMap": true,
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
-    "lazyloadPlaceholderEnable": false,
     "useMultiFrameRuntime": true,
     "useApiHook": true,
     "useApiHostProcess": true,
@@ -38,7 +37,8 @@
     "disableUseStrict": false,
     "useStaticServer": false,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": false,
+    "ignoreUploadUnusedFiles": true
   },
   "appid": "wx7a727ff7d940bb3f",
   "projectname": "plugin",

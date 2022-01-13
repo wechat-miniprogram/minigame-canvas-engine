@@ -8,7 +8,6 @@ module.exports = {
        'demos/interactivedemo/sub/engine': './src/index',
        'demos/noengine/sub/engine': './src/index',
        'demos/cocoscreator/build/wechatgame/sub/engine': './src/index',
-       'demos/touchbugdemo/openDataContext/engine': './src/index',
        './index': './src/index',
     },
     output:{

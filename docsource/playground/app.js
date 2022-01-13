@@ -24161,14 +24161,12 @@ if (true) {
   function mapFromLineView(lineView, line, lineN) {
     if (lineView.line == line)
       { return {map: lineView.measure.map, cache: lineView.measure.cache} }
-    if (lineView.rest) {
-      for (var i = 0; i < lineView.rest.length; i++)
-        { if (lineView.rest[i] == line)
-          { return {map: lineView.measure.maps[i], cache: lineView.measure.caches[i]} } }
-      for (var i$1 = 0; i$1 < lineView.rest.length; i$1++)
-        { if (lineNo(lineView.rest[i$1]) > lineN)
-          { return {map: lineView.measure.maps[i$1], cache: lineView.measure.caches[i$1], before: true} } }
-    }
+    for (var i = 0; i < lineView.rest.length; i++)
+      { if (lineView.rest[i] == line)
+        { return {map: lineView.measure.maps[i], cache: lineView.measure.caches[i]} } }
+    for (var i$1 = 0; i$1 < lineView.rest.length; i$1++)
+      { if (lineNo(lineView.rest[i$1]) > lineN)
+        { return {map: lineView.measure.maps[i$1], cache: lineView.measure.caches[i$1], before: true} } }
   }
 
   // Render a line into the hidden node display.externalMeasured. Used
@@ -24962,19 +24960,13 @@ if (true) {
     var curFragment = result.cursors = document.createDocumentFragment();
     var selFragment = result.selection = document.createDocumentFragment();
 
-    var customCursor = cm.options.$customCursor;
-    if (customCursor) { primary = true; }
     for (var i = 0; i < doc.sel.ranges.length; i++) {
       if (!primary && i == doc.sel.primIndex) { continue }
       var range = doc.sel.ranges[i];
       if (range.from().line >= cm.display.viewTo || range.to().line < cm.display.viewFrom) { continue }
       var collapsed = range.empty();
-      if (customCursor) {
-        var head = customCursor(cm, range);
-        if (head) { drawSelectionCursor(cm, head, curFragment); }
-      } else if (collapsed || cm.options.showCursorWhenSelecting) {
-        drawSelectionCursor(cm, range.head, curFragment);
-      }
+      if (collapsed || cm.options.showCursorWhenSelecting)
+        { drawSelectionCursor(cm, range.head, curFragment); }
       if (!collapsed)
         { drawSelectionRange(cm, range, selFragment); }
     }
@@ -24992,8 +24984,7 @@ if (true) {
 
     if (/\bcm-fat-cursor\b/.test(cm.getWrapperElement().className)) {
       var charPos = charCoords(cm, head, "div", null, null);
-      var width = charPos.right - charPos.left;
-      cursor.style.width = (width > 0 ? width : cm.defaultCharWidth()) + "px";
+      cursor.style.width = Math.max(0, charPos.right - charPos.left) + "px";
     }
 
     if (pos.other) {
@@ -25168,14 +25159,10 @@ if (true) {
   function updateHeightsInViewport(cm) {
     var display = cm.display;
     var prevBottom = display.lineDiv.offsetTop;
-    var viewTop = Math.max(0, display.scroller.getBoundingClientRect().top);
-    var oldHeight = display.lineDiv.getBoundingClientRect().top;
-    var mustScroll = 0;
     for (var i = 0; i < display.view.length; i++) {
       var cur = display.view[i], wrapping = cm.options.lineWrapping;
       var height = (void 0), width = 0;
       if (cur.hidden) { continue }
-      oldHeight += cur.line.height;
       if (ie && ie_version < 8) {
         var bot = cur.node.offsetTop + cur.node.offsetHeight;
         height = bot - prevBottom;
@@ -25190,7 +25177,6 @@ if (true) {
       }
       var diff = cur.line.height - height;
       if (diff > .005 || diff < -.005) {
-        if (oldHeight < viewTop) { mustScroll -= diff; }
         updateLineHeight(cur.line, height);
         updateWidgetHeight(cur.line);
         if (cur.rest) { for (var j = 0; j < cur.rest.length; j++)
@@ -25205,7 +25191,6 @@ if (true) {
         }
       }
     }
-    if (Math.abs(mustScroll) > 2) { display.scroller.scrollTop += mustScroll; }
   }
 
   // Read and store the height of line widgets associated with the
@@ -25466,7 +25451,6 @@ if (true) {
       this.vert.firstChild.style.height =
         Math.max(0, measure.scrollHeight - measure.clientHeight + totalHeight) + "px";
     } else {
-      this.vert.scrollTop = 0;
       this.vert.style.display = "";
       this.vert.firstChild.style.height = "0";
     }
@@ -26318,12 +26302,6 @@ if (true) {
 
   function onScrollWheel(cm, e) {
     var delta = wheelEventDelta(e), dx = delta.x, dy = delta.y;
-    var pixelsPerUnit = wheelPixelsPerUnit;
-    if (e.deltaMode === 0) {
-      dx = e.deltaX;
-      dy = e.deltaY;
-      pixelsPerUnit = 1;
-    }
 
     var display = cm.display, scroll = display.scroller;
     // Quit if there's nothing to scroll here
@@ -26352,10 +26330,10 @@ if (true) {
     // estimated pixels/delta value, we just handle horizontal
     // scrolling entirely here. It'll be slightly off from native, but
     // better than glitching out.
-    if (dx && !gecko && !presto && pixelsPerUnit != null) {
+    if (dx && !gecko && !presto && wheelPixelsPerUnit != null) {
       if (dy && canScrollY)
-        { updateScrollTop(cm, Math.max(0, scroll.scrollTop + dy * pixelsPerUnit)); }
-      setScrollLeft(cm, Math.max(0, scroll.scrollLeft + dx * pixelsPerUnit));
+        { updateScrollTop(cm, Math.max(0, scroll.scrollTop + dy * wheelPixelsPerUnit)); }
+      setScrollLeft(cm, Math.max(0, scroll.scrollLeft + dx * wheelPixelsPerUnit));
       // Only prevent default scrolling if vertical scrolling is
       // actually possible. Otherwise, it causes vertical scroll
       // jitter on OSX trackpads when deltaX is small and deltaY
@@ -26368,15 +26346,15 @@ if (true) {
 
     // 'Project' the visible viewport to cover the area that is being
     // scrolled into view (if we know enough to estimate it).
-    if (dy && pixelsPerUnit != null) {
-      var pixels = dy * pixelsPerUnit;
+    if (dy && wheelPixelsPerUnit != null) {
+      var pixels = dy * wheelPixelsPerUnit;
       var top = cm.doc.scrollTop, bot = top + display.wrapper.clientHeight;
       if (pixels < 0) { top = Math.max(0, top + pixels - 50); }
       else { bot = Math.min(cm.doc.height, bot + pixels + 50); }
       updateDisplaySimple(cm, {top: top, bottom: bot});
     }
 
-    if (wheelSamples < 20 && e.deltaMode !== 0) {
+    if (wheelSamples < 20) {
       if (display.wheelStartX == null) {
         display.wheelStartX = scroll.scrollLeft; display.wheelStartY = scroll.scrollTop;
         display.wheelDX = dx; display.wheelDY = dy;
@@ -30053,7 +30031,7 @@ if (true) {
   }
 
   function hiddenTextarea() {
-    var te = elt("textarea", null, null, "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; min-height: 1em; outline: none");
+    var te = elt("textarea", null, null, "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; outline: none");
     var div = elt("div", [te], null, "overflow: hidden; position: relative; width: 3px; height: 0px;");
     // The textarea is kept positioned near the cursor to prevent the
     // fact that it'll be scrolled into view on input from scrolling
@@ -30817,11 +30795,9 @@ if (true) {
   ContentEditableInput.prototype.supportsTouch = function () { return true };
 
   ContentEditableInput.prototype.receivedFocus = function () {
-      var this$1 = this;
-
     var input = this;
     if (this.selectionInEditor())
-      { setTimeout(function () { return this$1.pollSelection(); }, 20); }
+      { this.pollSelection(); }
     else
       { runInOp(this.cm, function () { return input.cm.curOp.selectionChanged = true; }); }
 
@@ -31650,7 +31626,7 @@ if (true) {
 
   addLegacyProps(CodeMirror);
 
-  CodeMirror.version = "5.65.0";
+  CodeMirror.version = "5.62.3";
 
   return CodeMirror;
 
@@ -31661,7 +31637,7 @@ if (true) {
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof2(obj); }
+function _typeof2(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
 
 module.exports =
 /******/
@@ -31913,14 +31889,108 @@ function (modules) {
 
   return __webpack_require__(__webpack_require__.s = 0);
   /******/
-}
-/************************************************************************/
+}([
+  /* 0 */
 
-/******/
-([
-/* 0 */
+  /***/
 
-/***/
+  /* 1 */
+
+  /***/
+
+  /* 2 */
+
+  /***/
+
+  /* 3 */
+
+  /***/
+
+  /* 4 */
+
+  /***/
+
+  /* 5 */
+
+  /***/
+
+  /* 6 */
+
+  /***/
+
+  /* 7 */
+
+  /***/
+
+  /* 8 */
+
+  /***/
+
+  /* 9 */
+
+  /***/
+
+  /* 10 */
+
+  /***/
+
+  /* 11 */
+
+  /***/
+
+  /* 12 */
+
+  /***/
+
+  /* 13 */
+
+  /***/
+
+  /* 14 */
+
+  /***/
+
+  /* 15 */
+
+  /***/
+
+  /* 16 */
+
+  /***/
+
+  /* 17 */
+
+  /***/
+
+  /* 18 */
+
+  /***/
+
+  /* 19 */
+
+  /***/
+
+  /* 20 */
+
+  /***/
+
+  /* 21 */
+
+  /***/
+
+  /* 22 */
+
+  /***/
+
+  /* 23 */
+
+  /***/
+
+  /* 24 */
+
+  /***/
+
+  /******/
 function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
@@ -31987,11 +32057,17 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    }, _typeof(obj);
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function _typeof(obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function _typeof(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -32013,9 +32089,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -32030,9 +32103,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
-    });
-    Object.defineProperty(subClass, "prototype", {
-      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -32138,6 +32208,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     var _constructor = constructorMap[node.name];
     var children = node.children || [];
     var attr = node.attr || {};
+    var dataset = {};
     var id = attr.id || '';
     var args = Object.keys(attr).reduce(function (obj, key) {
       var value = attr[key];
@@ -32165,6 +32236,12 @@ function (module, __webpack_exports__, __webpack_require__) {
         obj[attribute] = value;
       }
 
+      if (attribute.startsWith('data-')) {
+        var dataKey = attribute.substring(5);
+        dataset[dataKey] = value;
+      }
+
+      obj.dataset = dataset;
       return obj;
     }, {}); // 用于后续元素查询
 
@@ -32716,21 +32793,13 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   __webpack_exports__["default"] = Layout;
   /***/
-},
-/* 1 */
-
-/***/
-function (module, exports) {
+}, function (module, exports) {
   if (typeof GameGlobal !== "undefined") {
     GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
   }
   /***/
 
-},
-/* 2 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -32764,9 +32833,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -32819,7 +32885,9 @@ function (module, __webpack_exports__, __webpack_require__) {
           _ref$className = _ref.className,
           className = _ref$className === void 0 ? "" : _ref$className,
           _ref$id = _ref.id,
-          id = _ref$id === void 0 ? ++uuid : _ref$id;
+          id = _ref$id === void 0 ? ++uuid : _ref$id,
+          _ref$dataset = _ref.dataset,
+          dataset = _ref$dataset === void 0 ? {} : _ref$dataset;
 
       _classCallCheck(this, Element);
 
@@ -32836,6 +32904,7 @@ function (module, __webpack_exports__, __webpack_require__) {
       this.root = null;
       this.isDestroyed = false;
       this.layoutBox = {};
+      this.dataset = dataset;
 
       if (style.opacity !== undefined && style.color && style.color.indexOf("#") > -1) {
         style.color = getRgba(style.color, style.opacity);
@@ -33003,11 +33072,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }();
   /***/
 
-},
-/* 3 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -33034,11 +33099,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   var scalableStyles = ['left', 'top', 'right', 'bottom', 'width', 'height', 'margin', 'marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'fontSize', 'lineHeight', 'borderRadius', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight'];
   var layoutAffectedStyles = ['margin', 'marginTop', 'marginBottom', 'marginLeft', 'marginRight', 'padding', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight', 'width', 'height'];
   /***/
-},
-/* 4 */
-
-/***/
-function (module, exports) {
+}, function (module, exports) {
   function E() {// Keep this empty so it's easier to inherit from
     // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
   }
@@ -33097,11 +33158,7 @@ function (module, exports) {
   module.exports = E;
   module.exports.TinyEmitter = E;
   /***/
-},
-/* 5 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -33131,9 +33188,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -33184,11 +33238,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }();
   /***/
 
-},
-/* 6 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; // UMD (Universal Module Definition)
   // See https://github.com/umdjs/umd for reference
   //
@@ -34506,11 +34556,7 @@ function (module, exports, __webpack_require__) {
   });
   /***/
 
-},
-/* 7 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -34684,11 +34730,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   };
   /***/
 
-},
-/* 8 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
   var nodeToJson = __webpack_require__(9);
@@ -34716,11 +34758,7 @@ function (module, exports, __webpack_require__) {
   };
   /***/
 
-},
-/* 9 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
   var util = __webpack_require__(10);
@@ -34778,11 +34816,7 @@ function (module, exports, __webpack_require__) {
 
   exports.convertToJson = convertToJson;
   /***/
-},
-/* 10 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
   var getAllMatches = function getAllMatches(string, regex) {
@@ -34879,11 +34913,7 @@ function (module, exports, __webpack_require__) {
   exports.doesNotMatch = doesNotMatch;
   exports.getAllMatches = getAllMatches;
   /***/
-},
-/* 11 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
   var util = __webpack_require__(10);
@@ -35142,11 +35172,7 @@ function (module, exports, __webpack_require__) {
 
   exports.getTraversalObj = getTraversalObj;
   /***/
-},
-/* 12 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
   module.exports = function (tagname, parent, val) {
@@ -35172,11 +35198,7 @@ function (module, exports, __webpack_require__) {
   };
   /***/
 
-},
-/* 13 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   "use strict";
 
   var util = __webpack_require__(10);
@@ -35560,11 +35582,7 @@ function (module, exports, __webpack_require__) {
   }
   /***/
 
-},
-/* 14 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -35602,9 +35620,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -35745,11 +35760,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }();
   /***/
 
-},
-/* 15 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -35781,9 +35792,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -35850,11 +35858,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   __webpack_exports__["default"] = new ImageManager();
   /***/
-},
-/* 16 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -35910,11 +35914,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   });
   /***/
 
-},
-/* 17 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -35932,11 +35932,17 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    }, _typeof(obj);
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function _typeof(obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function _typeof(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -35958,9 +35964,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -35975,9 +35978,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
-    });
-    Object.defineProperty(subClass, "prototype", {
-      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -36063,7 +36063,8 @@ function (module, __webpack_exports__, __webpack_require__) {
           _ref$idName = _ref.idName,
           idName = _ref$idName === void 0 ? '' : _ref$idName,
           _ref$className = _ref.className,
-          className = _ref$className === void 0 ? '' : _ref$className;
+          className = _ref$className === void 0 ? '' : _ref$className,
+          dataset = _ref.dataset;
 
       _classCallCheck(this, View);
 
@@ -36071,7 +36072,8 @@ function (module, __webpack_exports__, __webpack_require__) {
         props: props,
         idName: idName,
         className: className,
-        style: style
+        style: style,
+        dataset: dataset
       });
       _this.type = 'View';
       _this.ctx = null;
@@ -36158,11 +36160,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-},
-/* 18 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -36184,11 +36182,17 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    }, _typeof(obj);
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function _typeof(obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function _typeof(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -36210,9 +36214,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -36227,9 +36228,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
-    });
-    Object.defineProperty(subClass, "prototype", {
-      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -36319,11 +36317,13 @@ function (module, __webpack_exports__, __webpack_require__) {
           _opts$className = opts.className,
           className = _opts$className === void 0 ? "" : _opts$className,
           _opts$src = opts.src,
-          src = _opts$src === void 0 ? "" : _opts$src;
+          src = _opts$src === void 0 ? "" : _opts$src,
+          dataset = opts.dataset;
       _this = _super.call(this, {
         props: props,
         idName: idName,
         className: className,
+        dataset: dataset,
         style: style
       });
       _this.imgsrc = src;
@@ -36462,11 +36462,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-},
-/* 19 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -36488,11 +36484,17 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    }, _typeof(obj);
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function _typeof(obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function _typeof(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -36514,9 +36516,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -36531,9 +36530,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
-    });
-    Object.defineProperty(subClass, "prototype", {
-      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -36673,7 +36669,8 @@ function (module, __webpack_exports__, __webpack_require__) {
           _ref$className = _ref.className,
           className = _ref$className === void 0 ? '' : _ref$className,
           _ref$value = _ref.value,
-          value = _ref$value === void 0 ? '' : _ref$value;
+          value = _ref$value === void 0 ? '' : _ref$value,
+          dataset = _ref.dataset;
 
       _classCallCheck(this, Text); // 没有设置宽度的时候通过canvas计算出文字宽度
 
@@ -36688,7 +36685,8 @@ function (module, __webpack_exports__, __webpack_require__) {
         props: props,
         idName: idName,
         className: className,
-        style: style
+        style: style,
+        dataset: dataset
       });
       _this.type = 'Text';
       _this.ctx = null;
@@ -36795,11 +36793,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-},
-/* 20 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -36829,11 +36823,17 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    }, _typeof(obj);
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function _typeof(obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function _typeof(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -36855,9 +36855,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -36872,9 +36869,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
-    });
-    Object.defineProperty(subClass, "prototype", {
-      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -36976,7 +36970,8 @@ function (module, __webpack_exports__, __webpack_require__) {
           _ref$scrollX = _ref.scrollX,
           scrollX = _ref$scrollX === void 0 ? false : _ref$scrollX,
           _ref$scrollY = _ref.scrollY,
-          scrollY = _ref$scrollY === void 0 ? false : _ref$scrollY;
+          scrollY = _ref$scrollY === void 0 ? false : _ref$scrollY,
+          dataset = _ref.dataset;
 
       _classCallCheck(this, ScrollView);
 
@@ -36984,6 +36979,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         props: props,
         style: style,
         idName: idName,
+        dataset: dataset,
         className: className
       });
       _this.type = 'ScrollView'; // 当前列表滚动的值
@@ -37295,11 +37291,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_view_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-},
-/* 21 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
   (function (root, factory) {
@@ -37313,11 +37305,7 @@ function (module, exports, __webpack_require__) {
   });
   /***/
 
-},
-/* 22 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
   /*
   * Scroller
@@ -37539,11 +37527,7 @@ function (module, exports, __webpack_require__) {
   });
   /***/
 
-},
-/* 23 */
-
-/***/
-function (module, exports, __webpack_require__) {
+}, function (module, exports, __webpack_require__) {
   var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
   /*
   * Scroller
@@ -38620,11 +38604,7 @@ function (module, exports, __webpack_require__) {
   });
   /***/
 
-},
-/* 24 */
-
-/***/
-function (module, __webpack_exports__, __webpack_require__) {
+}, function (module, __webpack_exports__, __webpack_require__) {
   "use strict";
 
   __webpack_require__.r(__webpack_exports__);
@@ -38646,11 +38626,17 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    }, _typeof(obj);
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function _typeof(obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function _typeof(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -38672,9 +38658,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
-    Object.defineProperty(Constructor, "prototype", {
-      writable: false
-    });
     return Constructor;
   }
 
@@ -38689,9 +38672,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         writable: true,
         configurable: true
       }
-    });
-    Object.defineProperty(subClass, "prototype", {
-      writable: false
     });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
@@ -38785,12 +38765,14 @@ function (module, __webpack_exports__, __webpack_require__) {
           _opts$value = opts.value,
           value = _opts$value === void 0 ? '' : _opts$value,
           _opts$font = opts.font,
-          font = _opts$font === void 0 ? '' : _opts$font;
+          font = _opts$font === void 0 ? '' : _opts$font,
+          dataset = opts.dataset;
       _this = _super.call(this, {
         props: props,
         idName: idName,
         className: className,
-        style: style
+        style: style,
+        dataset: dataset
       });
       _this.type = "BitMapText";
       _this.ctx = null;
@@ -38963,9 +38945,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
   /***/
 
-}
-/******/
-]);
+}]);
 
 /***/ }),
 /* 18 */
@@ -40094,10 +40074,6 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
     };
   }
 
-  function lower(tagName) {
-    return tagName && tagName.toLowerCase();
-  }
-
   function Context(state, tagName, startOfLine) {
     this.prev = state.context;
     this.tagName = tagName || "";
@@ -40116,8 +40092,8 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
         return;
       }
       parentTagName = state.context.tagName;
-      if (!config.contextGrabbers.hasOwnProperty(lower(parentTagName)) ||
-          !config.contextGrabbers[lower(parentTagName)].hasOwnProperty(lower(nextTagName))) {
+      if (!config.contextGrabbers.hasOwnProperty(parentTagName) ||
+          !config.contextGrabbers[parentTagName].hasOwnProperty(nextTagName)) {
         return;
       }
       popContext(state);
@@ -40151,7 +40127,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
     if (type == "word") {
       var tagName = stream.current();
       if (state.context && state.context.tagName != tagName &&
-          config.implicitlyClosed.hasOwnProperty(lower(state.context.tagName)))
+          config.implicitlyClosed.hasOwnProperty(state.context.tagName))
         popContext(state);
       if ((state.context && state.context.tagName == tagName) || config.matchClosing === false) {
         setStyle = "tag";
@@ -40190,7 +40166,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
       var tagName = state.tagName, tagStart = state.tagStart;
       state.tagName = state.tagStart = null;
       if (type == "selfcloseTag" ||
-          config.autoSelfClosers.hasOwnProperty(lower(tagName))) {
+          config.autoSelfClosers.hasOwnProperty(tagName)) {
         maybePopContext(state, tagName);
       } else {
         maybePopContext(state, tagName);
@@ -40270,7 +40246,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
           if (context.tagName == tagAfter[2]) {
             context = context.prev;
             break;
-          } else if (config.implicitlyClosed.hasOwnProperty(lower(context.tagName))) {
+          } else if (config.implicitlyClosed.hasOwnProperty(context.tagName)) {
             context = context.prev;
           } else {
             break;
@@ -40278,8 +40254,8 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
         }
       } else if (tagAfter) { // Opening tag spotted
         while (context) {
-          var grabbers = config.contextGrabbers[lower(context.tagName)];
-          if (grabbers && grabbers.hasOwnProperty(lower(tagAfter[2])))
+          var grabbers = config.contextGrabbers[context.tagName];
+          if (grabbers && grabbers.hasOwnProperty(tagAfter[2]))
             context = context.prev;
           else
             break;

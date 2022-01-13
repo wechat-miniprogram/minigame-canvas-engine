@@ -18,6 +18,8 @@
 |----------------|--------|--------|------------------------|
 | id  | string |    否 | 非唯一标识，两个标签可以共用id |
 | class | string |    否    | 与浏览器相同 |
+| dataset | string |    否    | 与浏览器相同，详见[文档](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset) |
+
 
 ## view标签
 
