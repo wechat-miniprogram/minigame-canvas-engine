@@ -68,7 +68,8 @@ export default class Text extends Element {
     props={},
     idName='',
     className='',
-    value=''
+    value='',
+    dataset,
   }) {
     // 没有设置宽度的时候通过canvas计算出文字宽度
     if ( style.width === undefined ) {
@@ -82,6 +83,7 @@ export default class Text extends Element {
       idName,
       className,
       style,
+      dataset,
     });
 
     this.type        = 'Text';

@@ -8,13 +8,15 @@ export default class Image extends Element {
       props = {},
       idName = "",
       className = "",
-      src = ""
+      src = "",
+      dataset,
     } = opts;
 
     super({
       props,
       idName,
       className,
+      dataset,
       style
     });
 

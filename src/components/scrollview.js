@@ -28,12 +28,14 @@ export default class ScrollView extends View {
     idName = "",
     className = "",
     scrollX = false,
-    scrollY = false
+    scrollY = false,
+    dataset,
   }) {
     super({
       props,
       style,
       idName,
+      dataset,
       className
     });
 

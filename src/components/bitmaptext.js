@@ -11,13 +11,15 @@ export default class BitMapText extends Element {
       idName='',
       className='',
       value='',
-      font=''
+      font='',
+      dataset,
     } = opts
     super({
       props,
       idName,
       className,
       style,
+      dataset,
     });
 
     this.type = "BitMapText";
@@ -149,12 +151,12 @@ export default class BitMapText extends Element {
 
     // 记录上一个字符，方便处理 kerning
     let prevCharCode = null;
-    
+
 
     for ( let i = 0; i < this.value.length; i++ ) {
       let char = this.value[i];
       let cfg = this.font.chars[char]
-      
+
       if (prevCharCode && cfg.kerning[prevCharCode]) {
         x += cfg.kerning[prevCharCode];
       }
@@ -181,7 +183,7 @@ export default class BitMapText extends Element {
     if (needStroke) {
       ctx.stroke();
     }
-    
+
     ctx.restore();
   }
 }

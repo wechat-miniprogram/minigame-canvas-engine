@@ -6,12 +6,14 @@ export default class View extends Element {
     props={},
     idName='',
     className='',
+    dataset,
   }) {
     super({
       props,
       idName,
       className,
       style,
+      dataset,
     });
 
     this.type = 'View';

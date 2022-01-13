@@ -45,6 +45,7 @@ const create = function (node, style, parent) {
   let children = node.children || [];
 
   let attr = node.attr || {};
+  let dataset = {};
   const id = attr.id || '';
 
   const args = Object.keys(attr)
@@ -76,6 +77,14 @@ const create = function (node, style, parent) {
       } else {
         obj[attribute] = value
       }
+
+      if (attribute.startsWith('data-')) {
+        const dataKey = attribute.substring(5);
+
+        dataset[dataKey] = value;
+      }
+
+      obj.dataset = dataset;
 
       return obj;
     }, {})

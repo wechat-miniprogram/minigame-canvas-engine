@@ -51,7 +51,8 @@ export default class Element {
     props = {},
     idName = "",
     className = "",
-    id = ++uuid
+    id = ++uuid,
+    dataset = {},
   }) {
     this.children = [];
     this.childMap = {};
@@ -66,6 +67,8 @@ export default class Element {
     this.root = null;
     this.isDestroyed = false;
     this.layoutBox = {};
+
+    this.dataset = dataset;
 
     if (
       style.opacity !== undefined &&
