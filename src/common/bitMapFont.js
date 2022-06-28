@@ -35,7 +35,7 @@ export default class BitMapFont {
     fntText = fntText.split("\r\n").join("\n");
     let lines = fntText.split("\n");
     let linesParsed = lines.map(line => {
-      return line.split(" ");
+      return line.trim().split(" ");
     });
 
     let charsLine = this.getConfigByLineName(linesParsed, 'chars');
