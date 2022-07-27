@@ -439,10 +439,9 @@ class _Layout extends Element {
 
       if (   ( box.realX <= x && x <= box.realX + box.width  )
         && ( box.realY <= y && y <= box.realY + box.height ) ) {
+        itemList.push(child);
         if ( Object.keys(child.children).length ) {
           this.getChildByPos(child, x, y, itemList);
-        } else {
-          itemList.push(child);
         }
       }
     }

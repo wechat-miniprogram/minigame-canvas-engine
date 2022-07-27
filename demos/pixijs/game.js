@@ -1,73 +1,73 @@
-// import './libs/adapter/index';
-// import App from './src/index.js';
+import './libs/weapp-adapter';
+import App from './src/index.js';
 
-// new App();
+new App();
 
-const info        = wx.getSystemInfoSync();
-const scale       = 3;
-const GAME_WIDTH  = info.windowWidth * scale;
-const GAME_HEIGHT = info.windowHeight * scale;
+// const info        = wx.getSystemInfoSync();
+// const scale       = 3;
+// const GAME_WIDTH  = info.windowWidth * scale;
+// const GAME_HEIGHT = info.windowHeight * scale;
 
-let canvas;
-let ctx;
+// let canvas;
+// let ctx;
 
-let flag = false;
-let x, y;
+// let flag = false;
+// let x, y;
 
-function initSharedCanvas() {
-  canvas = wx.createCanvas();
-  canvas.width = GAME_WIDTH;
-  canvas.height = GAME_HEIGHT;
-  ctx = canvas.getContext('2d');
+// function initSharedCanvas() {
+//   canvas = wx.createCanvas();
+//   canvas.width = GAME_WIDTH;
+//   canvas.height = GAME_HEIGHT;
+//   ctx = canvas.getContext('2d');
 
-  const openDataContext = wx.getOpenDataContext();
-  const sharedCanvas    = openDataContext.canvas;
+//   const openDataContext = wx.getOpenDataContext();
+//   const sharedCanvas    = openDataContext.canvas;
   
-  // 中间挖了个坑用填充排行榜
-  sharedCanvas.width  = 960;
-  sharedCanvas.height = 1410;
+//   // 中间挖了个坑用填充排行榜
+//   sharedCanvas.width  = 960;
+//   sharedCanvas.height = 1410;
   
-  const realWidth  = sharedCanvas.width / GAME_WIDTH * info.windowWidth;
-  const realHeight = sharedCanvas.height / GAME_HEIGHT * info.windowHeight;
+//   const realWidth  = sharedCanvas.width / GAME_WIDTH * info.windowWidth;
+//   const realHeight = sharedCanvas.height / GAME_HEIGHT * info.windowHeight;
   
-  openDataContext.postMessage({
-      event: 'updateViewPort',
-      box       : {
-          width  : realWidth,
-          height : realHeight,
-          x      : ( info.windowWidth - realWidth ) / 2,
-          y      : ( info.windowHeight - realHeight ) / 2,
-      }
-  });
+//   openDataContext.postMessage({
+//       event: 'updateViewPort',
+//       box       : {
+//           width  : realWidth,
+//           height : realHeight,
+//           x      : ( info.windowWidth - realWidth ) / 2,
+//           y      : ( info.windowHeight - realHeight ) / 2,
+//       }
+//   });
   
-  openDataContext.postMessage({
-    event: 'showFriendRank',
-  });
+//   openDataContext.postMessage({
+//     event: 'showFriendRank',
+//   });
   
-  x = GAME_WIDTH / 2 - sharedCanvas.width / 2;
-  y = GAME_HEIGHT / 2 - sharedCanvas.height / 2;
+//   x = GAME_WIDTH / 2 - sharedCanvas.width / 2;
+//   y = GAME_HEIGHT / 2 - sharedCanvas.height / 2;
   
-  flag = true;
+//   flag = true;
 
-  console.log(flag)
-}
+//   console.log(flag)
+// }
 
-function loop() {
-  if (flag) {
-    ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
+// function loop() {
+//   if (flag) {
+//     ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
 
-    ctx.fillStyle = '#f3f3f3';
-    ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
-    ctx.drawImage(sharedCanvas, x, y, sharedCanvas.width, sharedCanvas.height)
-  }
+//     ctx.fillStyle = '#f3f3f3';
+//     ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
+//     ctx.drawImage(sharedCanvas, x, y, sharedCanvas.width, sharedCanvas.height)
+//   }
 
-  requestAnimationFrame(loop)
-}
+//   requestAnimationFrame(loop)
+// }
 
-loop()
-initSharedCanvas();
+// loop()
+// initSharedCanvas();
 
-const img = wx.createImage()
-img.src = 'https://7465-test-0grsj1hfc9630cf7-1306937484.tcb.qcloud.la/Character/slick.png'
+// const img = wx.createImage()
+// img.src = 'https://7465-test-0grsj1hfc9630cf7-1306937484.tcb.qcloud.la/Character/slick.png'
 
-console.log(111, img)
+// console.log(111, img)

@@ -32603,10 +32603,10 @@ function (module, __webpack_exports__, __webpack_require__) {
           var box = child.realLayoutBox;
 
           if (box.realX <= x && x <= box.realX + box.width && box.realY <= y && y <= box.realY + box.height) {
+            itemList.push(child);
+
             if (Object.keys(child.children).length) {
               this.getChildByPos(child, x, y, itemList);
-            } else {
-              itemList.push(child);
             }
           }
         }
@@ -35665,7 +35665,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         fntText = fntText.split("\r\n").join("\n");
         var lines = fntText.split("\n");
         var linesParsed = lines.map(function (line) {
-          return line.split(" ");
+          return line.trim().split(" ");
         });
         var charsLine = this.getConfigByLineName(linesParsed, 'chars');
         var charsCount = this.getConfigByKeyInOneLine(charsLine.line, "count");
@@ -35833,11 +35833,11 @@ function (module, __webpack_exports__, __webpack_require__) {
           imgPool.set(src, img);
 
           img.onload = function () {
+            img.loadDone = true;
             img.onloadcbks.forEach(function (fn) {
               return fn(img, false);
             });
             img.onloadcbks = [];
-            img.loadDone = true;
           };
 
           img.onerror = function (e) {
@@ -36399,7 +36399,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "render",
       value: function render(ctx, layoutBox) {
-        if (!this.img) {
+        if (!this.img || !this.img.loadDone) {
           return;
         }
 
@@ -36423,7 +36423,11 @@ function (module, __webpack_exports__, __webpack_require__) {
           ctx.clip();
         }
 
-        ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+        try {
+          ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+        } catch (e) {
+          debugger;
+        }
 
         if (needStroke) {
           ctx.stroke();

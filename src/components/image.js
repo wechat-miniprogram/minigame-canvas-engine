@@ -85,7 +85,7 @@ export default class Image extends Element {
   }
 
   render(ctx, layoutBox) {
-    if (!this.img) {
+    if (!this.img || !this.img.loadDone) {
       return;
     }
 
@@ -109,7 +109,11 @@ export default class Image extends Element {
       ctx.clip();
     }
 
-    ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+    try {
+      ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+    } catch(e) {
+      debugger
+    }
 
     if (needStroke) {
       ctx.stroke();

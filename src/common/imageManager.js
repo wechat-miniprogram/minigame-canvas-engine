@@ -35,9 +35,9 @@ class ImageManager {
       imgPool.set(src, img);
 
       img.onload = () => {
+        img.loadDone   = true;
         img.onloadcbks.forEach(fn => fn(img, false));
         img.onloadcbks = [];
-        img.loadDone   = true;
       }
 
       img.onerror = (e) => {
