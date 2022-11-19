@@ -48,7 +48,7 @@ export default class ScrollView extends View {
     this.currentEvent = null;
 
     // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
-    this.throttleImageLoadDone = throttle(this.childImageLoadDoneCbk, 32, this);
+    this.throttleImageLoadDone = throttle(this.childImageLoadDoneCbk, 16, this);
 
     this.scrollCanvas = null;
     this.scrollCtx = null;
@@ -236,26 +236,27 @@ export default class ScrollView extends View {
     }
   }
 
-  childImageLoadDoneCbk(img) {
-    const box = this.layoutBox;
+  childImageLoadDoneCbk() {
+    this.scrollRender(this.scrollLeft, this.scrollTop);
+    // const box = this.layoutBox;
 
-    // 根据滚动值获取裁剪区域
-    const startY = box.absoluteY + this.scrollTop;
-    const endY = box.absoluteY + this.scrollTop + box.height;
-    const startX = box.absoluteX + this.scrollLeft;
-    const endX = box.absoluteX + this.scrollLeft + box.width;
+    // // 根据滚动值获取裁剪区域
+    // const startY = box.absoluteY + this.scrollTop;
+    // const endY = box.absoluteY + this.scrollTop + box.height;
+    // const startX = box.absoluteX + this.scrollLeft;
+    // const endX = box.absoluteX + this.scrollLeft + box.width;
 
-    const layoutBox = img.layoutBox;
-    const height = layoutBox.height;
-    const width = layoutBox.width;
-    let originY = layoutBox.originalAbsoluteY;
-    let originX = layoutBox.originalAbsoluteX;
+    // const layoutBox = img.layoutBox;
+    // const height = layoutBox.height;
+    // const width = layoutBox.width;
+    // let originY = layoutBox.originalAbsoluteY;
+    // let originX = layoutBox.originalAbsoluteX;
 
-    // 判断处于可视窗口内的子节点，渲染该子节点
-    if (originY + height >= startY && originY <= endY
-      && originX + width >= startX && originX <= endX) {
-      this.scrollRender(this.scrollLeft, this.scrollTop);
-    }
+    // // 判断处于可视窗口内的子节点，渲染该子节点
+    // if (originY + height >= startY && originY <= endY
+    //   && originX + width >= startX && originX <= endX) {
+    //   this.scrollRender(this.scrollLeft, this.scrollTop);
+    // }
   }
 
   insertScrollView(context) {

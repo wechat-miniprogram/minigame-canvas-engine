@@ -54,7 +54,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
         cacheRankData = data;
 
         // mock
-         for ( let i = 0; i < 50; i++ ) {
+         for ( let i = data.length; i < 50; i++ ) {
              data[i] = JSON.parse(JSON.stringify(data[0]));
              data[i].rank = i;
              data[i].rankScore = Math.floor(Math.random()*1000+1)
