@@ -4,26 +4,23 @@ import { none, createImage } from './util';
 const imgPool = new Pool('imgPool');
 
 class ImageManager {
-  constructor() {
-  }
-
   getRes(src) {
-    return imgPool.get(src)
+    return imgPool.get(src);
   }
 
   loadImage(src, callback = none) {
     let img     = null;
     const cache = this.getRes(src);
 
-    if ( !src ) {
-      return img
+    if (!src) {
+      return img;
     }
 
     // 图片已经被加载过，直接返回图片并且执行回调
-    if ( cache && cache.loadDone ) {
+    if (cache && cache.loadDone) {
       img = cache;
       callback(img, true);
-    } else if ( cache && !cache.loadDone ) {
+    } else if (cache && !cache.loadDone) {
       // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
       img = cache;
 
@@ -38,17 +35,17 @@ class ImageManager {
         img.loadDone   = true;
         img.onloadcbks.forEach(fn => fn(img, false));
         img.onloadcbks = [];
-      }
+      };
 
       img.onerror = (e) => {
         console.log('img load error', e);
-      }
+      };
 
       img.src = src;
     }
 
-    return img
+    return img;
   }
 }
 
-export default new ImageManager()
+export default new ImageManager();

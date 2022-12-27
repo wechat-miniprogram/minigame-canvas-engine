@@ -1,14 +1,14 @@
-import Element from "./elements.js";
-import imageManager from "../common/imageManager";
+import Element from './elements.js';
+import imageManager from '../common/imageManager';
 
 export default class Image extends Element {
   constructor(opts) {
-    let {
+    const {
       style = {},
       props = {},
-      idName = "",
-      className = "",
-      src = "",
+      idName = '',
+      className = '',
+      src = '',
       dataset,
     } = opts;
 
@@ -17,29 +17,29 @@ export default class Image extends Element {
       idName,
       className,
       dataset,
-      style
+      style,
     });
 
     this.imgsrc = src;
 
-    Object.defineProperty(this, "src", {
-      get: function() {
+    Object.defineProperty(this, 'src', {
+      get() {
         return this.imgsrc;
       },
-      set: function(newValue) {
+      set(newValue) {
         if (newValue !== this.imgsrc) {
           this.imgsrc = newValue;
-          imageManager.loadImage(this.src, img => {
+          imageManager.loadImage(this.src, (img) => {
             this.img = img;
-            this.emit("repaint");
+            this.emit('repaint');
           });
         }
       },
       enumerable: true,
-      configurable: true
+      configurable: true,
     });
 
-    this.type = "Image";
+    this.type = 'Image';
     this.renderBoxes = [];
 
     this.img = imageManager.loadImage(this.src, (img, fromCache) => {
@@ -48,7 +48,7 @@ export default class Image extends Element {
       } else {
         // 当图片加载完成，实例可能已经被销毁了
         if (this.img && this.isScrollViewChild) {
-          this.EE.emit("image__render__done", this);
+          this.EE.emit('image__render__done', this);
         }
       }
     });
@@ -56,9 +56,9 @@ export default class Image extends Element {
 
   get isScrollViewChild() {
     let flag = false;
-    let parent = this.parent;
+    let { parent } = this;
     while (parent && !flag) {
-      if (parent.type === "ScrollView") {
+      if (parent.type === 'ScrollView') {
         flag = true;
       } else {
         parent = parent.parent;
@@ -69,7 +69,7 @@ export default class Image extends Element {
   }
 
   repaint() {
-    this.renderBoxes.forEach(item => {
+    this.renderBoxes.forEach((item) => {
       this.render(item.ctx, item.box, false);
     });
   }
@@ -100,10 +100,10 @@ export default class Image extends Element {
 
     ctx.lineWidth = style.borderWidth || 0;
 
-    let drawX = box.absoluteX;
-    let drawY = box.absoluteY;
+    const drawX = box.absoluteX;
+    const drawY = box.absoluteY;
 
-    const {needClip, needStroke} = this.renderBorder(ctx, layoutBox);
+    const { needClip, needStroke } = this.renderBorder(ctx, layoutBox);
 
     if (needClip) {
       ctx.clip();
@@ -111,8 +111,8 @@ export default class Image extends Element {
 
     try {
       ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
-    } catch(e) {
-      debugger
+    } catch (e) {
+      debugger;
     }
 
     if (needStroke) {
@@ -134,8 +134,8 @@ export default class Image extends Element {
         // 当图片加载完成，实例可能已经被销毁了
         if (this.img) {
           const eventName = this.isScrollViewChild
-            ? "image__render__done"
-            : "one__image__render__done";
+            ? 'image__render__done'
+            : 'one__image__render__done';
           this.EE.emit(eventName, this);
         }
       }

@@ -168,7 +168,7 @@ function convertPercent(data, parentData) {
 var create = function create(node, style, parent) {
   var _this = this;
 
-  var _constructor = constructorMap[node.name];
+  var Constructor = constructorMap[node.name];
   var children = node.children || [];
   var attr = node.attr || {};
   var dataset = {};
@@ -237,7 +237,7 @@ var create = function create(node, style, parent) {
     }
   }
 
-  var element = new _constructor(args);
+  var element = new Constructor(args);
   element.root = this;
   children.forEach(function (childNode) {
     var childElement = create.call(_this, childNode, style, args);
@@ -455,15 +455,15 @@ var _Layout = /*#__PURE__*/function (_Element) {
     key: "init",
     value: function init(template, style, attrValueProcessor) {
       var start = new Date();
-      /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
+      /* if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
 
-      /*}*/
+      /* }*/
 
       var parseConfig = {
-        attributeNamePrefix: "",
-        attrNodeName: "attr",
-        //default is 'false'
-        textNodeName: "#text",
+        attributeNamePrefix: '',
+        attrNodeName: 'attr',
+        // default is 'false'
+        textNodeName: '#text',
         ignoreAttributes: false,
         ignoreNameSpace: true,
         allowBooleanAttributes: true,
@@ -473,7 +473,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
         parseTrueNumberOnly: false
       };
 
-      if (attrValueProcessor && typeof attrValueProcessor === "function") {
+      if (attrValueProcessor && typeof attrValueProcessor === 'function') {
         parseConfig.attrValueProcessor = attrValueProcessor;
       }
 
@@ -676,7 +676,8 @@ var _Layout = /*#__PURE__*/function (_Element) {
         tree = this;
       }
 
-      var children = tree.children;
+      var _tree = tree,
+          children = _tree.children;
       children.forEach(function (child) {
         child.destroy();
 
@@ -757,7 +758,7 @@ var Layout = new _Layout({
 /* 1 */
 /***/ (function(module, exports) {
 
-if (typeof GameGlobal !== "undefined") {
+if (typeof GameGlobal !== 'undefined') {
   GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
 }
 
@@ -796,7 +797,7 @@ function hexToRgb(hex) {
 function getRgba(hex, opacity) {
   var rgbObj = hexToRgb(hex);
 
-  if (opacity == undefined) {
+  if (opacity === undefined) {
     opacity = 1;
   }
 
@@ -804,7 +805,7 @@ function getRgba(hex, opacity) {
 }
 
 var toEventName = function toEventName(event, id) {
-  var elementEvent = ["click", "touchstart", "touchmove", "touchend", "touchcancel"];
+  var elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
 
   if (elementEvent.indexOf(event) !== -1) {
     return "element-".concat(id, "-").concat(event);
@@ -822,11 +823,11 @@ var Element = /*#__PURE__*/function () {
         _ref$props = _ref.props,
         props = _ref$props === void 0 ? {} : _ref$props,
         _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? "" : _ref$idName,
+        idName = _ref$idName === void 0 ? '' : _ref$idName,
         _ref$className = _ref.className,
-        className = _ref$className === void 0 ? "" : _ref$className,
+        className = _ref$className === void 0 ? '' : _ref$className,
         _ref$id = _ref.id,
-        id = _ref$id === void 0 ? ++uuid : _ref$id,
+        id = _ref$id === void 0 ? uuid += 1 : _ref$id,
         _ref$dataset = _ref.dataset,
         dataset = _ref$dataset === void 0 ? {} : _ref$dataset;
 
@@ -847,11 +848,11 @@ var Element = /*#__PURE__*/function () {
     this.layoutBox = {};
     this.dataset = dataset;
 
-    if (style.opacity !== undefined && style.color && style.color.indexOf("#") > -1) {
+    if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
       style.color = getRgba(style.color, style.opacity);
     }
 
-    if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf("#") > -1) {
+    if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf('#') > -1) {
       style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
     }
 
@@ -862,7 +863,7 @@ var Element = /*#__PURE__*/function () {
     } // 事件冒泡逻辑
 
 
-    ["touchstart", "touchmove", "touchcancel", "touchend", "click"].forEach(function (eventName) {
+    ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
       _this.on(eventName, function (e, touchMsg) {
         _this.parent && _this.parent.emit(eventName, e, touchMsg);
       });
@@ -875,8 +876,8 @@ var Element = /*#__PURE__*/function () {
     value: function initRepaint() {
       var _this2 = this;
 
-      this.on("repaint", function (e) {
-        _this2.parent && _this2.parent.emit("repaint", e);
+      this.on('repaint', function (e) {
+        _this2.parent && _this2.parent.emit('repaint', e);
       });
     } // 子类填充实现
 
@@ -893,13 +894,13 @@ var Element = /*#__PURE__*/function () {
     value: function destroy() {
       var _this3 = this;
 
-      ["touchstart", "touchmove", "touchcancel", "touchend", "click", "repaint"].forEach(function (eventName) {
+      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
         _this3.off(eventName);
       });
-      this.EE.off("image__render__done");
+      this.EE.off('image__render__done');
       this.isDestroyed = true;
       this.EE = null;
-      /*this.root          = null;*/
+      /* this.root          = null;*/
 
       this.parent = null;
       this.ctx = null;
@@ -976,13 +977,13 @@ var Element = /*#__PURE__*/function () {
       ctx.moveTo(x + borderTopLeftRadius, y);
       ctx.lineTo(x + width - borderTopRightRadius, y); // 右上角的圆角
 
-      /*ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius);*/
+      /* ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius);*/
 
       ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius); // 右下角的点
 
       ctx.lineTo(x + width, y + height - borderBottomRightRadius); // 右下角的圆角
 
-      /*ctx.quadraticCurveTo(
+      /* ctx.quadraticCurveTo(
         x + width,
         y + height,
         x + width - borderBottomRightRadius,
@@ -993,13 +994,13 @@ var Element = /*#__PURE__*/function () {
 
       ctx.lineTo(x + borderBottomLeftRadius, y + height); // 左下角的圆角
 
-      /*ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius);*/
+      /* ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius);*/
 
       ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius); // 左上角的点
 
       ctx.lineTo(x, y + borderTopLeftRadius); // 左上角的圆角
 
-      /*ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);*/
+      /* ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);*/
 
       ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
       return {
@@ -2394,11 +2395,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
 function throttle(fn, threshhold, scope) {
   threshhold || (threshhold = 250);
-  var last, deferTimer;
+  var last;
+  var deferTimer;
   return function () {
     var context = scope || this;
-    var now = +new Date(),
-        args = arguments;
+    var now = +new Date();
+    var args = arguments;
 
     if (last && now < last + threshhold) {
       // hold on to it
@@ -2437,19 +2439,19 @@ function isClick(touchMsg) {
 }
 function createCanvas() {
   /* istanbul ignore if*/
-  if (typeof __env !== "undefined") {
+  if (typeof __env !== 'undefined') {
     return __env.createCanvas();
-  } else {
-    return document.createElement('canvas');
   }
+
+  return document.createElement('canvas');
 }
 function createImage() {
   /* istanbul ignore if*/
-  if (typeof __env !== "undefined") {
+  if (typeof __env !== 'undefined') {
     return __env.createImage();
-  } else {
-    return document.createElement('img');
   }
+
+  return document.createElement('img');
 }
 
 var _dpr; // only Baidu platform need to recieve system info from main context
@@ -2470,7 +2472,7 @@ function getDpr() {
     return _dpr;
   }
 
-  if (typeof __env !== "undefined" && __env.getSystemInfoSync) {
+  if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
     _dpr = __env.getSystemInfoSync().devicePixelRatio;
   } else {
     console.warn('failed to access device pixel ratio, fallback to 1');
@@ -2480,10 +2482,10 @@ function getDpr() {
   return _dpr;
 }
 var STATE = {
-  "UNINIT": "UNINIT",
-  "INITED": "INITED",
-  "RENDERED": "RENDERED",
-  "CLEAR": "CLEAR"
+  UNINIT: 'UNINIT',
+  INITED: 'INITED',
+  RENDERED: 'RENDERED',
+  CLEAR: 'CLEAR'
 };
 var repaintChildren = function repaintChildren(children) {
   children.forEach(function (child) {
@@ -3428,13 +3430,13 @@ var BitMapFont = /*#__PURE__*/function () {
   _createClass(BitMapFont, [{
     key: "parseConfig",
     value: function parseConfig(fntText) {
-      fntText = fntText.split("\r\n").join("\n");
-      var lines = fntText.split("\n");
+      fntText = fntText.split('\r\n').join('\n');
+      var lines = fntText.split('\n');
       var linesParsed = lines.map(function (line) {
-        return line.trim().split(" ");
+        return line.trim().split(' ');
       });
       var charsLine = this.getConfigByLineName(linesParsed, 'chars');
-      var charsCount = this.getConfigByKeyInOneLine(charsLine.line, "count");
+      var charsCount = this.getConfigByKeyInOneLine(charsLine.line, 'count');
       var commonLine = this.getConfigByLineName(linesParsed, 'common');
       this.lineHeight = this.getConfigByKeyInOneLine(commonLine.line, 'lineHeight');
       var infoLine = this.getConfigByLineName(linesParsed, 'info');
@@ -3453,26 +3455,26 @@ var BitMapFont = /*#__PURE__*/function () {
 
       for (var i = 4; i < 4 + charsCount; i++) {
         var charText = lines[i];
-        var letter = String.fromCharCode(this.getConfigByKeyInOneLine(charText, "id"));
+        var letter = String.fromCharCode(this.getConfigByKeyInOneLine(charText, 'id'));
         var c = {};
         chars[letter] = c;
-        c["x"] = this.getConfigByKeyInOneLine(charText, "x");
-        c["y"] = this.getConfigByKeyInOneLine(charText, "y");
-        c["w"] = this.getConfigByKeyInOneLine(charText, "width");
-        c["h"] = this.getConfigByKeyInOneLine(charText, "height");
-        c["offX"] = this.getConfigByKeyInOneLine(charText, "xoffset");
-        c["offY"] = this.getConfigByKeyInOneLine(charText, "yoffset");
-        c["xadvance"] = this.getConfigByKeyInOneLine(charText, "xadvance");
-        c["kerning"] = {};
+        c.x = this.getConfigByKeyInOneLine(charText, 'x');
+        c.y = this.getConfigByKeyInOneLine(charText, 'y');
+        c.w = this.getConfigByKeyInOneLine(charText, 'width');
+        c.h = this.getConfigByKeyInOneLine(charText, 'height');
+        c.offX = this.getConfigByKeyInOneLine(charText, 'xoffset');
+        c.offY = this.getConfigByKeyInOneLine(charText, 'yoffset');
+        c.xadvance = this.getConfigByKeyInOneLine(charText, 'xadvance');
+        c.kerning = {};
       } // parse kernings
 
 
       if (kerningsCount) {
         for (var _i = kerningsStart; _i <= kerningsStart + kerningsCount; _i++) {
           var line = linesParsed[_i];
-          var first = String.fromCharCode(this.getConfigByKeyInOneLine(line, "first"));
-          var second = String.fromCharCode(this.getConfigByKeyInOneLine(line, "second"));
-          var amount = this.getConfigByKeyInOneLine(line, "amount");
+          var first = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'first'));
+          var second = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'second'));
+          var amount = this.getConfigByKeyInOneLine(line, 'amount');
 
           if (chars[second]) {
             chars[second].kerning[first] = amount;
@@ -3507,7 +3509,7 @@ var BitMapFont = /*#__PURE__*/function () {
   }, {
     key: "getConfigByKeyInOneLine",
     value: function getConfigByKeyInOneLine(configText, key) {
-      var itemConfigTextList = Array.isArray(configText) ? configText : configText.split(" ");
+      var itemConfigTextList = Array.isArray(configText) ? configText : configText.split(' ');
 
       for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
         var itemConfigText = itemConfigTextList[i];
@@ -3826,11 +3828,11 @@ var Image = /*#__PURE__*/function (_Element) {
         _opts$props = opts.props,
         props = _opts$props === void 0 ? {} : _opts$props,
         _opts$idName = opts.idName,
-        idName = _opts$idName === void 0 ? "" : _opts$idName,
+        idName = _opts$idName === void 0 ? '' : _opts$idName,
         _opts$className = opts.className,
-        className = _opts$className === void 0 ? "" : _opts$className,
+        className = _opts$className === void 0 ? '' : _opts$className,
         _opts$src = opts.src,
-        src = _opts$src === void 0 ? "" : _opts$src,
+        src = _opts$src === void 0 ? '' : _opts$src,
         dataset = opts.dataset;
     _this = _super.call(this, {
       props: props,
@@ -3840,7 +3842,7 @@ var Image = /*#__PURE__*/function (_Element) {
       style: style
     });
     _this.imgsrc = src;
-    Object.defineProperty(_assertThisInitialized(_this), "src", {
+    Object.defineProperty(_assertThisInitialized(_this), 'src', {
       get: function get() {
         return this.imgsrc;
       },
@@ -3852,14 +3854,14 @@ var Image = /*#__PURE__*/function (_Element) {
           _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
             _this2.img = img;
 
-            _this2.emit("repaint");
+            _this2.emit('repaint');
           });
         }
       },
       enumerable: true,
       configurable: true
     });
-    _this.type = "Image";
+    _this.type = 'Image';
     _this.renderBoxes = [];
     _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
       if (fromCache) {
@@ -3867,7 +3869,7 @@ var Image = /*#__PURE__*/function (_Element) {
       } else {
         // 当图片加载完成，实例可能已经被销毁了
         if (_this.img && _this.isScrollViewChild) {
-          _this.EE.emit("image__render__done", _assertThisInitialized(_this));
+          _this.EE.emit('image__render__done', _assertThisInitialized(_this));
         }
       }
     });
@@ -3881,7 +3883,7 @@ var Image = /*#__PURE__*/function (_Element) {
       var parent = this.parent;
 
       while (parent && !flag) {
-        if (parent.type === "ScrollView") {
+        if (parent.type === 'ScrollView') {
           flag = true;
         } else {
           parent = parent.parent;
@@ -3965,7 +3967,7 @@ var Image = /*#__PURE__*/function (_Element) {
         } else {
           // 当图片加载完成，实例可能已经被销毁了
           if (_this4.img) {
-            var eventName = _this4.isScrollViewChild ? "image__render__done" : "one__image__render__done";
+            var eventName = _this4.isScrollViewChild ? 'image__render__done' : 'one__image__render__done';
 
             _this4.EE.emit(eventName, _this4);
           }
@@ -4057,11 +4059,11 @@ function parseText(style, value) {
   var str = value.substring(0, length);
 
   while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
-    length--;
+    length -= 1;
     str = value.substring(0, length);
   }
 
-  return length && textOverflow === 'ellipsis' ? str + '...' : str;
+  return length && textOverflow === 'ellipsis' ? "".concat(str, "...") : str;
 }
 
 var Text = /*#__PURE__*/function (_Element) {
@@ -4104,7 +4106,7 @@ var Text = /*#__PURE__*/function (_Element) {
     _this.ctx = null;
     _this.valuesrc = value;
     _this.renderBoxes = [];
-    Object.defineProperty(_assertThisInitialized(_this), "value", {
+    Object.defineProperty(_assertThisInitialized(_this), 'value', {
       get: function get() {
         return this.valuesrc;
       },
@@ -4268,9 +4270,9 @@ var ScrollView = /*#__PURE__*/function (_View) {
         _ref$props = _ref.props,
         props = _ref$props === void 0 ? {} : _ref$props,
         _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? "" : _ref$idName,
+        idName = _ref$idName === void 0 ? '' : _ref$idName,
         _ref$className = _ref.className,
-        className = _ref$className === void 0 ? "" : _ref$className,
+        className = _ref$className === void 0 ? '' : _ref$className,
         _ref$scrollX = _ref.scrollX,
         scrollX = _ref$scrollX === void 0 ? false : _ref$scrollX,
         _ref$scrollY = _ref.scrollY,
@@ -4525,9 +4527,9 @@ var ScrollView = /*#__PURE__*/function (_View) {
           _this6.scrollRender(left, top);
 
           if (_this6.currentEvent) {
-            /*this.currentEvent.type = 'scroll';*/
+            /* this.currentEvent.type = 'scroll';*/
 
-            /*this.currentEvent.currentTarget = this;*/
+            /* this.currentEvent.currentTarget = this;*/
             _this6.emit('scroll', _this6.currentEvent);
           }
         }
@@ -4543,7 +4545,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
         }
 
         var touches = copyTouchArray(e.touches);
-        /*const touches = e.touches;*/
+        /* const touches = e.touches;*/
 
         touches.forEach(function (touch) {
           if (dpr !== 1) {
@@ -4562,7 +4564,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
         }
 
         var touches = copyTouchArray(e.touches);
-        /*const touches = e.touches;*/
+        /* const touches = e.touches;*/
 
         touches.forEach(function (touch) {
           if (dpr !== 1) {
@@ -6069,11 +6071,11 @@ var BitMapText = /*#__PURE__*/function (_Element) {
       style: style,
       dataset: dataset
     });
-    _this.type = "BitMapText";
+    _this.type = 'BitMapText';
     _this.ctx = null;
     _this.valuesrc = value;
     _this.renderBoxes = [];
-    Object.defineProperty(_assertThisInitialized(_this), "value", {
+    Object.defineProperty(_assertThisInitialized(_this), 'value', {
       get: function get() {
         return this.valuesrc;
       },

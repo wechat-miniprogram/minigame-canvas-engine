@@ -1,5 +1,5 @@
 function getCurrTime() {
-    return parseInt(+new Date() / 1000);
+  return parseInt(+new Date() / 1000);
 }
 
 function none() {}
@@ -8,37 +8,37 @@ function none() {}
  * 获取用户信息
  */
 export function getUserInfo(callback = none) {
-    wx.getUserInfo({
-        openIdList: ['selfOpenId'],
-        success   : userRes => {
-            callback(userRes.data[0] || {});
-        },
-        fail: callback
-    });
+  wx.getUserInfo({
+    openIdList: ["selfOpenId"],
+    success: (userRes) => {
+      callback(userRes.data[0] || {});
+    },
+    fail: callback,
+  });
 }
 
 export function getDataFromSource(item) {
-    let source;
-    // try {
-    //     source = JSON.parse(item.KVDataList[0].value);
-    // } catch(e) {
-    //     source = {
-    //         "wxgame":{
-    //             "rankScore"      : 0,
-    //             "update_time": getCurrTime()
-    //         }
-    //     }
-    // }
+  let source;
+  // try {
+  //     source = JSON.parse(item.KVDataList[0].value);
+  // } catch(e) {
+  //     source = {
+  //         "wxgame":{
+  //             "rankScore"      : 0,
+  //             "update_time": getCurrTime()
+  //         }
+  //     }
+  // }
 
-    /******debug******/
-    source = {
-        "wxgame":{
-            "rankScore"  : 0,
-            "update_time": getCurrTime()
-        }
-    }
-    /******debug******/
-    return source.wxgame;
+  /******debug******/
+  source = {
+    wxgame: {
+      rankScore: 0,
+      update_time: getCurrTime(),
+    },
+  };
+  /******debug******/
+  return source.wxgame;
 }
 
 /**
@@ -48,34 +48,33 @@ export function getDataFromSource(item) {
  */
 
 export function findSelf(list, selfData) {
-    // console.log("selfData",  selfData);
-    let result = {
-        index: -1,
-        self : null,
-    };
+  // console.log("selfData",  selfData);
+  let result = {
+    index: -1,
+    self: null,
+  };
 
-    list.forEach( (item, index) => {
-        if ( item.avatarUrl === selfData.avatarUrl ) {
-            result.self       = item;
-            let { rankScore, update_time } = getDataFromSource(item);
+  list.forEach((item, index) => {
+    if (item.avatarUrl === selfData.avatarUrl) {
+      result.self = item;
+      let { rankScore, update_time } = getDataFromSource(item);
 
-            result.self.rankScore       = rankScore;
-            result.self.update_time = update_time;
-            result.index            = index;
-        }
-        else {
-            /******debug******/
-            result.self       = item;
-            let { rankScore, update_time } = getDataFromSource(item);
+      result.self.rankScore = rankScore;
+      result.self.update_time = update_time;
+      result.index = index;
+    } else {
+      /******debug******/
+      result.self = item;
+      let { rankScore, update_time } = getDataFromSource(item);
 
-            result.self.rankScore       = rankScore;
-            result.self.update_time = update_time;
-            result.index            = index;
-            /******debug******/
-        }
-    });
+      result.self.rankScore = rankScore;
+      result.self.update_time = update_time;
+      result.index = index;
+      /******debug******/
+    }
+  });
 
-    return result;
+  return result;
 }
 
 /**
@@ -85,94 +84,92 @@ export function findSelf(list, selfData) {
  * 可以大大提高拉取速度
  */
 export function injectSelfToList(list, userinfo, rankScore) {
-    let item = {
-        rank: 1,
-        rankScore,
-        avatarUrl: userinfo.avatarUrl,
-        nickname : userinfo.nickname || userinfo.nickName,
-    }
+  let item = {
+    rank: 1,
+    rankScore,
+    avatarUrl: userinfo.avatarUrl,
+    nickname: userinfo.nickname || userinfo.nickName,
+  };
 
-    list.push(item);
+  list.push(item);
 }
 
 export function replaceSelfDataInList(list, info, rankScore) {
-    list.forEach( (item) => {
-        if (   item.avatarUrl === info.avatarUrl
-            && rankScore > item.rankScore ) {
-            item.rankScore = rankScore;
-        }
-    });
+  list.forEach((item) => {
+    if (item.avatarUrl === info.avatarUrl && rankScore > item.rankScore) {
+      item.rankScore = rankScore;
+    }
+  });
 }
 
 /**
  * 获取好友排行榜列表
  */
 export function getFriendData(key, callback = none) {
-    wx.getFriendCloudStorage({
-        keyList: [key],
-        success: res => {
+  wx.getFriendCloudStorage({
+    keyList: [key],
+    success: (res) => {
+      /*****debug*****/
+      res.data = res.data.filter((item) => item.KVDataList.length);
+      /*****debug*****/
 
-            /*****debug*****/
-            res.data = res.data.filter( item => item.KVDataList.length );
-            /*****debug*****/
+      let data = res.data.map((item) => {
+        let { rankScore, update_time } = getDataFromSource(item);
+        item.rankScore = rankScore;
+        item.update_time = update_time;
 
-            let data = res.data.map( item => {
-                let { rankScore, update_time } = getDataFromSource(item);
-                item.rankScore       = rankScore;
-                item.update_time = update_time;
+        return item;
+      });
 
-                return item;
-            });
+      for (let i = 0; i < data.length; i++) {
+        data[i].rank = i + 1;
+      }
 
-            for ( let i = 0; i < data.length; i++ ) {
-                data[i].rank = i + 1;
-            }
-
-            callback(data);
-        }
-    });
+      callback(data);
+    },
+  });
 }
 
 /**
  * 拉取用户当前的分数记录，如果当前分数大于历史最高分数，执行上报
  */
 export function setUserRecord(key, userData, startTime) {
-    let rankScore = userData.rankScore;
+  let rankScore = userData.rankScore;
 
-    if ( rankScore === undefined || rankScore === null ) {
-        return;
-    }
+  if (rankScore === undefined || rankScore === null) {
+    return;
+  }
 
-    let time   = getCurrTime();
-    let record = 0;
-    let last_update_time = getCurrTime();
+  let time = getCurrTime();
+  let record = 0;
+  let last_update_time = getCurrTime();
 
-    wx.getUserCloudStorage({
-        keyList: [key],
-        success: data => {
-            // 查找个人的最高历史记录
-            if ( data.KVDataList.length > 0 ) {
-                let { rankScore, update_time} = getDataFromSource(data);
-                record           = rankScore;
-                last_update_time = update_time;
-            }
+  wx.getUserCloudStorage({
+    keyList: [key],
+    success: (data) => {
+      // 查找个人的最高历史记录
+      if (data.KVDataList.length > 0) {
+        let { rankScore, update_time } = getDataFromSource(data);
+        record = rankScore;
+        last_update_time = update_time;
+      }
 
-            if ( rankScore > record || last_update_time < startTime ) {
-                wx.setUserCloudStorage({
-                    KVDataList: [
-                        {   key  : key,
-                            value: JSON.stringify({
-                                wxgame: {
-                                    rankScore,
-                                    update_time: time,
-                                }
-                            })
-                        },
-                    ],
-                    success: console.log
-                });
-            }
-        }
-    });
+      if (rankScore > record || last_update_time < startTime) {
+        wx.setUserCloudStorage({
+          KVDataList: [
+            {
+              key: key,
+              value: JSON.stringify({
+                wxgame: {
+                  rankScore,
+                  update_time: time,
+                },
+              }),
+            },
+          ],
+          success: console.log,
+        });
+      }
+    },
+  });
 }
-

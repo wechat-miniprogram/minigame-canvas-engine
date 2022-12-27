@@ -10,5 +10,5 @@ export {
   Image,
   Text,
   ScrollView,
-  BitMapText
-}
+  BitMapText,
+};

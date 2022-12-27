@@ -2,9 +2,9 @@ const pools = [];
 
 export default class Pool {
   constructor(name = 'pool') {
-    let curr = pools.find( item => item.name === name );
+    const curr = pools.find(item => item.name === name);
 
-    if ( curr ) {
+    if (curr) {
       return curr;
     }
 

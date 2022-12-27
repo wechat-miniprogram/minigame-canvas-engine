@@ -9,12 +9,12 @@ const getContext = () => {
   }
 
   const canvas = createCanvas();
-  canvas.width = 1
-  canvas.height = 1
+  canvas.width = 1;
+  canvas.height = 1;
   context = canvas.getContext('2d');
 
   return context;
-}
+};
 
 
 function getTextWidth(style, value) {
@@ -33,48 +33,48 @@ function parseText(style, value) {
   value = String(value);
 
   let maxWidth  = style.width;
-  let wordWidth = getTextWidth(style, value);
+  const wordWidth = getTextWidth(style, value);
 
   // 对文字溢出的处理，默认用...
-  let textOverflow = style.textOverflow || 'ellipsis';
+  const textOverflow = style.textOverflow || 'ellipsis';
 
   // 文字最大长度不超限制
-  if ( wordWidth <= maxWidth ) {
+  if (wordWidth <= maxWidth) {
     return value;
   }
 
   // 对于用点点点处理的情况，先将最大宽度减去...的宽度
-  if ( textOverflow === 'ellipsis' ) {
+  if (textOverflow === 'ellipsis') {
     maxWidth -= getTextWidthWithoutSetFont('...');
   }
 
   let length = value.length - 1;
   let str    = value.substring(0, length);
 
-  while ( getTextWidthWithoutSetFont(str) > maxWidth && length > 0 ) {
-    length--;
+  while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
+    length -= 1;
     str = value.substring(0, length);
   }
 
-  return (  length && textOverflow === 'ellipsis'
-    ? str  + '...'
-    : str  );
+  return (length && textOverflow === 'ellipsis'
+    ? `${str}...`
+    : str);
 }
 
 
 export default class Text extends Element {
   constructor({
-    style={},
-    props={},
-    idName='',
-    className='',
-    value='',
+    style = {},
+    props = {},
+    idName = '',
+    className = '',
+    value = '',
     dataset,
   }) {
     // 没有设置宽度的时候通过canvas计算出文字宽度
-    if ( style.width === undefined ) {
+    if (style.width === undefined) {
       style.width = getTextWidth(style, value);
-    } else if ( style.textOverflow === 'ellipsis' ) {
+    } else if (style.textOverflow === 'ellipsis') {
       value = parseText(style, value);
     }
 
@@ -92,24 +92,24 @@ export default class Text extends Element {
 
     this.renderBoxes = [];
 
-    Object.defineProperty(this, "value", {
-      get : function() {
+    Object.defineProperty(this, 'value', {
+      get() {
         return this.valuesrc;
       },
-      set : function(newValue){
-        if ( newValue !== this.valuesrc) {
+      set(newValue) {
+        if (newValue !== this.valuesrc) {
           this.valuesrc = newValue;
 
           this.emit('repaint');
         }
       },
-      enumerable   : true,
-      configurable : true
+      enumerable: true,
+      configurable: true,
     });
   }
 
   toCanvasData() {
-    let style = this.style || {};
+    const style = this.style || {};
 
     this.fontSize = style.fontSize || 12;
     this.textBaseline = 'top';
@@ -121,11 +121,11 @@ export default class Text extends Element {
   insert(ctx, box) {
     this.renderBoxes.push({ ctx, box });
 
-    this.render(ctx, box)
+    this.render(ctx, box);
   }
 
   repaint() {
-    this.renderBoxes.forEach(item => {
+    this.renderBoxes.forEach((item) => {
       this.render(item.ctx, item.box);
     });
   }
@@ -139,7 +139,7 @@ export default class Text extends Element {
     ctx.save();
 
     const box = layoutBox || this.layoutBox;
-    const style = this.style;
+    const { style } = this;
 
     ctx.textBaseline = this.textBaseline;
     ctx.font         = this.font;
@@ -148,15 +148,15 @@ export default class Text extends Element {
     let drawX = box.absoluteX;
     let drawY = box.absoluteY;
 
-    const {needClip, needStroke} = this.renderBorder(ctx, layoutBox);
+    const { needClip, needStroke } = this.renderBorder(ctx, layoutBox);
 
     if (needClip) {
       ctx.clip();
     }
 
-    if ( style.backgroundColor ) {
+    if (style.backgroundColor) {
       ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(drawX, drawY, box.width, box.height)
+      ctx.fillRect(drawX, drawY, box.width, box.height);
     }
 
     if (needStroke) {
@@ -165,13 +165,13 @@ export default class Text extends Element {
 
     ctx.fillStyle = this.fillStyle;
 
-    if ( this.textAlign === 'center' ) {
+    if (this.textAlign === 'center') {
       drawX += box.width / 2;
-    } else if ( this.textAlign === 'right' ) {
+    } else if (this.textAlign === 'right') {
       drawX += box.width;
     }
 
-    if ( style.lineHeight ) {
+    if (style.lineHeight) {
       ctx.textBaseline = 'middle';
       drawY += style.lineHeight / 2;
     }
@@ -179,7 +179,7 @@ export default class Text extends Element {
     ctx.fillText(
       this.value,
       drawX,
-      drawY
+      drawY,
     );
 
     ctx.restore();

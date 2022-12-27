@@ -1,81 +1,79 @@
 import './env.js';
-import Element                         from './components/elements.js';
-import Pool                            from './common/pool.js';
-import Emitter                         from 'tiny-emitter';
-import computeLayout                   from 'css-layout';
+import Element from './components/elements.js';
+import Pool from './common/pool.js';
+import Emitter from 'tiny-emitter';
+import computeLayout from 'css-layout';
 import { isClick, STATE, createImage, repaintChildren } from './common/util.js';
-import parser                          from './libs/fast-xml-parser/parser.js';
-import BitMapFont  from './common/bitMapFont';
+import parser from './libs/fast-xml-parser/parser.js';
+import BitMapFont from './common/bitMapFont';
 
 // components
 import {
-  View, Text, Image, ScrollView, BitMapText
-} from './components/index.js'
+  View, Text, Image, ScrollView, BitMapText,
+} from './components/index.js';
 
 // 全局事件管道
-export const EE  = new Emitter();
-const imgPool    = new Pool('imgPool');
+export const EE = new Emitter();
+const imgPool = new Pool('imgPool');
 const canvasPool = new Pool('canvasPool');
 
 const constructorMap = {
-  view      : View,
-  text      : Text,
-  image     : Image,
+  view: View,
+  text: Text,
+  image: Image,
   scrollview: ScrollView,
-  bitmaptext: BitMapText
-}
+  bitmaptext: BitMapText,
+};
 
-function isPercent (data) {
+function isPercent(data) {
   return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
 }
 
-function convertPercent (data, parentData) {
+function convertPercent(data, parentData) {
   if (typeof data === 'number') {
     return data;
   }
-  let matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
+  const matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
   if (matchData) {
     return parentData * matchData * 0.01;
   }
 }
 
 const create = function (node, style, parent) {
-  const _constructor = constructorMap[node.name];
+  const Constructor = constructorMap[node.name];
 
-  let children = node.children || [];
+  const children = node.children || [];
 
-  let attr = node.attr || {};
-  let dataset = {};
+  const attr = node.attr || {};
+  const dataset = {};
   const id = attr.id || '';
 
   const args = Object.keys(attr)
     .reduce((obj, key) => {
-      const value = attr[key]
+      const value = attr[key];
       const attribute = key;
 
-      if (key === 'id' ) {
-        obj.style = Object.assign(obj.style || {}, style[id] || {})
+      if (key === 'id') {
+        obj.style = Object.assign(obj.style || {}, style[id] || {});
 
-        return obj
+        return obj;
       }
 
       if (key === 'class') {
-        obj.style = value.split(/\s+/).reduce((res, oneClass) => {
-          return Object.assign(res, style[oneClass])
-        }, obj.style || {})
+        obj.style = value.split(/\s+/).reduce((res, oneClass) => Object.assign(res, style[oneClass]), obj.style || {});
 
-        return obj
+        return obj;
       }
 
       // if (/\{\{.+\}\}/.test(value)) {
 
       // }
       if (value === 'true') {
-        obj[attribute] = true
+        obj[attribute] = true;
       } else if (value === 'false') {
-        obj[attribute] = false
+        obj[attribute] = false;
       } else {
-        obj[attribute] = value
+        obj[attribute] = value;
       }
 
       if (attribute.startsWith('data-')) {
@@ -87,13 +85,13 @@ const create = function (node, style, parent) {
       obj.dataset = dataset;
 
       return obj;
-    }, {})
+    }, {});
 
   // 用于后续元素查询
-  args.idName    = id;
+  args.idName = id;
   args.className = attr.class || '';
 
-  let thisStyle = args.style;
+  const thisStyle = args.style;
   if (thisStyle) {
     let parentStyle;
     if (parent) {
@@ -105,8 +103,8 @@ const create = function (node, style, parent) {
     } else {
       parentStyle = {
         width: 300,
-        height: 150
-      }
+        height: 150,
+      };
     }
     if (isPercent(thisStyle.width)) {
       thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
@@ -115,30 +113,30 @@ const create = function (node, style, parent) {
       thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
     }
   }
-  const element  = new _constructor(args)
+  const element = new Constructor(args);
   element.root = this;
 
-  children.forEach(childNode => {
+  children.forEach((childNode) => {
     const childElement = create.call(this, childNode, style, args);
 
     element.add(childElement);
   });
 
   return element;
-}
+};
 
-const getChildren = (element) => Object.keys(element.children)
+const getChildren = element => Object.keys(element.children)
   .map(id => element.children[id])
   .map(child => ({
-    id      : child.id,
-    name    : child.name,
-    style   : child.style,
-    children: getChildren(child)
+    id: child.id,
+    name: child.name,
+    style: child.style,
+    children: getChildren(child),
   }));
 
 const renderChildren = (children, context) => {
-  children.forEach(child => {
-    if ( child.type === 'ScrollView' ) {
+  children.forEach((child) => {
+    if (child.type === 'ScrollView') {
       // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
       child.insertScrollView(context);
     } else {
@@ -147,20 +145,20 @@ const renderChildren = (children, context) => {
       return renderChildren(child.children, context);
     }
   });
-}
+};
 
 
-function layoutChildren (dataArray, children) {
+function layoutChildren(dataArray, children) {
   dataArray.forEach((data) => {
-    const child = children.find(item => item.id === data.id)
+    const child = children.find(item => item.id === data.id);
 
     child.layoutBox = child.layoutBox || {};
 
-    ['left', 'top', 'width', 'height'].forEach(prop => {
+    ['left', 'top', 'width', 'height'].forEach((prop) => {
       child.layoutBox[prop] = data.layout[prop];
     });
 
-    if ( child.parent ) {
+    if (child.parent) {
       child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
       child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
     } else {
@@ -172,36 +170,36 @@ function layoutChildren (dataArray, children) {
     child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
 
     // 滚动列表的画板尺寸和主画板保持一致
-    if ( child.type === 'ScrollView' ) {
+    if (child.type === 'ScrollView') {
       child.updateRenderPort(this.renderport);
     }
 
-    layoutChildren.call(this, data.children, child.children );
+    layoutChildren.call(this, data.children, child.children);
   });
 }
 
 const updateRealLayout = (dataArray, children, scale) => {
   dataArray.forEach((data) => {
-    const child = children.find(item => item.id === data.id)
+    const child = children.find(item => item.id === data.id);
 
     child.realLayoutBox = child.realLayoutBox || {};
 
-    ['left', 'top', 'width', 'height'].forEach(prop => {
+    ['left', 'top', 'width', 'height'].forEach((prop) => {
       child.realLayoutBox[prop] = data.layout[prop] * scale;
     });
 
-    if ( child.parent ) {
+    if (child.parent) {
       // Scrollview支持横向滚动和纵向滚动，realX和realY需要动态计算
       Object.defineProperty(child.realLayoutBox, 'realX', {
         configurable: true,
-        enumerable  : true,
+        enumerable: true,
         get: () => {
           let res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
 
           /**
            * 滚动列表事件处理
            */
-          if ( child.parent && child.parent.type === 'ScrollView' ) {
+          if (child.parent && child.parent.type === 'ScrollView') {
             res -= (child.parent.scrollLeft * scale);
           }
 
@@ -211,14 +209,14 @@ const updateRealLayout = (dataArray, children, scale) => {
 
       Object.defineProperty(child.realLayoutBox, 'realY', {
         configurable: true,
-        enumerable  : true,
+        enumerable: true,
         get: () => {
           let res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
 
           /**
            * 滚动列表事件处理
            */
-          if ( child.parent && child.parent.type === 'ScrollView' ) {
+          if (child.parent && child.parent.type === 'ScrollView') {
             res -= (child.parent.scrollTop * scale);
           }
 
@@ -232,17 +230,17 @@ const updateRealLayout = (dataArray, children, scale) => {
 
     updateRealLayout(data.children, child.children, scale);
   });
-}
+};
 
 function _getElementsById(tree, list = [], id) {
-  Object.keys(tree.children).forEach(key => {
+  Object.keys(tree.children).forEach((key) => {
     const child = tree.children[key];
 
-    if ( child.idName === id ) {
+    if (child.idName === id) {
       list.push(child);
     }
 
-    if ( Object.keys(child.children).length ) {
+    if (Object.keys(child.children).length) {
       _getElementsById(child, list, id);
     }
   });
@@ -251,14 +249,14 @@ function _getElementsById(tree, list = [], id) {
 }
 
 function _getElementsByClassName(tree, list = [], className) {
-  Object.keys(tree.children).forEach(key => {
+  Object.keys(tree.children).forEach((key) => {
     const child = tree.children[key];
 
-    if ( child.className.split(/\s+/).indexOf(className) > -1 ) {
+    if (child.className.split(/\s+/).indexOf(className) > -1) {
       list.push(child);
     }
 
-    if ( Object.keys(child.children).length ) {
+    if (Object.keys(child.children).length) {
       _getElementsByClassName(child, list, className);
     }
   });
@@ -268,20 +266,20 @@ function _getElementsByClassName(tree, list = [], className) {
 
 
 class _Layout extends Element {
-  constructor({style, name} = {}) {
-    super({style, id: 0, name});
+  constructor({ style, name } = {}) {
+    super({ style, id: 0, name });
 
     this.hasEventHandler = false;
-    this.elementTree     = null;
-    this.renderContext   = null;
+    this.elementTree = null;
+    this.renderContext = null;
 
-    this.debugInfo  = {};
+    this.debugInfo = {};
     this.renderport = {};
-    this.viewport   = {};
+    this.viewport = {};
 
-    this.touchStart  = this.eventHandler('touchstart').bind(this);
-    this.touchMove   = this.eventHandler('touchmove').bind(this);
-    this.touchEnd    = this.eventHandler('touchend').bind(this);
+    this.touchStart = this.eventHandler('touchstart').bind(this);
+    this.touchMove = this.eventHandler('touchmove').bind(this);
+    this.touchEnd = this.eventHandler('touchend').bind(this);
     this.touchCancel = this.eventHandler('touchcancel').bind(this);
 
     this.version = '0.0.7';
@@ -292,7 +290,7 @@ class _Layout extends Element {
     this.realLayoutBox = {
       realX: 0,
       realY: 0,
-    }
+    };
 
     this.state = STATE.UNINIT;
 
@@ -307,44 +305,44 @@ class _Layout extends Element {
    * y坐标
    */
   updateViewPort(box) {
-    this.viewport.width  = box.width  || 0;
+    this.viewport.width = box.width || 0;
     this.viewport.height = box.height || 0;
-    this.viewport.x      = box.x      || 0;
-    this.viewport.y      = box.y      || 0;
+    this.viewport.x = box.x || 0;
+    this.viewport.y = box.y || 0;
 
     this.realLayoutBox = {
       realX: this.viewport.x,
       realY: this.viewport.y,
-    }
+    };
 
     this.hasViewPortSet = true;
   }
 
   init(template, style, attrValueProcessor) {
-    let start = new Date();
+    const start = new Date();
 
-    /*if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
-    /*}*/
-    let parseConfig = {
-      attributeNamePrefix : "",
-      attrNodeName: "attr", //default is 'false'
-      textNodeName : "#text",
-      ignoreAttributes : false,
-      ignoreNameSpace : true,
-      allowBooleanAttributes : true,
-      parseNodeValue : false,
-      parseAttributeValue : false,
+    /* if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
+    /* }*/
+    const parseConfig = {
+      attributeNamePrefix: '',
+      attrNodeName: 'attr', // default is 'false'
+      textNodeName: '#text',
+      ignoreAttributes: false,
+      ignoreNameSpace: true,
+      allowBooleanAttributes: true,
+      parseNodeValue: false,
+      parseAttributeValue: false,
       trimValues: true,
       parseTrueNumberOnly: false,
-    }
+    };
 
-    if (attrValueProcessor && typeof attrValueProcessor  === "function") {
+    if (attrValueProcessor && typeof attrValueProcessor === 'function') {
       parseConfig.attrValueProcessor = attrValueProcessor;
     }
 
-    let jsonObj = parser.parse(template, parseConfig, true);
+    const jsonObj = parser.parse(template, parseConfig, true);
 
-    let xmlTree = jsonObj.children[0];
+    const xmlTree = jsonObj.children[0];
 
     this.debugInfo.xmlTree = new Date() - start;
 
@@ -356,24 +354,24 @@ class _Layout extends Element {
     const elementTree = {
       id: this.id,
       style: {
-        width        : this.style.width,
-        height       : this.style.height,
-        flexDirection: 'row'
+        width: this.style.width,
+        height: this.style.height,
+        flexDirection: 'row',
       },
-      children: getChildren(this)
-    }
+      children: getChildren(this),
+    };
 
     // 计算布局树
     computeLayout(elementTree);
     this.elementTree = elementTree;
     this.debugInfo.renderTree = new Date() - start;
 
-    let rootEle = this.children[0];
+    const rootEle = this.children[0];
 
-    if ( rootEle.style.width === undefined || rootEle.style.height === undefined ) {
+    if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
       console.error('Please set width and height property for root element');
     } else {
-      this.renderport.width  = rootEle.style.width;
+      this.renderport.width = rootEle.style.width;
       this.renderport.height = rootEle.style.height;
     }
 
@@ -381,16 +379,16 @@ class _Layout extends Element {
   }
 
   layout(context) {
-    let start = new Date();
+    const start = new Date();
 
     this.renderContext = context;
 
-    if ( this.renderContext ) {
+    if (this.renderContext) {
       this.renderContext.clearRect(0, 0, this.renderport.width, this.renderport.height);
     }
 
-    if ( !this.hasViewPortSet ) {
-      console.error('Please invoke method `updateViewPort` before method `layout`' );
+    if (!this.hasViewPortSet) {
+      console.error('Please invoke method `updateViewPort` before method `layout`');
     }
 
     layoutChildren.call(this, this.elementTree.children, this.children);
@@ -416,9 +414,9 @@ class _Layout extends Element {
       this.repaint();
     });
 
-    this.EE.on('one__image__render__done', ()=> {
+    this.EE.on('one__image__render__done', () => {
       this.repaint();
-    })
+    });
   }
 
   repaint() {
@@ -431,16 +429,16 @@ class _Layout extends Element {
    * 之所以要查询所有节点是因为先渲染的节点层级更低，最后一个查询到的节点才是最上面的被点中的节点
    */
   getChildByPos(tree, x, y, itemList) {
-    let list = Object.keys(tree.children);
+    const list = Object.keys(tree.children);
 
-    for ( let i = 0; i < list.length;i++ ) {
+    for (let i = 0; i < list.length; i++) {
       const child = tree.children[list[i]];
-      const box   = child.realLayoutBox;
+      const box = child.realLayoutBox;
 
-      if (   ( box.realX <= x && x <= box.realX + box.width  )
-        && ( box.realY <= y && y <= box.realY + box.height ) ) {
+      if ((box.realX <= x && x <= box.realX + box.width)
+        && (box.realY <= y && y <= box.realY + box.height)) {
         itemList.push(child);
-        if ( Object.keys(child.children).length ) {
+        if (Object.keys(child.children).length) {
           this.getChildByPos(child, x, y, itemList);
         }
       }
@@ -449,16 +447,16 @@ class _Layout extends Element {
 
   eventHandler(eventName) {
     return function touchEventHandler(e) {
-      if ( !this.elementTree ) {
+      if (!this.elementTree) {
         return;
       }
 
-      const touch = (e.touches && e.touches[0]) ||( e.changedTouches &&  e.changedTouches[0]) || e;
-      if ( !touch || !touch.pageX || !touch.pageY ) {
+      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+      if (!touch || !touch.pageX || !touch.pageY) {
         return;
       }
 
-      if ( !touch.timeStamp )  {
+      if (!touch.timeStamp) {
         touch.timeStamp = e.timeStamp;
       }
 
@@ -474,32 +472,32 @@ class _Layout extends Element {
       const item = list[list.length - 1];
       item && item.emit(eventName, e);
 
-      if ( eventName === 'touchstart' || eventName === 'touchend' ) {
+      if (eventName === 'touchstart' || eventName === 'touchend') {
         this.touchMsg[eventName] = touch;
       }
 
-      if ( eventName === 'touchend' && isClick(this.touchMsg) ) {
+      if (eventName === 'touchend' && isClick(this.touchMsg)) {
         item && item.emit('click', e);
       }
-    }
+    };
   }
 
   bindEvents() {
-    if ( this.hasEventHandler ) {
+    if (this.hasEventHandler) {
       return;
     }
 
     this.hasEventHandler = true;
 
-    if ( typeof __env !== 'undefined' ) {
+    if (typeof __env !== 'undefined') {
       __env.onTouchStart(this.touchStart);
       __env.onTouchMove(this.touchMove);
       __env.onTouchEnd(this.touchEnd);
       __env.onTouchCancel(this.touchCancel);
     } else {
-      document.onmousedown  = this.touchStart;
-      document.onmousemove  = this.touchMove;
-      document.onmouseup    = this.touchEnd;
+      document.onmousedown = this.touchStart;
+      document.onmousemove = this.touchMove;
+      document.onmouseup = this.touchEnd;
       document.onmouseleave = this.touchEnd;
     }
   }
@@ -509,15 +507,15 @@ class _Layout extends Element {
   }
 
   on(event, callback) {
-    EE.on(event, callback)
+    EE.on(event, callback);
   }
 
   once(event, callback) {
-    EE.once(event, callback)
+    EE.once(event, callback);
   }
 
   off(event, callback) {
-    EE.off(event, callback)
+    EE.off(event, callback);
   }
 
   getElementsById(id) {
@@ -529,13 +527,13 @@ class _Layout extends Element {
   }
 
   destroyAll(tree) {
-    if ( !tree ) {
+    if (!tree) {
       tree = this;
     }
 
-    const children = tree.children;
+    const { children } = tree;
 
-    children.forEach(child => {
+    children.forEach((child) => {
       child.destroy();
       this.destroyAll(child);
       child.destroySelf && child.destroySelf();
@@ -545,24 +543,23 @@ class _Layout extends Element {
   clear() {
     this.destroyAll();
     this.elementTree = null;
-    this.children    = [];
-    this.layoutTree  = {};
-    this.state       = STATE.CLEAR;
+    this.children = [];
+    this.layoutTree = {};
+    this.state = STATE.CLEAR;
 
-    canvasPool.getList().forEach(item => {
+    canvasPool.getList().forEach((item) => {
       item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
       item.elements = [];
 
-      item.canvas  = null;
+      item.canvas = null;
       item.context = null;
-    })
+    });
 
-    if ( this.renderContext ) {
+    if (this.renderContext) {
       this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
     }
 
     this.EE.off('image__render__done');
-
   }
 
   clearPool() {
@@ -577,14 +574,14 @@ class _Layout extends Element {
   }
 
   loadImgs(arr) {
-    arr.forEach( src => {
-      let img = createImage();
+    arr.forEach((src) => {
+      const img = createImage();
 
       imgPool.set(src, img);
 
       img.onload = () => {
         img.loadDone = true;
-      }
+      };
 
       img.onloadcbks = [];
       img.src = src;
@@ -592,17 +589,17 @@ class _Layout extends Element {
   }
 
   registBitMapFont(name, src, config) {
-    const font = new BitMapFont(name, src, config)
-    this.bitMapFonts.push(font)
+    const font = new BitMapFont(name, src, config);
+    this.bitMapFonts.push(font);
   }
 }
 
-let Layout = new _Layout({
+const Layout = new _Layout({
   style: {
-    width : 0,
+    width: 0,
     height: 0,
   },
-  name: 'layout'
+  name: 'layout',
 });
 
 export default Layout;

@@ -2,31 +2,29 @@ import View from './view.js';
 import {
   throttle,
   createCanvas,
-  getDpr
+  getDpr,
 } from '../common/util.js';
 
 import {
-  Scroller
+  Scroller,
 } from 'scroller';
 
 function copyTouchArray(touches) {
-  return touches.map(function (touch) {
-    return {
-      identifier: touch.identifier,
-      pageX: touch.pageX,
-      pageY: touch.pageY,
-      clientX: touch.clientX,
-      clientY: touch.clientY,
-    }
-  })
+  return touches.map(touch => ({
+    identifier: touch.identifier,
+    pageX: touch.pageX,
+    pageY: touch.pageY,
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+  }));
 }
 
 export default class ScrollView extends View {
   constructor({
     style = {},
     props = {},
-    idName = "",
-    className = "",
+    idName = '',
+    className = '',
     scrollX = false,
     scrollY = false,
     dataset,
@@ -36,7 +34,7 @@ export default class ScrollView extends View {
       style,
       idName,
       dataset,
-      className
+      className,
     });
 
     this.type = 'ScrollView';
@@ -61,7 +59,7 @@ export default class ScrollView extends View {
     this._scrollerOption = {
       scrollingX: this._scrollX,
       scrollingY: this._scrollY,
-    }
+    };
 
     this.sharedTexture = false;
   }
@@ -98,8 +96,8 @@ export default class ScrollView extends View {
 
   set scrollX(value) {
     this.scrollerOption = {
-      scrollingX: value
-    }
+      scrollingX: value,
+    };
   }
 
   get scrollY() {
@@ -108,8 +106,8 @@ export default class ScrollView extends View {
 
   set scrollY(value) {
     this.scrollerOption = {
-      scrollingY: value
-    }
+      scrollingY: value,
+    };
   }
 
   get scrollerOption() {
@@ -127,7 +125,7 @@ export default class ScrollView extends View {
   repaint() {
     this.clear();
 
-    this.renderBoxes.forEach(item => {
+    this.renderBoxes.forEach((item) => {
       this.render(item.ctx, item.box);
     });
 
@@ -159,18 +157,18 @@ export default class ScrollView extends View {
     this.scrollCanvas = null;
     this.scrollCtx = null;
 
-    this.requestID && cancelAnimationFrame(this.requestID)
+    this.requestID && cancelAnimationFrame(this.requestID);
   }
 
   renderTreeWithTop(tree, top, left) {
-    const layoutBox = tree.layoutBox;
+    const { layoutBox } = tree;
     // 计算实际渲染的Y轴位置
     layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
     layoutBox.absoluteX = layoutBox.originalAbsoluteX - left;
 
     tree.render(this.scrollCtx, layoutBox);
 
-    tree.children.forEach(child => {
+    tree.children.forEach((child) => {
       this.renderTreeWithTop(child, top, left);
     });
   }
@@ -178,7 +176,7 @@ export default class ScrollView extends View {
   clear() {
     const box = this.layoutBox;
     this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
-    this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height)
+    this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
   }
 
   scrollRenderHandler(left = 0, top = 0) {
@@ -199,16 +197,16 @@ export default class ScrollView extends View {
     // 清理滚动画布和主屏画布
     this.clear();
 
-    this.renderBoxes.forEach(item => {
+    this.renderBoxes.forEach((item) => {
       this.render(item.ctx, item.box);
     });
 
-    this.children.forEach(child => {
-      const layoutBox = child.layoutBox;
-      const height = layoutBox.height;
-      const width = layoutBox.width;
-      let originY = layoutBox.originalAbsoluteY;
-      let originX = layoutBox.originalAbsoluteX;
+    this.children.forEach((child) => {
+      const { layoutBox } = child;
+      const { height } = layoutBox;
+      const { width } = layoutBox;
+      const originY = layoutBox.originalAbsoluteY;
+      const originX = layoutBox.originalAbsoluteX;
 
       // 判断处于可视窗口内的子节点，渲染该子节点
       if (originY + height >= startY && originY <= endY
@@ -287,8 +285,8 @@ export default class ScrollView extends View {
         this.scrollRender(left, top);
 
         if (this.currentEvent) {
-          /*this.currentEvent.type = 'scroll';*/
-          /*this.currentEvent.currentTarget = this;*/
+          /* this.currentEvent.type = 'scroll';*/
+          /* this.currentEvent.currentTarget = this;*/
           this.emit('scroll', this.currentEvent);
         }
       }
@@ -305,9 +303,9 @@ export default class ScrollView extends View {
       }
 
       const touches = copyTouchArray(e.touches);
-      /*const touches = e.touches;*/
+      /* const touches = e.touches;*/
 
-      touches.forEach(touch => {
+      touches.forEach((touch) => {
         if (dpr !== 1) {
           touch.pageX *= dpr;
           touch.pageY *= dpr;
@@ -318,15 +316,14 @@ export default class ScrollView extends View {
     });
 
     this.on('touchmove', (e) => {
-
       if (!e.touches) {
         e.touches = [e];
       }
 
       const touches = copyTouchArray(e.touches);
-      /*const touches = e.touches;*/
+      /* const touches = e.touches;*/
 
-      touches.forEach(touch => {
+      touches.forEach((touch) => {
         if (dpr !== 1) {
           touch.pageX *= dpr;
           touch.pageY *= dpr;

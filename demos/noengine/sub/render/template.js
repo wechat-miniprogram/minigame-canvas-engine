@@ -32,4 +32,3 @@ const template = `
     </view>
 </view>
 `;
-
