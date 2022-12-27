@@ -1,6 +1,6 @@
-# 标签
+# 组件
 
-## 标签列表
+## 组件列表
 
 |      标签      |            说明          |
 |----------------|----------------             |
@@ -21,11 +21,11 @@
 | dataset | string |    否    | 与浏览器相同，详见[文档](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset) |
 
 
-## view标签
+## view
 
 view标签用来页面布局，布局严格遵循[CSS Flex布局](https://developer.mozilla.org/en-US/docs/Web/CSS/flex)，节点在Flex属性相互作用的结果可以通过Yoga的[Playground](https://yogalayout.com/playground)试验。
 
-## image标签
+## image
 ### 特殊属性
 |      属性      |  类型  | 是否必填 |          说明          |
 |----------------|--------|--------|------------------------|
@@ -37,7 +37,7 @@ view标签用来页面布局，布局严格遵循[CSS Flex布局](https://develo
 2.图片可以通过API[loadImgs](/api/api.html#loadimgs)实现预加载
 :::
 
-## text标签
+## text
 
 ### 特殊属性
 |      属性      |  类型  | 是否必填 |          说明          |
@@ -50,7 +50,7 @@ view标签用来页面布局，布局严格遵循[CSS Flex布局](https://develo
 | textOverflow | string |   否  | 文字溢出处理方式，默认不处理，ellipsis则支持自动截断|
 | textAlign| string |   否  | 文字水平居中方式，默认left，支持right、center |
 
-## scrollview标签
+## scrollview
 滚动内容的容器，滚动的前提是正确调用[updateViewPort](/api/api.html#updateviewport)
 ### 特殊样式
 |      属性      |  类型  | 是否必填 |          说明          |
