@@ -140,7 +140,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default.a();
 var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
-var canvasPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('canvasPool');
 var constructorMap = {
   view: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["View"],
   text: _components_index_js__WEBPACK_IMPORTED_MODULE_8__["Text"],
@@ -455,10 +454,6 @@ var _Layout = /*#__PURE__*/function (_Element) {
     key: "init",
     value: function init(template, style, attrValueProcessor) {
       var start = new Date();
-      /* if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
-
-      /* }*/
-
       var parseConfig = {
         attributeNamePrefix: '',
         attrNodeName: 'attr',
@@ -672,12 +667,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
     value: function destroyAll(tree) {
       var _this5 = this;
 
-      if (!tree) {
-        tree = this;
-      }
-
-      var _tree = tree,
-          children = _tree.children;
+      var children = tree.children;
       children.forEach(function (child) {
         child.destroy();
 
@@ -689,17 +679,11 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "clear",
     value: function clear() {
-      this.destroyAll();
+      this.destroyAll(this);
       this.elementTree = null;
       this.children = [];
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
-      canvasPool.getList().forEach(function (item) {
-        item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
-        item.elements = [];
-        item.canvas = null;
-        item.context = null;
-      });
 
       if (this.renderContext) {
         this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
@@ -711,7 +695,6 @@ var _Layout = /*#__PURE__*/function (_Element) {
     key: "clearPool",
     value: function clearPool() {
       imgPool.clear();
-      canvasPool.clear();
     }
   }, {
     key: "clearAll",

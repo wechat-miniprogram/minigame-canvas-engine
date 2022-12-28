@@ -15,7 +15,6 @@ import {
 // 全局事件管道
 export const EE = new Emitter();
 const imgPool = new Pool('imgPool');
-const canvasPool = new Pool('canvasPool');
 
 const constructorMap = {
   view: View,
@@ -113,6 +112,7 @@ const create = function (node, style, parent) {
       thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
     }
   }
+
   const element = new Constructor(args);
   element.root = this;
 
@@ -232,7 +232,7 @@ const updateRealLayout = (dataArray, children, scale) => {
   });
 };
 
-function _getElementsById(tree, list = [], id) {
+function getElementsById(tree, list = [], id) {
   Object.keys(tree.children).forEach((key) => {
     const child = tree.children[key];
 
@@ -241,14 +241,14 @@ function _getElementsById(tree, list = [], id) {
     }
 
     if (Object.keys(child.children).length) {
-      _getElementsById(child, list, id);
+      getElementsById(child, list, id);
     }
   });
 
   return list;
 }
 
-function _getElementsByClassName(tree, list = [], className) {
+function getElementsByClassName(tree, list = [], className) {
   Object.keys(tree.children).forEach((key) => {
     const child = tree.children[key];
 
@@ -257,7 +257,7 @@ function _getElementsByClassName(tree, list = [], className) {
     }
 
     if (Object.keys(child.children).length) {
-      _getElementsByClassName(child, list, className);
+      getElementsByClassName(child, list, className);
     }
   });
 
@@ -321,8 +321,6 @@ class _Layout extends Element {
   init(template, style, attrValueProcessor) {
     const start = new Date();
 
-    /* if( parser.validate(template) === true) { //optional (it'll return an object in case it's not valid)*/
-    /* }*/
     const parseConfig = {
       attributeNamePrefix: '',
       attrNodeName: 'attr', // default is 'false'
@@ -519,18 +517,14 @@ class _Layout extends Element {
   }
 
   getElementsById(id) {
-    return _getElementsById(this, [], id);
+    return getElementsById(this, [], id);
   }
 
   getElementsByClassName(className) {
-    return _getElementsByClassName(this, [], className);
+    return getElementsByClassName(this, [], className);
   }
 
   destroyAll(tree) {
-    if (!tree) {
-      tree = this;
-    }
-
     const { children } = tree;
 
     children.forEach((child) => {
@@ -541,19 +535,11 @@ class _Layout extends Element {
   }
 
   clear() {
-    this.destroyAll();
+    this.destroyAll(this);
     this.elementTree = null;
     this.children = [];
     this.layoutTree = {};
     this.state = STATE.CLEAR;
-
-    canvasPool.getList().forEach((item) => {
-      item.context && item.context.clearRect(0, 0, item.canvas.width, item.canvas.height);
-      item.elements = [];
-
-      item.canvas = null;
-      item.context = null;
-    });
 
     if (this.renderContext) {
       this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
@@ -564,7 +550,6 @@ class _Layout extends Element {
 
   clearPool() {
     imgPool.clear();
-    canvasPool.clear();
   }
 
   clearAll() {
