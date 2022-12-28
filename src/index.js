@@ -418,6 +418,9 @@ class _Layout extends Element {
   }
 
   repaint() {
+    if (this.renderContext) {
+      this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
+    }
     repaintChildren(this.children);
     this.emit('repaint__done');
   }

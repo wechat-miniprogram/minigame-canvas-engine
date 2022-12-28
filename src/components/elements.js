@@ -199,19 +199,12 @@ export default class Element {
     ctx.lineTo(x + width - borderTopRightRadius, y);
 
     // 右上角的圆角
-    /* ctx.quadraticCurveTo(x + width, y, x + width, y + borderTopRightRadius);*/
     ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius);
 
     // 右下角的点
     ctx.lineTo(x + width, y + height - borderBottomRightRadius);
 
     // 右下角的圆角
-    /* ctx.quadraticCurveTo(
-      x + width,
-      y + height,
-      x + width - borderBottomRightRadius,
-      y + height
-    );*/
     ctx.arcTo(
       x + width,
       y + height,
@@ -224,14 +217,12 @@ export default class Element {
     ctx.lineTo(x + borderBottomLeftRadius, y + height);
 
     // 左下角的圆角
-    /* ctx.quadraticCurveTo(x, y + height, x, y + height - borderBottomLeftRadius);*/
     ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius);
 
     // 左上角的点
     ctx.lineTo(x, y + borderTopLeftRadius);
 
     // 左上角的圆角
-    /* ctx.quadraticCurveTo(x, y, x + borderTopLeftRadius, y);*/
     ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
 
     return { needClip: !!hasRadius, needStroke: !!borderWidth };

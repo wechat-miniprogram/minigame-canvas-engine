@@ -32,7 +32,7 @@ function getTextWidthWithoutSetFont(value) {
 function parseText(style, value) {
   value = String(value);
 
-  let maxWidth  = style.width;
+  let maxWidth = style.width;
   const wordWidth = getTextWidth(style, value);
 
   // 对文字溢出的处理，默认用...
@@ -49,7 +49,7 @@ function parseText(style, value) {
   }
 
   let length = value.length - 1;
-  let str    = value.substring(0, length);
+  let str = value.substring(0, length);
 
   while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
     length -= 1;
@@ -86,9 +86,9 @@ export default class Text extends Element {
       dataset,
     });
 
-    this.type        = 'Text';
-    this.ctx         = null;
-    this.valuesrc    = value;
+    this.type = 'Text';
+    this.ctx = null;
+    this.valuesrc = value;
 
     this.renderBoxes = [];
 
@@ -113,9 +113,9 @@ export default class Text extends Element {
 
     this.fontSize = style.fontSize || 12;
     this.textBaseline = 'top';
-    this.font = `${style.fontWeight  || ''} ${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY}`;
+    this.font = `${style.fontWeight || ''} ${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY}`;
     this.textAlign = style.textAlign || 'left';
-    this.fillStyle = style.color     || '#000';
+    this.fillStyle = style.color || '#000';
   }
 
   insert(ctx, box) {
@@ -131,7 +131,7 @@ export default class Text extends Element {
   }
 
   destroySelf() {
-    this.root          = null;
+    this.root = null;
   }
 
   render(ctx, layoutBox) {
@@ -142,8 +142,8 @@ export default class Text extends Element {
     const { style } = this;
 
     ctx.textBaseline = this.textBaseline;
-    ctx.font         = this.font;
-    ctx.textAlign    = this.textAlign;
+    ctx.font = this.font;
+    ctx.textAlign = this.textAlign;
 
     let drawX = box.absoluteX;
     let drawY = box.absoluteY;

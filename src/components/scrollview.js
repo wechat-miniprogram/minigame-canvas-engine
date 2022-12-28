@@ -53,12 +53,9 @@ export default class ScrollView extends View {
 
     this.requestID = null;
 
-    this._scrollX = scrollX;
-    this._scrollY = scrollY;
-
-    this._scrollerOption = {
-      scrollingX: this._scrollX,
-      scrollingY: this._scrollY,
+    this.innerScrollerOption = {
+      scrollingX: scrollX,
+      scrollingY: scrollY,
     };
 
     this.sharedTexture = false;
@@ -91,7 +88,7 @@ export default class ScrollView extends View {
   }
 
   get scrollX() {
-    return this._scrollerOption.scrollingX;
+    return this.innerScrollerOption.scrollingX;
   }
 
   set scrollX(value) {
@@ -101,7 +98,7 @@ export default class ScrollView extends View {
   }
 
   get scrollY() {
-    return this._scrollerOption.scrollingY;
+    return this.innerScrollerOption.scrollingY;
   }
 
   set scrollY(value) {
@@ -111,11 +108,11 @@ export default class ScrollView extends View {
   }
 
   get scrollerOption() {
-    return this._scrollerOption;
+    return this.innerScrollerOption;
   }
 
   set scrollerOption(value = {}) {
-    Object.assign(this._scrollerOption, value);
+    Object.assign(this.innerScrollerOption, value);
 
     if (this.scrollerObj) {
       Object.assign(this.scrollerObj.options, this.scrollerOption);
@@ -236,25 +233,6 @@ export default class ScrollView extends View {
 
   childImageLoadDoneCbk() {
     this.scrollRender(this.scrollLeft, this.scrollTop);
-    // const box = this.layoutBox;
-
-    // // 根据滚动值获取裁剪区域
-    // const startY = box.absoluteY + this.scrollTop;
-    // const endY = box.absoluteY + this.scrollTop + box.height;
-    // const startX = box.absoluteX + this.scrollLeft;
-    // const endX = box.absoluteX + this.scrollLeft + box.width;
-
-    // const layoutBox = img.layoutBox;
-    // const height = layoutBox.height;
-    // const width = layoutBox.width;
-    // let originY = layoutBox.originalAbsoluteY;
-    // let originX = layoutBox.originalAbsoluteX;
-
-    // // 判断处于可视窗口内的子节点，渲染该子节点
-    // if (originY + height >= startY && originY <= endY
-    //   && originX + width >= startX && originX <= endX) {
-    //   this.scrollRender(this.scrollLeft, this.scrollTop);
-    // }
   }
 
   insertScrollView(context) {
@@ -285,8 +263,6 @@ export default class ScrollView extends View {
         this.scrollRender(left, top);
 
         if (this.currentEvent) {
-          /* this.currentEvent.type = 'scroll';*/
-          /* this.currentEvent.currentTarget = this;*/
           this.emit('scroll', this.currentEvent);
         }
       }
