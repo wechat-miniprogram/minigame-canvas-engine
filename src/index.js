@@ -6,11 +6,14 @@ import computeLayout from 'css-layout';
 import { isClick, STATE, createImage, repaintChildren } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
+import TWEEN from '@tweenjs/tween.js';
 
 // components
 import {
   View, Text, Image, ScrollView, BitMapText,
 } from './components/index.js';
+
+console.log(TWEEN);
 
 // 全局事件管道
 export const EE = new Emitter();
@@ -148,6 +151,9 @@ const renderChildren = (children, context) => {
 };
 
 
+/**
+ * 将布局树的布局信息加工赋值到渲染树
+ */
 function layoutChildren(dataArray, children) {
   dataArray.forEach((data) => {
     const child = children.find(item => item.id === data.id);
@@ -338,6 +344,7 @@ class _Layout extends Element {
       parseConfig.attrValueProcessor = attrValueProcessor;
     }
 
+    // 将xml字符串解析成xml节点树
     const jsonObj = parser.parse(template, parseConfig, true);
 
     const xmlTree = jsonObj.children[0];
@@ -361,6 +368,7 @@ class _Layout extends Element {
 
     // 计算布局树
     computeLayout(elementTree);
+    // 经过 Layout 计算，节点树 elementTree 带上了 layout、lastLayout 等布局信息
     this.elementTree = elementTree;
     this.debugInfo.renderTree = new Date() - start;
 
@@ -381,14 +389,13 @@ class _Layout extends Element {
 
     this.renderContext = context;
 
-    if (this.renderContext) {
-      this.renderContext.clearRect(0, 0, this.renderport.width, this.renderport.height);
-    }
+    this.clearCanvas();
 
     if (!this.hasViewPortSet) {
       console.error('Please invoke method `updateViewPort` before method `layout`');
     }
 
+    // 将布局树的布局信息加工赋值到渲染树
     layoutChildren.call(this, this.elementTree.children, this.children);
 
     this.debugInfo.layoutChildren = new Date() - start;
@@ -398,6 +405,7 @@ class _Layout extends Element {
 
     this.debugInfo.updateRealLayout = new Date() - start;
 
+    // 遍历节点树，依次调用节点的渲染接口实现渲染
     renderChildren(this.children, context);
 
     this.debugInfo.renderChildren = new Date() - start;
@@ -418,11 +426,9 @@ class _Layout extends Element {
   }
 
   repaint() {
-    if (this.renderContext) {
-      this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
-    }
+    this.clearCanvas();
     repaintChildren(this.children);
-    this.emit('repaint__done');
+    // this.emit('repaint__done');
   }
 
   /**
@@ -537,16 +543,20 @@ class _Layout extends Element {
     });
   }
 
+  // 清理画布
+  clearCanvas() {
+    if (this.renderContext) {
+      this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
+    }
+  }
+
   clear() {
     this.destroyAll(this);
     this.elementTree = null;
     this.children = [];
     this.layoutTree = {};
     this.state = STATE.CLEAR;
-
-    if (this.renderContext) {
-      this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
-    }
+    this.clearCanvas();
 
     this.EE.off('image__render__done');
   }

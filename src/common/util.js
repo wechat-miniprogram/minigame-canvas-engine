@@ -108,7 +108,9 @@ export const repaintChildren = (children) => {
   children.forEach((child) => {
     child.repaint();
 
-    repaintChildren(child.children);
+    if (child.type !== 'ScrollView') {
+      repaintChildren(child.children);
+    }
   });
 };
 

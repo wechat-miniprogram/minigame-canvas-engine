@@ -240,9 +240,9 @@ export default class ScrollView extends View {
     this.insert(context);
 
     // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
-    this.root.on('repaint__done', () => {
-      this.scrollRender(this.scrollLeft, this.scrollTop);
-    });
+    // this.root.on('repaint__done', () => {
+    //   this.scrollRender(this.scrollLeft, this.scrollTop);
+    // });
 
     this.scrollRender(0, 0);
 

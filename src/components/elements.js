@@ -67,6 +67,8 @@ export default class Element {
     this.root = null;
     this.isDestroyed = false;
     this.layoutBox = {};
+    // element 在屏幕中的物理位置和尺寸信息，维护这个是因为需要做事件处理
+    this.realLayoutBox = {};
 
     this.dataset = dataset;
 
@@ -75,6 +77,7 @@ export default class Element {
       && style.color
       && style.color.indexOf('#') > -1
     ) {
+      // eslint-disable-next-line no-param-reassign
       style.color = getRgba(style.color, style.opacity);
     }
 
@@ -83,14 +86,15 @@ export default class Element {
       && style.backgroundColor
       && style.backgroundColor.indexOf('#') > -1
     ) {
+      // eslint-disable-next-line no-param-reassign
       style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
     }
 
-    for (const key in this.style) {
+    Object.keys(style).forEach((key) => {
       if (scalableStyles.indexOf(key) > -1) {
         this.style[key] *= dpr;
       }
-    }
+    });
 
     // 事件冒泡逻辑
     ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach((eventName) => {
@@ -134,6 +138,8 @@ export default class Element {
     this.parent = null;
     this.ctx = null;
     this.realLayoutBox = null;
+
+    // element 在画布中的位置和尺寸信息
     this.layoutBox = null;
     this.props = null;
     this.style = null;
@@ -144,7 +150,9 @@ export default class Element {
   }
 
   add(element) {
+    // eslint-disable-next-line no-param-reassign
     element.parent = this;
+    // eslint-disable-next-line no-param-reassign
     element.parentId = this.id;
 
     this.children.push(element);
