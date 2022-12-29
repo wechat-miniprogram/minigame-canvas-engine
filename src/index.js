@@ -154,14 +154,12 @@ const renderChildren = (children, context) => {
 /**
  * 将布局树的布局信息加工赋值到渲染树
  */
-function layoutChildren(dataArray, children) {
-  dataArray.forEach((data) => {
-    const child = children.find(item => item.id === data.id);
-
+function layoutChildren(element) {
+  element.children.forEach((child) => {
     child.layoutBox = child.layoutBox || {};
 
     ['left', 'top', 'width', 'height'].forEach((prop) => {
-      child.layoutBox[prop] = data.layout[prop];
+      child.layoutBox[prop] = child.layout[prop];
     });
 
     if (child.parent) {
@@ -180,18 +178,16 @@ function layoutChildren(dataArray, children) {
       child.updateRenderPort(this.renderport);
     }
 
-    layoutChildren.call(this, data.children, child.children);
+    layoutChildren.call(this, child);
   });
 }
 
-const updateRealLayout = (dataArray, children, scale) => {
-  dataArray.forEach((data) => {
-    const child = children.find(item => item.id === data.id);
-
+const updateRealLayout = (element, scale) => {
+  element.children.forEach((child) => {
     child.realLayoutBox = child.realLayoutBox || {};
 
     ['left', 'top', 'width', 'height'].forEach((prop) => {
-      child.realLayoutBox[prop] = data.layout[prop] * scale;
+      child.realLayoutBox[prop] = child.layout[prop] * scale;
     });
 
     if (child.parent) {
@@ -234,7 +230,7 @@ const updateRealLayout = (dataArray, children, scale) => {
       child.realLayoutBox.realY = child.realLayoutBox.top;
     }
 
-    updateRealLayout(data.children, child.children, scale);
+    updateRealLayout(child, scale)
   });
 };
 
@@ -325,7 +321,7 @@ class _Layout extends Element {
   }
 
   init(template, style, attrValueProcessor) {
-    const start = new Date();
+    let start = new Date();
 
     const parseConfig = {
       attributeNamePrefix: '',
@@ -352,27 +348,19 @@ class _Layout extends Element {
     this.debugInfo.xmlTree = new Date() - start;
 
     // XML树生成渲染树
+    start = new Date();
     this.layoutTree = create.call(this, xmlTree, style);
     this.debugInfo.layoutTree = new Date() - start;
     this.add(this.layoutTree);
 
-    const elementTree = {
-      id: this.id,
-      style: {
-        width: this.style.width,
-        height: this.style.height,
-        flexDirection: 'row',
-      },
-      children: getChildren(this),
-    };
-
     // 计算布局树
-    computeLayout(elementTree);
+    start = new Date();
+    computeLayout(this.children[0]);
     // 经过 Layout 计算，节点树 elementTree 带上了 layout、lastLayout 等布局信息
-    this.elementTree = elementTree;
     this.debugInfo.renderTree = new Date() - start;
+    console.log('this.debugInfo.renderTree', this.debugInfo.renderTree)
 
-    const rootEle = this.children[0];
+    const rootEle = this.children[0];    
 
     if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
       console.error('Please set width and height property for root element');
@@ -396,12 +384,14 @@ class _Layout extends Element {
     }
 
     // 将布局树的布局信息加工赋值到渲染树
-    layoutChildren.call(this, this.elementTree.children, this.children);
+    // layoutChildren.call(this, this.elementTree.children, this.children);
+    layoutChildren.call(this, this);
 
     this.debugInfo.layoutChildren = new Date() - start;
 
     // 计算真实的物理像素位置，用于事件处理
-    updateRealLayout(this.elementTree.children, this.children, this.viewport.width / this.renderport.width);
+    // updateRealLayout(this.elementTree.children, this.children, this.viewport.width / this.renderport.width);
+    updateRealLayout(this, this.viewport.width / this.renderport.width);
 
     this.debugInfo.updateRealLayout = new Date() - start;
 
@@ -454,9 +444,9 @@ class _Layout extends Element {
 
   eventHandler(eventName) {
     return function touchEventHandler(e) {
-      if (!this.elementTree) {
-        return;
-      }
+      // if (!this.elementTree) {
+      //   return;
+      // }
 
       const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
       if (!touch || !touch.pageX || !touch.pageY) {
