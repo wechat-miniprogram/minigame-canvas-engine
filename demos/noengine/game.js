@@ -29,7 +29,7 @@ function initSharedCanvas() {
   
   const realWidth  = sharedCanvas.width / GAME_WIDTH * info.windowWidth;
   const realHeight = sharedCanvas.height / GAME_HEIGHT * info.windowHeight;
-  
+  // console.log(realHeight, realWidth)
   openDataContext.postMessage({
       event: 'updateViewPort',
       box       : {

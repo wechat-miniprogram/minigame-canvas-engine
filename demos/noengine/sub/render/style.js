@@ -2,6 +2,7 @@ export default {
   container: {
     width: 960,
     height: 1410,
+    // paddingLeft: 100,
     borderRadius: 12,
   },
 
@@ -37,6 +38,7 @@ export default {
     height: 950,
     backgroundColor: "#ffffff",
     marginTop: 30,
+    // borderWidth: 1,
   },
 
   listItem: {
