@@ -115,6 +115,7 @@ export function create(node, style, parent) {
 export function renderChildren(children, context) {
   children.forEach((child) => {
     child.shouldUpdate = false;
+    child.isDirty = false;
     if (child.type === 'ScrollView') {
       // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
       child.insertScrollView(context);

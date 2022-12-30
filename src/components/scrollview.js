@@ -261,23 +261,21 @@ export default class ScrollView extends View {
     // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，所以这里不需要重复调用渲染
     // this.scrollRender(0, 0);
 
-    // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-    this.EE.on('image__render__done', (img) => {
-      this.throttleImageLoadDone(img);
-    });
-
     if (this.hasEventBind) {
+      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
       return;
     }
 
     this.hasEventBind = true;
 
+    // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+    this.EE.on('image__render__done', (img) => {
+      this.throttleImageLoadDone(img);
+    });
+
     this.scrollerObj = new Scroller((left, top) => {
       // 可能被销毁了或者节点树还没准备好
       if (!this.isDestroyed) {
-        // this.scrollLeft = left;
-        // this.scrollTop = top;
-        // this.root.repaint();
         this.scrollRender(left, top);
         if (this.currentEvent) {
           this.emit('scroll', this.currentEvent);

@@ -1,4 +1,4 @@
-import { scalableStyles } from './style.js';
+import { scalableStyles, layoutAffectedStyles } from './style.js';
 
 const Emitter = require('tiny-emitter');
 
@@ -93,6 +93,26 @@ export default class Element {
       if (scalableStyles.indexOf(key) > -1) {
         this.style[key] *= dpr;
       }
+    });
+
+    const innerStyle = Object.assign({}, this.style);
+    Object.keys(this.style).forEach((key) => {
+      Object.defineProperty(this.style, key, {
+        configurable: true,
+        enumerable: true,
+        get: () => innerStyle[key],
+        set: (value) => {
+          innerStyle[key] = value;
+          if (layoutAffectedStyles.indexOf(key)) {
+            this.isDirty = true;
+            let { parent } = this;
+            while (parent) {
+              parent.isDirty = true;
+              parent = parent.parent;
+            }
+          }
+        },
+      });
     });
 
     // 事件冒泡逻辑

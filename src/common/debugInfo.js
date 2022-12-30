@@ -1,8 +1,6 @@
 export default class DebugInfo {
   constructor() {
-    this.info = {};
-    this.totalStart = 0;
-    this.totalCost = 0;
+    this.reset();
   }
 
   start(name) {
@@ -25,6 +23,12 @@ export default class DebugInfo {
     }
   }
 
+  reset() {
+    this.info = {};
+    this.totalStart = 0;
+    this.totalCost = 0;
+  }
+
   log() {
     let logInfo = 'Layout debug info: \n';
     logInfo += Object.keys(this.info).reduce((sum, curr) => {
@@ -37,6 +41,6 @@ export default class DebugInfo {
     // eslint-disable-next-line no-unused-vars
     logInfo += `totalCost: ${this.totalCost}`;
 
-    console.log(logInfo);
+    return logInfo;
   }
 }

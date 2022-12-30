@@ -22,6 +22,7 @@ import {
 // 全局事件管道
 export const EE = new Emitter();
 const imgPool = new Pool('imgPool');
+const debugInfo = new DebugInfo()
 
 class _Layout extends Element {
   constructor({ style, name } = {}) {
@@ -31,7 +32,6 @@ class _Layout extends Element {
     this.elementTree = null;
     this.renderContext = null;
 
-    this.debugInfo = new DebugInfo();
     this.renderport = {};
     this.viewport = {};
 
@@ -53,6 +53,10 @@ class _Layout extends Element {
     this.state = STATE.UNINIT;
 
     this.bitMapFonts = [];
+  }
+
+  get debugInfo() {
+    return debugInfo.log();
   }
 
   /**
@@ -94,21 +98,58 @@ class _Layout extends Element {
       parseConfig.attrValueProcessor = attrValueProcessor;
     }
 
-    this.debugInfo.start('xmlParse');
+    debugInfo.start('xmlParse');
     // 将xml字符串解析成xml节点树
     const jsonObj = parser.parse(template, parseConfig, true);
-    this.debugInfo.end('xmlParse');
+    debugInfo.end('xmlParse');
 
     const xmlTree = jsonObj.children[0];
 
     // XML树生成渲染树
-    this.debugInfo.start('xmlTreeToLayoutTree');
+    debugInfo.start('xmlTreeToLayoutTree');
     this.layoutTree = create.call(this, xmlTree, style);
-    this.debugInfo.end('xmlTreeToLayoutTree');
+    debugInfo.end('xmlTreeToLayoutTree');
 
     this.add(this.layoutTree);
 
     this.state = STATE.INITED;
+  }
+
+  reflow() {
+    /**
+ * 计算布局树
+ * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
+ * Layout本身并不作为布局计算，只是作为节点树的容器
+ */
+    debugInfo.start('computeLayout');
+    computeLayout(this.children[0]);
+    debugInfo.end('computeLayout');
+
+    const rootEle = this.children[0];
+
+    if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
+      console.error('Please set width and height property for root element');
+    } else {
+      this.renderport.width = rootEle.style.width;
+      this.renderport.height = rootEle.style.height;
+    }
+
+    // 将布局树的布局信息加工赋值到渲染树
+    debugInfo.start('layoutChildren');
+    layoutChildren.call(this, this);
+    debugInfo.end('layoutChildren');
+
+    // 计算真实的物理像素位置，用于事件处理
+    debugInfo.start('updateRealLayout');
+    updateRealLayout(this, this.viewport.width / this.renderport.width);
+    debugInfo.end('updateRealLayout');
+
+    this.clearCanvas();
+
+    // 遍历节点树，依次调用节点的渲染接口实现渲染
+    debugInfo.start('renderChildren');
+    renderChildren(this.children, this.renderContext);
+    debugInfo.end('renderChildren');
   }
 
   /**
@@ -133,40 +174,7 @@ class _Layout extends Element {
       console.error('Please invoke method `updateViewPort` before method `layout`');
     }
 
-    /**
-     * 计算布局树
-     * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
-     * Layout本身并不作为布局计算，只是作为节点树的容器
-     */
-    this.debugInfo.start('computeLayout');
-    computeLayout(this.children[0]);
-    this.debugInfo.end('computeLayout');
-
-    const rootEle = this.children[0];
-
-    if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
-      console.error('Please set width and height property for root element');
-    } else {
-      this.renderport.width = rootEle.style.width;
-      this.renderport.height = rootEle.style.height;
-    }
-
-    // 将布局树的布局信息加工赋值到渲染树
-    this.debugInfo.start('layoutChildren');
-    layoutChildren.call(this, this);
-    this.debugInfo.end('layoutChildren');
-
-    // 计算真实的物理像素位置，用于事件处理
-    this.debugInfo.start('updateRealLayout');
-    updateRealLayout(this, this.viewport.width / this.renderport.width);
-    this.debugInfo.end('updateRealLayout');
-
-    this.clearCanvas();
-
-    // 遍历节点树，依次调用节点的渲染接口实现渲染
-    this.debugInfo.start('renderChildren');
-    renderChildren(this.children, context);
-    this.debugInfo.end('renderChildren');
+    this.reflow();
 
     this.bindEvents();
 
