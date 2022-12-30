@@ -3,261 +3,25 @@ import Element from './components/elements.js';
 import Pool from './common/pool.js';
 import Emitter from 'tiny-emitter';
 import computeLayout from 'css-layout';
-import { isClick, STATE, createImage, repaintChildren } from './common/util.js';
+import { isClick, STATE, createImage } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 import TWEEN from '@tweenjs/tween.js';
 import DebugInfo from './common/debugInfo.js';
-
-// components
 import {
-  View, Text, Image, ScrollView, BitMapText,
-} from './components/index.js';
-
-console.log(TWEEN);
+  create,
+  renderChildren,
+  layoutChildren,
+  updateRealLayout,
+  getElementsById,
+  getElementsByClassName,
+  iterateTree,
+  repaintChildren,
+} from './common/vd';
 
 // 全局事件管道
 export const EE = new Emitter();
 const imgPool = new Pool('imgPool');
-
-const constructorMap = {
-  view: View,
-  text: Text,
-  image: Image,
-  scrollview: ScrollView,
-  bitmaptext: BitMapText,
-};
-
-function isPercent(data) {
-  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
-}
-
-function convertPercent(data, parentData) {
-  if (typeof data === 'number') {
-    return data;
-  }
-  const matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
-  if (matchData) {
-    return parentData * matchData * 0.01;
-  }
-}
-
-const create = function (node, style, parent) {
-  const Constructor = constructorMap[node.name];
-
-  const children = node.children || [];
-
-  const attr = node.attr || {};
-  const dataset = {};
-  const id = attr.id || '';
-
-  const args = Object.keys(attr)
-    .reduce((obj, key) => {
-      const value = attr[key];
-      const attribute = key;
-
-      if (key === 'id') {
-        obj.style = Object.assign(obj.style || {}, style[id] || {});
-
-        return obj;
-      }
-
-      if (key === 'class') {
-        obj.style = value.split(/\s+/).reduce((res, oneClass) => Object.assign(res, style[oneClass]), obj.style || {});
-
-        return obj;
-      }
-
-      // if (/\{\{.+\}\}/.test(value)) {
-
-      // }
-      if (value === 'true') {
-        obj[attribute] = true;
-      } else if (value === 'false') {
-        obj[attribute] = false;
-      } else {
-        obj[attribute] = value;
-      }
-
-      if (attribute.startsWith('data-')) {
-        const dataKey = attribute.substring(5);
-
-        dataset[dataKey] = value;
-      }
-
-      obj.dataset = dataset;
-
-      return obj;
-    }, {});
-
-  // 用于后续元素查询
-  args.idName = id;
-  args.className = attr.class || '';
-
-  const thisStyle = args.style;
-  if (thisStyle) {
-    let parentStyle;
-    if (parent) {
-      parentStyle = parent.style;
-    } else if (typeof sharedCanvas !== 'undefined') {
-      parentStyle = sharedCanvas;
-    } else if (typeof __env !== 'undefined') {
-      parentStyle = __env.getSharedCanvas();
-    } else {
-      parentStyle = {
-        width: 300,
-        height: 150,
-      };
-    }
-    if (isPercent(thisStyle.width)) {
-      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
-    }
-    if (isPercent(thisStyle.height)) {
-      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
-    }
-  }
-
-  const element = new Constructor(args);
-  element.root = this;
-
-  children.forEach((childNode) => {
-    const childElement = create.call(this, childNode, style, args);
-
-    element.add(childElement);
-  });
-
-  return element;
-};
-
-const renderChildren = (children, context) => {
-  children.forEach((child) => {
-    if (child.type === 'ScrollView') {
-      // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-      child.insertScrollView(context);
-    } else {
-      child.insert(context);
-
-      return renderChildren(child.children, context);
-    }
-  });
-};
-
-
-/**
- * 将布局树的布局信息加工赋值到渲染树
- */
-function layoutChildren(element) {
-  element.children.forEach((child) => {
-    child.layoutBox = child.layoutBox || {};
-
-    ['left', 'top', 'width', 'height'].forEach((prop) => {
-      child.layoutBox[prop] = child.layout[prop];
-    });
-
-    if (child.parent) {
-      child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
-      child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
-    } else {
-      child.layoutBox.absoluteX = child.layoutBox.left;
-      child.layoutBox.absoluteY = child.layoutBox.top;
-    }
-
-    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
-    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
-
-    // 滚动列表的画板尺寸和主画板保持一致
-    // if (child.type === 'ScrollView') {
-    //   child.updateRenderPort(this.renderport);
-    // }
-
-    layoutChildren.call(this, child);
-  });
-}
-
-const updateRealLayout = (element, scale) => {
-  element.children.forEach((child) => {
-    child.realLayoutBox = child.realLayoutBox || {};
-
-    ['left', 'top', 'width', 'height'].forEach((prop) => {
-      child.realLayoutBox[prop] = child.layout[prop] * scale;
-    });
-
-    if (child.parent) {
-      // Scrollview支持横向滚动和纵向滚动，realX和realY需要动态计算
-      Object.defineProperty(child.realLayoutBox, 'realX', {
-        configurable: true,
-        enumerable: true,
-        get: () => {
-          let res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
-
-          /**
-           * 滚动列表事件处理
-           */
-          if (child.parent && child.parent.type === 'ScrollView') {
-            res -= (child.parent.scrollLeft * scale);
-          }
-
-          return res;
-        },
-      });
-
-      Object.defineProperty(child.realLayoutBox, 'realY', {
-        configurable: true,
-        enumerable: true,
-        get: () => {
-          let res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
-
-          /**
-           * 滚动列表事件处理
-           */
-          if (child.parent && child.parent.type === 'ScrollView') {
-            res -= (child.parent.scrollTop * scale);
-          }
-
-          return res;
-        },
-      });
-    } else {
-      child.realLayoutBox.realX = child.realLayoutBox.left;
-      child.realLayoutBox.realY = child.realLayoutBox.top;
-    }
-
-    updateRealLayout(child, scale);
-  });
-};
-
-function getElementsById(tree, list = [], id) {
-  Object.keys(tree.children).forEach((key) => {
-    const child = tree.children[key];
-
-    if (child.idName === id) {
-      list.push(child);
-    }
-
-    if (Object.keys(child.children).length) {
-      getElementsById(child, list, id);
-    }
-  });
-
-  return list;
-}
-
-function getElementsByClassName(tree, list = [], className) {
-  Object.keys(tree.children).forEach((key) => {
-    const child = tree.children[key];
-
-    if (child.className.split(/\s+/).indexOf(className) > -1) {
-      list.push(child);
-    }
-
-    if (Object.keys(child.children).length) {
-      getElementsByClassName(child, list, className);
-    }
-  });
-
-  return list;
-}
-
 
 class _Layout extends Element {
   constructor({ style, name } = {}) {
@@ -313,8 +77,6 @@ class _Layout extends Element {
   }
 
   init(template, style, attrValueProcessor) {
-    let start = new Date();
-
     const parseConfig = {
       attributeNamePrefix: '',
       attrNodeName: 'attr', // default is 'false'
@@ -346,6 +108,31 @@ class _Layout extends Element {
 
     this.add(this.layoutTree);
 
+    this.state = STATE.INITED;
+  }
+
+  /**
+   * init阶段核心仅仅是根据xml和css创建了节点树
+   * 要实现真正的渲染，需要调用 layout 函数，之所以将 layout 单独抽象为一个函数，是因为 layout 应当是可以重复调用的
+   * 比如改变了一个元素的尺寸，实际上节点树是没变的，仅仅是需要重新计算布局，然后渲染
+   * 一个完整的 layout 分成下面的几步：
+   * 1. 执行画布清理，因为布局变化页面需要重绘，这里没有做很高级的剔除等操作，一律清除重画，实际上性能已经很好
+   * 2. 节点树都含有 style 属性，css-layout 能够根据这些信息计算出最终布局，详情可见 https://www.npmjs.com/package/css-layout
+   * 3. 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息，但这些信息并不是能够直接用的
+   *    比如 layout.top 是指在一个父容器内的 top，最终要实现渲染，实际上要递归加上复容器的 top
+   *    这样每次 repaint 的时候只需要直接使用计算好的值即可，不需要每次都递归计算
+   *    这一步称为 layoutChildren，目的在于将 css-layout 进一步处理为可以渲染直接用的布局信息
+   * 4. updateRealLayout: 一般 Layout 在绘制完了之后，会背继续绘制到其他引擎，要做好事件处理，就需要做一个坐标转换
+   * 5. renderChildren：执行渲染
+   * 6. bindEvents：执行事件绑定
+   */
+  layout(context) {
+    this.renderContext = context;
+
+    if (!this.hasViewPortSet) {
+      console.error('Please invoke method `updateViewPort` before method `layout`');
+    }
+
     /**
      * 计算布局树
      * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
@@ -364,18 +151,6 @@ class _Layout extends Element {
       this.renderport.height = rootEle.style.height;
     }
 
-    this.state = STATE.INITED;
-  }
-
-  layout(context) {
-    this.renderContext = context;
-
-    this.clearCanvas();
-
-    if (!this.hasViewPortSet) {
-      console.error('Please invoke method `updateViewPort` before method `layout`');
-    }
-
     // 将布局树的布局信息加工赋值到渲染树
     this.debugInfo.start('layoutChildren');
     layoutChildren.call(this, this);
@@ -386,6 +161,8 @@ class _Layout extends Element {
     updateRealLayout(this, this.viewport.width / this.renderport.width);
     this.debugInfo.end('updateRealLayout');
 
+    this.clearCanvas();
+
     // 遍历节点树，依次调用节点的渲染接口实现渲染
     this.debugInfo.start('renderChildren');
     renderChildren(this.children, context);
@@ -394,6 +171,25 @@ class _Layout extends Element {
     this.bindEvents();
 
     this.state = STATE.RENDERED;
+
+    // console.log('-----------------')
+
+    // const listItem = this.getElementsByClassName('listHeadImg')[0];
+    // listItem.style.height = 300;
+    // listItem.isDirty = true;
+    // let parent = listItem.parent;
+    // while (parent) {
+    //   parent.isDirty = true;
+
+    //   parent = parent.parent;
+    // }
+
+    // let start = new Date();
+    // computeLayout(this.children[0]);
+    // console.log(new Date() - start)
+    // iterateTree(this.children[0], (ele) => {
+    //   // console.log(ele.id, ele.className, ele.shouldUpdate, ele.renderBoxes.length);
+    // });
   }
 
   initRepaint() {
@@ -408,6 +204,7 @@ class _Layout extends Element {
 
   repaint() {
     this.clearCanvas();
+
     repaintChildren(this.children);
   }
 

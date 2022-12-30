@@ -1,8 +1,8 @@
 import View from './view.js';
 import {
   throttle,
-  createCanvas,
   getDpr,
+  createCanvas,
 } from '../common/util.js';
 
 import {
@@ -132,7 +132,7 @@ export default class ScrollView extends View {
   /**
    * 与主canvas的尺寸保持一致
    */
-  updateRenderPort() {
+  updateRenderPort(renderport) {
     // this.renderport = renderport;
 
     // this.scrollCanvas = createCanvas();
@@ -173,6 +173,7 @@ export default class ScrollView extends View {
 
   clear() {
     const box = this.layoutBox;
+    // this.root.clearCanvas();
     this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
     // this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
   }
@@ -205,6 +206,7 @@ export default class ScrollView extends View {
      * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
      */
     this.ctx.save();
+    this.ctx.beginPath();
     this.ctx.rect(this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
     this.ctx.clip();
 
@@ -273,8 +275,10 @@ export default class ScrollView extends View {
     this.scrollerObj = new Scroller((left, top) => {
       // 可能被销毁了或者节点树还没准备好
       if (!this.isDestroyed) {
+        // this.scrollLeft = left;
+        // this.scrollTop = top;
+        // this.root.repaint();
         this.scrollRender(left, top);
-
         if (this.currentEvent) {
           this.emit('scroll', this.currentEvent);
         }

@@ -49,15 +49,17 @@ export default class BitMapText extends Element {
   }
 
   insert(ctx, box) {
-    this.renderBoxes.push({ ctx, box });
+    // this.renderBoxes.push({ ctx, box });
 
     this.render(ctx, box);
   }
 
   repaint() {
-    this.renderBoxes.forEach((item) => {
-      this.render(item.ctx, item.box);
-    });
+    this.render(this.ctx, this.layoutBox);
+
+    // this.renderBoxes.forEach((item) => {
+    //   this.render(item.ctx, item.box);
+    // });
   }
 
   destroySelf() {

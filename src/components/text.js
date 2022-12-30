@@ -119,15 +119,18 @@ export default class Text extends Element {
   }
 
   insert(ctx, box) {
-    this.renderBoxes.push({ ctx, box });
+    this.ctx = ctx;
+    // this.renderBoxes.push({ ctx, box });
 
     this.render(ctx, box);
   }
 
   repaint() {
-    this.renderBoxes.forEach((item) => {
-      this.render(item.ctx, item.box);
-    });
+    this.render(this.ctx, this.layoutBox);
+
+    // this.renderBoxes.forEach((item) => {
+    //   this.render(item.ctx, item.box);
+    // });
   }
 
   destroySelf() {

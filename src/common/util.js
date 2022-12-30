@@ -104,23 +104,3 @@ export const STATE = {
   RENDERED: 'RENDERED',
   CLEAR: 'CLEAR',
 };
-
-export const repaintChildren = (children) => {
-  children.forEach((child) => {
-    child.repaint();
-
-    if (child.type !== 'ScrollView') {
-      repaintChildren(child.children);
-    }
-  });
-};
-
-export const repaintTree = (tree) => {
-  tree.repaint();
-
-  tree.children.forEach((child) => {
-    child.repaint();
-
-    repaintTree(child);
-  });
-};
