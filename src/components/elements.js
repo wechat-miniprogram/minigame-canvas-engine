@@ -55,7 +55,6 @@ export default class Element {
     dataset = {},
   }) {
     this.children = [];
-    this.childMap = {};
     this.parent = null;
     this.parentId = 0;
     this.id = id;

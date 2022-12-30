@@ -85,16 +85,17 @@ if (typeof swan !== 'undefined') {
 }
 
 export function getDpr() {
-  if (typeof _dpr !== 'undefined') {
-    return _dpr;
-  }
-  if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
-    _dpr = __env.getSystemInfoSync().devicePixelRatio;
-  } else {
-    console.warn('failed to access device pixel ratio, fallback to 1');
-    _dpr = 1;
-  }
-  return _dpr;
+  return 3;
+  // if (typeof _dpr !== 'undefined') {
+  //   return _dpr;
+  // }
+  // if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
+  //   _dpr = __env.getSystemInfoSync().devicePixelRatio;
+  // } else {
+  //   console.warn('failed to access device pixel ratio, fallback to 1');
+  //   _dpr = 1;
+  // }
+  // return _dpr;
 }
 
 export const STATE = {

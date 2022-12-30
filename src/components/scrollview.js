@@ -132,14 +132,14 @@ export default class ScrollView extends View {
   /**
    * 与主canvas的尺寸保持一致
    */
-  updateRenderPort(renderport) {
-    this.renderport = renderport;
+  updateRenderPort() {
+    // this.renderport = renderport;
 
-    this.scrollCanvas = createCanvas();
-    this.scrollCtx = this.scrollCanvas.getContext('2d');
+    // this.scrollCanvas = createCanvas();
+    // this.scrollCtx = this.scrollCanvas.getContext('2d');
 
-    this.scrollCanvas.width = this.renderport.width;
-    this.scrollCanvas.height = this.renderport.height;
+    // this.scrollCanvas.width = this.renderport.width;
+    // this.scrollCanvas.height = this.renderport.height;
   }
 
   destroySelf() {
@@ -163,7 +163,8 @@ export default class ScrollView extends View {
     layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
     layoutBox.absoluteX = layoutBox.originalAbsoluteX - left;
 
-    tree.render(this.scrollCtx, layoutBox);
+    // tree.render(this.scrollCtx, layoutBox);
+    tree.render(this.ctx, layoutBox);
 
     tree.children.forEach((child) => {
       this.renderTreeWithTop(child, top, left);
@@ -173,7 +174,7 @@ export default class ScrollView extends View {
   clear() {
     const box = this.layoutBox;
     this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
-    this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
+    // this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
   }
 
   scrollRenderHandler(left = 0, top = 0) {
@@ -194,9 +195,18 @@ export default class ScrollView extends View {
     // 清理滚动画布和主屏画布
     this.clear();
 
+    // ScrollView 作为容器本身的渲染
     this.renderBoxes.forEach((item) => {
       this.render(item.ctx, item.box);
     });
+
+    /**
+     * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的
+     * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
+     */
+    this.ctx.save();
+    this.ctx.rect(this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
+    this.ctx.clip();
 
     this.children.forEach((child) => {
       const { layoutBox } = child;
@@ -212,13 +222,15 @@ export default class ScrollView extends View {
       }
     });
 
-    this.ctx.drawImage(
-      this.scrollCanvas,
-      box.absoluteX, box.absoluteY,
-      box.width, box.height,
-      box.absoluteX, box.absoluteY,
-      box.width, box.height,
-    );
+    this.ctx.restore();
+
+    // this.ctx.drawImage(
+    //   this.scrollCanvas,
+    //   box.absoluteX, box.absoluteY,
+    //   box.width, box.height,
+    //   box.absoluteX, box.absoluteY,
+    //   box.width, box.height,
+    // );
   }
 
   scrollRender(left, top) {
@@ -244,7 +256,8 @@ export default class ScrollView extends View {
     //   this.scrollRender(this.scrollLeft, this.scrollTop);
     // });
 
-    this.scrollRender(0, 0);
+    // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，所以这里不需要重复调用渲染
+    // this.scrollRender(0, 0);
 
     // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
     this.EE.on('image__render__done', (img) => {

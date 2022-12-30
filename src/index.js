@@ -7,6 +7,7 @@ import { isClick, STATE, createImage, repaintChildren } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 import TWEEN from '@tweenjs/tween.js';
+import DebugInfo from './common/debugInfo.js';
 
 // components
 import {
@@ -128,15 +129,6 @@ const create = function (node, style, parent) {
   return element;
 };
 
-const getChildren = element => Object.keys(element.children)
-  .map(id => element.children[id])
-  .map(child => ({
-    id: child.id,
-    name: child.name,
-    style: child.style,
-    children: getChildren(child),
-  }));
-
 const renderChildren = (children, context) => {
   children.forEach((child) => {
     if (child.type === 'ScrollView') {
@@ -174,9 +166,9 @@ function layoutChildren(element) {
     child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
 
     // 滚动列表的画板尺寸和主画板保持一致
-    if (child.type === 'ScrollView') {
-      child.updateRenderPort(this.renderport);
-    }
+    // if (child.type === 'ScrollView') {
+    //   child.updateRenderPort(this.renderport);
+    // }
 
     layoutChildren.call(this, child);
   });
@@ -230,7 +222,7 @@ const updateRealLayout = (element, scale) => {
       child.realLayoutBox.realY = child.realLayoutBox.top;
     }
 
-    updateRealLayout(child, scale)
+    updateRealLayout(child, scale);
   });
 };
 
@@ -275,7 +267,7 @@ class _Layout extends Element {
     this.elementTree = null;
     this.renderContext = null;
 
-    this.debugInfo = {};
+    this.debugInfo = new DebugInfo();
     this.renderport = {};
     this.viewport = {};
 
@@ -340,27 +332,30 @@ class _Layout extends Element {
       parseConfig.attrValueProcessor = attrValueProcessor;
     }
 
+    this.debugInfo.start('xmlParse');
     // 将xml字符串解析成xml节点树
     const jsonObj = parser.parse(template, parseConfig, true);
+    this.debugInfo.end('xmlParse');
 
     const xmlTree = jsonObj.children[0];
 
-    this.debugInfo.xmlTree = new Date() - start;
-
     // XML树生成渲染树
-    start = new Date();
+    this.debugInfo.start('xmlTreeToLayoutTree');
     this.layoutTree = create.call(this, xmlTree, style);
-    this.debugInfo.layoutTree = new Date() - start;
+    this.debugInfo.end('xmlTreeToLayoutTree');
+
     this.add(this.layoutTree);
 
-    // 计算布局树
-    start = new Date();
+    /**
+     * 计算布局树
+     * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
+     * Layout本身并不作为布局计算，只是作为节点树的容器
+     */
+    this.debugInfo.start('computeLayout');
     computeLayout(this.children[0]);
-    // 经过 Layout 计算，节点树 elementTree 带上了 layout、lastLayout 等布局信息
-    this.debugInfo.renderTree = new Date() - start;
-    console.log('this.debugInfo.renderTree', this.debugInfo.renderTree)
+    this.debugInfo.end('computeLayout');
 
-    const rootEle = this.children[0];    
+    const rootEle = this.children[0];
 
     if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
       console.error('Please set width and height property for root element');
@@ -373,8 +368,6 @@ class _Layout extends Element {
   }
 
   layout(context) {
-    const start = new Date();
-
     this.renderContext = context;
 
     this.clearCanvas();
@@ -384,21 +377,19 @@ class _Layout extends Element {
     }
 
     // 将布局树的布局信息加工赋值到渲染树
-    // layoutChildren.call(this, this.elementTree.children, this.children);
+    this.debugInfo.start('layoutChildren');
     layoutChildren.call(this, this);
-
-    this.debugInfo.layoutChildren = new Date() - start;
+    this.debugInfo.end('layoutChildren');
 
     // 计算真实的物理像素位置，用于事件处理
-    // updateRealLayout(this.elementTree.children, this.children, this.viewport.width / this.renderport.width);
+    this.debugInfo.start('updateRealLayout');
     updateRealLayout(this, this.viewport.width / this.renderport.width);
-
-    this.debugInfo.updateRealLayout = new Date() - start;
+    this.debugInfo.end('updateRealLayout');
 
     // 遍历节点树，依次调用节点的渲染接口实现渲染
+    this.debugInfo.start('renderChildren');
     renderChildren(this.children, context);
-
-    this.debugInfo.renderChildren = new Date() - start;
+    this.debugInfo.end('renderChildren');
 
     this.bindEvents();
 
@@ -418,7 +409,6 @@ class _Layout extends Element {
   repaint() {
     this.clearCanvas();
     repaintChildren(this.children);
-    // this.emit('repaint__done');
   }
 
   /**
@@ -444,10 +434,6 @@ class _Layout extends Element {
 
   eventHandler(eventName) {
     return function touchEventHandler(e) {
-      // if (!this.elementTree) {
-      //   return;
-      // }
-
       const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
       if (!touch || !touch.pageX || !touch.pageY) {
         return;
