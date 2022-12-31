@@ -8,6 +8,7 @@ import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 import TWEEN from '@tweenjs/tween.js';
 import DebugInfo from './common/debugInfo.js';
+import Ticker from './common/ticker';
 import {
   create,
   renderChildren,
@@ -56,8 +57,24 @@ class _Layout extends Element {
 
     this.on('repaint', (info) => {
       // console.log('request repaint', info);
-      this.repaint();
+      this.isNeedRepaint = true;
     });
+
+    this.isNeedRepaint = false;
+    this.ticker = new Ticker();
+    this.TWEEN = TWEEN;
+
+    const tickerFunc = () => {
+      TWEEN.update();
+      if (this.isDirty) {
+        this.reflow();
+      } else if (this.isNeedRepaint) {
+        this.repaint();
+      }
+    };
+
+    this.ticker.add(tickerFunc);
+    this.ticker.start();
   }
 
   // 与老版本兼容
@@ -156,6 +173,7 @@ class _Layout extends Element {
     debugInfo.start('renderChildren');
     renderChildren(this.children, this.renderContext);
     debugInfo.end('renderChildren');
+    this.isDirty = false;
   }
 
   /**
@@ -187,19 +205,10 @@ class _Layout extends Element {
     this.state = STATE.RENDERED;
   }
 
-  initRepaint() {
-    this.on('repaint', () => {
-      this.repaint();
-    });
-
-    // this.EE.on('one__image__render__done', () => {
-    //   this.repaint();
-    // });
-  }
-
   repaint() {
     this.clearCanvas();
 
+    this.isNeedRepaint = false;
     repaintChildren(this.children);
   }
 
@@ -325,8 +334,6 @@ class _Layout extends Element {
     this.layoutTree = {};
     this.state = STATE.CLEAR;
     this.clearCanvas();
-
-    // this.EE.off('image__render__done');
   }
 
   clearPool() {

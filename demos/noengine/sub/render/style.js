@@ -43,7 +43,7 @@ export default {
 
   listItem: {
     backgroundColor: "#F7F7F7",
-    width: 960,
+    maxWidth: 960,
     height: 150,
     flexDirection: "row",
     alignItems: "center",
@@ -64,7 +64,7 @@ export default {
   },
 
   listHeadImg: {
-    // borderRadius: 6,
+    borderRadius: 6,
     width: 90,
     height: 90,
   },

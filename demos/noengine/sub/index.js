@@ -3,9 +3,6 @@ import tplFn from "render/tplfn.js";
 import Layout from "./engine.js";
 // const Layout = requirePlugin('Layout').default;
 
-import TWEEN from './tween'
-console.log(TWEEN)
-
 import {
   getFriendData,
   setUserRecord,
@@ -33,36 +30,26 @@ function draw(data = []) {
   Layout.clear();
   Layout.init(template, style);
   Layout.layout(sharedContext);
-  const headers = Layout.getElementsByClassName('listItem')
-  const self = headers[0];
+  const listItem = Layout.getElementsByClassName('listItem')[0]
 
-  console.log(self);
   console.log(Layout.debugInfo)
 
   // Setup the animation loop.
-  function animate(time) {
-    requestAnimationFrame(animate)
-    TWEEN.update()
-  }
-  requestAnimationFrame(animate)
+  // function animate(time) {
+  //   requestAnimationFrame(animate)
+  //   TWEEN.update()
+  // }
+  // requestAnimationFrame(animate)
   
-  const title = Layout.getElementsByClassName('title')[0];
-
-  title.on('click', () => {
-    let count = 0;
-    let target = self.style.height === 500 ? 150 : 500;
-    new TWEEN.Tween(self.style) // Create a new tween that modifies 'coords'.
-    .to({height: target}, 1000) // Move to (300, 200) in 1 second.
-    .easing(TWEEN.Easing.Bounce.Out) // Use an easing function to make the animation smooth.
+  listItem.on('click', () => {
+    console.log('click')
+    let target = listItem.style.height === 150 ? 300 : 150;
+    new Layout.TWEEN.Tween(listItem.style)
+    .to({ height: target}, 1000)
+    .easing(Layout.TWEEN.Easing.Bounce.Out)
     .onUpdate(() => {
-      count += 1;
-      Layout.reflow();
-
-      if (count % 10 === 0) {
-        // console.log(Layout.debugInfo);
-      }
     }).onComplete(() => {
-      // console.log(Layout.debugInfo);
+      // console.log(Layout)
     }).start();
   });
 }

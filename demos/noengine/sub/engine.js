@@ -105,8 +105,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(14);
 /* harmony import */ var _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(16);
-/* harmony import */ var _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(27);
-/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(28);
+/* harmony import */ var _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(18);
+/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(29);
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(19);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -128,6 +129,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -182,8 +184,33 @@ var _Layout = /*#__PURE__*/function (_Element) {
     };
     _this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].UNINIT;
     _this.bitMapFonts = [];
+
+    _this.on('repaint', function (info) {
+      // console.log('request repaint', info);
+      _this.isNeedRepaint = true;
+    });
+
+    _this.isNeedRepaint = false;
+    _this.ticker = new _common_ticker__WEBPACK_IMPORTED_MODULE_10__["default"]();
+    _this.TWEEN = _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"];
+
+    var tickerFunc = function tickerFunc() {
+      _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"].update();
+
+      if (_this.isDirty) {
+        _this.reflow();
+      } else if (_this.isNeedRepaint) {
+        _this.repaint();
+      }
+    };
+
+    _this.ticker.add(tickerFunc);
+
+    _this.ticker.start();
+
     return _this;
-  }
+  } // 与老版本兼容
+
 
   _createClass(_Layout, [{
     key: "debugInfo",
@@ -239,7 +266,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       var xmlTree = jsonObj.children[0]; // XML树生成渲染树
 
       debugInfo.start('xmlTreeToLayoutTree');
-      this.layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_10__["create"].call(this, xmlTree, style);
+      this.layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_11__["create"].call(this, xmlTree, style);
       debugInfo.end('xmlTreeToLayoutTree');
       this.add(this.layoutTree);
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].INITED;
@@ -248,10 +275,10 @@ var _Layout = /*#__PURE__*/function (_Element) {
     key: "reflow",
     value: function reflow() {
       /**
-      * 计算布局树
-      * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
-      * Layout本身并不作为布局计算，只是作为节点树的容器
-      */
+       * 计算布局树
+       * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
+       * Layout本身并不作为布局计算，只是作为节点树的容器
+       */
       debugInfo.start('computeLayout');
       css_layout__WEBPACK_IMPORTED_MODULE_4___default()(this.children[0]);
       debugInfo.end('computeLayout');
@@ -266,17 +293,18 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
 
       debugInfo.start('layoutChildren');
-      _common_vd__WEBPACK_IMPORTED_MODULE_10__["layoutChildren"].call(this, this);
+      _common_vd__WEBPACK_IMPORTED_MODULE_11__["layoutChildren"].call(this, this);
       debugInfo.end('layoutChildren'); // 计算真实的物理像素位置，用于事件处理
 
       debugInfo.start('updateRealLayout');
-      Object(_common_vd__WEBPACK_IMPORTED_MODULE_10__["updateRealLayout"])(this, this.viewport.width / this.renderport.width);
+      Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["updateRealLayout"])(this, this.viewport.width / this.renderport.width);
       debugInfo.end('updateRealLayout');
       this.clearCanvas(); // 遍历节点树，依次调用节点的渲染接口实现渲染
 
       debugInfo.start('renderChildren');
-      Object(_common_vd__WEBPACK_IMPORTED_MODULE_10__["renderChildren"])(this.children, this.renderContext);
+      Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["renderChildren"])(this.children, this.renderContext);
       debugInfo.end('renderChildren');
+      this.isDirty = false;
     }
     /**
      * init阶段核心仅仅是根据xml和css创建了节点树
@@ -305,39 +333,14 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
       this.reflow();
       this.bindEvents();
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].RENDERED; // console.log('-----------------')
-      // const listItem = this.getElementsByClassName('listHeadImg')[0];
-      // listItem.style.height = 300;
-      // listItem.isDirty = true;
-      // let parent = listItem.parent;
-      // while (parent) {
-      //   parent.isDirty = true;
-      //   parent = parent.parent;
-      // }
-      // let start = new Date();
-      // computeLayout(this.children[0]);
-      // console.log(new Date() - start)
-      // iterateTree(this.children[0], (ele) => {
-      //   // console.log(ele.id, ele.className, ele.shouldUpdate, ele.renderBoxes.length);
-      // });
-    }
-  }, {
-    key: "initRepaint",
-    value: function initRepaint() {
-      var _this2 = this;
-
-      this.on('repaint', function () {
-        _this2.repaint();
-      });
-      this.EE.on('one__image__render__done', function () {
-        _this2.repaint();
-      });
+      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].RENDERED;
     }
   }, {
     key: "repaint",
     value: function repaint() {
       this.clearCanvas();
-      Object(_common_vd__WEBPACK_IMPORTED_MODULE_10__["repaintChildren"])(this.children);
+      this.isNeedRepaint = false;
+      Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["repaintChildren"])(this.children);
     }
     /**
      * 给定节点树和触摸坐标，遍历节点树，查询被点中的所有节点
@@ -445,23 +448,23 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "getElementsById",
     value: function getElementsById(id) {
-      return Object(_common_vd__WEBPACK_IMPORTED_MODULE_10__["getElementsById"])(this, [], id);
+      return Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["getElementsById"])(this, [], id);
     }
   }, {
     key: "getElementsByClassName",
     value: function getElementsByClassName(className) {
-      return Object(_common_vd__WEBPACK_IMPORTED_MODULE_10__["getElementsByClassName"])(this, [], className);
+      return Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["getElementsByClassName"])(this, [], className);
     }
   }, {
     key: "destroyAll",
     value: function destroyAll(tree) {
-      var _this3 = this;
+      var _this2 = this;
 
       var children = tree.children;
       children.forEach(function (child) {
         child.destroy();
 
-        _this3.destroyAll(child);
+        _this2.destroyAll(child);
 
         child.destroySelf && child.destroySelf();
       });
@@ -483,7 +486,6 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
       this.clearCanvas();
-      this.EE.off('image__render__done');
     }
   }, {
     key: "clearPool",
@@ -669,21 +671,16 @@ var Element = /*#__PURE__*/function () {
       _this.on(eventName, function (e, touchMsg) {
         _this.parent && _this.parent.emit(eventName, e, touchMsg);
       });
-    });
-    this.initRepaint();
-  }
+    }); // this.initRepaint();
+  } // initRepaint() {
+  //   this.on('repaint', (e) => {
+  //     this.parent && this.parent.emit('repaint', e);
+  //   });
+  // }
+  // 子类填充实现
+
 
   _createClass(Element, [{
-    key: "initRepaint",
-    value: function initRepaint() {
-      var _this2 = this;
-
-      this.on('repaint', function (e) {
-        _this2.parent && _this2.parent.emit('repaint', e);
-      });
-    } // 子类填充实现
-
-  }, {
     key: "repaint",
     value: function repaint() {} // 子类填充实现
 
@@ -694,12 +691,12 @@ var Element = /*#__PURE__*/function () {
   }, {
     key: "destroy",
     value: function destroy() {
-      var _this3 = this;
+      var _this2 = this;
 
       ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
-        _this3.off(eventName);
-      });
-      this.EE.off('image__render__done');
+        _this2.off(eventName);
+      }); // this.EE.off('image__render__done');
+
       this.isDestroyed = true;
       this.EE = null;
       /* this.root          = null;*/
@@ -711,10 +708,6 @@ var Element = /*#__PURE__*/function () {
       this.layoutBox = null;
       this.props = null;
       this.style = null;
-
-      if (this.renderBoxes) {
-        this.renderBoxes = null;
-      }
     }
   }, {
     key: "add",
@@ -4415,19 +4408,365 @@ process.umask = function() { return 0; };
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(19);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DebugInfo; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var DebugInfo = /*#__PURE__*/function () {
+  function DebugInfo() {
+    _classCallCheck(this, DebugInfo);
+
+    this.reset();
+  }
+
+  _createClass(DebugInfo, [{
+    key: "start",
+    value: function start(name) {
+      if (this.totalStart === 0) {
+        this.totalStart = Date.now();
+      }
+
+      this.info[name] = {
+        start: Date.now()
+      };
+    }
+  }, {
+    key: "end",
+    value: function end(name) {
+      if (this.info[name]) {
+        this.info[name].end = Date.now();
+        this.info[name].cost = this.info[name].end - this.info[name].start;
+        this.totalCost = this.info[name].end - this.totalStart;
+      }
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.info = {};
+      this.totalStart = 0;
+      this.totalCost = 0;
+    }
+  }, {
+    key: "log",
+    value: function log() {
+      var _this = this;
+
+      var logInfo = 'Layout debug info: \n';
+      logInfo += Object.keys(this.info).reduce(function (sum, curr) {
+        // eslint-disable-next-line no-param-reassign
+        sum += "".concat(curr, ": ").concat(_this.info[curr].cost, "\n");
+        return sum;
+      }, ''); // eslint-disable-next-line no-unused-vars
+
+      logInfo += "totalCost: ".concat(this.totalCost);
+      return logInfo;
+    }
+  }]);
+
+  return DebugInfo;
+}();
+
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderChildren", function() { return renderChildren; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layoutChildren", function() { return layoutChildren; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateRealLayout", function() { return updateRealLayout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "iterateTree", function() { return iterateTree; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsById", function() { return getElementsById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsByClassName", function() { return getElementsByClassName; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintChildren", function() { return repaintChildren; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
+/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
+// components
+
+var constructorMap = {
+  view: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["View"],
+  text: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Text"],
+  image: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"],
+  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["ScrollView"],
+  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["BitMapText"]
+};
+
+function isPercent(data) {
+  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
+}
+
+function convertPercent(data, parentData) {
+  if (typeof data === 'number') {
+    return data;
+  }
+
+  var matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
+
+  if (matchData) {
+    return parentData * matchData * 0.01;
+  }
+}
+
+function create(node, style, parent) {
+  var _this = this;
+
+  var Constructor = constructorMap[node.name];
+  var children = node.children || [];
+  var attr = node.attr || {};
+  var dataset = {};
+  var id = attr.id || '';
+  var args = Object.keys(attr).reduce(function (obj, key) {
+    var value = attr[key];
+    var attribute = key;
+
+    if (key === 'id') {
+      obj.style = Object.assign(obj.style || {}, style[id] || {});
+      return obj;
+    }
+
+    if (key === 'class') {
+      obj.style = value.split(/\s+/).reduce(function (res, oneClass) {
+        return Object.assign(res, style[oneClass]);
+      }, obj.style || {});
+      return obj;
+    } // if (/\{\{.+\}\}/.test(value)) {
+    // }
+
+
+    if (value === 'true') {
+      obj[attribute] = true;
+    } else if (value === 'false') {
+      obj[attribute] = false;
+    } else {
+      obj[attribute] = value;
+    }
+
+    if (attribute.startsWith('data-')) {
+      var dataKey = attribute.substring(5);
+      dataset[dataKey] = value;
+    }
+
+    obj.dataset = dataset;
+    return obj;
+  }, {}); // 用于后续元素查询
+
+  args.idName = id;
+  args.className = attr["class"] || '';
+  var thisStyle = args.style;
+
+  if (thisStyle) {
+    var parentStyle;
+
+    if (parent) {
+      parentStyle = parent.style;
+    } else if (typeof sharedCanvas !== 'undefined') {
+      parentStyle = sharedCanvas;
+    } else if (typeof __env !== 'undefined') {
+      parentStyle = __env.getSharedCanvas();
+    } else {
+      parentStyle = {
+        width: 300,
+        height: 150
+      };
+    }
+
+    if (isPercent(thisStyle.width)) {
+      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
+    }
+
+    if (isPercent(thisStyle.height)) {
+      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
+    }
+  }
+
+  var element = new Constructor(args);
+  element.root = this;
+  children.forEach(function (childNode) {
+    var childElement = create.call(_this, childNode, style, args);
+    element.add(childElement);
+  });
+  return element;
+}
+function renderChildren(children, context) {
+  children.forEach(function (child) {
+    // eslint-disable-next-line no-param-reassign
+    child.shouldUpdate = false; // eslint-disable-next-line no-param-reassign
+
+    child.isDirty = false;
+
+    if (child.type === 'ScrollView') {
+      // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
+      child.insertScrollView(context);
+    } else {
+      child.insert(context);
+      return renderChildren(child.children, context);
+    }
+  });
+}
+/**
+ * 将布局树的布局信息加工赋值到渲染树
+ */
+
+function layoutChildren(element) {
+  var _this2 = this;
+
+  element.children.forEach(function (child) {
+    child.layoutBox = child.layoutBox || {};
+    ['left', 'top', 'width', 'height'].forEach(function (prop) {
+      child.layoutBox[prop] = child.layout[prop];
+    });
+
+    if (child.parent) {
+      child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
+      child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
+    } else {
+      child.layoutBox.absoluteX = child.layoutBox.left;
+      child.layoutBox.absoluteY = child.layoutBox.top;
+    }
+
+    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX; // 滚动列表的画板尺寸和主画板保持一致
+
+    if (child.type === 'ScrollView') {
+      child.updateRenderPort(_this2.renderport);
+    }
+
+    layoutChildren.call(_this2, child);
+  });
+}
+function updateRealLayout(element, scale) {
+  element.children.forEach(function (child) {
+    child.realLayoutBox = child.realLayoutBox || {};
+    ['left', 'top', 'width', 'height'].forEach(function (prop) {
+      child.realLayoutBox[prop] = child.layout[prop] * scale;
+    });
+
+    if (child.parent) {
+      // Scrollview支持横向滚动和纵向滚动，realX和realY需要动态计算
+      Object.defineProperty(child.realLayoutBox, 'realX', {
+        configurable: true,
+        enumerable: true,
+        get: function get() {
+          var res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
+          /**
+           * 滚动列表事件处理
+           */
+
+          if (child.parent && child.parent.type === 'ScrollView') {
+            res -= child.parent.scrollLeft * scale;
+          }
+
+          return res;
+        }
+      });
+      Object.defineProperty(child.realLayoutBox, 'realY', {
+        configurable: true,
+        enumerable: true,
+        get: function get() {
+          var res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
+          /**
+           * 滚动列表事件处理
+           */
+
+          if (child.parent && child.parent.type === 'ScrollView') {
+            res -= child.parent.scrollTop * scale;
+          }
+
+          return res;
+        }
+      });
+    } else {
+      child.realLayoutBox.realX = child.realLayoutBox.left;
+      child.realLayoutBox.realY = child.realLayoutBox.top;
+    }
+
+    updateRealLayout(child, scale);
+  });
+}
+
+function none() {}
+
+function iterateTree(element) {
+  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : none;
+  callback(element);
+  element.children.forEach(function (child) {
+    iterateTree(child, callback);
+  });
+}
+function getElementsById(tree) {
+  var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var id = arguments.length > 2 ? arguments[2] : undefined;
+  Object.keys(tree.children).forEach(function (key) {
+    var child = tree.children[key];
+
+    if (child.idName === id) {
+      list.push(child);
+    }
+
+    if (Object.keys(child.children).length) {
+      getElementsById(child, list, id);
+    }
+  });
+  return list;
+}
+function getElementsByClassName(tree) {
+  var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var className = arguments.length > 2 ? arguments[2] : undefined;
+  Object.keys(tree.children).forEach(function (key) {
+    var child = tree.children[key];
+
+    if (child.className.split(/\s+/).indexOf(className) > -1) {
+      list.push(child);
+    }
+
+    if (Object.keys(child.children).length) {
+      getElementsByClassName(child, list, className);
+    }
+  });
+  return list;
+}
+var repaintChildren = function repaintChildren(children) {
+  children.forEach(function (child) {
+    child.repaint();
+
+    if (child.type !== 'ScrollView') {
+      repaintChildren(child.children);
+    }
+  });
+};
+var repaintTree = function repaintTree(tree) {
+  tree.repaint();
+  tree.children.forEach(function (child) {
+    child.repaint();
+    repaintTree(child);
+  });
+};
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "View", function() { return _view_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(20);
+/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(21);
+/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Text", function() { return _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(22);
+/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(24);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(26);
+/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(28);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BitMapText", function() { return _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
 
@@ -4438,7 +4777,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4498,7 +4837,6 @@ var View = /*#__PURE__*/function (_Element) {
     });
     _this.type = 'View';
     _this.ctx = null;
-    _this.renderBoxes = [];
     return _this;
   }
 
@@ -4558,17 +4896,14 @@ var View = /*#__PURE__*/function (_Element) {
 
       if (!box) {
         box = this.layoutBox;
-      } // this.renderBoxes.push({ ctx, box });
-
+      }
 
       this.render(ctx, box);
     }
   }, {
     key: "repaint",
     value: function repaint() {
-      this.render(this.ctx, this.layoutBox); // this.renderBoxes.forEach((item) => {
-      //   this.render(item.ctx, item.box);
-      // });
+      this.render(this.ctx, this.layoutBox);
     }
   }]);
 
@@ -4578,7 +4913,7 @@ var View = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4660,15 +4995,12 @@ var Image = /*#__PURE__*/function (_Element) {
       configurable: true
     });
     _this.type = 'Image';
-    _this.renderBoxes = [];
     _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
       if (fromCache) {
         _this.img = img;
       } else {
         // 当图片加载完成，实例可能已经被销毁了
-        if (_this.img && _this.isScrollViewChild) {
-          _this.EE.emit('image__render__done', _assertThisInitialized(_this));
-        }
+        _this.root.emit('repaint', _this.className);
       }
     });
     return _this;
@@ -4693,9 +5025,7 @@ var Image = /*#__PURE__*/function (_Element) {
   }, {
     key: "repaint",
     value: function repaint() {
-      this.render(this.ctx, this.layoutBox); // this.renderBoxes.forEach((item) => {
-      //   this.render(item.ctx, item.box, false);
-      // });
+      this.render(this.ctx, this.layoutBox);
     } // 子类填充实现
 
   }, {
@@ -4748,25 +5078,22 @@ var Image = /*#__PURE__*/function (_Element) {
   }, {
     key: "insert",
     value: function insert(ctx, box) {
-      var _this3 = this;
-
-      this.ctx = ctx; // this.renderBoxes.push({ ctx, box });
-
-      this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img, fromCache) {
-        // 来自缓存的，还没返回img就会执行回调函数
-        if (fromCache) {
-          _this3.img = img;
-
-          _this3.render(ctx, box, false);
-        } else {
-          // 当图片加载完成，实例可能已经被销毁了
-          if (_this3.img) {
-            var eventName = _this3.isScrollViewChild ? 'image__render__done' : 'one__image__render__done';
-
-            _this3.EE.emit(eventName, _this3);
-          }
-        }
-      });
+      this.ctx = ctx; // this.img = imageManager.loadImage(this.src, (img, fromCache) => {
+      //   // 来自缓存的，还没返回img就会执行回调函数
+      //   if (fromCache) {
+      //     this.img = img;
+      //     this.render(ctx, box, false);
+      //   } else {
+      //     // 当图片加载完成，实例可能已经被销毁了
+      //     if (this.img) {
+      //       // const eventName = this.isScrollViewChild
+      //       //   ? 'image__render__done'
+      //       //   : 'one__image__render__done';
+      //       // this.EE.emit(eventName, this);
+      //       this.root.emit('repaint');
+      //     }
+      //   }
+      // });
     }
   }]);
 
@@ -4776,7 +5103,7 @@ var Image = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4899,7 +5226,6 @@ var Text = /*#__PURE__*/function (_Element) {
     _this.type = 'Text';
     _this.ctx = null;
     _this.valuesrc = value;
-    _this.renderBoxes = [];
     Object.defineProperty(_assertThisInitialized(_this), 'value', {
       get: function get() {
         return this.valuesrc;
@@ -4929,16 +5255,13 @@ var Text = /*#__PURE__*/function (_Element) {
   }, {
     key: "insert",
     value: function insert(ctx, box) {
-      this.ctx = ctx; // this.renderBoxes.push({ ctx, box });
-
+      this.ctx = ctx;
       this.render(ctx, box);
     }
   }, {
     key: "repaint",
     value: function repaint() {
-      this.render(this.ctx, this.layoutBox); // this.renderBoxes.forEach((item) => {
-      //   this.render(item.ctx, item.box);
-      // });
+      this.render(this.ctx, this.layoutBox);
     }
   }, {
     key: "destroySelf",
@@ -4999,15 +5322,15 @@ var Text = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(19);
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(25);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -5163,12 +5486,8 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "repaint",
     value: function repaint() {
-      var _this2 = this;
-
       this.clear();
-      this.renderBoxes.forEach(function (item) {
-        _this2.render(item.ctx, item.box);
-      });
+      this.render(this.ctx, this.layoutBox);
       this.scrollRender(this.scrollLeft, this.scrollTop);
     }
     /**
@@ -5199,7 +5518,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "renderTreeWithTop",
     value: function renderTreeWithTop(tree, top, left) {
-      var _this3 = this;
+      var _this2 = this;
 
       var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
 
@@ -5208,7 +5527,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
       tree.render(this.ctx, layoutBox);
       tree.children.forEach(function (child) {
-        _this3.renderTreeWithTop(child, top, left);
+        _this2.renderTreeWithTop(child, top, left);
       });
     }
   }, {
@@ -5221,7 +5540,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "scrollRenderHandler",
     value: function scrollRenderHandler() {
-      var _this4 = this;
+      var _this3 = this;
 
       var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -5239,9 +5558,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
       this.clear(); // ScrollView 作为容器本身的渲染
 
-      this.renderBoxes.forEach(function (item) {
-        _this4.render(item.ctx, item.box);
-      });
+      this.render(this.ctx, this.layoutBox);
       /**
        * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的
        * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
@@ -5259,7 +5576,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
         var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
 
         if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
-          _this4.renderTreeWithTop(child, _this4.scrollTop, _this4.scrollLeft);
+          _this3.renderTreeWithTop(child, _this3.scrollTop, _this3.scrollLeft);
         }
       });
       this.ctx.restore(); // this.ctx.drawImage(
@@ -5273,11 +5590,11 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "scrollRender",
     value: function scrollRender(left, top) {
-      var _this5 = this;
+      var _this4 = this;
 
       if (this.sharedTexture) {
         this.requestID = requestAnimationFrame(function () {
-          _this5.scrollRenderHandler(left, top);
+          _this4.scrollRenderHandler(left, top);
         });
       } else {
         this.scrollRenderHandler(left, top);
@@ -5291,14 +5608,10 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "insertScrollView",
     value: function insertScrollView(context) {
-      var _this6 = this;
+      var _this5 = this;
 
       // 绘制容器
-      this.insert(context); // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
-      // this.root.on('repaint__done', () => {
-      //   this.scrollRender(this.scrollLeft, this.scrollTop);
-      // });
-      // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，所以这里不需要重复调用渲染
+      this.insert(context); // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，所以这里不需要重复调用渲染
       // this.scrollRender(0, 0);
 
       if (this.hasEventBind) {
@@ -5307,17 +5620,17 @@ var ScrollView = /*#__PURE__*/function (_View) {
       }
 
       this.hasEventBind = true; // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
+      // this.EE.on('image__render__done', (img) => {
+      //   this.throttleImageLoadDone(img);
+      // });
 
-      this.EE.on('image__render__done', function (img) {
-        _this6.throttleImageLoadDone(img);
-      });
       this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
         // 可能被销毁了或者节点树还没准备好
-        if (!_this6.isDestroyed) {
-          _this6.scrollRender(left, top);
+        if (!_this5.isDestroyed) {
+          _this5.scrollRender(left, top);
 
-          if (_this6.currentEvent) {
-            _this6.emit('scroll', _this6.currentEvent);
+          if (_this5.currentEvent) {
+            _this5.emit('scroll', _this5.currentEvent);
           }
         }
       }, this.scrollerOption);
@@ -5341,9 +5654,9 @@ var ScrollView = /*#__PURE__*/function (_View) {
           }
         });
 
-        _this6.scrollerObj.doTouchStart(touches, e.timeStamp);
+        _this5.scrollerObj.doTouchStart(touches, e.timeStamp);
 
-        _this6.currentEvent = e;
+        _this5.currentEvent = e;
       });
       this.on('touchmove', function (e) {
         if (!e.touches) {
@@ -5360,15 +5673,15 @@ var ScrollView = /*#__PURE__*/function (_View) {
           }
         });
 
-        _this6.scrollerObj.doTouchMove(touches, e.timeStamp);
+        _this5.scrollerObj.doTouchMove(touches, e.timeStamp);
 
-        _this6.currentEvent = e;
+        _this5.currentEvent = e;
       }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
 
       this.root.on('touchend', function (e) {
-        _this6.scrollerObj.doTouchEnd(e.timeStamp);
+        _this5.scrollerObj.doTouchEnd(e.timeStamp);
 
-        _this6.currentEvent = e;
+        _this5.currentEvent = e;
       });
     }
   }, {
@@ -5387,13 +5700,13 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
     if (true) {
         // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(24), __webpack_require__(25)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(26), __webpack_require__(27)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -5405,7 +5718,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -5639,7 +5952,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -5659,7 +5972,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 (function (root, factory) {
     if (true) {
         // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(24)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(26)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -6794,7 +7107,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6861,7 +7174,6 @@ var BitMapText = /*#__PURE__*/function (_Element) {
     _this.type = 'BitMapText';
     _this.ctx = null;
     _this.valuesrc = value;
-    _this.renderBoxes = [];
     Object.defineProperty(_assertThisInitialized(_this), 'value', {
       get: function get() {
         return this.valuesrc;
@@ -6887,15 +7199,12 @@ var BitMapText = /*#__PURE__*/function (_Element) {
   _createClass(BitMapText, [{
     key: "insert",
     value: function insert(ctx, box) {
-      // this.renderBoxes.push({ ctx, box });
       this.render(ctx, box);
     }
   }, {
     key: "repaint",
     value: function repaint() {
-      this.render(this.ctx, this.layoutBox); // this.renderBoxes.forEach((item) => {
-      //   this.render(item.ctx, item.box);
-      // });
+      this.render(this.ctx, this.layoutBox);
     }
   }, {
     key: "destroySelf",
@@ -7026,348 +7335,88 @@ var BitMapText = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DebugInfo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ticker; });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-var DebugInfo = /*#__PURE__*/function () {
-  function DebugInfo() {
-    _classCallCheck(this, DebugInfo);
+var Ticker = /*#__PURE__*/function () {
+  function Ticker() {
+    var _this = this;
 
-    this.reset();
+    _classCallCheck(this, Ticker);
+
+    this.started = false;
+    this.animationId = null;
+    this.cbs = [];
+
+    this.update = function () {
+      _this.cbs.forEach(function (cb) {
+        cb();
+      });
+
+      _this.animationId = requestAnimationFrame(_this.update);
+    };
   }
 
-  _createClass(DebugInfo, [{
+  _createClass(Ticker, [{
+    key: "cancelIfNeed",
+    value: function cancelIfNeed() {
+      if (this.animationId !== null) {
+        cancelAnimationFrame(this.animationId);
+        this.animationId = null;
+      }
+    }
+  }, {
+    key: "add",
+    value: function add(cb) {
+      if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
+        this.cbs.push(cb);
+      }
+    }
+  }, {
+    key: "remove",
+    value: function remove(cb) {
+      if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
+        this.cbs.splice(this.cbs.indexOf(cb), 1);
+      }
+
+      if (!this.cbs.length) {
+        this.cancelIfNeed();
+      }
+    }
+  }, {
     key: "start",
-    value: function start(name) {
-      if (this.totalStart === 0) {
-        this.totalStart = Date.now();
-      }
+    value: function start() {
+      if (!this.started) {
+        this.started = true;
 
-      this.info[name] = {
-        start: Date.now()
-      };
-    }
-  }, {
-    key: "end",
-    value: function end(name) {
-      if (this.info[name]) {
-        this.info[name].end = Date.now();
-        this.info[name].cost = this.info[name].end - this.info[name].start;
-        this.totalCost = this.info[name].end - this.totalStart;
+        if (this.animationId === null && this.cbs.length) {
+          this.animationId = requestAnimationFrame(this.update);
+        }
       }
     }
   }, {
-    key: "reset",
-    value: function reset() {
-      this.info = {};
-      this.totalStart = 0;
-      this.totalCost = 0;
-    }
-  }, {
-    key: "log",
-    value: function log() {
-      var _this = this;
-
-      var logInfo = 'Layout debug info: \n';
-      logInfo += Object.keys(this.info).reduce(function (sum, curr) {
-        // eslint-disable-next-line no-param-reassign
-        sum += "".concat(curr, ": ").concat(_this.info[curr].cost, "\n");
-        return sum;
-      }, ''); // eslint-disable-next-line no-unused-vars
-
-      logInfo += "totalCost: ".concat(this.totalCost);
-      return logInfo;
+    key: "stop",
+    value: function stop() {
+      if (this.started) {
+        this.started = false;
+        this.cancelIfNeed();
+      }
     }
   }]);
 
-  return DebugInfo;
+  return Ticker;
 }();
 
 
-
-/***/ }),
-/* 28 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderChildren", function() { return renderChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layoutChildren", function() { return layoutChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateRealLayout", function() { return updateRealLayout; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "iterateTree", function() { return iterateTree; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsById", function() { return getElementsById; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsByClassName", function() { return getElementsByClassName; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintChildren", function() { return repaintChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
-// components
-
-var constructorMap = {
-  view: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["View"],
-  text: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Text"],
-  image: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"],
-  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["ScrollView"],
-  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["BitMapText"]
-};
-
-function isPercent(data) {
-  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
-}
-
-function convertPercent(data, parentData) {
-  if (typeof data === 'number') {
-    return data;
-  }
-
-  var matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
-
-  if (matchData) {
-    return parentData * matchData * 0.01;
-  }
-}
-
-function create(node, style, parent) {
-  var _this = this;
-
-  var Constructor = constructorMap[node.name];
-  var children = node.children || [];
-  var attr = node.attr || {};
-  var dataset = {};
-  var id = attr.id || '';
-  var args = Object.keys(attr).reduce(function (obj, key) {
-    var value = attr[key];
-    var attribute = key;
-
-    if (key === 'id') {
-      obj.style = Object.assign(obj.style || {}, style[id] || {});
-      return obj;
-    }
-
-    if (key === 'class') {
-      obj.style = value.split(/\s+/).reduce(function (res, oneClass) {
-        return Object.assign(res, style[oneClass]);
-      }, obj.style || {});
-      return obj;
-    } // if (/\{\{.+\}\}/.test(value)) {
-    // }
-
-
-    if (value === 'true') {
-      obj[attribute] = true;
-    } else if (value === 'false') {
-      obj[attribute] = false;
-    } else {
-      obj[attribute] = value;
-    }
-
-    if (attribute.startsWith('data-')) {
-      var dataKey = attribute.substring(5);
-      dataset[dataKey] = value;
-    }
-
-    obj.dataset = dataset;
-    return obj;
-  }, {}); // 用于后续元素查询
-
-  args.idName = id;
-  args.className = attr["class"] || '';
-  var thisStyle = args.style;
-
-  if (thisStyle) {
-    var parentStyle;
-
-    if (parent) {
-      parentStyle = parent.style;
-    } else if (typeof sharedCanvas !== 'undefined') {
-      parentStyle = sharedCanvas;
-    } else if (typeof __env !== 'undefined') {
-      parentStyle = __env.getSharedCanvas();
-    } else {
-      parentStyle = {
-        width: 300,
-        height: 150
-      };
-    }
-
-    if (isPercent(thisStyle.width)) {
-      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
-    }
-
-    if (isPercent(thisStyle.height)) {
-      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
-    }
-  }
-
-  var element = new Constructor(args);
-  element.root = this;
-  children.forEach(function (childNode) {
-    var childElement = create.call(_this, childNode, style, args);
-    element.add(childElement);
-  });
-  return element;
-}
-function renderChildren(children, context) {
-  children.forEach(function (child) {
-    child.shouldUpdate = false;
-    child.isDirty = false;
-
-    if (child.type === 'ScrollView') {
-      // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-      child.insertScrollView(context);
-    } else {
-      child.insert(context);
-      return renderChildren(child.children, context);
-    }
-  });
-}
-/**
- * 将布局树的布局信息加工赋值到渲染树
- */
-
-function layoutChildren(element) {
-  var _this2 = this;
-
-  element.children.forEach(function (child) {
-    child.layoutBox = child.layoutBox || {};
-    ['left', 'top', 'width', 'height'].forEach(function (prop) {
-      child.layoutBox[prop] = child.layout[prop];
-    });
-
-    if (child.parent) {
-      child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
-      child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
-    } else {
-      child.layoutBox.absoluteX = child.layoutBox.left;
-      child.layoutBox.absoluteY = child.layoutBox.top;
-    }
-
-    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
-    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX; // 滚动列表的画板尺寸和主画板保持一致
-
-    if (child.type === 'ScrollView') {
-      child.updateRenderPort(_this2.renderport);
-    }
-
-    layoutChildren.call(_this2, child);
-  });
-}
-function updateRealLayout(element, scale) {
-  element.children.forEach(function (child) {
-    child.realLayoutBox = child.realLayoutBox || {};
-    ['left', 'top', 'width', 'height'].forEach(function (prop) {
-      child.realLayoutBox[prop] = child.layout[prop] * scale;
-    });
-
-    if (child.parent) {
-      // Scrollview支持横向滚动和纵向滚动，realX和realY需要动态计算
-      Object.defineProperty(child.realLayoutBox, 'realX', {
-        configurable: true,
-        enumerable: true,
-        get: function get() {
-          var res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
-          /**
-           * 滚动列表事件处理
-           */
-
-          if (child.parent && child.parent.type === 'ScrollView') {
-            res -= child.parent.scrollLeft * scale;
-          }
-
-          return res;
-        }
-      });
-      Object.defineProperty(child.realLayoutBox, 'realY', {
-        configurable: true,
-        enumerable: true,
-        get: function get() {
-          var res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
-          /**
-           * 滚动列表事件处理
-           */
-
-          if (child.parent && child.parent.type === 'ScrollView') {
-            res -= child.parent.scrollTop * scale;
-          }
-
-          return res;
-        }
-      });
-    } else {
-      child.realLayoutBox.realX = child.realLayoutBox.left;
-      child.realLayoutBox.realY = child.realLayoutBox.top;
-    }
-
-    updateRealLayout(child, scale);
-  });
-}
-
-function none() {}
-
-function iterateTree(element) {
-  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : none;
-  callback(element);
-  element.children.forEach(function (child) {
-    iterateTree(child, callback);
-  });
-}
-function getElementsById(tree) {
-  var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-  var id = arguments.length > 2 ? arguments[2] : undefined;
-  Object.keys(tree.children).forEach(function (key) {
-    var child = tree.children[key];
-
-    if (child.idName === id) {
-      list.push(child);
-    }
-
-    if (Object.keys(child.children).length) {
-      getElementsById(child, list, id);
-    }
-  });
-  return list;
-}
-function getElementsByClassName(tree) {
-  var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-  var className = arguments.length > 2 ? arguments[2] : undefined;
-  Object.keys(tree.children).forEach(function (key) {
-    var child = tree.children[key];
-
-    if (child.className.split(/\s+/).indexOf(className) > -1) {
-      list.push(child);
-    }
-
-    if (Object.keys(child.children).length) {
-      getElementsByClassName(child, list, className);
-    }
-  });
-  return list;
-}
-var repaintChildren = function repaintChildren(children) {
-  children.forEach(function (child) {
-    child.repaint();
-
-    if (child.type !== 'ScrollView') {
-      repaintChildren(child.children);
-    }
-  });
-};
-var repaintTree = function repaintTree(tree) {
-  tree.repaint();
-  tree.children.forEach(function (child) {
-    child.repaint();
-    repaintTree(child);
-  });
-};
 
 /***/ })
 /******/ ]);
