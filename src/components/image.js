@@ -40,7 +40,6 @@ export default class Image extends Element {
     });
 
     this.type = 'Image';
-    this.renderBoxes = [];
 
     this.img = imageManager.loadImage(this.src, (img, fromCache) => {
       if (fromCache) {
@@ -70,10 +69,6 @@ export default class Image extends Element {
 
   repaint() {
     this.render(this.ctx, this.layoutBox);
-
-    // this.renderBoxes.forEach((item) => {
-    //   this.render(item.ctx, item.box, false);
-    // });
   }
 
   // 子类填充实现
@@ -126,7 +121,6 @@ export default class Image extends Element {
 
   insert(ctx, box) {
     this.ctx = ctx;
-    // this.renderBoxes.push({ ctx, box });
 
     this.img = imageManager.loadImage(this.src, (img, fromCache) => {
       // 来自缓存的，还没返回img就会执行回调函数

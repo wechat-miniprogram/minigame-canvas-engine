@@ -18,7 +18,6 @@ export default class View extends Element {
 
     this.type = 'View';
     this.ctx  = null;
-    this.renderBoxes = [];
   }
 
   destroySelf() {
@@ -86,17 +85,11 @@ export default class View extends Element {
       box = this.layoutBox;
     }
 
-    // this.renderBoxes.push({ ctx, box });
-
     this.render(ctx, box);
   }
 
   repaint() {
     this.render(this.ctx, this.layoutBox);
-
-    // this.renderBoxes.forEach((item) => {
-    //   this.render(item.ctx, item.box);
-    // });
   }
 }
 

@@ -162,10 +162,6 @@ export default class Element {
     this.layoutBox = null;
     this.props = null;
     this.style = null;
-
-    if (this.renderBoxes) {
-      this.renderBoxes = null;
-    }
   }
 
   add(element) {

@@ -25,7 +25,6 @@ export default class BitMapText extends Element {
     this.type = 'BitMapText';
     this.ctx  = null;
     this.valuesrc = value;
-    this.renderBoxes = [];
 
     Object.defineProperty(this, 'value', {
       get() {
@@ -49,17 +48,11 @@ export default class BitMapText extends Element {
   }
 
   insert(ctx, box) {
-    // this.renderBoxes.push({ ctx, box });
-
     this.render(ctx, box);
   }
 
   repaint() {
     this.render(this.ctx, this.layoutBox);
-
-    // this.renderBoxes.forEach((item) => {
-    //   this.render(item.ctx, item.box);
-    // });
   }
 
   destroySelf() {

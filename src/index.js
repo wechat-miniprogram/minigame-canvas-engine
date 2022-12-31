@@ -22,7 +22,7 @@ import {
 // 全局事件管道
 export const EE = new Emitter();
 const imgPool = new Pool('imgPool');
-const debugInfo = new DebugInfo()
+const debugInfo = new DebugInfo();
 
 class _Layout extends Element {
   constructor({ style, name } = {}) {
@@ -117,10 +117,10 @@ class _Layout extends Element {
 
   reflow() {
     /**
- * 计算布局树
- * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
- * Layout本身并不作为布局计算，只是作为节点树的容器
- */
+     * 计算布局树
+     * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
+     * Layout本身并不作为布局计算，只是作为节点树的容器
+     */
     debugInfo.start('computeLayout');
     computeLayout(this.children[0]);
     debugInfo.end('computeLayout');
@@ -179,25 +179,6 @@ class _Layout extends Element {
     this.bindEvents();
 
     this.state = STATE.RENDERED;
-
-    // console.log('-----------------')
-
-    // const listItem = this.getElementsByClassName('listHeadImg')[0];
-    // listItem.style.height = 300;
-    // listItem.isDirty = true;
-    // let parent = listItem.parent;
-    // while (parent) {
-    //   parent.isDirty = true;
-
-    //   parent = parent.parent;
-    // }
-
-    // let start = new Date();
-    // computeLayout(this.children[0]);
-    // console.log(new Date() - start)
-    // iterateTree(this.children[0], (ele) => {
-    //   // console.log(ele.id, ele.className, ele.shouldUpdate, ele.renderBoxes.length);
-    // });
   }
 
   initRepaint() {

@@ -90,8 +90,6 @@ export default class Text extends Element {
     this.ctx = null;
     this.valuesrc = value;
 
-    this.renderBoxes = [];
-
     Object.defineProperty(this, 'value', {
       get() {
         return this.valuesrc;
@@ -120,17 +118,12 @@ export default class Text extends Element {
 
   insert(ctx, box) {
     this.ctx = ctx;
-    // this.renderBoxes.push({ ctx, box });
 
     this.render(ctx, box);
   }
 
   repaint() {
     this.render(this.ctx, this.layoutBox);
-
-    // this.renderBoxes.forEach((item) => {
-    //   this.render(item.ctx, item.box);
-    // });
   }
 
   destroySelf() {
