@@ -122,14 +122,14 @@ export default class Element {
       });
     });
 
-    this.initRepaint();
+    // this.initRepaint();
   }
 
-  initRepaint() {
-    this.on('repaint', (e) => {
-      this.parent && this.parent.emit('repaint', e);
-    });
-  }
+  // initRepaint() {
+  //   this.on('repaint', (e) => {
+  //     this.parent && this.parent.emit('repaint', e);
+  //   });
+  // }
 
   // 子类填充实现
   repaint() { }
@@ -149,7 +149,7 @@ export default class Element {
     ].forEach((eventName) => {
       this.off(eventName);
     });
-    this.EE.off('image__render__done');
+    // this.EE.off('image__render__done');
 
     this.isDestroyed = true;
     this.EE = null;

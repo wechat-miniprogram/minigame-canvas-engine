@@ -53,8 +53,14 @@ class _Layout extends Element {
     this.state = STATE.UNINIT;
 
     this.bitMapFonts = [];
+
+    this.on('repaint', (info) => {
+      // console.log('request repaint', info);
+      this.repaint();
+    });
   }
 
+  // 与老版本兼容
   get debugInfo() {
     return debugInfo.log();
   }
@@ -186,9 +192,9 @@ class _Layout extends Element {
       this.repaint();
     });
 
-    this.EE.on('one__image__render__done', () => {
-      this.repaint();
-    });
+    // this.EE.on('one__image__render__done', () => {
+    //   this.repaint();
+    // });
   }
 
   repaint() {
@@ -320,7 +326,7 @@ class _Layout extends Element {
     this.state = STATE.CLEAR;
     this.clearCanvas();
 
-    this.EE.off('image__render__done');
+    // this.EE.off('image__render__done');
   }
 
   clearPool() {

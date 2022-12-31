@@ -46,9 +46,7 @@ export default class Image extends Element {
         this.img = img;
       } else {
         // 当图片加载完成，实例可能已经被销毁了
-        if (this.img && this.isScrollViewChild) {
-          this.EE.emit('image__render__done', this);
-        }
+        this.root.emit('repaint', this.className);
       }
     });
   }
@@ -121,21 +119,21 @@ export default class Image extends Element {
 
   insert(ctx, box) {
     this.ctx = ctx;
-
-    this.img = imageManager.loadImage(this.src, (img, fromCache) => {
-      // 来自缓存的，还没返回img就会执行回调函数
-      if (fromCache) {
-        this.img = img;
-        this.render(ctx, box, false);
-      } else {
-        // 当图片加载完成，实例可能已经被销毁了
-        if (this.img) {
-          const eventName = this.isScrollViewChild
-            ? 'image__render__done'
-            : 'one__image__render__done';
-          this.EE.emit(eventName, this);
-        }
-      }
-    });
+    // this.img = imageManager.loadImage(this.src, (img, fromCache) => {
+    //   // 来自缓存的，还没返回img就会执行回调函数
+    //   if (fromCache) {
+    //     this.img = img;
+    //     this.render(ctx, box, false);
+    //   } else {
+    //     // 当图片加载完成，实例可能已经被销毁了
+    //     if (this.img) {
+    //       // const eventName = this.isScrollViewChild
+    //       //   ? 'image__render__done'
+    //       //   : 'one__image__render__done';
+    //       // this.EE.emit(eventName, this);
+    //       this.root.emit('repaint');
+    //     }
+    //   }
+    // });
   }
 }

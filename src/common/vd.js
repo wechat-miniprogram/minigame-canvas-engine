@@ -114,7 +114,9 @@ export function create(node, style, parent) {
 
 export function renderChildren(children, context) {
   children.forEach((child) => {
+    // eslint-disable-next-line no-param-reassign
     child.shouldUpdate = false;
+    // eslint-disable-next-line no-param-reassign
     child.isDirty = false;
     if (child.type === 'ScrollView') {
       // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView

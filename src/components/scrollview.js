@@ -249,11 +249,6 @@ export default class ScrollView extends View {
     // 绘制容器
     this.insert(context);
 
-    // Layout提供了repaint API，会抛出repaint__done事件，scrollview执行相应的repaint逻辑
-    // this.root.on('repaint__done', () => {
-    //   this.scrollRender(this.scrollLeft, this.scrollTop);
-    // });
-
     // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，所以这里不需要重复调用渲染
     // this.scrollRender(0, 0);
 
@@ -265,9 +260,9 @@ export default class ScrollView extends View {
     this.hasEventBind = true;
 
     // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-    this.EE.on('image__render__done', (img) => {
-      this.throttleImageLoadDone(img);
-    });
+    // this.EE.on('image__render__done', (img) => {
+    //   this.throttleImageLoadDone(img);
+    // });
 
     this.scrollerObj = new Scroller((left, top) => {
       // 可能被销毁了或者节点树还没准备好
