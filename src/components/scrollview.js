@@ -1,5 +1,6 @@
+/* eslint-disable no-param-reassign */
 import View from './view.js';
-import { throttle, getDpr } from '../common/util.js';
+import { getDpr } from '../common/util.js';
 import { Scroller } from 'scroller';
 
 const dpr = getDpr();
@@ -40,20 +41,12 @@ export default class ScrollView extends View {
     this.hasEventBind = false;
     this.currentEvent = null;
 
-    // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
-    this.throttleImageLoadDone = throttle(this.childImageLoadDoneCbk, 16, this);
-
-    this.scrollCanvas = null;
-    this.scrollCtx = null;
-
     this.requestID = null;
 
     this.innerScrollerOption = {
       scrollingX: scrollX,
       scrollingY: scrollY,
     };
-
-    this.sharedTexture = false;
   }
 
   /**
@@ -126,15 +119,9 @@ export default class ScrollView extends View {
     this.touch = null;
     this.isDestroyed = true;
 
-    this.root.off('repaint__done');
     this.ctx = null;
     this.children = null;
     this.root = null;
-
-    this.scrollCanvas = null;
-    this.scrollCtx = null;
-
-    this.requestID && cancelAnimationFrame(this.requestID);
   }
 
   renderTreeWithTop(tree, top, left) {
@@ -143,7 +130,6 @@ export default class ScrollView extends View {
     layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
     layoutBox.absoluteX = layoutBox.originalAbsoluteX - left;
 
-    // tree.render(this.scrollCtx, layoutBox);
     tree.render(this.ctx, layoutBox);
 
     tree.children.forEach((child) => {
@@ -156,7 +142,7 @@ export default class ScrollView extends View {
     this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
   }
 
-  scrollRenderHandler(left = 0, top = 0) {
+  scrollRender(left = 0, top = 0) {
     const box = this.layoutBox;
     this.scrollTop = top;
     this.scrollLeft = left;
@@ -183,7 +169,7 @@ export default class ScrollView extends View {
      */
     this.ctx.save();
     this.ctx.beginPath();
-    this.ctx.rect(this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
+    this.ctx.rect(abX, abY, box.width, box.height);
     this.ctx.clip();
 
     this.children.forEach((child) => {
@@ -201,20 +187,6 @@ export default class ScrollView extends View {
     });
 
     this.ctx.restore();
-  }
-
-  scrollRender(left, top) {
-    if (this.sharedTexture) {
-      this.requestID = requestAnimationFrame(() => {
-        this.scrollRenderHandler(left, top);
-      });
-    } else {
-      this.scrollRenderHandler(left, top);
-    }
-  }
-
-  childImageLoadDoneCbk() {
-    this.scrollRender(this.scrollLeft, this.scrollTop);
   }
 
   insertScrollView(context) {
@@ -242,15 +214,12 @@ export default class ScrollView extends View {
     // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，调用渲染
     this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
-    /* this.scrollActive = true; */
     this.on('touchstart', (e) => {
-      // this.scrollActive = true;
       if (!e.touches) {
         e.touches = [e];
       }
 
       const touches = copyTouchArray(e.touches);
-      /* const touches = e.touches;*/
 
       touches.forEach((touch) => {
         if (dpr !== 1) {
@@ -268,7 +237,6 @@ export default class ScrollView extends View {
       }
 
       const touches = copyTouchArray(e.touches);
-      /* const touches = e.touches;*/
 
       touches.forEach((touch) => {
         if (dpr !== 1) {

@@ -1,26 +1,3 @@
-export function throttle(fn, threshhold, scope) {
-  threshhold || (threshhold = 250);
-  let last;
-  let deferTimer;
-  return function () {
-    const context = scope || this;
-
-    const now = +new Date;
-    const args = arguments;
-    if (last && now < last + threshhold) {
-      // hold on to it
-      clearTimeout(deferTimer);
-      deferTimer = setTimeout(() => {
-        last = now;
-        fn.apply(context, args);
-      }, threshhold);
-    } else {
-      last = now;
-      fn.apply(context, args);
-    }
-  };
-}
-
 /* istanbul ignore next */
 export function none() {}
 
@@ -104,3 +81,7 @@ export const STATE = {
   RENDERED: 'RENDERED',
   CLEAR: 'CLEAR',
 };
+
+export function clearCanvas(ctx) {
+  ctx && ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}

@@ -78,14 +78,10 @@ export default class View extends Element {
     ctx.restore();
   }
 
-  insert(ctx, box) {
+  insert(ctx) {
     this.ctx = ctx;
 
-    if (!box) {
-      box = this.layoutBox;
-    }
-
-    this.render(ctx, box);
+    this.render(ctx, this.layoutBox);
   }
 
   repaint() {

@@ -3,7 +3,7 @@ import Element from './components/elements.js';
 import Pool from './common/pool.js';
 import Emitter from 'tiny-emitter';
 import computeLayout from 'css-layout';
-import { isClick, STATE, createImage } from './common/util.js';
+import { isClick, STATE, createImage, clearCanvas } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 import TWEEN from '@tweenjs/tween.js';
@@ -179,7 +179,7 @@ class _Layout extends Element {
     updateRealLayout(this, this.viewport.width / this.renderport.width);
     debugInfo.end('updateRealLayout');
 
-    this.clearCanvas();
+    clearCanvas(this.renderContext);
 
     // 遍历节点树，依次调用节点的渲染接口实现渲染
     debugInfo.start('renderChildren');
@@ -218,7 +218,7 @@ class _Layout extends Element {
   }
 
   repaint() {
-    this.clearCanvas();
+    clearCanvas(this.renderContext);
 
     this.isNeedRepaint = false;
     repaintChildren(this.children);
@@ -238,7 +238,7 @@ class _Layout extends Element {
       if ((box.realX <= x && x <= box.realX + box.width)
         && (box.realY <= y && y <= box.realY + box.height)) {
         itemList.push(child);
-        if (Object.keys(child.children).length) {
+        if (child.children.length) {
           this.getChildByPos(child, x, y, itemList);
         }
       }
@@ -332,20 +332,13 @@ class _Layout extends Element {
     });
   }
 
-  // 清理画布
-  clearCanvas() {
-    if (this.renderContext) {
-      this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
-    }
-  }
-
   clear() {
     this.destroyAll(this);
     this.elementTree = null;
     this.children = [];
     this.layoutTree = {};
     this.state = STATE.CLEAR;
-    this.clearCanvas();
+    clearCanvas(this.renderContext);
   }
 
   clearPool() {
