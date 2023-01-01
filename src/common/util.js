@@ -85,3 +85,13 @@ export const STATE = {
 export function clearCanvas(ctx) {
   ctx && ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
+
+export function copyTouchArray(touches) {
+  return touches.map(touch => ({
+    identifier: touch.identifier,
+    pageX: touch.pageX,
+    pageY: touch.pageY,
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+  }));
+}

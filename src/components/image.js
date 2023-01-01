@@ -51,20 +51,6 @@ export default class Image extends Element {
     });
   }
 
-  get isScrollViewChild() {
-    let flag = false;
-    let { parent } = this;
-    while (parent && !flag) {
-      if (parent.type === 'ScrollView') {
-        flag = true;
-      } else {
-        parent = parent.parent;
-      }
-    }
-
-    return flag;
-  }
-
   repaint() {
     this.render(this.ctx, this.layoutBox);
   }

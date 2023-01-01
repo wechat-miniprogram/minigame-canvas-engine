@@ -1,19 +1,10 @@
 /* eslint-disable no-param-reassign */
 import View from './view.js';
-import { getDpr } from '../common/util.js';
+import { getDpr, copyTouchArray } from '../common/util.js';
 import { Scroller } from 'scroller';
+import { iterateTree  } from '../common/vd.js';
 
 const dpr = getDpr();
-
-function copyTouchArray(touches) {
-  return touches.map(touch => ({
-    identifier: touch.identifier,
-    pageX: touch.pageX,
-    pageY: touch.pageY,
-    clientX: touch.clientX,
-    clientY: touch.clientY,
-  }));
-}
 
 export default class ScrollView extends View {
   constructor({
@@ -126,9 +117,6 @@ export default class ScrollView extends View {
 
   renderTreeWithTop(tree, top, left) {
     const { layoutBox } = tree;
-    // 计算实际渲染的Y轴位置
-    layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
-    layoutBox.absoluteX = layoutBox.originalAbsoluteX - left;
 
     tree.render(this.ctx, layoutBox);
 
@@ -179,7 +167,7 @@ export default class ScrollView extends View {
       const originY = layoutBox.originalAbsoluteY;
       const originX = layoutBox.originalAbsoluteX;
 
-      // 判断处于可视窗口内的子节点，渲染该子节点
+      // 判断处于可视窗口内的子节点，递归渲染该子节点
       if (originY + height >= startY && originY <= endY
         && originX + width >= startX && originX <= endX) {
         this.renderTreeWithTop(child, this.scrollTop, this.scrollLeft);
@@ -204,6 +192,12 @@ export default class ScrollView extends View {
     this.scrollerObj = new Scroller((left, top) => {
       // 可能被销毁了或者节点树还没准备好
       if (!this.isDestroyed) {
+        iterateTree(this, (ele) => {
+          if (ele !== this) {
+            ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
+            ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;  
+          }
+        });
         this.scrollRender(left, top);
         if (this.currentEvent) {
           this.emit('scroll', this.currentEvent);
