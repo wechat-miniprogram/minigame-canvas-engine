@@ -1,5 +1,6 @@
 export default class Ticker {
   constructor() {
+    this.count = 0;
     this.started = false;
     this.animationId = null;
 
@@ -9,6 +10,8 @@ export default class Ticker {
       this.cbs.forEach((cb) => {
         cb();
       });
+
+      this.count += 1;
       this.animationId = requestAnimationFrame(this.update);
     };
   }

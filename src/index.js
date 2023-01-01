@@ -41,7 +41,7 @@ class _Layout extends Element {
     this.touchEnd = this.eventHandler('touchend').bind(this);
     this.touchCancel = this.eventHandler('touchcancel').bind(this);
 
-    this.version = '0.0.7';
+    this.version = '1.0.0';
 
     this.touchMsg = {};
 
@@ -55,13 +55,25 @@ class _Layout extends Element {
 
     this.bitMapFonts = [];
 
-    this.on('repaint', (info) => {
-      // console.log('request repaint', info);
+    /**
+     * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
+     * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
+     * 而是执行一个置脏操作，ticker 每一次执行 update 会检查这个标记位，进而执行真正的重绘操作
+     */
+    this.isNeedRepaint = false;
+
+    this.on('repaint', () => {
       this.isNeedRepaint = true;
     });
 
-    this.isNeedRepaint = false;
     this.ticker = new Ticker();
+
+    /**
+     * 将 Tween 挂载到 Layout，对于 Tween 的使用完全遵循 Tween.js 的文档
+     * https://github.com/tweenjs/tween.js/
+     * 只不过当 Tween 改动了节点会触发 repaint、reflow 的属性时，Layout 会执行相应的操作
+     * 业务侧不用感知到 repaint 和 reflow
+     */
     this.TWEEN = TWEEN;
 
     const tickerFunc = () => {

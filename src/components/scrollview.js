@@ -1,13 +1,8 @@
 import View from './view.js';
-import {
-  throttle,
-  getDpr,
-  createCanvas,
-} from '../common/util.js';
+import { throttle, getDpr } from '../common/util.js';
+import { Scroller } from 'scroller';
 
-import {
-  Scroller,
-} from 'scroller';
+const dpr = getDpr();
 
 function copyTouchArray(touches) {
   return touches.map(touch => ({
@@ -127,19 +122,6 @@ export default class ScrollView extends View {
     this.scrollRender(this.scrollLeft, this.scrollTop);
   }
 
-  /**
-   * 与主canvas的尺寸保持一致
-   */
-  updateRenderPort(renderport) {
-    // this.renderport = renderport;
-
-    // this.scrollCanvas = createCanvas();
-    // this.scrollCtx = this.scrollCanvas.getContext('2d');
-
-    // this.scrollCanvas.width = this.renderport.width;
-    // this.scrollCanvas.height = this.renderport.height;
-  }
-
   destroySelf() {
     this.touch = null;
     this.isDestroyed = true;
@@ -171,9 +153,7 @@ export default class ScrollView extends View {
 
   clear() {
     const box = this.layoutBox;
-    // this.root.clearCanvas();
     this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
-    // this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
   }
 
   scrollRenderHandler(left = 0, top = 0) {
@@ -221,14 +201,6 @@ export default class ScrollView extends View {
     });
 
     this.ctx.restore();
-
-    // this.ctx.drawImage(
-    //   this.scrollCanvas,
-    //   box.absoluteX, box.absoluteY,
-    //   box.width, box.height,
-    //   box.absoluteX, box.absoluteY,
-    //   box.width, box.height,
-    // );
   }
 
   scrollRender(left, top) {
@@ -249,20 +221,13 @@ export default class ScrollView extends View {
     // 绘制容器
     this.insert(context);
 
-    // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，所以这里不需要重复调用渲染
-    // this.scrollRender(0, 0);
-
     if (this.hasEventBind) {
+      // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域
       this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
       return;
     }
 
     this.hasEventBind = true;
-
-    // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-    // this.EE.on('image__render__done', (img) => {
-    //   this.throttleImageLoadDone(img);
-    // });
 
     this.scrollerObj = new Scroller((left, top) => {
       // 可能被销毁了或者节点树还没准备好
@@ -274,9 +239,9 @@ export default class ScrollView extends View {
       }
     }, this.scrollerOption);
 
+    // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，调用渲染
     this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
-    const dpr = getDpr();
     /* this.scrollActive = true; */
     this.on('touchstart', (e) => {
       // this.scrollActive = true;

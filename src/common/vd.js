@@ -1,7 +1,6 @@
+/* eslint-disable no-param-reassign */
 // components
-import {
-  View, Text, Image, ScrollView, BitMapText,
-} from '../components/index.js';
+import { View, Text, Image, ScrollView, BitMapText } from '../components/index.js';
 
 const constructorMap = {
   view: View,
@@ -114,9 +113,7 @@ export function create(node, style, parent) {
 
 export function renderChildren(children, context) {
   children.forEach((child) => {
-    // eslint-disable-next-line no-param-reassign
     child.shouldUpdate = false;
-    // eslint-disable-next-line no-param-reassign
     child.isDirty = false;
     if (child.type === 'ScrollView') {
       // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
@@ -151,10 +148,6 @@ export function layoutChildren(element) {
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
     child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
 
-    // 滚动列表的画板尺寸和主画板保持一致
-    if (child.type === 'ScrollView') {
-      child.updateRenderPort(this.renderport);
-    }
 
     layoutChildren.call(this, child);
   });

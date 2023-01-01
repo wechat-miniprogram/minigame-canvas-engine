@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { scalableStyles, layoutAffectedStyles } from './style.js';
 
 const Emitter = require('tiny-emitter');
@@ -76,7 +77,6 @@ export default class Element {
       && style.color
       && style.color.indexOf('#') > -1
     ) {
-      // eslint-disable-next-line no-param-reassign
       style.color = getRgba(style.color, style.opacity);
     }
 
@@ -85,8 +85,14 @@ export default class Element {
       && style.backgroundColor
       && style.backgroundColor.indexOf('#') > -1
     ) {
-      // eslint-disable-next-line no-param-reassign
       style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
+    }
+
+    if (typeof style.left === 'undefined') {
+      style.left = 0;
+    }
+    if (typeof style.top === 'undefined') {
+      style.top = 0;
     }
 
     Object.keys(style).forEach((key) => {
@@ -110,6 +116,8 @@ export default class Element {
               parent.isDirty = true;
               parent = parent.parent;
             }
+          } else {
+            this.root.emit('repaint');
           }
         },
       });
@@ -121,15 +129,7 @@ export default class Element {
         this.parent && this.parent.emit(eventName, e, touchMsg);
       });
     });
-
-    // this.initRepaint();
   }
-
-  // initRepaint() {
-  //   this.on('repaint', (e) => {
-  //     this.parent && this.parent.emit('repaint', e);
-  //   });
-  // }
 
   // 子类填充实现
   repaint() { }
@@ -149,11 +149,9 @@ export default class Element {
     ].forEach((eventName) => {
       this.off(eventName);
     });
-    // this.EE.off('image__render__done');
 
     this.isDestroyed = true;
     this.EE = null;
-    /* this.root          = null;*/
     this.parent = null;
     this.ctx = null;
     this.realLayoutBox = null;
@@ -165,9 +163,7 @@ export default class Element {
   }
 
   add(element) {
-    // eslint-disable-next-line no-param-reassign
     element.parent = this;
-    // eslint-disable-next-line no-param-reassign
     element.parentId = this.id;
 
     this.children.push(element);
