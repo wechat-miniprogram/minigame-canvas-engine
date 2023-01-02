@@ -106,8 +106,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(14);
 /* harmony import */ var _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(16);
 /* harmony import */ var _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(18);
-/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(29);
-/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(19);
+/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(19);
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(20);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -175,7 +175,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
     _this.touchMove = _this.eventHandler('touchmove').bind(_assertThisInitialized(_this));
     _this.touchEnd = _this.eventHandler('touchend').bind(_assertThisInitialized(_this));
     _this.touchCancel = _this.eventHandler('touchcancel').bind(_assertThisInitialized(_this));
-    _this.version = '0.0.7';
+    _this.version = '1.0.0';
     _this.touchMsg = {};
     _this.hasViewPortSet = false;
     _this.realLayoutBox = {
@@ -184,14 +184,26 @@ var _Layout = /*#__PURE__*/function (_Element) {
     };
     _this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].UNINIT;
     _this.bitMapFonts = [];
+    /**
+     * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
+     * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
+     * 而是执行一个置脏操作，ticker 每一次执行 update 会检查这个标记位，进而执行真正的重绘操作
+     */
 
-    _this.on('repaint', function (info) {
-      // console.log('request repaint', info);
+    _this.isNeedRepaint = false;
+
+    _this.on('repaint', function () {
       _this.isNeedRepaint = true;
     });
 
-    _this.isNeedRepaint = false;
     _this.ticker = new _common_ticker__WEBPACK_IMPORTED_MODULE_10__["default"]();
+    /**
+     * 将 Tween 挂载到 Layout，对于 Tween 的使用完全遵循 Tween.js 的文档
+     * https://github.com/tweenjs/tween.js/
+     * 只不过当 Tween 改动了节点会触发 repaint、reflow 的属性时，Layout 会执行相应的操作
+     * 业务侧不用感知到 repaint 和 reflow
+     */
+
     _this.TWEEN = _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"];
 
     var tickerFunc = function tickerFunc() {
@@ -299,7 +311,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       debugInfo.start('updateRealLayout');
       Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["updateRealLayout"])(this, this.viewport.width / this.renderport.width);
       debugInfo.end('updateRealLayout');
-      this.clearCanvas(); // 遍历节点树，依次调用节点的渲染接口实现渲染
+      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext); // 遍历节点树，依次调用节点的渲染接口实现渲染
 
       debugInfo.start('renderChildren');
       Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["renderChildren"])(this.children, this.renderContext);
@@ -338,7 +350,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "repaint",
     value: function repaint() {
-      this.clearCanvas();
+      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
       this.isNeedRepaint = false;
       Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["repaintChildren"])(this.children);
     }
@@ -359,7 +371,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
         if (box.realX <= x && x <= box.realX + box.width && box.realY <= y && y <= box.realY + box.height) {
           itemList.push(child);
 
-          if (Object.keys(child.children).length) {
+          if (child.children.length) {
             this.getChildByPos(child, x, y, itemList);
           }
         }
@@ -468,14 +480,6 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
         child.destroySelf && child.destroySelf();
       });
-    } // 清理画布
-
-  }, {
-    key: "clearCanvas",
-    value: function clearCanvas() {
-      if (this.renderContext) {
-        this.renderContext.clearRect(0, 0, this.renderContext.canvas.width, this.renderContext.canvas.height);
-      }
     }
   }, {
     key: "clear",
@@ -485,7 +489,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.children = [];
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
-      this.clearCanvas();
+      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
     }
   }, {
     key: "clearPool",
@@ -555,6 +559,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
+/* eslint-disable no-param-reassign */
 
 
 var Emitter = __webpack_require__(4); // 全局事件管道
@@ -629,13 +634,19 @@ var Element = /*#__PURE__*/function () {
     this.dataset = dataset;
 
     if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
-      // eslint-disable-next-line no-param-reassign
       style.color = getRgba(style.color, style.opacity);
     }
 
     if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf('#') > -1) {
-      // eslint-disable-next-line no-param-reassign
       style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
+    }
+
+    if (typeof style.left === 'undefined') {
+      style.left = 0;
+    }
+
+    if (typeof style.top === 'undefined') {
+      style.top = 0;
     }
 
     Object.keys(style).forEach(function (key) {
@@ -662,6 +673,8 @@ var Element = /*#__PURE__*/function () {
               parent.isDirty = true;
               parent = parent.parent;
             }
+          } else {
+            _this.root.emit('repaint');
           }
         }
       });
@@ -671,22 +684,22 @@ var Element = /*#__PURE__*/function () {
       _this.on(eventName, function (e, touchMsg) {
         _this.parent && _this.parent.emit(eventName, e, touchMsg);
       });
-    }); // this.initRepaint();
-  } // initRepaint() {
-  //   this.on('repaint', (e) => {
-  //     this.parent && this.parent.emit('repaint', e);
-  //   });
-  // }
-  // 子类填充实现
+    });
+  } // 子类填充实现
 
 
   _createClass(Element, [{
     key: "repaint",
-    value: function repaint() {} // 子类填充实现
-
+    value: function repaint() {}
   }, {
     key: "insert",
-    value: function insert() {} // 子类填充实现
+    value: function insert(ctx, needRender) {
+      this.ctx = ctx;
+
+      if (needRender) {
+        this.render();
+      }
+    } // 子类填充实现
 
   }, {
     key: "destroy",
@@ -695,12 +708,9 @@ var Element = /*#__PURE__*/function () {
 
       ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
         _this2.off(eventName);
-      }); // this.EE.off('image__render__done');
-
+      });
       this.isDestroyed = true;
       this.EE = null;
-      /* this.root          = null;*/
-
       this.parent = null;
       this.ctx = null;
       this.realLayoutBox = null; // element 在画布中的位置和尺寸信息
@@ -712,9 +722,7 @@ var Element = /*#__PURE__*/function () {
   }, {
     key: "add",
     value: function add(element) {
-      // eslint-disable-next-line no-param-reassign
-      element.parent = this; // eslint-disable-next-line no-param-reassign
-
+      element.parent = this;
       element.parentId = this.id;
       this.children.push(element);
     }
@@ -744,7 +752,7 @@ var Element = /*#__PURE__*/function () {
     }
   }, {
     key: "renderBorder",
-    value: function renderBorder(ctx, layoutBox) {
+    value: function renderBorder(ctx) {
       var style = this.style || {};
       var radius = style.borderRadius || 0;
       var _style$borderWidth = style.borderWidth,
@@ -753,7 +761,7 @@ var Element = /*#__PURE__*/function () {
       var borderTopRightRadius = style.borderTopRightRadius || radius;
       var borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
       var borderBottomRightRadius = style.borderBottomRightRadius || radius;
-      var box = layoutBox || this.layoutBox;
+      var box = this.layoutBox;
       var borderColor = style.borderColor;
       var x = box.absoluteX;
       var y = box.absoluteY;
@@ -2182,37 +2190,15 @@ if (true) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throttle", function() { return throttle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "none", function() { return none; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isClick", function() { return isClick; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCanvas", function() { return createCanvas; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createImage", function() { return createImage; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDpr", function() { return getDpr; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "STATE", function() { return STATE; });
-function throttle(fn, threshhold, scope) {
-  threshhold || (threshhold = 250);
-  var last;
-  var deferTimer;
-  return function () {
-    var context = scope || this;
-    var now = +new Date();
-    var args = arguments;
-
-    if (last && now < last + threshhold) {
-      // hold on to it
-      clearTimeout(deferTimer);
-      deferTimer = setTimeout(function () {
-        last = now;
-        fn.apply(context, args);
-      }, threshhold);
-    } else {
-      last = now;
-      fn.apply(context, args);
-    }
-  };
-}
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearCanvas", function() { return clearCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "copyTouchArray", function() { return copyTouchArray; });
 /* istanbul ignore next */
-
 function none() {}
 /**
  * 根据触摸时长和触摸位置变化来判断是否属于点击事件
@@ -2264,16 +2250,19 @@ if (typeof swan !== 'undefined') {
 }
 
 function getDpr() {
-  return 3; // if (typeof _dpr !== 'undefined') {
-  //   return _dpr;
-  // }
-  // if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
-  //   _dpr = __env.getSystemInfoSync().devicePixelRatio;
-  // } else {
-  //   console.warn('failed to access device pixel ratio, fallback to 1');
-  //   _dpr = 1;
-  // }
-  // return _dpr;
+  // return 3;
+  if (typeof _dpr !== 'undefined') {
+    return _dpr;
+  }
+
+  if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
+    _dpr = __env.getSystemInfoSync().devicePixelRatio;
+  } else {
+    console.warn('failed to access device pixel ratio, fallback to 1');
+    _dpr = 1;
+  }
+
+  return _dpr;
 }
 var STATE = {
   UNINIT: 'UNINIT',
@@ -2281,6 +2270,20 @@ var STATE = {
   RENDERED: 'RENDERED',
   CLEAR: 'CLEAR'
 };
+function clearCanvas(ctx) {
+  ctx && ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+function copyTouchArray(touches) {
+  return touches.map(function (touch) {
+    return {
+      identifier: touch.identifier,
+      pageX: touch.pageX,
+      pageY: touch.pageY,
+      clientX: touch.clientX,
+      clientY: touch.clientY
+    };
+  });
+}
 
 /***/ }),
 /* 8 */
@@ -4477,6 +4480,92 @@ var DebugInfo = /*#__PURE__*/function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ticker; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var Ticker = /*#__PURE__*/function () {
+  function Ticker() {
+    var _this = this;
+
+    _classCallCheck(this, Ticker);
+
+    this.count = 0;
+    this.started = false;
+    this.animationId = null;
+    this.cbs = [];
+
+    this.update = function () {
+      _this.cbs.forEach(function (cb) {
+        cb();
+      });
+
+      _this.count += 1;
+      _this.animationId = requestAnimationFrame(_this.update);
+    };
+  }
+
+  _createClass(Ticker, [{
+    key: "cancelIfNeed",
+    value: function cancelIfNeed() {
+      if (this.animationId !== null) {
+        cancelAnimationFrame(this.animationId);
+        this.animationId = null;
+      }
+    }
+  }, {
+    key: "add",
+    value: function add(cb) {
+      if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
+        this.cbs.push(cb);
+      }
+    }
+  }, {
+    key: "remove",
+    value: function remove(cb) {
+      if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
+        this.cbs.splice(this.cbs.indexOf(cb), 1);
+      }
+
+      if (!this.cbs.length) {
+        this.cancelIfNeed();
+      }
+    }
+  }, {
+    key: "start",
+    value: function start() {
+      if (!this.started) {
+        this.started = true;
+
+        if (this.animationId === null && this.cbs.length) {
+          this.animationId = requestAnimationFrame(this.update);
+        }
+      }
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      if (this.started) {
+        this.started = false;
+        this.cancelIfNeed();
+      }
+    }
+  }]);
+
+  return Ticker;
+}();
+
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderChildren", function() { return renderChildren; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layoutChildren", function() { return layoutChildren; });
@@ -4486,7 +4575,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsByClassName", function() { return getElementsByClassName; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintChildren", function() { return repaintChildren; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
+/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+/* eslint-disable no-param-reassign */
 // components
 
 var constructorMap = {
@@ -4594,19 +4684,22 @@ function create(node, style, parent) {
   return element;
 }
 function renderChildren(children, context) {
+  var needRender = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
   children.forEach(function (child) {
-    // eslint-disable-next-line no-param-reassign
-    child.shouldUpdate = false; // eslint-disable-next-line no-param-reassign
-
+    child.shouldUpdate = false;
     child.isDirty = false;
+    /**
+     * ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
+     * TODO: 这里感觉还有优化空间
+     */
 
     if (child.type === 'ScrollView') {
-      // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-      child.insertScrollView(context);
-    } else {
-      child.insert(context);
-      return renderChildren(child.children, context);
+      child.insert(context, needRender);
+      return renderChildren(child.children, context, false);
     }
+
+    child.insert(context, needRender);
+    return renderChildren(child.children, context, needRender);
   });
 }
 /**
@@ -4631,12 +4724,7 @@ function layoutChildren(element) {
     }
 
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
-    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX; // 滚动列表的画板尺寸和主画板保持一致
-
-    if (child.type === 'ScrollView') {
-      child.updateRenderPort(_this2.renderport);
-    }
-
+    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
     layoutChildren.call(_this2, child);
   });
 }
@@ -4749,24 +4837,24 @@ var repaintTree = function repaintTree(tree) {
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "View", function() { return _view_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
+/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(24);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Text", function() { return _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(24);
+/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(25);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
-/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(28);
+/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(29);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BitMapText", function() { return _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
 
@@ -4777,7 +4865,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4857,9 +4945,10 @@ var View = /*#__PURE__*/function (_Element) {
     }
   }, {
     key: "render",
-    value: function render(ctx, layoutBox) {
+    value: function render() {
       var style = this.style || {};
-      var box = layoutBox || this.layoutBox;
+      var box = this.layoutBox;
+      var ctx = this.ctx;
       ctx.save();
       var borderWidth = style.borderWidth || 0;
       var drawX = box.absoluteX;
@@ -4868,9 +4957,9 @@ var View = /*#__PURE__*/function (_Element) {
       var borderRightWidth = style.borderRightWidth || borderWidth;
       var borderTopWidth = style.borderTopWidth || borderWidth;
       var borderBottomWidth = style.borderBottomWidth || borderWidth;
-      this.renderBorder(ctx, layoutBox);
+      this.renderBorder(ctx);
 
-      var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+      var _this$renderBorder = this.renderBorder(ctx),
           needClip = _this$renderBorder.needClip,
           needStroke = _this$renderBorder.needStroke;
 
@@ -4890,20 +4979,9 @@ var View = /*#__PURE__*/function (_Element) {
       ctx.restore();
     }
   }, {
-    key: "insert",
-    value: function insert(ctx, box) {
-      this.ctx = ctx;
-
-      if (!box) {
-        box = this.layoutBox;
-      }
-
-      this.render(ctx, box);
-    }
-  }, {
     key: "repaint",
     value: function repaint() {
-      this.render(this.ctx, this.layoutBox);
+      this.render();
     }
   }]);
 
@@ -4913,7 +4991,7 @@ var View = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5007,25 +5085,9 @@ var Image = /*#__PURE__*/function (_Element) {
   }
 
   _createClass(Image, [{
-    key: "isScrollViewChild",
-    get: function get() {
-      var flag = false;
-      var parent = this.parent;
-
-      while (parent && !flag) {
-        if (parent.type === 'ScrollView') {
-          flag = true;
-        } else {
-          parent = parent.parent;
-        }
-      }
-
-      return flag;
-    }
-  }, {
     key: "repaint",
     value: function repaint() {
-      this.render(this.ctx, this.layoutBox);
+      this.render();
     } // 子类填充实现
 
   }, {
@@ -5038,13 +5100,14 @@ var Image = /*#__PURE__*/function (_Element) {
     }
   }, {
     key: "render",
-    value: function render(ctx, layoutBox) {
+    value: function render() {
       if (!this.img || !this.img.loadDone) {
         return;
       }
 
       var style = this.style || {};
-      var box = layoutBox || this.layoutBox;
+      var box = this.layoutBox;
+      var ctx = this.ctx;
       ctx.save();
 
       if (style.borderColor) {
@@ -5055,7 +5118,7 @@ var Image = /*#__PURE__*/function (_Element) {
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
 
-      var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+      var _this$renderBorder = this.renderBorder(ctx),
           needClip = _this$renderBorder.needClip,
           needStroke = _this$renderBorder.needStroke;
 
@@ -5075,26 +5138,6 @@ var Image = /*#__PURE__*/function (_Element) {
 
       ctx.restore();
     }
-  }, {
-    key: "insert",
-    value: function insert(ctx, box) {
-      this.ctx = ctx; // this.img = imageManager.loadImage(this.src, (img, fromCache) => {
-      //   // 来自缓存的，还没返回img就会执行回调函数
-      //   if (fromCache) {
-      //     this.img = img;
-      //     this.render(ctx, box, false);
-      //   } else {
-      //     // 当图片加载完成，实例可能已经被销毁了
-      //     if (this.img) {
-      //       // const eventName = this.isScrollViewChild
-      //       //   ? 'image__render__done'
-      //       //   : 'one__image__render__done';
-      //       // this.EE.emit(eventName, this);
-      //       this.root.emit('repaint');
-      //     }
-      //   }
-      // });
-    }
   }]);
 
   return Image;
@@ -5103,7 +5146,7 @@ var Image = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5253,15 +5296,9 @@ var Text = /*#__PURE__*/function (_Element) {
       this.fillStyle = style.color || '#000';
     }
   }, {
-    key: "insert",
-    value: function insert(ctx, box) {
-      this.ctx = ctx;
-      this.render(ctx, box);
-    }
-  }, {
     key: "repaint",
     value: function repaint() {
-      this.render(this.ctx, this.layoutBox);
+      this.render();
     }
   }, {
     key: "destroySelf",
@@ -5270,10 +5307,11 @@ var Text = /*#__PURE__*/function (_Element) {
     }
   }, {
     key: "render",
-    value: function render(ctx, layoutBox) {
+    value: function render() {
+      var ctx = this.ctx;
       this.toCanvasData();
       ctx.save();
-      var box = layoutBox || this.layoutBox;
+      var box = this.layoutBox;
       var style = this.style;
       ctx.textBaseline = this.textBaseline;
       ctx.font = this.font;
@@ -5281,7 +5319,7 @@ var Text = /*#__PURE__*/function (_Element) {
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
 
-      var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+      var _this$renderBorder = this.renderBorder(ctx),
           needClip = _this$renderBorder.needClip,
           needStroke = _this$renderBorder.needStroke;
 
@@ -5322,16 +5360,17 @@ var Text = /*#__PURE__*/function (_Element) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
 /* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(25);
+/* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(26);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _common_vd_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5354,21 +5393,12 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+/* eslint-disable no-param-reassign */
 
 
 
 
-function copyTouchArray(touches) {
-  return touches.map(function (touch) {
-    return {
-      identifier: touch.identifier,
-      pageX: touch.pageX,
-      pageY: touch.pageY,
-      clientX: touch.clientX,
-      clientY: touch.clientY
-    };
-  });
-}
+var dpr = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getDpr"])();
 
 var ScrollView = /*#__PURE__*/function (_View) {
   _inherits(ScrollView, _View);
@@ -5406,17 +5436,12 @@ var ScrollView = /*#__PURE__*/function (_View) {
     _this.scrollTop = 0;
     _this.scrollLeft = 0;
     _this.hasEventBind = false;
-    _this.currentEvent = null; // 图片加载完成之后会触发scrollView的重绘函数，当图片过多的时候用节流提升性能
-
-    _this.throttleImageLoadDone = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["throttle"])(_this.childImageLoadDoneCbk, 16, _assertThisInitialized(_this));
-    _this.scrollCanvas = null;
-    _this.scrollCtx = null;
+    _this.currentEvent = null;
     _this.requestID = null;
     _this.innerScrollerOption = {
       scrollingX: scrollX,
       scrollingY: scrollY
     };
-    _this.sharedTexture = false;
     return _this;
   }
   /**
@@ -5487,45 +5512,24 @@ var ScrollView = /*#__PURE__*/function (_View) {
     key: "repaint",
     value: function repaint() {
       this.clear();
-      this.render(this.ctx, this.layoutBox);
+      this.render(this.ctx);
       this.scrollRender(this.scrollLeft, this.scrollTop);
-    }
-    /**
-     * 与主canvas的尺寸保持一致
-     */
-
-  }, {
-    key: "updateRenderPort",
-    value: function updateRenderPort(renderport) {// this.renderport = renderport;
-      // this.scrollCanvas = createCanvas();
-      // this.scrollCtx = this.scrollCanvas.getContext('2d');
-      // this.scrollCanvas.width = this.renderport.width;
-      // this.scrollCanvas.height = this.renderport.height;
     }
   }, {
     key: "destroySelf",
     value: function destroySelf() {
       this.touch = null;
       this.isDestroyed = true;
-      this.root.off('repaint__done');
       this.ctx = null;
       this.children = null;
       this.root = null;
-      this.scrollCanvas = null;
-      this.scrollCtx = null;
-      this.requestID && cancelAnimationFrame(this.requestID);
     }
   }, {
     key: "renderTreeWithTop",
     value: function renderTreeWithTop(tree, top, left) {
       var _this2 = this;
 
-      var layoutBox = tree.layoutBox; // 计算实际渲染的Y轴位置
-
-      layoutBox.absoluteY = layoutBox.originalAbsoluteY - top;
-      layoutBox.absoluteX = layoutBox.originalAbsoluteX - left; // tree.render(this.scrollCtx, layoutBox);
-
-      tree.render(this.ctx, layoutBox);
+      tree.render();
       tree.children.forEach(function (child) {
         _this2.renderTreeWithTop(child, top, left);
       });
@@ -5533,13 +5537,12 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "clear",
     value: function clear() {
-      var box = this.layoutBox; // this.root.clearCanvas();
-
-      this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height); // this.scrollCtx.clearRect(0, 0, this.renderport.width, this.renderport.height);
+      var box = this.layoutBox;
+      this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
     }
   }, {
-    key: "scrollRenderHandler",
-    value: function scrollRenderHandler() {
+    key: "scrollRender",
+    value: function scrollRender() {
       var _this3 = this;
 
       var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -5558,7 +5561,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
       this.clear(); // ScrollView 作为容器本身的渲染
 
-      this.render(this.ctx, this.layoutBox);
+      this.render(this.ctx);
       /**
        * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的
        * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
@@ -5566,87 +5569,62 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
       this.ctx.save();
       this.ctx.beginPath();
-      this.ctx.rect(this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
+      this.ctx.rect(abX, abY, box.width, box.height);
       this.ctx.clip();
       this.children.forEach(function (child) {
         var layoutBox = child.layoutBox;
         var height = layoutBox.height;
         var width = layoutBox.width;
         var originY = layoutBox.originalAbsoluteY;
-        var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，渲染该子节点
+        var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，递归渲染该子节点
 
         if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
           _this3.renderTreeWithTop(child, _this3.scrollTop, _this3.scrollLeft);
         }
       });
-      this.ctx.restore(); // this.ctx.drawImage(
-      //   this.scrollCanvas,
-      //   box.absoluteX, box.absoluteY,
-      //   box.width, box.height,
-      //   box.absoluteX, box.absoluteY,
-      //   box.width, box.height,
-      // );
+      this.ctx.restore();
     }
   }, {
-    key: "scrollRender",
-    value: function scrollRender(left, top) {
+    key: "insert",
+    value: function insert(context) {
       var _this4 = this;
 
-      if (this.sharedTexture) {
-        this.requestID = requestAnimationFrame(function () {
-          _this4.scrollRenderHandler(left, top);
-        });
-      } else {
-        this.scrollRenderHandler(left, top);
-      }
-    }
-  }, {
-    key: "childImageLoadDoneCbk",
-    value: function childImageLoadDoneCbk() {
-      this.scrollRender(this.scrollLeft, this.scrollTop);
-    }
-  }, {
-    key: "insertScrollView",
-    value: function insertScrollView(context) {
-      var _this5 = this;
-
-      // 绘制容器
-      this.insert(context); // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，所以这里不需要重复调用渲染
-      // this.scrollRender(0, 0);
+      this.ctx = context;
 
       if (this.hasEventBind) {
+        // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域
         this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
         return;
       }
 
-      this.hasEventBind = true; // 图片加载可能是异步的，监听图片加载完成事件完成列表重绘逻辑
-      // this.EE.on('image__render__done', (img) => {
-      //   this.throttleImageLoadDone(img);
-      // });
-
+      this.hasEventBind = true;
       this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
         // 可能被销毁了或者节点树还没准备好
-        if (!_this5.isDestroyed) {
-          _this5.scrollRender(left, top);
+        if (!_this4.isDestroyed) {
+          Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(_this4, function (ele) {
+            if (ele !== _this4) {
+              ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
+              ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
+            }
+          });
 
-          if (_this5.currentEvent) {
-            _this5.emit('scroll', _this5.currentEvent);
+          _this4.scrollRender(left, top);
+
+          if (_this4.currentEvent) {
+            _this4.emit('scroll', _this4.currentEvent);
           }
         }
       }, this.scrollerOption);
-      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
-      var dpr = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getDpr"])();
-      /* this.scrollActive = true; */
-
+      requestAnimationFrame(function () {
+        // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，调用渲染
+        _this4.scrollerObj.setDimensions(_this4.layoutBox.width, _this4.layoutBox.height, _this4.scrollWidth, _this4.scrollHeight);
+      });
       this.on('touchstart', function (e) {
-        // this.scrollActive = true;
         if (!e.touches) {
           e.touches = [e];
         }
 
-        var touches = copyTouchArray(e.touches);
-        /* const touches = e.touches;*/
-
+        var touches = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["copyTouchArray"])(e.touches);
         touches.forEach(function (touch) {
           if (dpr !== 1) {
             touch.pageX *= dpr;
@@ -5654,18 +5632,16 @@ var ScrollView = /*#__PURE__*/function (_View) {
           }
         });
 
-        _this5.scrollerObj.doTouchStart(touches, e.timeStamp);
+        _this4.scrollerObj.doTouchStart(touches, e.timeStamp);
 
-        _this5.currentEvent = e;
+        _this4.currentEvent = e;
       });
       this.on('touchmove', function (e) {
         if (!e.touches) {
           e.touches = [e];
         }
 
-        var touches = copyTouchArray(e.touches);
-        /* const touches = e.touches;*/
-
+        var touches = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["copyTouchArray"])(e.touches);
         touches.forEach(function (touch) {
           if (dpr !== 1) {
             touch.pageX *= dpr;
@@ -5673,15 +5649,15 @@ var ScrollView = /*#__PURE__*/function (_View) {
           }
         });
 
-        _this5.scrollerObj.doTouchMove(touches, e.timeStamp);
+        _this4.scrollerObj.doTouchMove(touches, e.timeStamp);
 
-        _this5.currentEvent = e;
+        _this4.currentEvent = e;
       }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
 
       this.root.on('touchend', function (e) {
-        _this5.scrollerObj.doTouchEnd(e.timeStamp);
+        _this4.scrollerObj.doTouchEnd(e.timeStamp);
 
-        _this5.currentEvent = e;
+        _this4.currentEvent = e;
       });
     }
   }, {
@@ -5700,13 +5676,13 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
     if (true) {
         // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(26), __webpack_require__(27)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(27), __webpack_require__(28)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -5718,7 +5694,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -5952,7 +5928,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -5972,7 +5948,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 (function (root, factory) {
     if (true) {
         // AMD
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(26)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(27)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -7107,7 +7083,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7197,14 +7173,9 @@ var BitMapText = /*#__PURE__*/function (_Element) {
   }
 
   _createClass(BitMapText, [{
-    key: "insert",
-    value: function insert(ctx, box) {
-      this.render(ctx, box);
-    }
-  }, {
     key: "repaint",
     value: function repaint() {
-      this.render(this.ctx, this.layoutBox);
+      this.render();
     }
   }, {
     key: "destroySelf",
@@ -7213,7 +7184,7 @@ var BitMapText = /*#__PURE__*/function (_Element) {
     }
   }, {
     key: "render",
-    value: function render(ctx, layoutBox) {
+    value: function render() {
       var _this2 = this;
 
       if (!this.font) {
@@ -7221,11 +7192,11 @@ var BitMapText = /*#__PURE__*/function (_Element) {
       }
 
       if (this.font.ready) {
-        this.renderText(ctx, layoutBox);
+        this.renderText(this.ctx, this.layoutBox);
       } else {
         this.font.event.on('text__load__done', function () {
           if (!_this2.isDestroyed) {
-            _this2.renderText(ctx, layoutBox);
+            _this2.renderText(_this2.ctx, _this2.layoutBox);
           }
         });
       }
@@ -7258,12 +7229,12 @@ var BitMapText = /*#__PURE__*/function (_Element) {
     }
   }, {
     key: "renderText",
-    value: function renderText(ctx, layoutBox) {
+    value: function renderText(ctx) {
       var bounds = this.getTextBounds();
       var defaultLineHeight = this.font.lineHeight;
       ctx.save();
 
-      var _this$renderBorder = this.renderBorder(ctx, layoutBox),
+      var _this$renderBorder = this.renderBorder(ctx),
           needClip = _this$renderBorder.needClip,
           needStroke = _this$renderBorder.needStroke;
 
@@ -7271,7 +7242,7 @@ var BitMapText = /*#__PURE__*/function (_Element) {
         ctx.clip();
       }
 
-      var box = layoutBox || this.layoutBox;
+      var box = this.layoutBox;
       var style = this.style;
       var width = style.width,
           height = style.height,
@@ -7331,90 +7302,6 @@ var BitMapText = /*#__PURE__*/function (_Element) {
 
   return BitMapText;
 }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-
-/***/ }),
-/* 29 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ticker; });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-var Ticker = /*#__PURE__*/function () {
-  function Ticker() {
-    var _this = this;
-
-    _classCallCheck(this, Ticker);
-
-    this.started = false;
-    this.animationId = null;
-    this.cbs = [];
-
-    this.update = function () {
-      _this.cbs.forEach(function (cb) {
-        cb();
-      });
-
-      _this.animationId = requestAnimationFrame(_this.update);
-    };
-  }
-
-  _createClass(Ticker, [{
-    key: "cancelIfNeed",
-    value: function cancelIfNeed() {
-      if (this.animationId !== null) {
-        cancelAnimationFrame(this.animationId);
-        this.animationId = null;
-      }
-    }
-  }, {
-    key: "add",
-    value: function add(cb) {
-      if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
-        this.cbs.push(cb);
-      }
-    }
-  }, {
-    key: "remove",
-    value: function remove(cb) {
-      if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
-        this.cbs.splice(this.cbs.indexOf(cb), 1);
-      }
-
-      if (!this.cbs.length) {
-        this.cancelIfNeed();
-      }
-    }
-  }, {
-    key: "start",
-    value: function start() {
-      if (!this.started) {
-        this.started = true;
-
-        if (this.animationId === null && this.cbs.length) {
-          this.animationId = requestAnimationFrame(this.update);
-        }
-      }
-    }
-  }, {
-    key: "stop",
-    value: function stop() {
-      if (this.started) {
-        this.started = false;
-        this.cancelIfNeed();
-      }
-    }
-  }]);
-
-  return Ticker;
-}();
 
 
 

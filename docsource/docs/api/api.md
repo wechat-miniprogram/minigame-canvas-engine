@@ -27,6 +27,9 @@
 #### Layout.getElementsByClassName(String className)
 获取包含class为**className**的一组元素
 
+### Layout.TWEEN
+
+
 ### repaint
 #### Layout.repaint()
 在某些场景下执行重渲染逻辑，比如通过getElementsById获取一个元素并且改变他的背景颜色，因为不涉及布局变更，执行Layout.repaint()即可。
@@ -53,7 +56,6 @@ Layout.loadImgs([
     'sub/Buffet_icon_GiftPlate.png',
     'sub/UI_Icon_Rating.png',
 ]);
-
 ```
 
 ### registBitMapFont

@@ -2,11 +2,11 @@
 
 ## 组件列表
 
-|      标签      |            说明          |
+|      组件      |            说明          |
 |----------------|----------------             |
 | view           | 容器标签，与HTML中的div相似 |
-| scrollview           | 滚动列表容器，如果容器内的子元素高度大于scrollview高度，支持纵向滚动，不支持嵌套scrollview |
-| image           | 图片标签，|
+| scrollview     | 滚动列表容器，如果容器内的子元素高度大于scrollview高度，支持纵向滚动，不支持嵌套scrollview |
+| image          | 图片标签 |
 | text           | 文本标签 |
 | bitmaptext| bitmapfont文本标签|
 

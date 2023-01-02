@@ -40,8 +40,8 @@ let style = {
     },
     testText: {
         color: '#ffffff',
-        width: 400,
-        height: 200,
+        width: '100%',
+        height: '100%',
         lineHeight: 200,
         fontSize: 40,
         textAlign: 'center',
@@ -95,4 +95,4 @@ text.on('click', (e) => {
 });
 ```
 
-上述示例代码可见：https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/helloworld
+上述示例代码可见：[https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/helloworld](https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/helloworld)
