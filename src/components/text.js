@@ -116,12 +116,6 @@ export default class Text extends Element {
     this.fillStyle = style.color || '#000';
   }
 
-  insert(ctx) {
-    this.ctx = ctx;
-
-    this.render();
-  }
-
   repaint() {
     this.render();
   }

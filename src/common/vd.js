@@ -111,18 +111,22 @@ export function create(node, style, parent) {
   return element;
 }
 
-export function renderChildren(children, context) {
+export function renderChildren(children, context, needRender = true) {
   children.forEach((child) => {
     child.shouldUpdate = false;
     child.isDirty = false;
+    /**
+     * ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
+     * TODO: 这里感觉还有优化空间
+     */
     if (child.type === 'ScrollView') {
-      // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-      child.insertScrollView(context);
-    } else {
-      child.insert(context);
+      child.insert(context, needRender);
 
-      return renderChildren(child.children, context);
+      return renderChildren(child.children, context, false);
     }
+
+    child.insert(context, needRender);
+    return renderChildren(child.children, context, needRender);
   });
 }
 

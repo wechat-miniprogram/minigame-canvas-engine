@@ -103,10 +103,4 @@ export default class Image extends Element {
 
     ctx.restore();
   }
-
-  insert(ctx) {
-    this.ctx = ctx;
-
-    this.render(ctx);
-  }
 }

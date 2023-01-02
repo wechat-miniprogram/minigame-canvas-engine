@@ -134,8 +134,13 @@ export default class Element {
   // 子类填充实现
   repaint() { }
 
-  // 子类填充实现
-  insert() { }
+  insert(ctx, needRender) {
+    this.ctx = ctx;
+
+    if (needRender) {
+      this.render();
+    }
+  }
 
   // 子类填充实现
   destroy() {

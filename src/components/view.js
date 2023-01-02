@@ -79,12 +79,6 @@ export default class View extends Element {
     ctx.restore();
   }
 
-  insert(ctx) {
-    this.ctx = ctx;
-
-    this.render();
-  }
-
   repaint() {
     this.render();
   }

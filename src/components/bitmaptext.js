@@ -47,12 +47,6 @@ export default class BitMapText extends Element {
     }
   }
 
-  insert(ctx) {
-    this.ctx = ctx;
-
-    this.render();
-  }
-
   repaint() {
     this.render();
   }

@@ -116,7 +116,7 @@ export default class ScrollView extends View {
   }
 
   renderTreeWithTop(tree, top, left) {
-    tree.render(this.ctx);
+    tree.render();
 
     tree.children.forEach((child) => {
       this.renderTreeWithTop(child, top, left);
@@ -175,9 +175,8 @@ export default class ScrollView extends View {
     this.ctx.restore();
   }
 
-  insertScrollView(context) {
-    // 绘制容器
-    this.insert(context);
+  insert(context) {
+    this.ctx = context;
 
     if (this.hasEventBind) {
       // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域
@@ -193,7 +192,7 @@ export default class ScrollView extends View {
         iterateTree(this, (ele) => {
           if (ele !== this) {
             ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
-            ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;  
+            ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
           }
         });
         this.scrollRender(left, top);
@@ -203,8 +202,10 @@ export default class ScrollView extends View {
       }
     }, this.scrollerOption);
 
-    // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，调用渲染
-    this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+    requestAnimationFrame(() => {
+      // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，调用渲染
+      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+    });
 
     this.on('touchstart', (e) => {
       if (!e.touches) {
