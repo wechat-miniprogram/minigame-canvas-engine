@@ -185,7 +185,7 @@ export default class Element {
     EE.off(toEventName(event, this.id), callback);
   }
 
-  renderBorder(ctx, layoutBox) {
+  renderBorder(ctx) {
     const style = this.style || {};
     const radius = style.borderRadius || 0;
     const { borderWidth = 0 } = style;
@@ -193,7 +193,7 @@ export default class Element {
     const borderTopRightRadius = style.borderTopRightRadius || radius;
     const borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
     const borderBottomRightRadius = style.borderBottomRightRadius || radius;
-    const box = layoutBox || this.layoutBox;
+    const box = this.layoutBox;
     const { borderColor } = style;
     const x = box.absoluteX;
     const y = box.absoluteY;

@@ -47,29 +47,31 @@ export default class BitMapText extends Element {
     }
   }
 
-  insert(ctx, box) {
-    this.render(ctx, box);
+  insert(ctx) {
+    this.ctx = ctx;
+
+    this.render();
   }
 
   repaint() {
-    this.render(this.ctx, this.layoutBox);
+    this.render();
   }
 
   destroySelf() {
-    this.root          = null;
+    this.root = null;
   }
 
-  render(ctx, layoutBox) {
+  render() {
     if (!this.font) {
       return;
     }
 
     if (this.font.ready) {
-      this.renderText(ctx, layoutBox);
+      this.renderText(this.ctx, this.layoutBox);
     } else {
       this.font.event.on('text__load__done', () => {
         if (!this.isDestroyed) {
-          this.renderText(ctx, layoutBox);
+          this.renderText(this.ctx, this.layoutBox);
         }
       });
     }
@@ -96,19 +98,19 @@ export default class BitMapText extends Element {
     return { width, height: this.font.lineHeight };
   }
 
-  renderText(ctx, layoutBox) {
+  renderText(ctx) {
     const bounds = this.getTextBounds();
     const defaultLineHeight = this.font.lineHeight;
 
     ctx.save();
 
-    const { needClip, needStroke } = this.renderBorder(ctx, layoutBox);
+    const { needClip, needStroke } = this.renderBorder(ctx);
 
     if (needClip) {
       ctx.clip();
     }
 
-    const box = layoutBox || this.layoutBox;
+    const box = this.layoutBox;
     const { style } = this;
 
     const {

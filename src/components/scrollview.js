@@ -101,7 +101,7 @@ export default class ScrollView extends View {
   repaint() {
     this.clear();
 
-    this.render(this.ctx, this.layoutBox);
+    this.render(this.ctx);
 
     this.scrollRender(this.scrollLeft, this.scrollTop);
   }
@@ -116,9 +116,7 @@ export default class ScrollView extends View {
   }
 
   renderTreeWithTop(tree, top, left) {
-    const { layoutBox } = tree;
-
-    tree.render(this.ctx, layoutBox);
+    tree.render(this.ctx);
 
     tree.children.forEach((child) => {
       this.renderTreeWithTop(child, top, left);
@@ -149,7 +147,7 @@ export default class ScrollView extends View {
     this.clear();
 
     // ScrollView 作为容器本身的渲染
-    this.render(this.ctx, this.layoutBox);
+    this.render(this.ctx);
 
     /**
      * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的

@@ -52,7 +52,7 @@ export default class Image extends Element {
   }
 
   repaint() {
-    this.render(this.ctx, this.layoutBox);
+    this.render();
   }
 
   // 子类填充实现
@@ -65,13 +65,14 @@ export default class Image extends Element {
     this.root = null;
   }
 
-  render(ctx, layoutBox) {
+  render() {
     if (!this.img || !this.img.loadDone) {
       return;
     }
 
     const style = this.style || {};
-    const box = layoutBox || this.layoutBox;
+    const box = this.layoutBox;
+    const { ctx } = this;
 
     ctx.save();
 
@@ -84,7 +85,7 @@ export default class Image extends Element {
     const drawX = box.absoluteX;
     const drawY = box.absoluteY;
 
-    const { needClip, needStroke } = this.renderBorder(ctx, layoutBox);
+    const { needClip, needStroke } = this.renderBorder(ctx);
 
     if (needClip) {
       ctx.clip();
@@ -106,6 +107,6 @@ export default class Image extends Element {
   insert(ctx) {
     this.ctx = ctx;
 
-    this.render(ctx, this.layoutBox);
+    this.render(ctx);
   }
 }

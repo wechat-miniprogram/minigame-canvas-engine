@@ -116,25 +116,26 @@ export default class Text extends Element {
     this.fillStyle = style.color || '#000';
   }
 
-  insert(ctx, box) {
+  insert(ctx) {
     this.ctx = ctx;
 
-    this.render(ctx, box);
+    this.render();
   }
 
   repaint() {
-    this.render(this.ctx, this.layoutBox);
+    this.render();
   }
 
   destroySelf() {
     this.root = null;
   }
 
-  render(ctx, layoutBox) {
+  render() {
+    const { ctx } = this;
     this.toCanvasData();
     ctx.save();
 
-    const box = layoutBox || this.layoutBox;
+    const box = this.layoutBox;
     const { style } = this;
 
     ctx.textBaseline = this.textBaseline;
@@ -144,7 +145,7 @@ export default class Text extends Element {
     let drawX = box.absoluteX;
     let drawY = box.absoluteY;
 
-    const { needClip, needStroke } = this.renderBorder(ctx, layoutBox);
+    const { needClip, needStroke } = this.renderBorder(ctx);
 
     if (needClip) {
       ctx.clip();

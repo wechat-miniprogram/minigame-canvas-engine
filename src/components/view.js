@@ -39,9 +39,10 @@ export default class View extends Element {
       || (style.borderRightWidth  && (borderColor  || style.borderRightColor)));
   }
 
-  render(ctx, layoutBox) {
+  render() {
     const style = this.style || {};
-    const box = layoutBox || this.layoutBox;
+    const box = this.layoutBox;
+    const { ctx } = this;
 
     ctx.save();
 
@@ -54,8 +55,8 @@ export default class View extends Element {
     const borderTopWidth    = style.borderTopWidth    || borderWidth;
     const borderBottomWidth = style.borderBottomWidth || borderWidth;
 
-    this.renderBorder(ctx, layoutBox);
-    const { needClip, needStroke } = this.renderBorder(ctx, layoutBox);
+    this.renderBorder(ctx);
+    const { needClip, needStroke } = this.renderBorder(ctx);
 
     if (needClip) {
       ctx.clip();
@@ -81,11 +82,11 @@ export default class View extends Element {
   insert(ctx) {
     this.ctx = ctx;
 
-    this.render(ctx, this.layoutBox);
+    this.render();
   }
 
   repaint() {
-    this.render(this.ctx, this.layoutBox);
+    this.render();
   }
 }
 
