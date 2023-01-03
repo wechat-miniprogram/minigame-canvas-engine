@@ -1,17 +1,33 @@
-const textStyles = ['color', 'fontSize', 'textAlign', 'fontWeight', 'lineHeight', 'lineBreak'];
-
-const scalableStyles = ['left', 'top', 'right', 'bottom', 'width', 'height',
+const reflowAffectedStyles = [
+  'width', 'height',
+  'minWidth', 'minHeight',
+  'maxWidth', 'maxHeight',
+  'left', 'right', 'top', 'bottom',
   'margin', 'marginLeft', 'marginRight', 'marginTop', 'marginBottom',
   'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom',
-  'fontSize', 'lineHeight',
-  'borderRadius',
-  'minWidth', 'maxWidth', 'minHeight', 'maxHeight',
+  'borderWidth', 'borderLeftWidth', 'borderRightWidth', 'borderTopWidth', 'borderBottomWidth',
+  'flexDirection',
+  'justifyContent',
+  'alignItems', 'alignSelf',
+  'flex',
+  'flexWrap',
+  'position',
 ];
 
-const layoutAffectedStyles = [
-  'margin', 'marginTop', 'marginBottom', 'marginLeft', 'marginRight',
-  'padding', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight',
-  'width', 'height'];
+const repaintAffectedStyles = [
+  'fontSize',
+  'lineHeight',
+  'textAlign',
+  'verticalAlign',
+  'color',
+  'backgroundColor',
+  'textOverflow',
+  'letterSpacing',
+  'backgroundColor',
+  'borderRadius',
+  'borderColor',
+];
 
+const allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
 
-export { scalableStyles, textStyles, layoutAffectedStyles };
+export { repaintAffectedStyles, reflowAffectedStyles, allStyles };

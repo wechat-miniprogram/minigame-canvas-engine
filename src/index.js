@@ -16,8 +16,8 @@ import {
   updateRealLayout,
   getElementsById,
   getElementsByClassName,
-  iterateTree,
   repaintChildren,
+  iterateTree,
 } from './common/vd';
 
 // 全局事件管道
@@ -213,6 +213,10 @@ class _Layout extends Element {
     this.reflow();
 
     this.bindEvents();
+
+    debugInfo.start('observeStyleAndEvent');
+    iterateTree(this.children[0], element => element.observeStyleAndEvent());
+    debugInfo.end('observeStyleAndEvent');
 
     this.state = STATE.RENDERED;
   }

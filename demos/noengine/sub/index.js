@@ -19,6 +19,8 @@ let key = "rankScore";
 let currentMaxScore = 0;
 let cacheRankData = [];
 
+console.log('Proxy', Proxy)
+
 let sharedCanvas = wx.getSharedCanvas();
 let sharedContext = sharedCanvas.getContext("2d");
 function draw(data = []) {
@@ -30,7 +32,13 @@ function draw(data = []) {
   Layout.clear();
   Layout.init(template, style);
   Layout.layout(sharedContext);
-  const listItem = Layout.getElementsByClassName('listItem')[0]
+  console.log(Layout)
+
+  // setTimeout(() => {
+  //   const scrollList = Layout.getElementsByClassName('list')[0];
+  //   scrollList.scrollTo(0, 100, false)  
+  // }, 100)
+  const listItem = Layout.getElementsByClassName('listItem')[1]
 
   console.log(Layout.debugInfo)
 
@@ -44,8 +52,9 @@ function draw(data = []) {
   listItem.on('click', () => {
     console.log('click')
     let target = listItem.style.height === 150 ? 300 : 150;
+    listItem.style.top = 0
     new Layout.TWEEN.Tween(listItem.style)
-    .to({ height: target}, 1000)
+    .to({ top: -150 }, 1000)
     .easing(Layout.TWEEN.Easing.Bounce.Out)
     .onUpdate(() => {
     }).onComplete(() => {

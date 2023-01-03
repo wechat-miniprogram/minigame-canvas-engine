@@ -28,6 +28,16 @@
 获取包含class为**className**的一组元素
 
 ### Layout.TWEEN
+Layout 默认挂载了[tween.js](https://github.com/tweenjs/tween.js/)模块，TWEEN 的使用与 tween.js 的使用并无差异。
+缓动系统的更多细节可见[缓动系统](/api/tween.html)。
+```js
+const ball = Layout.getElementsByClassName('ball')[0];
+
+new Layout.TWEEN.Tween(ball.style)
+  .to({ top: 250 }, 1000)
+  .easing(Layout.TWEEN.Easing.Bounce.Out)
+  .start();
+```
 
 
 ### repaint

@@ -147,7 +147,7 @@ export default class ScrollView extends View {
     this.clear();
 
     // ScrollView 作为容器本身的渲染
-    this.render(this.ctx);
+    this.render();
 
     /**
      * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的

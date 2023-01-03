@@ -10,17 +10,20 @@ module.exports = {
   ],
   themeConfig: {
     repo: 'wechat-miniprogram/minigame-canvas-engine',
-    editLinks: true,
-    editLinkText: '在 GitHub 上编辑此页',
     lastUpdated: '上次更新', // string | boolean
     sidebar: [
       {
         title: '概览',   // 必要的
-        path: '/',      // 可选的, 应该是一个绝对路径
+        path: '/',       
       },
       {
-        title: '快速入门',
-        path: '/api/guide',
+        title: '安装使用',
+        collapsable: false, // 可选的, 默认值是 true,
+        sidebarDepth: 2,    // 可选的, 默认值是 1
+        children: [
+          '/overview/guide',
+          '/overview/plugin.md'
+        ]
       },
       {
         title: 'API 文档',

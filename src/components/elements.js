@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { scalableStyles, layoutAffectedStyles } from './style.js';
+import { repaintAffectedStyles, reflowAffectedStyles, allStyles } from './style.js';
 
 const Emitter = require('tiny-emitter');
 
@@ -7,7 +7,6 @@ const Emitter = require('tiny-emitter');
 const EE = new Emitter();
 
 let uuid = 0;
-const dpr = 1;
 
 function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -62,7 +61,7 @@ export default class Element {
     this.props = props;
     this.idName = idName;
     this.className = className;
-    this.style = style;
+    // this.style = style;
     this.EE = EE;
     this.root = null;
     this.isDestroyed = false;
@@ -88,40 +87,62 @@ export default class Element {
       style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
     }
 
-    if (typeof style.left === 'undefined') {
-      style.left = 0;
-    }
-    if (typeof style.top === 'undefined') {
-      style.top = 0;
-    }
+    this.originStyle = style;
+    this.style = style;
+  }
 
-    Object.keys(style).forEach((key) => {
-      if (scalableStyles.indexOf(key) > -1) {
-        this.style[key] *= dpr;
-      }
-    });
-
-    const innerStyle = Object.assign({}, this.style);
-    Object.keys(this.style).forEach((key) => {
-      Object.defineProperty(this.style, key, {
-        configurable: true,
-        enumerable: true,
-        get: () => innerStyle[key],
-        set: (value) => {
-          innerStyle[key] = value;
-          if (layoutAffectedStyles.indexOf(key)) {
-            this.isDirty = true;
-            let { parent } = this;
+  /**
+   * 监听属性的变化判断是否需要执行 reflow、repaint 操作
+   * 经过测试，Object.defineProperty 是一个比较慢的方法， 特别是属性比较多的时候
+   * 因此会先判断是否支持 Proxy，iMac (Retina 5K, 27-inch, 2017)测试结果
+   * 总共 312 个节点，observeStyleAndEvent总耗时为：
+   * Proxy: 3ms
+   * Object.defineProperty: 20ms
+   */
+  observeStyleAndEvent() {
+    if (typeof Proxy === 'function') {
+      const ele = this;
+      this.style = new Proxy(this.originStyle, {
+        get(target, prop, receiver) {
+          return Reflect.get(target, prop, receiver);
+        },
+        set(target, prop, val, receiver) {
+          if (reflowAffectedStyles.indexOf(prop)) {
+            ele.isDirty = true;
+            let { parent } = ele;
             while (parent) {
               parent.isDirty = true;
               parent = parent.parent;
             }
-          } else {
-            this.root.emit('repaint');
+          } else if (repaintAffectedStyles.indexOf(prop)) {
+            ele.root.emit('repaint');
           }
+          return Reflect.set(target, prop, val, receiver);
         },
       });
-    });
+    } else {
+      const innerStyle = Object.assign({}, this.style);
+      allStyles.forEach((key) => {
+        Object.defineProperty(this.style, key, {
+          configurable: true,
+          enumerable: true,
+          get: () => innerStyle[key],
+          set: (value) => {
+            innerStyle[key] = value;
+            if (reflowAffectedStyles.indexOf(key)) {
+              this.isDirty = true;
+              let { parent } = this;
+              while (parent) {
+                parent.isDirty = true;
+                parent = parent.parent;
+              }
+            } else if (repaintAffectedStyles.indexOf(key)) {
+              this.root.emit('repaint');
+            }
+          },
+        });
+      });
+    }
 
     // 事件冒泡逻辑
     ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach((eventName) => {
@@ -133,6 +154,9 @@ export default class Element {
 
   // 子类填充实现
   repaint() { }
+
+  // 子类填充实现
+  render() { }
 
   insert(ctx, needRender) {
     this.ctx = ctx;
