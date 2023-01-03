@@ -5,11 +5,18 @@ export default class Ticker {
     this.animationId = null;
 
     this.cbs = [];
+    this.nextCbs = [];
 
     this.update = () => {
       this.cbs.forEach((cb) => {
         cb();
       });
+
+      if (this.nextCbs.length) {
+        this.nextCbs.forEach(cb => cb());
+
+        this.nextCbs = [];
+      }
 
       this.count += 1;
       this.animationId = requestAnimationFrame(this.update);
@@ -26,6 +33,12 @@ export default class Ticker {
   add(cb) {
     if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
       this.cbs.push(cb);
+    }
+  }
+
+  next(cb) {
+    if (typeof cb === 'function') {
+      this.nextCbs.push(cb);
     }
   }
 

@@ -4522,11 +4522,20 @@ var Ticker = /*#__PURE__*/function () {
     this.started = false;
     this.animationId = null;
     this.cbs = [];
+    this.nextCbs = [];
 
     this.update = function () {
       _this.cbs.forEach(function (cb) {
         cb();
       });
+
+      if (_this.nextCbs.length) {
+        _this.nextCbs.forEach(function (cb) {
+          return cb();
+        });
+
+        _this.nextCbs = [];
+      }
 
       _this.count += 1;
       _this.animationId = requestAnimationFrame(_this.update);
@@ -4546,6 +4555,13 @@ var Ticker = /*#__PURE__*/function () {
     value: function add(cb) {
       if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
         this.cbs.push(cb);
+      }
+    }
+  }, {
+    key: "next",
+    value: function next(cb) {
+      if (typeof cb === 'function') {
+        this.nextCbs.push(cb);
       }
     }
   }, {
@@ -4746,7 +4762,13 @@ function layoutChildren(element) {
     } else {
       child.layoutBox.absoluteX = child.layoutBox.left;
       child.layoutBox.absoluteY = child.layoutBox.top;
-    }
+    } // if (typeof child.layoutBox.scrollTop !== 'undefined') {
+    //   child.layoutBox.absoluteY -= child.layoutBox.scrollTop;
+    // }
+    // if (typeof child.layoutBox.scrollLeft !== 'undefined') {
+    //   child.layoutBox.absoluteX -= child.layoutBox.scrollLeft;
+    // }
+
 
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
     child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
@@ -5536,8 +5558,8 @@ var ScrollView = /*#__PURE__*/function (_View) {
   }, {
     key: "repaint",
     value: function repaint() {
-      this.clear();
-      this.render(this.ctx);
+      this.clear(); // this.render();
+
       this.scrollRender(this.scrollLeft, this.scrollTop);
     }
   }, {
@@ -5610,40 +5632,56 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.ctx.restore();
     }
   }, {
+    key: "scrollHandler",
+    value: function scrollHandler(left, top) {
+      var _this4 = this;
+
+      // 可能被销毁了或者节点树还没准备好
+      if (!this.isDestroyed && !this.isFirstScroll) {
+        Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(this, function (ele) {
+          if (ele !== _this4) {
+            ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
+            ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
+          }
+        });
+        this.scrollRender(left, top);
+
+        if (this.currentEvent) {
+          this.emit('scroll', this.currentEvent);
+        }
+      }
+
+      if (this.isFirstScroll) {
+        this.isFirstScroll = false;
+      }
+    }
+  }, {
     key: "insert",
     value: function insert(context) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.ctx = context;
 
       if (this.hasEventBind) {
         // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域
-        this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+        if (this.layoutBox.width !== this.scrollerObj.__clientWidth || this.layoutBox.height !== this.scrollerObj.__clientHeight || this.scrollWidth !== this.scrollerObj.__contentWidth || this.scrollHeight !== this.scrollerObj.__contentHeight) {
+          this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+        } // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
+
+
+        Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(this, function (ele) {
+          if (ele !== _this5) {
+            ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - _this5.scrollTop;
+            ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - _this5.scrollLeft;
+          }
+        });
         return;
       }
 
       this.hasEventBind = true;
       this.isFirstScroll = true;
       this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
-        // 可能被销毁了或者节点树还没准备好
-        if (!_this4.isDestroyed && !_this4.isFirstScroll) {
-          Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(_this4, function (ele) {
-            if (ele !== _this4) {
-              ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
-              ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
-            }
-          });
-
-          _this4.scrollRender(left, top);
-
-          if (_this4.currentEvent) {
-            _this4.emit('scroll', _this4.currentEvent);
-          }
-        }
-
-        if (_this4.isFirstScroll) {
-          _this4.isFirstScroll = false;
-        }
+        _this5.scrollHandler(left, top);
       }, this.scrollerOption);
       this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
       this.on('touchstart', function (e) {
@@ -5659,9 +5697,9 @@ var ScrollView = /*#__PURE__*/function (_View) {
           }
         });
 
-        _this4.scrollerObj.doTouchStart(touches, e.timeStamp);
+        _this5.scrollerObj.doTouchStart(touches, e.timeStamp);
 
-        _this4.currentEvent = e;
+        _this5.currentEvent = e;
       });
       this.on('touchmove', function (e) {
         if (!e.touches) {
@@ -5676,15 +5714,15 @@ var ScrollView = /*#__PURE__*/function (_View) {
           }
         });
 
-        _this4.scrollerObj.doTouchMove(touches, e.timeStamp);
+        _this5.scrollerObj.doTouchMove(touches, e.timeStamp);
 
-        _this4.currentEvent = e;
+        _this5.currentEvent = e;
       }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
 
       this.root.on('touchend', function (e) {
-        _this4.scrollerObj.doTouchEnd(e.timeStamp);
+        _this5.scrollerObj.doTouchEnd(e.timeStamp);
 
-        _this4.currentEvent = e;
+        _this5.currentEvent = e;
       });
     }
   }, {

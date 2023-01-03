@@ -55,7 +55,7 @@ new Layout.TWEEN.Tween(ball.style)
 Layout 仅仅是引用了 tween.js，缓动相关的接口并没有做任何定制，因此缓动相关的能力主要查看 [tween.js 的文档](https://github.com/tweenjs/tween.js/blob/main/docs/user_guide.md)。
 
 借助 tween.js，主要是能够实现两类动画
-1. 改变位置相关动画: 如示例所示，改变 **style.left**、**style.top**即可;
+1. 改变位置相关动画: 如示例所示，改变 **style.left**、**style.top**、**style.right**、**style.bottom** 即可，特别注意的是，left/top/right/bottom默认是没有值的，需要指定个默认值 TWEEN 才能够生效。
 2. 改变布局的动画：更改 **style.width**、**style.height**等会改变布局的属性，布局属性列表可见[布局属性](/api/style.html#布局);
 
 ## 一些参考资料

@@ -149,6 +149,14 @@ export function layoutChildren(element) {
       child.layoutBox.absoluteY = child.layoutBox.top;
     }
 
+    // if (typeof child.layoutBox.scrollTop !== 'undefined') {
+    //   child.layoutBox.absoluteY -= child.layoutBox.scrollTop;
+    // }
+
+    // if (typeof child.layoutBox.scrollLeft !== 'undefined') {
+    //   child.layoutBox.absoluteX -= child.layoutBox.scrollLeft;
+    // }
+
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
     child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
 

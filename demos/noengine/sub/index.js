@@ -21,6 +21,7 @@ let cacheRankData = [];
 
 let sharedCanvas = wx.getSharedCanvas();
 let sharedContext = sharedCanvas.getContext("2d");
+
 function draw(data = []) {
   let template = tplFn({
     data,
@@ -30,15 +31,26 @@ function draw(data = []) {
   Layout.clear();
   Layout.init(template, style);
   Layout.layout(sharedContext);
-  console.log(Layout)
+  console.log(Layout);
 
-  const scrollList = Layout.getElementsByClassName('list')[0];
-  scrollList.scrollTo(0, 100, false)
-  // setTimeout(() => {
-  //   const scrollList = Layout.getElementsByClassName('list')[0];
-  //   scrollList.scrollTo(0, 100, false)  
-  // }, 100)
-  const listItem = Layout.getElementsByClassName('listItem')[1]
+  Layout.ticker.next(() => {
+    console.log('test ticker next method');
+  })
+
+  const list = Layout.getElementsByClassName('list')[0];
+
+  const listItem = Layout.getElementsByClassName('listItem')[1];
+
+  const listItems = Layout.getElementsByClassName('listHeadImg');
+  setTimeout(() => {
+    listItems.forEach(item => {
+      new Layout.TWEEN.Tween(item.style).to({
+        width: 70,
+        height: 70
+      }).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
+    })
+  }, 2000)
+
 
   console.log(Layout.debugInfo)
 
@@ -48,19 +60,19 @@ function draw(data = []) {
   //   TWEEN.update()
   // }
   // requestAnimationFrame(animate)
-  
-  listItem.on('click', () => {
-    console.log('click')
-    let target = listItem.style.height === 150 ? 300 : 150;
-    listItem.style.top = 0
-    new Layout.TWEEN.Tween(listItem.style)
-    .to({ top: -150 }, 1000)
-    .easing(Layout.TWEEN.Easing.Bounce.Out)
-    .onUpdate(() => {
-    }).onComplete(() => {
-      // console.log(Layout)
-    }).start();
-  });
+
+  // listItem.on('click', () => {
+  //   console.log('click')
+  //   let target = listItem.style.height === 150 ? 300 : 150;
+  //   listItem.style.top = 0
+  //   new Layout.TWEEN.Tween(listItem.style)
+  //   .to({ top: -150 }, 1000)
+  //   .easing(Layout.TWEEN.Easing.Bounce.Out)
+  //   .onUpdate(() => {
+  //   }).onComplete(() => {
+  //     // console.log(Layout)
+  //   }).start();
+  // });
 }
 
 function loadFriendDataAndRender(key, info, needRender = true) {
@@ -86,7 +98,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     cacheRankData = data;
 
     // mock
-    for (let i = data.length; i < 50; i++) {
+    for (let i = data.length; i < 20; i++) {
       data[i] = JSON.parse(JSON.stringify(data[0]));
       data[i].rank = i;
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
@@ -101,9 +113,9 @@ function loadFriendDataAndRender(key, info, needRender = true) {
       btnList[i].on("click", (e) => {
         let img = Layout.getElementsById("img" + i);
         img[0].src =
-          img[0].src === "sub/Buffet_icon_GiftPlate_0.png"
-            ? "sub/Buffet_icon_GiftPlate.png"
-            : "sub/Buffet_icon_GiftPlate_0.png";
+          img[0].src === "sub/Buffet_icon_GiftPlate_0.png" ?
+          "sub/Buffet_icon_GiftPlate.png" :
+          "sub/Buffet_icon_GiftPlate_0.png";
       });
     }
   });

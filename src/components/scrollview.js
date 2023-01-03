@@ -2,7 +2,7 @@
 import View from './view.js';
 import { getDpr, copyTouchArray } from '../common/util.js';
 import { Scroller } from 'scroller';
-import { iterateTree  } from '../common/vd.js';
+import { iterateTree } from '../common/vd.js';
 
 const dpr = getDpr();
 
@@ -101,7 +101,7 @@ export default class ScrollView extends View {
   repaint() {
     this.clear();
 
-    this.render(this.ctx);
+    // this.render();
 
     this.scrollRender(this.scrollLeft, this.scrollTop);
   }
@@ -175,12 +175,45 @@ export default class ScrollView extends View {
     this.ctx.restore();
   }
 
+  scrollHandler(left, top) {
+    // 可能被销毁了或者节点树还没准备好
+    if (!this.isDestroyed && !this.isFirstScroll) {
+      iterateTree(this, (ele) => {
+        if (ele !== this) {
+          ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
+          ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
+        }
+      });
+      this.scrollRender(left, top);
+      if (this.currentEvent) {
+        this.emit('scroll', this.currentEvent);
+      }
+    }
+    if (this.isFirstScroll) {
+      this.isFirstScroll = false;
+    }
+  }
+
   insert(context) {
     this.ctx = context;
 
     if (this.hasEventBind) {
       // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域
-      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+      if (this.layoutBox.width !== this.scrollerObj.__clientWidth
+        || this.layoutBox.height !== this.scrollerObj.__clientHeight
+        || this.scrollWidth !== this.scrollerObj.__contentWidth
+        || this.scrollHeight !== this.scrollerObj.__contentHeight) {
+        this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+      }
+
+      // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
+      iterateTree(this, (ele) => {
+        if (ele !== this) {
+          ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - this.scrollTop;
+          ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - this.scrollLeft;
+        }
+      });
+
       return;
     }
 
@@ -188,22 +221,7 @@ export default class ScrollView extends View {
     this.isFirstScroll = true;
 
     this.scrollerObj = new Scroller((left, top) => {
-      // 可能被销毁了或者节点树还没准备好
-      if (!this.isDestroyed && !this.isFirstScroll) {
-        iterateTree(this, (ele) => {
-          if (ele !== this) {
-            ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
-            ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
-          }
-        });
-        this.scrollRender(left, top);
-        if (this.currentEvent) {
-          this.emit('scroll', this.currentEvent);
-        }
-      }
-      if (this.isFirstScroll) {
-        this.isFirstScroll = false;
-      }
+      this.scrollHandler(left, top);
     }, this.scrollerOption);
 
     this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
