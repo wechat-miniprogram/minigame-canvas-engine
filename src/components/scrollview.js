@@ -185,10 +185,11 @@ export default class ScrollView extends View {
     }
 
     this.hasEventBind = true;
+    this.isFirstScroll = true;
 
     this.scrollerObj = new Scroller((left, top) => {
       // 可能被销毁了或者节点树还没准备好
-      if (!this.isDestroyed) {
+      if (!this.isDestroyed && !this.isFirstScroll) {
         iterateTree(this, (ele) => {
           if (ele !== this) {
             ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
@@ -200,12 +201,12 @@ export default class ScrollView extends View {
           this.emit('scroll', this.currentEvent);
         }
       }
+      if (this.isFirstScroll) {
+        this.isFirstScroll = false;
+      }
     }, this.scrollerOption);
 
-    requestAnimationFrame(() => {
-      // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，调用渲染
-      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
-    });
+    this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
     this.on('touchstart', (e) => {
       if (!e.touches) {

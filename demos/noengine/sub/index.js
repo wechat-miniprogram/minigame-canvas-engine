@@ -19,8 +19,6 @@ let key = "rankScore";
 let currentMaxScore = 0;
 let cacheRankData = [];
 
-console.log('Proxy', Proxy)
-
 let sharedCanvas = wx.getSharedCanvas();
 let sharedContext = sharedCanvas.getContext("2d");
 function draw(data = []) {
@@ -34,6 +32,8 @@ function draw(data = []) {
   Layout.layout(sharedContext);
   console.log(Layout)
 
+  const scrollList = Layout.getElementsByClassName('list')[0];
+  scrollList.scrollTo(0, 100, false)
   // setTimeout(() => {
   //   const scrollList = Layout.getElementsByClassName('list')[0];
   //   scrollList.scrollTo(0, 100, false)  

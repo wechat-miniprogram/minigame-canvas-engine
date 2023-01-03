@@ -183,8 +183,12 @@ class _Layout extends Element {
 
     // 遍历节点树，依次调用节点的渲染接口实现渲染
     debugInfo.start('renderChildren');
-    renderChildren(this.children, this.renderContext);
+    renderChildren(this.children, this.renderContext, false);
     debugInfo.end('renderChildren');
+
+    debugInfo.start('repaint');
+    this.repaint();
+    debugInfo.end('repaint');
     this.isDirty = false;
   }
 

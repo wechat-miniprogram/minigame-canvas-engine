@@ -314,8 +314,11 @@ var _Layout = /*#__PURE__*/function (_Element) {
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext); // 遍历节点树，依次调用节点的渲染接口实现渲染
 
       debugInfo.start('renderChildren');
-      Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["renderChildren"])(this.children, this.renderContext);
+      Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["renderChildren"])(this.children, this.renderContext, false);
       debugInfo.end('renderChildren');
+      debugInfo.start('repaint');
+      this.repaint();
+      debugInfo.end('repaint');
       this.isDirty = false;
     }
     /**
@@ -5620,9 +5623,10 @@ var ScrollView = /*#__PURE__*/function (_View) {
       }
 
       this.hasEventBind = true;
+      this.isFirstScroll = true;
       this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
         // 可能被销毁了或者节点树还没准备好
-        if (!_this4.isDestroyed) {
+        if (!_this4.isDestroyed && !_this4.isFirstScroll) {
           Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(_this4, function (ele) {
             if (ele !== _this4) {
               ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
@@ -5636,11 +5640,12 @@ var ScrollView = /*#__PURE__*/function (_View) {
             _this4.emit('scroll', _this4.currentEvent);
           }
         }
+
+        if (_this4.isFirstScroll) {
+          _this4.isFirstScroll = false;
+        }
       }, this.scrollerOption);
-      requestAnimationFrame(function () {
-        // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，调用渲染
-        _this4.scrollerObj.setDimensions(_this4.layoutBox.width, _this4.layoutBox.height, _this4.scrollWidth, _this4.scrollHeight);
-      });
+      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
       this.on('touchstart', function (e) {
         if (!e.touches) {
           e.touches = [e];
