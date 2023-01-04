@@ -30,9 +30,11 @@ export default class Image extends Element {
         if (newValue !== this.imgsrc) {
           this.imgsrc = newValue;
           imageManager.loadImage(this.src, (img) => {
-            this.img = img;
-            // 当图片加载完成，实例可能已经被销毁了
-            this.root.emit('repaint');
+            if (!this.isDestroyed) {
+              this.img = img;
+              // 当图片加载完成，实例可能已经被销毁了
+              this.root.emit('repaint');
+            }
           });
         }
       },
@@ -46,8 +48,11 @@ export default class Image extends Element {
       if (fromCache) {
         this.img = img;
       } else {
-        // 当图片加载完成，实例可能已经被销毁了
-        this.root.emit('repaint');
+        if (!this.isDestroyed) {
+          this.img = img;
+          // 当图片加载完成，实例可能已经被销毁了
+          this.root.emit('repaint');
+        }
       }
     });
   }

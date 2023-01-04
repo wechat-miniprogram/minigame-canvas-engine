@@ -5111,9 +5111,11 @@ var Image = /*#__PURE__*/function (_Element) {
         if (newValue !== this.imgsrc) {
           this.imgsrc = newValue;
           _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
-            _this2.img = img; // 当图片加载完成，实例可能已经被销毁了
+            if (!_this2.isDestroyed) {
+              _this2.img = img; // 当图片加载完成，实例可能已经被销毁了
 
-            _this2.root.emit('repaint');
+              _this2.root.emit('repaint');
+            }
           });
         }
       },
@@ -5125,8 +5127,11 @@ var Image = /*#__PURE__*/function (_Element) {
       if (fromCache) {
         _this.img = img;
       } else {
-        // 当图片加载完成，实例可能已经被销毁了
-        _this.root.emit('repaint');
+        if (!_this.isDestroyed) {
+          _this.img = img; // 当图片加载完成，实例可能已经被销毁了
+
+          _this.root.emit('repaint');
+        }
       }
     });
     return _this;
