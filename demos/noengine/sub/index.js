@@ -31,26 +31,36 @@ function draw(data = []) {
   Layout.clear();
   Layout.init(template, style);
   Layout.layout(sharedContext);
-  console.log(Layout);
+  // console.log(Layout);
 
-  Layout.ticker.next(() => {
-    console.log('test ticker next method');
-  })
+  // Layout.ticker.next(() => {
+  //   console.log('test ticker next method');
+  // })
 
-  const list = Layout.getElementsByClassName('list')[0];
+  // const list = Layout.getElementsByClassName('list')[0];
+  // console.log(list)
 
-  const listItem = Layout.getElementsByClassName('listItem')[1];
+  // const listItem = Layout.getElementsByClassName('listItem')[1];
+
+  // const listItems = Layout.getElementsByClassName('listHeadImg');
+  // listItems.forEach(item => {
+  //   new Layout.TWEEN.Tween(item.style).to({
+  //     width: 70,
+  //     height: 70
+  //   }).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
+  // })
+
+  // setTimeout(() => {
+  //   Layout.clear();
+  //   Layout.init(template, style);
+  //   Layout.layout(sharedContext);
+  //   // console.log(Layout);
+  // }, 3000)
 
   const listItems = Layout.getElementsByClassName('listHeadImg');
   setTimeout(() => {
-    listItems.forEach(item => {
-      new Layout.TWEEN.Tween(item.style).to({
-        width: 70,
-        height: 70
-      }).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
-    })
-  }, 2000)
-
+    listItems[0].src = listItems[1].src;
+  }, 3000)
 
   console.log(Layout.debugInfo)
 

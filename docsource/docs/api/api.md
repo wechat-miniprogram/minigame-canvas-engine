@@ -2,16 +2,30 @@
 
 ## Layout
 
-### getElementsById
-#### Layout.getElementsById(String elementId)
-获取元素id为**elementId**的一组元素
+### Layout.getElementsById(String elementId)
+获取元素id为**elementId**的一组元素，之所以是一组元素是因为这里 id 的实现没有对齐 Web，id并不是唯一的，只是一个标识。
+```js
+// <view id="container"></view>
+const container = Layout.getElementsById('container')[0];
+```
 
-### getElementsByClassName
-#### Layout.getElementsByClassName(String className)
-获取包含class为**className**的一组元素
+### Layout.getElementsByClassName(String className)
+获取包含class为**className**的一组元素。
 
-### updateViewPort
-#### Layout.updateViewPort(Object box)
+```js
+/**
+ * <view id="container">
+    <view class="item"></view>
+    <view class="item"></view>
+    <view class="item"></view>
+   </view>
+ */
+const list = Layout.getElementsByClassName('item');
+
+console.log(list.length); // 3
+```
+
+### Layout.updateViewPort(Object box)
 更新被绘制canvas的窗口信息，本渲染引擎并不关心是否会和其他游戏引擎共同使用，而本身又需要支持事件处理，因此，如果被渲染内容是绘制到离屏canvas，需要将最终绘制在屏幕上
 的绝对尺寸和位置信息更新到本渲染引擎。
 
@@ -23,9 +37,9 @@
 | x | Number |  是   | canvas 距离屏幕左上角的物理像素x坐标|
 | y | Number |  是   | canvas 距离屏幕左上角的物理像素y坐标|
 
-
-#### Layout.getElementsByClassName(String className)
-获取包含class为**className**的一组元素
+::: tip
+这一步非常重要，决定了点击、滑动等事件能否争取处理。
+:::
 
 ### Layout.TWEEN
 Layout 默认挂载了[tween.js](https://github.com/tweenjs/tween.js/)模块，TWEEN 的使用与 tween.js 的使用并无差异。
@@ -40,20 +54,16 @@ new Layout.TWEEN.Tween(ball.style)
 ```
 
 
-### repaint
-#### Layout.repaint()
+### Layout.repaint()
 在某些场景下执行重渲染逻辑，比如通过getElementsById获取一个元素并且改变他的背景颜色，因为不涉及布局变更，执行Layout.repaint()即可。
 
-### clear
-#### Layout.clear()
-清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行init和layout方法渲染界面。
+### Layout.clear()
+清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行`init`和`layout`方法渲染界面。
 
-### clearPool
-#### Layout.clearPool()
+### Layout.clearPool()
 调用此API可以清理对象池，释放内存
 
-### clearAll
-#### Layout.clearAll()
+### Layout.clearAll()
 等价于按序调用Layout.clear和Layout.clearPool.
 
 ### loadImgs

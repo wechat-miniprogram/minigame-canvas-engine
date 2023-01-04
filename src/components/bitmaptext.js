@@ -61,11 +61,11 @@ export default class BitMapText extends Element {
     }
 
     if (this.font.ready) {
-      this.renderText(this.ctx, this.layoutBox);
+      this.renderText(this.ctx);
     } else {
       this.font.event.on('text__load__done', () => {
         if (!this.isDestroyed) {
-          this.renderText(this.ctx, this.layoutBox);
+          this.renderText(this.ctx);
         }
       });
     }

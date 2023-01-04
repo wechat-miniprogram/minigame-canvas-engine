@@ -112,6 +112,7 @@ export default class ScrollView extends View {
 
     this.ctx = null;
     this.children = null;
+    this.root.off('touchend');
     this.root = null;
   }
 

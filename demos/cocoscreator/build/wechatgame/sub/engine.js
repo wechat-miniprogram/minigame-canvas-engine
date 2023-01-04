@@ -492,6 +492,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "clear",
     value: function clear() {
+      _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"].removeAll();
       this.destroyAll(this);
       this.elementTree = null;
       this.children = [];
@@ -5110,9 +5111,9 @@ var Image = /*#__PURE__*/function (_Element) {
         if (newValue !== this.imgsrc) {
           this.imgsrc = newValue;
           _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
-            _this2.img = img;
+            _this2.img = img; // 当图片加载完成，实例可能已经被销毁了
 
-            _this2.emit('repaint');
+            _this2.root.emit('repaint');
           });
         }
       },
@@ -5125,7 +5126,7 @@ var Image = /*#__PURE__*/function (_Element) {
         _this.img = img;
       } else {
         // 当图片加载完成，实例可能已经被销毁了
-        _this.root.emit('repaint', _this.className);
+        _this.root.emit('repaint');
       }
     });
     return _this;
@@ -5569,6 +5570,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
       this.isDestroyed = true;
       this.ctx = null;
       this.children = null;
+      this.root.off('touchend');
       this.root = null;
     }
   }, {
@@ -7257,11 +7259,11 @@ var BitMapText = /*#__PURE__*/function (_Element) {
       }
 
       if (this.font.ready) {
-        this.renderText(this.ctx, this.layoutBox);
+        this.renderText(this.ctx);
       } else {
         this.font.event.on('text__load__done', function () {
           if (!_this2.isDestroyed) {
-            _this2.renderText(_this2.ctx, _this2.layoutBox);
+            _this2.renderText(_this2.ctx);
           }
         });
       }

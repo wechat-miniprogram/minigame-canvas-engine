@@ -341,6 +341,7 @@ class _Layout extends Element {
   }
 
   clear() {
+    TWEEN.removeAll();
     this.destroyAll(this);
     this.elementTree = null;
     this.children = [];

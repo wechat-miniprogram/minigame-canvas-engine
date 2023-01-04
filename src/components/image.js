@@ -31,7 +31,8 @@ export default class Image extends Element {
           this.imgsrc = newValue;
           imageManager.loadImage(this.src, (img) => {
             this.img = img;
-            this.emit('repaint');
+            // 当图片加载完成，实例可能已经被销毁了
+            this.root.emit('repaint');
           });
         }
       },
@@ -46,7 +47,7 @@ export default class Image extends Element {
         this.img = img;
       } else {
         // 当图片加载完成，实例可能已经被销毁了
-        this.root.emit('repaint', this.className);
+        this.root.emit('repaint');
       }
     });
   }
