@@ -74,6 +74,8 @@ export function create(node, style, parent) {
 
   // 用于后续元素查询
   args.idName = id;
+  this.eleCount += 1;
+  args.id = this.eleCount;
   args.className = attr.class || '';
 
   const thisStyle = args.style;

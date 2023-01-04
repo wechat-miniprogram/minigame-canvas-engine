@@ -94,6 +94,7 @@ export default {
     height: 150,
     lineHeight: 150,
     marginLeft: 8,
+    // width: 20
   },
 
   selfListItem: {

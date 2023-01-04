@@ -3,7 +3,12 @@ import Element from './components/elements.js';
 import Pool from './common/pool.js';
 import Emitter from 'tiny-emitter';
 import computeLayout from 'css-layout';
-import { isClick, STATE, createImage, clearCanvas } from './common/util.js';
+import {
+  isClick,
+  STATE,
+  createImage,
+  clearCanvas
+} from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 import TWEEN from '@tweenjs/tween.js';
@@ -26,8 +31,15 @@ const imgPool = new Pool('imgPool');
 const debugInfo = new DebugInfo();
 
 class _Layout extends Element {
-  constructor({ style, name } = {}) {
-    super({ style, id: 0, name });
+  constructor({
+    style,
+    name
+  } = {}) {
+    super({
+      style,
+      id: 0,
+      name
+    });
 
     this.hasEventHandler = false;
     this.elementTree = null;
@@ -42,6 +54,7 @@ class _Layout extends Element {
     this.touchCancel = this.eventHandler('touchcancel').bind(this);
 
     this.version = '1.0.0';
+    this.eleCount = 0;
 
     this.touchMsg = {};
 
@@ -91,7 +104,11 @@ class _Layout extends Element {
 
   // 与老版本兼容
   get debugInfo() {
-    return debugInfo.log();
+    let info = debugInfo.log();
+
+    info += `elementCount: ${this.eleCount}\n`;
+
+    return info;
   }
 
   /**
@@ -243,8 +260,8 @@ class _Layout extends Element {
       const child = tree.children[list[i]];
       const box = child.realLayoutBox;
 
-      if ((box.realX <= x && x <= box.realX + box.width)
-        && (box.realY <= y && y <= box.realY + box.height)) {
+      if ((box.realX <= x && x <= box.realX + box.width) &&
+        (box.realY <= y && y <= box.realY + box.height)) {
         itemList.push(child);
         if (child.children.length) {
           this.getChildByPos(child, x, y, itemList);
@@ -331,7 +348,9 @@ class _Layout extends Element {
   }
 
   destroyAll(tree) {
-    const { children } = tree;
+    const {
+      children
+    } = tree;
 
     children.forEach((child) => {
       child.destroy();
@@ -341,6 +360,7 @@ class _Layout extends Element {
   }
 
   clear() {
+    debugInfo.reset();
     TWEEN.removeAll();
     this.destroyAll(this);
     this.elementTree = null;
@@ -348,6 +368,7 @@ class _Layout extends Element {
     this.layoutTree = {};
     this.state = STATE.CLEAR;
     clearCanvas(this.renderContext);
+    this.eleCount = 0;
   }
 
   clearPool() {

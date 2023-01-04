@@ -39,7 +39,7 @@ export default class DebugInfo {
     }, '');
 
     // eslint-disable-next-line no-unused-vars
-    logInfo += `totalCost: ${this.totalCost}`;
+    logInfo += `totalCost: ${this.totalCost}\n`;
 
     return logInfo;
   }

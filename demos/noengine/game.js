@@ -14,12 +14,12 @@ let ctx;
 let flag = false;
 let x, y;
 
-function initSharedCanvas() {
-  canvas = wx.createCanvas();
-  canvas.width = GAME_WIDTH;
-  canvas.height = GAME_HEIGHT;
-  ctx = canvas.getContext('2d');
+canvas = wx.createCanvas();
+canvas.width = GAME_WIDTH;
+canvas.height = GAME_HEIGHT;
+ctx = canvas.getContext('2d');
 
+function initSharedCanvas() {
   const openDataContext = wx.getOpenDataContext();
   const sharedCanvas    = openDataContext.canvas;
   
@@ -51,11 +51,11 @@ function initSharedCanvas() {
 }
 
 function loop() {
-  if (flag) {
-    ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
+  ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
 
     ctx.fillStyle = '#f3f3f3';
     ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
+  if (flag) {
     ctx.drawImage(sharedCanvas, x, y, sharedCanvas.width, sharedCanvas.height)
   }
 
@@ -63,4 +63,9 @@ function loop() {
 }
 
 loop()
+
+// wx.onTouchStart((result) => {
+//   initSharedCanvas();
+// })
+
 initSharedCanvas();

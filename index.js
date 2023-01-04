@@ -176,6 +176,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
     _this.touchEnd = _this.eventHandler('touchend').bind(_assertThisInitialized(_this));
     _this.touchCancel = _this.eventHandler('touchcancel').bind(_assertThisInitialized(_this));
     _this.version = '1.0.0';
+    _this.eleCount = 0;
     _this.touchMsg = {};
     _this.hasViewPortSet = false;
     _this.realLayoutBox = {
@@ -227,7 +228,9 @@ var _Layout = /*#__PURE__*/function (_Element) {
   _createClass(_Layout, [{
     key: "debugInfo",
     get: function get() {
-      return debugInfo.log();
+      var info = debugInfo.log();
+      info += "elementCount: ".concat(this.eleCount, "\n");
+      return info;
     }
     /**
      * 更新被绘制canvas的窗口信息，本渲染引擎并不关心是否会和其他游戏引擎共同使用
@@ -492,6 +495,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "clear",
     value: function clear() {
+      debugInfo.reset();
       _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"].removeAll();
       this.destroyAll(this);
       this.elementTree = null;
@@ -499,6 +503,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
+      this.eleCount = 0;
     }
   }, {
     key: "clearPool",
@@ -4490,7 +4495,7 @@ var DebugInfo = /*#__PURE__*/function () {
         return sum;
       }, ''); // eslint-disable-next-line no-unused-vars
 
-      logInfo += "totalCost: ".concat(this.totalCost);
+      logInfo += "totalCost: ".concat(this.totalCost, "\n");
       return logInfo;
     }
   }]);
@@ -4689,6 +4694,8 @@ function create(node, style, parent) {
   }, {}); // 用于后续元素查询
 
   args.idName = id;
+  this.eleCount += 1;
+  args.id = this.eleCount;
   args.className = attr["class"] || '';
   var thisStyle = args.style;
 

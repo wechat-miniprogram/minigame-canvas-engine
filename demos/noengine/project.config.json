@@ -6,7 +6,7 @@
     "enhance": true,
     "postcss": true,
     "preloadBackgroundData": false,
-    "minified": true,
+    "minified": false,
     "newFeature": true,
     "coverView": true,
     "nodeModules": false,

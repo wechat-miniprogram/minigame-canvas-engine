@@ -31,7 +31,7 @@ function draw(data = []) {
   Layout.clear();
   Layout.init(template, style);
   Layout.layout(sharedContext);
-  // console.log(Layout);
+  console.log(Layout);
 
   // Layout.ticker.next(() => {
   //   console.log('test ticker next method');
@@ -108,7 +108,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     cacheRankData = data;
 
     // mock
-    for (let i = data.length; i < 20; i++) {
+    for (let i = data.length; i < 150; i++) {
       data[i] = JSON.parse(JSON.stringify(data[0]));
       data[i].rank = i;
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
