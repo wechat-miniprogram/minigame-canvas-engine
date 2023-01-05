@@ -42,13 +42,59 @@ function draw(data = []) {
 
   // const listItem = Layout.getElementsByClassName('listItem')[1];
 
-  // const listItems = Layout.getElementsByClassName('listHeadImg');
-  // listItems.forEach(item => {
-  //   new Layout.TWEEN.Tween(item.style).to({
-  //     width: 70,
-  //     height: 70
-  //   }).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
-  // })
+
+  /**
+   * tween不直接作用于节点，否则一个列表大量的节点都执行tween操作性能必然会差
+   * 因此维护一个与节点无关的 globalTween，每帧检查是 globalTween 应该作用于哪些节点
+   * 每次 Layout.clear 记得清理或者重置 globalTween
+   */
+  let globalStyle = { width: 90, height: 90 }
+  let globalTween = new Layout.TWEEN.Tween(globalStyle).to({
+    width: 70,
+    height: 70
+  }).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
+
+  const list = Layout.getElementsByClassName('list')[0];
+  const listItems = Layout.getElementsByClassName('listHeadImg');
+  const box = list.layoutBox;
+
+  function manualTween() {
+    // scrollview在全局节点中的Y轴位置
+    const abY = box.absoluteY;
+    const abX = box.absoluteX;
+
+    // 根据滚动值获取裁剪区域
+    const startY = abY + list.scrollTop;
+    const endY = abY + list.scrollTop + box.height;
+    const startX = abX + list.scrollLeft;
+    const endX = abX + list.scrollLeft + box.width;
+
+    listItems.forEach((item, index) => {
+      const { layoutBox } = item;
+      const { height } = layoutBox;
+      const { width } = layoutBox;
+      const originY = layoutBox.originalAbsoluteY;
+      const originX = layoutBox.originalAbsoluteX;
+
+      // 判断处于可视窗口内的子节点，递归渲染该子节点
+      if (originY + height >= startY && originY <= endY
+        && originX + width >= startX && originX <= endX) {
+          // item.style.width = globalStyle.width;
+          item.style.height = globalStyle.height;
+      }
+    });
+  }
+
+  Layout.ticker.add(() => {
+    manualTween();
+  });
+
+  // list.on('scroll', () => {
+  // });
+
+  setInterval(() => {
+    console.log(Layout.debugInfo)
+  }, 3000)
 
   // setTimeout(() => {
   //   Layout.clear();
@@ -57,10 +103,10 @@ function draw(data = []) {
   //   // console.log(Layout);
   // }, 3000)
 
-  const listItems = Layout.getElementsByClassName('listHeadImg');
-  setTimeout(() => {
-    listItems[0].src = listItems[1].src;
-  }, 3000)
+  // const listItems = Layout.getElementsByClassName('listHeadImg');
+  // setTimeout(() => {
+  //   listItems[0].src = listItems[1].src;
+  // }, 3000)
 
   console.log(Layout.debugInfo)
 
@@ -108,7 +154,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     cacheRankData = data;
 
     // mock
-    for (let i = data.length; i < 150; i++) {
+    for (let i = data.length; i < 20; i++) {
       data[i] = JSON.parse(JSON.stringify(data[0]));
       data[i].rank = i;
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
