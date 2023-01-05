@@ -134,15 +134,12 @@ export default class ScrollView extends View {
     this.scrollTop = top;
     this.scrollLeft = left;
 
-    // scrollview在全局节点中的Y轴位置
-    const abY = box.absoluteY;
-    const abX = box.absoluteX;
+    const { absoluteX: startX, absoluteY: startY, width, height } = box;
 
     // 根据滚动值获取裁剪区域
-    const startY = abY + this.scrollTop;
-    const endY = abY + this.scrollTop + box.height;
-    const startX = abX + this.scrollLeft;
-    const endX = abX + this.scrollLeft + box.width;
+    const endX = startX + width;
+    const endY = startY + height;
+
 
     // 清理滚动画布和主屏画布
     this.clear();
@@ -156,19 +153,16 @@ export default class ScrollView extends View {
      */
     this.ctx.save();
     this.ctx.beginPath();
-    this.ctx.rect(abX, abY, box.width, box.height);
+    this.ctx.rect(startX, startY, width, height);
     this.ctx.clip();
 
     this.children.forEach((child) => {
-      const { layoutBox } = child;
-      const { height } = layoutBox;
-      const { width } = layoutBox;
-      const originY = layoutBox.originalAbsoluteY;
-      const originX = layoutBox.originalAbsoluteX;
+      const { width, height, absoluteX, absoluteY } = child.layoutBox;
 
       // 判断处于可视窗口内的子节点，递归渲染该子节点
-      if (originY + height >= startY && originY <= endY
-        && originX + width >= startX && originX <= endX) {
+      if (absoluteY + height >= startY && absoluteY <= endY
+        && absoluteX + width >= startX && absoluteX <= endX) {
+        console.log(child);
         this.renderTreeWithTop(child, this.scrollTop, this.scrollLeft);
       }
     });
@@ -204,7 +198,12 @@ export default class ScrollView extends View {
         || this.layoutBox.height !== this.scrollerObj.__clientHeight
         || this.scrollWidth !== this.scrollerObj.__contentWidth
         || this.scrollHeight !== this.scrollerObj.__contentHeight) {
-        this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+        this.scrollerObj.setDimensions(
+          this.layoutBox.width,
+          this.layoutBox.height,
+          this.scrollWidth,
+          this.scrollHeight,
+        );
       }
 
       // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
