@@ -66,8 +66,6 @@ export default class Element {
     this.root = null;
     this.isDestroyed = false;
     this.layoutBox = {};
-    // element 在屏幕中的物理位置和尺寸信息，维护这个是因为需要做事件处理
-    this.realLayoutBox = {};
 
     this.dataset = dataset;
 
@@ -184,7 +182,6 @@ export default class Element {
     this.EE = null;
     this.parent = null;
     this.ctx = null;
-    this.realLayoutBox = null;
 
     // element 在画布中的位置和尺寸信息
     this.layoutBox = null;
@@ -197,6 +194,20 @@ export default class Element {
     element.parentId = this.id;
 
     this.children.push(element);
+  }
+
+  getBoundingClientRect() {
+    const { absoluteX, absoluteY, width, height } = this.layoutBox;
+    return {
+      x: absoluteX,
+      y: absoluteY,
+      left: absoluteX,
+      top: absoluteY,
+      width,
+      height,
+      right: absoluteX + width,
+      bottom: absoluteY + height,
+    };
   }
 
   emit(event, ...theArgs) {

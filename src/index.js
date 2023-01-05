@@ -355,7 +355,7 @@ class _Layout extends Element {
 
   destroyAll(tree) {
     const {
-      children
+      children,
     } = tree;
 
     children.forEach((child) => {
@@ -374,6 +374,10 @@ class _Layout extends Element {
     this.layoutTree = {};
     this.state = STATE.CLEAR;
     clearCanvas(this.renderContext);
+    this.realLayoutBox = {
+      realX: 0,
+      realY: 0,
+    };
     this.eleCount = 0;
   }
 

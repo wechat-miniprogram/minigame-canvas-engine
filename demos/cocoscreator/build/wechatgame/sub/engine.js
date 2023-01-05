@@ -509,6 +509,10 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
+      this.realLayoutBox = {
+        realX: 0,
+        realY: 0
+      };
       this.eleCount = 0;
     }
   }, {
@@ -645,9 +649,7 @@ var Element = /*#__PURE__*/function () {
     this.EE = EE;
     this.root = null;
     this.isDestroyed = false;
-    this.layoutBox = {}; // element 在屏幕中的物理位置和尺寸信息，维护这个是因为需要做事件处理
-
-    this.realLayoutBox = {};
+    this.layoutBox = {};
     this.dataset = dataset;
 
     if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
@@ -762,8 +764,7 @@ var Element = /*#__PURE__*/function () {
       this.isDestroyed = true;
       this.EE = null;
       this.parent = null;
-      this.ctx = null;
-      this.realLayoutBox = null; // element 在画布中的位置和尺寸信息
+      this.ctx = null; // element 在画布中的位置和尺寸信息
 
       this.layoutBox = null;
       this.props = null;
@@ -775,6 +776,25 @@ var Element = /*#__PURE__*/function () {
       element.parent = this;
       element.parentId = this.id;
       this.children.push(element);
+    }
+  }, {
+    key: "getBoundingClientRect",
+    value: function getBoundingClientRect() {
+      var _this$layoutBox = this.layoutBox,
+          absoluteX = _this$layoutBox.absoluteX,
+          absoluteY = _this$layoutBox.absoluteY,
+          width = _this$layoutBox.width,
+          height = _this$layoutBox.height;
+      return {
+        x: absoluteX,
+        y: absoluteY,
+        left: absoluteX,
+        top: absoluteY,
+        width: width,
+        height: height,
+        right: absoluteX + width,
+        bottom: absoluteY + height
+      };
     }
   }, {
     key: "emit",
@@ -4775,13 +4795,7 @@ function layoutChildren(element) {
     } else {
       child.layoutBox.absoluteX = child.layoutBox.left;
       child.layoutBox.absoluteY = child.layoutBox.top;
-    } // if (typeof child.layoutBox.scrollTop !== 'undefined') {
-    //   child.layoutBox.absoluteY -= child.layoutBox.scrollTop;
-    // }
-    // if (typeof child.layoutBox.scrollLeft !== 'undefined') {
-    //   child.layoutBox.absoluteX -= child.layoutBox.scrollLeft;
-    // }
-
+    }
 
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
     child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
@@ -5566,15 +5580,14 @@ var ScrollView = /*#__PURE__*/function (_View) {
       var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       var box = this.layoutBox;
       this.scrollTop = top;
-      this.scrollLeft = left; // scrollview在全局节点中的Y轴位置
+      this.scrollLeft = left;
+      var startX = box.absoluteX,
+          startY = box.absoluteY,
+          width = box.width,
+          height = box.height; // 根据滚动值获取裁剪区域
 
-      var abY = box.absoluteY;
-      var abX = box.absoluteX; // 根据滚动值获取裁剪区域
-
-      var startY = abY + this.scrollTop;
-      var endY = abY + this.scrollTop + box.height;
-      var startX = abX + this.scrollLeft;
-      var endX = abX + this.scrollLeft + box.width; // 清理滚动画布和主屏画布
+      var endX = startX + width;
+      var endY = startY + height; // 清理滚动画布和主屏画布
 
       this.clear(); // ScrollView 作为容器本身的渲染
 
@@ -5586,16 +5599,16 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
       this.ctx.save();
       this.ctx.beginPath();
-      this.ctx.rect(abX, abY, box.width, box.height);
+      this.ctx.rect(startX, startY, width, height);
       this.ctx.clip();
       this.children.forEach(function (child) {
-        var layoutBox = child.layoutBox;
-        var height = layoutBox.height;
-        var width = layoutBox.width;
-        var originY = layoutBox.originalAbsoluteY;
-        var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，递归渲染该子节点
+        var _child$layoutBox = child.layoutBox,
+            width = _child$layoutBox.width,
+            height = _child$layoutBox.height,
+            absoluteX = _child$layoutBox.absoluteX,
+            absoluteY = _child$layoutBox.absoluteY; // 判断处于可视窗口内的子节点，递归渲染该子节点
 
-        if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
+        if (absoluteY + height >= startY && absoluteY <= endY && absoluteX + width >= startX && absoluteX <= endX) {
           _this3.renderTreeWithTop(child, _this3.scrollTop, _this3.scrollLeft);
         }
       });

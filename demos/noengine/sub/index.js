@@ -58,6 +58,8 @@ function draw(data = []) {
   const listItems = Layout.getElementsByClassName('listHeadImg');
   const box = list.layoutBox;
 
+
+  console.log(listItems[0].getBoundingClientRect())
   listItems[19].on('click', () => {
     console.log('click listitem 19');
   })
@@ -89,13 +91,13 @@ function draw(data = []) {
     });
   }
 
-  Layout.ticker.add(() => {
-    manualTween();
-  });
+  // Layout.ticker.add(() => {
+  //   manualTween();
+  // });
 
-  setInterval(() => {
-    console.log(Layout.debugInfo)
-  }, 3000)
+  // setInterval(() => {
+  //   console.log(Layout.debugInfo)
+  // }, 3000)
 
   // setTimeout(() => {
   //   Layout.clear();

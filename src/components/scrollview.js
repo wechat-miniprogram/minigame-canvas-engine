@@ -162,7 +162,6 @@ export default class ScrollView extends View {
       // 判断处于可视窗口内的子节点，递归渲染该子节点
       if (absoluteY + height >= startY && absoluteY <= endY
         && absoluteX + width >= startX && absoluteX <= endX) {
-        console.log(child);
         this.renderTreeWithTop(child, this.scrollTop, this.scrollLeft);
       }
     });
