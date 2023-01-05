@@ -91,6 +91,7 @@ export default class Element {
     this.style = style;
   }
 
+
   /**
    * 监听属性的变化判断是否需要执行 reflow、repaint 操作
    * 经过测试，Object.defineProperty 是一个比较慢的方法， 特别是属性比较多的时候

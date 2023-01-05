@@ -171,6 +171,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
     _this.renderContext = null;
     _this.renderport = {};
     _this.viewport = {};
+    _this.viewportScale = 1;
     _this.touchStart = _this.eventHandler('touchstart').bind(_assertThisInitialized(_this));
     _this.touchMove = _this.eventHandler('touchmove').bind(_assertThisInitialized(_this));
     _this.touchEnd = _this.eventHandler('touchend').bind(_assertThisInitialized(_this));
@@ -289,11 +290,19 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "reflow",
     value: function reflow() {
+      var isFirst = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      if (!isFirst) {
+        debugInfo.reset();
+      }
+
+      debugInfo.start('reflow');
       /**
        * 计算布局树
        * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
        * Layout本身并不作为布局计算，只是作为节点树的容器
        */
+
       debugInfo.start('computeLayout');
       css_layout__WEBPACK_IMPORTED_MODULE_4___default()(this.children[0]);
       debugInfo.end('computeLayout');
@@ -310,10 +319,11 @@ var _Layout = /*#__PURE__*/function (_Element) {
       debugInfo.start('layoutChildren');
       _common_vd__WEBPACK_IMPORTED_MODULE_11__["layoutChildren"].call(this, this);
       debugInfo.end('layoutChildren'); // 计算真实的物理像素位置，用于事件处理
+      // debugInfo.start('updateRealLayout');
+      // updateRealLayout(this, this.viewport.width / this.renderport.width);
+      // debugInfo.end('updateRealLayout');
 
-      debugInfo.start('updateRealLayout');
-      Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["updateRealLayout"])(this, this.viewport.width / this.renderport.width);
-      debugInfo.end('updateRealLayout');
+      this.viewportScale = this.viewport.width / this.renderport.width;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext); // 遍历节点树，依次调用节点的渲染接口实现渲染
 
       debugInfo.start('renderChildren');
@@ -323,6 +333,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.repaint();
       debugInfo.end('repaint');
       this.isDirty = false;
+      debugInfo.end('reflow');
     }
     /**
      * init阶段核心仅仅是根据xml和css创建了节点树
@@ -349,7 +360,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
         console.error('Please invoke method `updateViewPort` before method `layout`');
       }
 
-      this.reflow();
+      this.reflow(true);
       this.bindEvents();
       debugInfo.start('observeStyleAndEvent');
       Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["iterateTree"])(this.children[0], function (element) {
@@ -365,33 +376,12 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.isNeedRepaint = false;
       Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["repaintChildren"])(this.children);
     }
-    /**
-     * 给定节点树和触摸坐标，遍历节点树，查询被点中的所有节点
-     * 之所以要查询所有节点是因为先渲染的节点层级更低，最后一个查询到的节点才是最上面的被点中的节点
-     */
-
-  }, {
-    key: "getChildByPos",
-    value: function getChildByPos(tree, x, y, itemList) {
-      var list = Object.keys(tree.children);
-
-      for (var i = 0; i < list.length; i++) {
-        var child = tree.children[list[i]];
-        var box = child.realLayoutBox;
-
-        if (box.realX <= x && x <= box.realX + box.width && box.realY <= y && y <= box.realY + box.height) {
-          itemList.push(child);
-
-          if (child.children.length) {
-            this.getChildByPos(child, x, y, itemList);
-          }
-        }
-      }
-    }
   }, {
     key: "eventHandler",
     value: function eventHandler(eventName) {
       return function touchEventHandler(e) {
+        var _this2 = this;
+
         var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
 
         if (!touch || !touch.pageX || !touch.pageY) {
@@ -405,7 +395,23 @@ var _Layout = /*#__PURE__*/function (_Element) {
         var list = [];
 
         if (touch) {
-          this.getChildByPos(this, touch.pageX, touch.pageY, list);
+          var x = touch.pageX;
+          var y = touch.pageY;
+          Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["iterateTree"])(this.children[0], function (ele) {
+            var _ele$layoutBox = ele.layoutBox,
+                absoluteX = _ele$layoutBox.absoluteX,
+                absoluteY = _ele$layoutBox.absoluteY,
+                width = _ele$layoutBox.width,
+                height = _ele$layoutBox.height;
+            var realX = absoluteX * _this2.viewportScale + _this2.realLayoutBox.realX;
+            var realY = absoluteY * _this2.viewportScale + _this2.realLayoutBox.realY;
+            var realWidth = width * _this2.viewportScale;
+            var realHeight = height * _this2.viewportScale;
+
+            if (realX <= x && x <= realX + realWidth && realY <= y && y <= realY + realHeight) {
+              list.push(ele);
+            }
+          });
         }
 
         if (!list.length) {
@@ -481,13 +487,13 @@ var _Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "destroyAll",
     value: function destroyAll(tree) {
-      var _this2 = this;
+      var _this3 = this;
 
       var children = tree.children;
       children.forEach(function (child) {
         child.destroy();
 
-        _this2.destroyAll(child);
+        _this3.destroyAll(child);
 
         child.destroySelf && child.destroySelf();
       });
@@ -4616,7 +4622,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderChildren", function() { return renderChildren; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layoutChildren", function() { return layoutChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateRealLayout", function() { return updateRealLayout; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "iterateTree", function() { return iterateTree; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsById", function() { return getElementsById; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsByClassName", function() { return getElementsByClassName; });
@@ -4781,55 +4786,6 @@ function layoutChildren(element) {
     child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
     child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
     layoutChildren.call(_this2, child);
-  });
-}
-function updateRealLayout(element, scale) {
-  element.children.forEach(function (child) {
-    child.realLayoutBox = child.realLayoutBox || {};
-    ['left', 'top', 'width', 'height'].forEach(function (prop) {
-      child.realLayoutBox[prop] = child.layout[prop] * scale;
-    });
-
-    if (child.parent) {
-      // Scrollview支持横向滚动和纵向滚动，realX和realY需要动态计算
-      Object.defineProperty(child.realLayoutBox, 'realX', {
-        configurable: true,
-        enumerable: true,
-        get: function get() {
-          var res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
-          /**
-           * 滚动列表事件处理
-           */
-
-          if (child.parent && child.parent.type === 'ScrollView') {
-            res -= child.parent.scrollLeft * scale;
-          }
-
-          return res;
-        }
-      });
-      Object.defineProperty(child.realLayoutBox, 'realY', {
-        configurable: true,
-        enumerable: true,
-        get: function get() {
-          var res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
-          /**
-           * 滚动列表事件处理
-           */
-
-          if (child.parent && child.parent.type === 'ScrollView') {
-            res -= child.parent.scrollTop * scale;
-          }
-
-          return res;
-        }
-      });
-    } else {
-      child.realLayoutBox.realX = child.realLayoutBox.left;
-      child.realLayoutBox.realY = child.realLayoutBox.top;
-    }
-
-    updateRealLayout(child, scale);
   });
 }
 

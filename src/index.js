@@ -47,6 +47,7 @@ class _Layout extends Element {
 
     this.renderport = {};
     this.viewport = {};
+    this.viewportScale = 1;
 
     this.touchStart = this.eventHandler('touchstart').bind(this);
     this.touchMove = this.eventHandler('touchmove').bind(this);
@@ -167,7 +168,12 @@ class _Layout extends Element {
     this.state = STATE.INITED;
   }
 
-  reflow() {
+  reflow(isFirst = false) {
+    if (!isFirst) {
+      debugInfo.reset();
+    }
+
+    debugInfo.start('reflow');
     /**
      * 计算布局树
      * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
@@ -192,9 +198,10 @@ class _Layout extends Element {
     debugInfo.end('layoutChildren');
 
     // 计算真实的物理像素位置，用于事件处理
-    debugInfo.start('updateRealLayout');
-    updateRealLayout(this, this.viewport.width / this.renderport.width);
-    debugInfo.end('updateRealLayout');
+    // debugInfo.start('updateRealLayout');
+    // updateRealLayout(this, this.viewport.width / this.renderport.width);
+    // debugInfo.end('updateRealLayout');
+    this.viewportScale = this.viewport.width / this.renderport.width;
 
     clearCanvas(this.renderContext);
 
@@ -207,6 +214,8 @@ class _Layout extends Element {
     this.repaint();
     debugInfo.end('repaint');
     this.isDirty = false;
+
+    debugInfo.end('reflow');
   }
 
   /**
@@ -231,7 +240,7 @@ class _Layout extends Element {
       console.error('Please invoke method `updateViewPort` before method `layout`');
     }
 
-    this.reflow();
+    this.reflow(true);
 
     this.bindEvents();
 
@@ -249,27 +258,6 @@ class _Layout extends Element {
     repaintChildren(this.children);
   }
 
-  /**
-   * 给定节点树和触摸坐标，遍历节点树，查询被点中的所有节点
-   * 之所以要查询所有节点是因为先渲染的节点层级更低，最后一个查询到的节点才是最上面的被点中的节点
-   */
-  getChildByPos(tree, x, y, itemList) {
-    const list = Object.keys(tree.children);
-
-    for (let i = 0; i < list.length; i++) {
-      const child = tree.children[list[i]];
-      const box = child.realLayoutBox;
-
-      if ((box.realX <= x && x <= box.realX + box.width) &&
-        (box.realY <= y && y <= box.realY + box.height)) {
-        itemList.push(child);
-        if (child.children.length) {
-          this.getChildByPos(child, x, y, itemList);
-        }
-      }
-    }
-  }
-
   eventHandler(eventName) {
     return function touchEventHandler(e) {
       const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
@@ -283,7 +271,25 @@ class _Layout extends Element {
 
       const list = [];
       if (touch) {
-        this.getChildByPos(this, touch.pageX, touch.pageY, list);
+        const x = touch.pageX;
+        const y = touch.pageY;
+
+        iterateTree(this.children[0], (ele) => {
+          const {
+            absoluteX,
+            absoluteY,
+            width,
+            height,
+          } = ele.layoutBox;
+          const realX = absoluteX * this.viewportScale + this.realLayoutBox.realX;
+          const realY = absoluteY * this.viewportScale + this.realLayoutBox.realY;
+          const realWidth = width * this.viewportScale;
+          const realHeight = height * this.viewportScale;
+
+          if ((realX <= x && x <= realX + realWidth) && (realY <= y && y <= realY + realHeight)) {
+            list.push(ele);
+          }
+        });
       }
 
       if (!list.length) {

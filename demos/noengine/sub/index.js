@@ -58,6 +58,10 @@ function draw(data = []) {
   const listItems = Layout.getElementsByClassName('listHeadImg');
   const box = list.layoutBox;
 
+  listItems[19].on('click', () => {
+    console.log('click listitem 19');
+  })
+
   function manualTween() {
     // scrollview在全局节点中的Y轴位置
     const abY = box.absoluteY;
@@ -88,9 +92,6 @@ function draw(data = []) {
   Layout.ticker.add(() => {
     manualTween();
   });
-
-  // list.on('scroll', () => {
-  // });
 
   setInterval(() => {
     console.log(Layout.debugInfo)
@@ -154,7 +155,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     cacheRankData = data;
 
     // mock
-    for (let i = data.length; i < 20; i++) {
+    for (let i = data.length; i < 100; i++) {
       data[i] = JSON.parse(JSON.stringify(data[0]));
       data[i].rank = i;
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);

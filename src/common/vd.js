@@ -167,58 +167,6 @@ export function layoutChildren(element) {
   });
 }
 
-export function updateRealLayout(element, scale) {
-  element.children.forEach((child) => {
-    child.realLayoutBox = child.realLayoutBox || {};
-
-    ['left', 'top', 'width', 'height'].forEach((prop) => {
-      child.realLayoutBox[prop] = child.layout[prop] * scale;
-    });
-
-    if (child.parent) {
-      // Scrollview支持横向滚动和纵向滚动，realX和realY需要动态计算
-      Object.defineProperty(child.realLayoutBox, 'realX', {
-        configurable: true,
-        enumerable: true,
-        get: () => {
-          let res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
-
-          /**
-           * 滚动列表事件处理
-           */
-          if (child.parent && child.parent.type === 'ScrollView') {
-            res -= (child.parent.scrollLeft * scale);
-          }
-
-          return res;
-        },
-      });
-
-      Object.defineProperty(child.realLayoutBox, 'realY', {
-        configurable: true,
-        enumerable: true,
-        get: () => {
-          let res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
-
-          /**
-           * 滚动列表事件处理
-           */
-          if (child.parent && child.parent.type === 'ScrollView') {
-            res -= (child.parent.scrollTop * scale);
-          }
-
-          return res;
-        },
-      });
-    } else {
-      child.realLayoutBox.realX = child.realLayoutBox.left;
-      child.realLayoutBox.realY = child.realLayoutBox.top;
-    }
-
-    updateRealLayout(child, scale);
-  });
-}
-
 function none() { }
 export function iterateTree(element, callback = none) {
   callback(element);
