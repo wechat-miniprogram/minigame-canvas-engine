@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import View from './view.js';
 import { getDpr, copyTouchArray } from '../common/util.js';
@@ -100,8 +101,6 @@ export default class ScrollView extends View {
 
   repaint() {
     this.clear();
-
-    // this.render();
 
     this.scrollRender(this.scrollLeft, this.scrollTop);
   }
@@ -219,9 +218,7 @@ export default class ScrollView extends View {
     this.hasEventBind = true;
     this.isFirstScroll = true;
 
-    this.scrollerObj = new Scroller((left, top) => {
-      this.scrollHandler(left, top);
-    }, this.scrollerOption);
+    this.scrollerObj = new Scroller(this.scrollHandler.bind(this), this.scrollerOption);
 
     this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 

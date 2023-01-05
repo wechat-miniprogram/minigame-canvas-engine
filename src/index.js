@@ -374,10 +374,10 @@ class _Layout extends Element {
     this.layoutTree = {};
     this.state = STATE.CLEAR;
     clearCanvas(this.renderContext);
-    this.realLayoutBox = {
-      realX: 0,
-      realY: 0,
-    };
+    // this.realLayoutBox = {
+    //   realX: 0,
+    //   realY: 0,
+    // };
     this.eleCount = 0;
   }
 
