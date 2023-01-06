@@ -65,7 +65,7 @@ function draw(data = []) {
       }
     });
   }
-
+  
   // 记得在必要的时候执行 Layout.ticker.remove(manualTween)，比如每次 Layout.init 之前
   Layout.ticker.add(manualTween);
 

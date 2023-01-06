@@ -38,7 +38,7 @@ console.log(list.length); // 3
 | y | Number |  是   | canvas 距离屏幕左上角的物理像素y坐标|
 
 ::: tip
-这一步非常重要，决定了点击、滑动等事件能否争取处理。
+这一步非常重要，决定了点击、滑动等事件能否正确处理。
 :::
 
 ### Layout.TWEEN
@@ -51,6 +51,37 @@ new Layout.TWEEN.Tween(ball.style)
   .to({ top: 250 }, 1000)
   .easing(Layout.TWEEN.Easing.Bounce.Out)
   .start();
+```
+
+### Layout.ticker
+类似游戏引擎，Layout 本身会依赖 requestAnimationFrame 维护个循环，每帧检测是否需要重渲染、重布局之类的操作。
+
+#### Layout.ticker.add(callback: Function)
+在 Layout 的循环注册个事件回调，如果 Ticker 没有暂停，回调函数每帧都会执行
+```js
+const ball = Layout.getElementsByClassName('ball')[0];
+const selfTickerFunc = () => {
+  ball.style.top += 1;
+}
+Layout.ticker.add(selfTickerFunc);
+```
+
+#### Layout.ticker.remove(callback: Function)
+从 Layout 的循环移除事件回调。
+
+#### Layout.ticker.start()
+开始 Layout 的循环，Layout.ticker 默认是 started 状态，不需要手动开启。
+
+#### Layout.ticker.stop()
+结束 Layout 的循环。
+
+#### Layout.ticker.next(callback: Function)
+在 Layout 的下一次循环之后执行一次事件回调。
+```js
+const ball = Layout.getElementsByClassName('ball')[0];
+Layout.ticker.next(() => {
+  console.log(ball.getBoundingClientRect());
+});
 ```
 
 
@@ -66,10 +97,9 @@ new Layout.TWEEN.Tween(ball.style)
 ### Layout.clearAll()
 等价于按序调用Layout.clear和Layout.clearPool.
 
-### loadImgs
-#### Layout.loadImgs(Array imgarr)
+### Layout.loadImgs(Array imgarr)
 对于图片资源，如果不提前加载，渲染过程中可能出现挨个出现图片效果，影响体验。通过Layout.loadImgs可以预加载图片资源，在调用Layout.layout的时候渲染性能更好，体验更佳。
-```
+```js
 // 注意图片路径不需要加./作为前缀，以小游戏根目录作为根目录
 Layout.loadImgs([
     'sub/Buffet_icon_GiftPlate_0.png',
@@ -78,9 +108,7 @@ Layout.loadImgs([
 ]);
 ```
 
-### registBitMapFont
-
-#### Layout.registBitMapFont(name, src, config)
+### Layout.registBitMapFont(name, src, config)
 
 | keyName  | 类型     |  描述    |
 |----------|----------| ---------|
@@ -117,15 +145,15 @@ kernings count=0`
 
 ```
 
-## 事件API
+## 事件监听
 通过getElementsById或者getElementsByClassName获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`、`scroll(只有scrollview支持）`示例如下：
 ``` js
 const list = Layout.getElementsByClassName('listItem');
 
 list.forEach(item => {
-    item.on('touchstart', (e) => {
-        console.log(e, item);
-    });
+  item.on('touchstart', (e) => {
+    console.log(e, item);
+  });
 });
 ```
 
