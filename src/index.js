@@ -22,6 +22,7 @@ import {
   getElementsByClassName,
   repaintChildren,
   iterateTree,
+  clone,
 } from './common/vd';
 
 // 全局事件管道
@@ -29,7 +30,7 @@ export const EE = new Emitter();
 const imgPool = new Pool('imgPool');
 const debugInfo = new DebugInfo();
 
-class _Layout extends Element {
+class Layout extends Element {
   constructor({
     style,
     name,
@@ -159,10 +160,10 @@ class _Layout extends Element {
 
     // XML树生成渲染树
     debugInfo.start('xmlTreeToLayoutTree');
-    this.layoutTree = create.call(this, xmlTree, style);
+    const layoutTree = create.call(this, xmlTree, style);
     debugInfo.end('xmlTreeToLayoutTree');
 
-    this.add(this.layoutTree);
+    this.add(layoutTree);
 
     this.state = STATE.INITED;
   }
@@ -209,6 +210,10 @@ class _Layout extends Element {
     this.repaint();
     debugInfo.end('repaint');
     this.isDirty = false;
+
+    // iterateTree(this.children[0], (ele) => {
+    //   console.log(ele.id, ele.className);
+    // });
 
     debugInfo.end('reflow');
   }
@@ -365,7 +370,6 @@ class _Layout extends Element {
     this.destroyAll(this);
     this.elementTree = null;
     this.children = [];
-    this.layoutTree = {};
     this.state = STATE.CLEAR;
     clearCanvas(this.renderContext);
     this.eleCount = 0;
@@ -400,14 +404,16 @@ class _Layout extends Element {
     const font = new BitMapFont(name, src, config);
     this.bitMapFonts.push(font);
   }
+
+  cloneNode(element) {
+    return clone.call(this, element);
+  }
 }
 
-const Layout = new _Layout({
+export default new Layout({
   style: {
     width: 0,
     height: 0,
   },
   name: 'layout',
 });
-
-export default Layout;

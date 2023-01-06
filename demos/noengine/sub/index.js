@@ -33,15 +33,30 @@ function draw(data = []) {
   Layout.layout(sharedContext);
   console.log(Layout);
 
+  console.log(Layout.debugInfo)
+
+
   // Layout.ticker.next(() => {
   //   console.log('test ticker next method');
   // })
 
-  // const list = Layout.getElementsByClassName('list')[0];
+  const list = Layout.getElementsByClassName('list')[0];
   // console.log(list)
 
-  // const listItem = Layout.getElementsByClassName('listItem')[1];
+  const listItem = Layout.getElementsByClassName('listItem');
+  // console.log(listItem);
 
+  listItem.forEach(item => {
+    list.appendChild(Layout.cloneNode(item))
+  });
+
+  // const newListItem = Layout.cloneNode(listItem);
+
+  // list.appendChild(newListItem);
+
+  Layout.ticker.next(() => {
+    console.log(Layout.debugInfo)
+  });
 
   /**
    * tween不直接作用于节点，否则一个列表大量的节点都执行tween操作性能必然会差
@@ -67,7 +82,7 @@ function draw(data = []) {
   }
   
   // 记得在必要的时候执行 Layout.ticker.remove(manualTween)，比如每次 Layout.init 之前
-  Layout.ticker.add(manualTween);
+  // Layout.ticker.add(manualTween);
 
   // setInterval(() => {
   //   console.log(Layout.debugInfo)
@@ -84,8 +99,6 @@ function draw(data = []) {
   // setTimeout(() => {
   //   listItems[0].src = listItems[1].src;
   // }, 3000)
-
-  console.log(Layout.debugInfo)
 
   // Setup the animation loop.
   // function animate(time) {
@@ -130,8 +143,9 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     // 缓存数据，加速下次渲染
     cacheRankData = data;
 
+    // data.length = 3;
     // mock
-    for (let i = data.length; i < 100; i++) {
+    for (let i = data.length; i < 50; i++) {
       data[i] = JSON.parse(JSON.stringify(data[0]));
       data[i].rank = i;
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
@@ -139,17 +153,6 @@ function loadFriendDataAndRender(key, info, needRender = true) {
 
     if (needRender) {
       draw(data, selfData, currentMaxScore);
-    }
-
-    let btnList = Layout.getElementsByClassName("giftBtn");
-    for (let i = 0; i < btnList.length; i++) {
-      btnList[i].on("click", (e) => {
-        let img = Layout.getElementsById("img" + i);
-        img[0].src =
-          img[0].src === "sub/Buffet_icon_GiftPlate_0.png" ?
-          "sub/Buffet_icon_GiftPlate.png" :
-          "sub/Buffet_icon_GiftPlate_0.png";
-      });
     }
   });
 }

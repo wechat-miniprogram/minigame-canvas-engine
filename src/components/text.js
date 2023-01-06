@@ -124,9 +124,20 @@ export default class Text extends Element {
     this.root = null;
   }
 
+  insert(ctx, needRender) {
+    this.ctx = ctx;
+
+    this.toCanvasData();
+
+    if (needRender) {
+      this.render();
+    }
+  }
+
+
   render() {
     const { ctx } = this;
-    this.toCanvasData();
+    // this.toCanvasData();
     ctx.save();
 
     const box = this.layoutBox;

@@ -147,19 +147,19 @@ var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default.a();
 var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
 var debugInfo = new _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
 
-var _Layout = /*#__PURE__*/function (_Element) {
-  _inherits(_Layout, _Element);
+var Layout = /*#__PURE__*/function (_Element) {
+  _inherits(Layout, _Element);
 
-  var _super = _createSuper(_Layout);
+  var _super = _createSuper(Layout);
 
-  function _Layout() {
+  function Layout() {
     var _this;
 
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         style = _ref.style,
         name = _ref.name;
 
-    _classCallCheck(this, _Layout);
+    _classCallCheck(this, Layout);
 
     _this = _super.call(this, {
       style: style,
@@ -226,7 +226,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
   } // 与老版本兼容
 
 
-  _createClass(_Layout, [{
+  _createClass(Layout, [{
     key: "debugInfo",
     get: function get() {
       var info = debugInfo.log();
@@ -282,9 +282,9 @@ var _Layout = /*#__PURE__*/function (_Element) {
       var xmlTree = jsonObj.children[0]; // XML树生成渲染树
 
       debugInfo.start('xmlTreeToLayoutTree');
-      this.layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_11__["create"].call(this, xmlTree, style);
+      var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_11__["create"].call(this, xmlTree, style);
       debugInfo.end('xmlTreeToLayoutTree');
-      this.add(this.layoutTree);
+      this.add(layoutTree);
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].INITED;
     }
   }, {
@@ -328,7 +328,10 @@ var _Layout = /*#__PURE__*/function (_Element) {
       debugInfo.start('repaint');
       this.repaint();
       debugInfo.end('repaint');
-      this.isDirty = false;
+      this.isDirty = false; // iterateTree(this.children[0], (ele) => {
+      //   console.log(ele.id, ele.className);
+      // });
+
       debugInfo.end('reflow');
     }
     /**
@@ -501,7 +504,6 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.destroyAll(this);
       this.elementTree = null;
       this.children = [];
-      this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
       this.eleCount = 0;
@@ -538,19 +540,23 @@ var _Layout = /*#__PURE__*/function (_Element) {
       var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__["default"](name, src, config);
       this.bitMapFonts.push(font);
     }
+  }, {
+    key: "cloneNode",
+    value: function cloneNode(element) {
+      return _common_vd__WEBPACK_IMPORTED_MODULE_11__["clone"].call(this, element);
+    }
   }]);
 
-  return _Layout;
+  return Layout;
 }(_components_elements_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
-var Layout = new _Layout({
+/* harmony default export */ __webpack_exports__["default"] = (new Layout({
   style: {
     width: 0,
     height: 0
   },
   name: 'layout'
-});
-/* harmony default export */ __webpack_exports__["default"] = (Layout);
+}));
 
 /***/ }),
 /* 1 */
@@ -780,6 +786,18 @@ var Element = /*#__PURE__*/function () {
       element.parent = this;
       element.parentId = this.id;
       this.children.push(element);
+    }
+  }, {
+    key: "appendChild",
+    value: function appendChild(element) {
+      this.add(element);
+      this.isDirty = true;
+      var parent = this.parent;
+
+      while (parent) {
+        parent.isDirty = true;
+        parent = parent.parent;
+      }
     }
   }, {
     key: "emit",
@@ -4632,6 +4650,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsByClassName", function() { return getElementsByClassName; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintChildren", function() { return repaintChildren; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clone", function() { return clone; });
 /* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
 /* eslint-disable no-param-reassign */
 // components
@@ -4732,10 +4751,12 @@ function create(node, style, parent) {
     if (isPercent(thisStyle.height)) {
       thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
     }
-  }
+  } // console.log(args);
+
 
   var element = new Constructor(args);
   element.root = this;
+  element.tagName = node.name;
   children.forEach(function (childNode) {
     var childElement = create.call(_this, childNode, style, args);
     element.add(childElement);
@@ -4747,18 +4768,9 @@ function renderChildren(children, context) {
   children.forEach(function (child) {
     child.shouldUpdate = false;
     child.isDirty = false;
-    /**
-     * ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-     * TODO: 这里感觉还有优化空间
-     */
+    child.insert(context, needRender); // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
 
-    if (child.type === 'ScrollView') {
-      child.insert(context, needRender);
-      return renderChildren(child.children, context, false);
-    }
-
-    child.insert(context, needRender);
-    return renderChildren(child.children, context, needRender);
+    return renderChildren(child.children, context, child.type === 'ScrollView' ? false : needRender);
   });
 }
 /**
@@ -4845,6 +4857,39 @@ var repaintTree = function repaintTree(tree) {
     repaintTree(child);
   });
 };
+function clone(element, parent) {
+  var _this3 = this;
+
+  var Constructor = constructorMap[element.tagName];
+  this.eleCount += 1;
+  var args = {
+    style: Object.assign({}, element.style),
+    idName: element.idName,
+    className: element.className,
+    id: this.eleCount,
+    dataset: element.dataset
+  };
+
+  if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"]) {
+    args.src = element.src;
+  } else if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Text"] || element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["BitMapText"]) {
+    args.value = element.value;
+  }
+
+  var newElemenet = new Constructor(args);
+  newElemenet.root = this;
+  newElemenet.insert(this.renderContext, false);
+  newElemenet.observeStyleAndEvent(); // console.log(newElemenet);
+
+  if (parent) {
+    parent.add(newElemenet);
+  }
+
+  element.children.forEach(function (child) {
+    clone.call(_this3, child, newElemenet);
+  });
+  return newElemenet;
+}
 
 /***/ }),
 /* 21 */
@@ -5321,10 +5366,20 @@ var Text = /*#__PURE__*/function (_Element) {
       this.root = null;
     }
   }, {
+    key: "insert",
+    value: function insert(ctx, needRender) {
+      this.ctx = ctx;
+      this.toCanvasData();
+
+      if (needRender) {
+        this.render();
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      var ctx = this.ctx;
-      this.toCanvasData();
+      var ctx = this.ctx; // this.toCanvasData();
+
       ctx.save();
       var box = this.layoutBox;
       var style = this.style;

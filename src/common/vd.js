@@ -101,8 +101,10 @@ export function create(node, style, parent) {
     }
   }
 
+  // console.log(args);
   const element = new Constructor(args);
   element.root = this;
+  element.tagName = node.name;
 
   children.forEach((childNode) => {
     const childElement = create.call(this, childNode, style, args);
@@ -117,18 +119,10 @@ export function renderChildren(children, context, needRender = true) {
   children.forEach((child) => {
     child.shouldUpdate = false;
     child.isDirty = false;
-    /**
-     * ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-     * TODO: 这里感觉还有优化空间
-     */
-    if (child.type === 'ScrollView') {
-      child.insert(context, needRender);
-
-      return renderChildren(child.children, context, false);
-    }
-
     child.insert(context, needRender);
-    return renderChildren(child.children, context, needRender);
+
+    // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
+    return renderChildren(child.children, context,  child.type === 'ScrollView' ? false : needRender);
   });
 }
 
@@ -219,3 +213,39 @@ export const repaintTree = (tree) => {
     repaintTree(child);
   });
 };
+
+export function clone(element, parent) {
+  const Constructor = constructorMap[element.tagName];
+  this.eleCount += 1;
+
+  const args = {
+    style: Object.assign({}, element.style),
+    idName: element.idName,
+    className: element.className,
+    id: this.eleCount,
+    dataset: element.dataset,
+  };
+
+  if (element instanceof Image) {
+    args.src = element.src;
+  } else if (element instanceof Text || element instanceof BitMapText) {
+    args.value = element.value;
+  }
+
+  const newElemenet = new Constructor(args);
+  newElemenet.root = this;
+  newElemenet.insert(this.renderContext, false);
+  newElemenet.observeStyleAndEvent();
+
+  // console.log(newElemenet);
+
+  if (parent) {
+    parent.add(newElemenet);
+  }
+
+  element.children.forEach((child) => {
+    clone.call(this, child, newElemenet);
+  });
+
+  return newElemenet;
+}

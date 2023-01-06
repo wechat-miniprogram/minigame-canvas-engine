@@ -218,6 +218,17 @@ export default class Element {
     this.children.push(element);
   }
 
+  appendChild(element) {
+    this.add(element);
+
+    this.isDirty = true;
+    let { parent } = this;
+    while (parent) {
+      parent.isDirty = true;
+      parent = parent.parent;
+    }
+  }
+
   emit(event, ...theArgs) {
     EE.emit(toEventName(event, this.id), ...theArgs);
   }

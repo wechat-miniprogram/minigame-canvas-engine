@@ -1,5 +1,5 @@
 # Layout
-Layout 是一个单例，给定 template 和 style 最终渲染到画布一般要经过 `Layout.clear`、`Layout.init` 和 `Layout.layout` 三个步骤，除了这三个方法，还会有有一些方法挂载在 Layout，下面一一介绍。
+Layout 是一个单例，给定 template 和 style 最终渲染到画布一般要经过 `Layout.clear`、`Layout.init` 和 `Layout.layout` 三个步骤，除了这三个方法，还有一些方法挂载在 Layout，下面一一介绍。
 
 ## clear
 清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行`init`和`layout`方法渲染界面。
