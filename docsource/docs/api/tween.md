@@ -1,12 +1,13 @@
-# 缓动系统(Beta)
+# 缓动系统
 
 ## 简介
-缓动动画是很常见的需求，游戏引擎会一般内置缓动系统，如果没有内置的缓动系统，通过引入缓动引擎也能够很容易实现缓动动画能力。
+缓动动画是很常见的需求，游戏引擎一般会内置缓动系统，如果没有内置的缓动系统，通过引入缓动引擎也能够很容易实现缓动动画能力。
 
 Layout 默认挂载了[tween.js](https://github.com/tweenjs/tween.js/)模块，使用 tween.js 来实现动画能力与浏览器插件的 DOM 动画差异不大。
 
+::: tip
 支持缓动系统的版本改动较大，请先手动引用[index.js](https://github.com/wechat-miniprogram/minigame-canvas-engine/blob/master/index.js)来使用，版本稳定会会发布至 npm 和小游戏插件。
-
+:::
 ## 简单示例
 下面分别是示例需要的 xml、style 和缓动函数调用示例，省略 Layout 初始化和 layout 等逻辑。
 ``` xml

@@ -318,11 +318,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
 
       debugInfo.start('layoutChildren');
       _common_vd__WEBPACK_IMPORTED_MODULE_11__["layoutChildren"].call(this, this);
-      debugInfo.end('layoutChildren'); // 计算真实的物理像素位置，用于事件处理
-      // debugInfo.start('updateRealLayout');
-      // updateRealLayout(this, this.viewport.width / this.renderport.width);
-      // debugInfo.end('updateRealLayout');
-
+      debugInfo.end('layoutChildren');
       this.viewportScale = this.viewport.width / this.renderport.width;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext); // 遍历节点树，依次调用节点的渲染接口实现渲染
 
@@ -346,9 +342,8 @@ var _Layout = /*#__PURE__*/function (_Element) {
      *    比如 layout.top 是指在一个父容器内的 top，最终要实现渲染，实际上要递归加上复容器的 top
      *    这样每次 repaint 的时候只需要直接使用计算好的值即可，不需要每次都递归计算
      *    这一步称为 layoutChildren，目的在于将 css-layout 进一步处理为可以渲染直接用的布局信息
-     * 4. updateRealLayout: 一般 Layout 在绘制完了之后，会背继续绘制到其他引擎，要做好事件处理，就需要做一个坐标转换
-     * 5. renderChildren：执行渲染
-     * 6. bindEvents：执行事件绑定
+     * 4. renderChildren：执行渲染
+     * 5. bindEvents：执行事件绑定
      */
 
   }, {
@@ -508,11 +503,7 @@ var _Layout = /*#__PURE__*/function (_Element) {
       this.children = [];
       this.layoutTree = {};
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext); // this.realLayoutBox = {
-      //   realX: 0,
-      //   realY: 0,
-      // };
-
+      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
       this.eleCount = 0;
     }
   }, {

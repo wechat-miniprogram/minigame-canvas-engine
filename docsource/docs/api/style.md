@@ -1,6 +1,9 @@
 # 样式
 
+下面列举 Layout 支持的样式属性。
+
 ## 布局
+支持的标签：`view`、`scrollview`、`image`、`text`、`bitmaptext`
 
 | 属性名                | 支持的值或类型                                            | 默认值     |
 | --------------------- | --------------------------------------------------------- | ---------- |
@@ -31,7 +34,7 @@
 | alignItems, alignSelf | flex-start, center, flex-end, stretch                     | flex-start |
 
 ## 文本
-
+支持的标签：`text`
 | 属性名          | 支持的值或类型      | 默认值      |
 | --------------- | ------------------- | ----------- |
 | fontSize        | number              | 14          |
@@ -44,14 +47,14 @@
 | letterSpacing   | number              | 默认值为0，只对 bitmaptext 标签生效          |
 
 ## 容器
-
+支持的标签：`view`、`scrollview`、`image`、`text`、`bitmaptext`
 |      属性     |  类型  | 默认值 |           说明           |
 |---------------|--------|--------|--------------------------|
 | backgroundColor    | string |        | 背景的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色                   |
 
 
 ## 边框
-
+支持的标签：`view`、`scrollview`、`image`、`text`、`bitmaptext`
 | 属性 | 类型 | 默认值 | 说明 |
 |---------------|--------|--------|--------------------------|
 | borderRadius | number | | 边框圆角 |
