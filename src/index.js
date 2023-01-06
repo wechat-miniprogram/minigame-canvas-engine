@@ -7,7 +7,7 @@ import {
   isClick,
   STATE,
   createImage,
-  clearCanvas
+  clearCanvas,
 } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
@@ -33,12 +33,12 @@ const debugInfo = new DebugInfo();
 class _Layout extends Element {
   constructor({
     style,
-    name
+    name,
   } = {}) {
     super({
       style,
       id: 0,
-      name
+      name,
     });
 
     this.hasEventHandler = false;

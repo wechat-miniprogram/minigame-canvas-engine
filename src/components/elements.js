@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { repaintAffectedStyles, reflowAffectedStyles, allStyles } from './style.js';
+import Rect from '../common/rect';
 
 const Emitter = require('tiny-emitter');
 
@@ -87,6 +88,7 @@ export default class Element {
 
     this.originStyle = style;
     this.style = style;
+    this.rect = null;
   }
 
 
@@ -157,6 +159,26 @@ export default class Element {
   // 子类填充实现
   render() { }
 
+  getBoundingClientRect() {
+    if (!this.rect) {
+      this.rect = new Rect(
+        this.layoutBox.absoluteX,
+        this.layoutBox.absoluteY,
+        this.layoutBox.width,
+        this.layoutBox.height,
+      );
+    }
+
+    this.rect.set(
+      this.layoutBox.absoluteX,
+      this.layoutBox.absoluteY,
+      this.layoutBox.width,
+      this.layoutBox.height,
+    );
+
+    return this.rect;
+  }
+
   insert(ctx, needRender) {
     this.ctx = ctx;
 
@@ -194,20 +216,6 @@ export default class Element {
     element.parentId = this.id;
 
     this.children.push(element);
-  }
-
-  getBoundingClientRect() {
-    const { absoluteX, absoluteY, width, height } = this.layoutBox;
-    return {
-      x: absoluteX,
-      y: absoluteY,
-      left: absoluteX,
-      top: absoluteY,
-      width,
-      height,
-      right: absoluteX + width,
-      bottom: absoluteY + height,
-    };
   }
 
   emit(event, ...theArgs) {

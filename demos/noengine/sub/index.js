@@ -49,51 +49,25 @@ function draw(data = []) {
    * 每次 Layout.clear 记得清理或者重置 globalTween
    */
   let globalStyle = { width: 90, height: 90 }
-  let globalTween = new Layout.TWEEN.Tween(globalStyle).to({
+  new Layout.TWEEN.Tween(globalStyle).to({
     width: 70,
     height: 70
   }).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
 
-  const list = Layout.getElementsByClassName('list')[0];
+  const scrollList = Layout.getElementsByClassName('list')[0];
   const listItems = Layout.getElementsByClassName('listHeadImg');
-  const box = list.layoutBox;
-
-
-  console.log(listItems[0].getBoundingClientRect())
-  listItems[19].on('click', () => {
-    console.log('click listitem 19');
-  })
+  const scrollRect = scrollList.getBoundingClientRect();
 
   function manualTween() {
-    // scrollview在全局节点中的Y轴位置
-    const abY = box.absoluteY;
-    const abX = box.absoluteX;
-
-    // 根据滚动值获取裁剪区域
-    const startY = abY + list.scrollTop;
-    const endY = abY + list.scrollTop + box.height;
-    const startX = abX + list.scrollLeft;
-    const endX = abX + list.scrollLeft + box.width;
-
-    listItems.forEach((item, index) => {
-      const { layoutBox } = item;
-      const { height } = layoutBox;
-      const { width } = layoutBox;
-      const originY = layoutBox.originalAbsoluteY;
-      const originX = layoutBox.originalAbsoluteX;
-
-      // 判断处于可视窗口内的子节点，递归渲染该子节点
-      if (originY + height >= startY && originY <= endY
-        && originX + width >= startX && originX <= endX) {
-          // item.style.width = globalStyle.width;
-          item.style.height = globalStyle.height;
+    listItems.forEach((item) => {
+      if (scrollRect.intersects(item.getBoundingClientRect())) {
+        item.style.height = globalStyle.height;
       }
     });
   }
 
-  // Layout.ticker.add(() => {
-  //   manualTween();
-  // });
+  // 记得在必要的时候执行 Layout.ticker.remove(manualTween)，比如每次 Layout.init 之前
+  Layout.ticker.add(manualTween);
 
   // setInterval(() => {
   //   console.log(Layout.debugInfo)
