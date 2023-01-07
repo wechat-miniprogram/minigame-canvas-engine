@@ -123,6 +123,32 @@ const list = Layout.getElementsByClassName('item');
 console.log(list.length); // 3
 ```
 
+## cloneNode
+Layout.cloneNode(element: Element, deep: boolean)
+克隆节点，克隆后的节点可以添加到 Layout 的某个节点中，该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。
+
+``` js
+
+// 获取 ScrollView
+const list = Layout.getElementsByClassName('list')[0];
+
+// 对列表第一项进行深度拷贝
+const listItem = Layout.getElementsByClassName('listItem');
+const listItem1 = listItem[0];
+const newListItem1 = Layout.cloneNode(listItem1);
+
+// 针对拷贝后的子节点做一些魔改
+const listItemNum = newListItem1.getElementsByClassName('listItemNum')[0];
+listItemNum.value = 2;
+const listItemName = newListItem1.getElementsByClassName('listItemName')[0];
+listItemName.value = 'zim test';
+const listItemScore = newListItem1.getElementsByClassName('listItemScore')[0];
+listItemScore.value = '100';
+
+// 将拷贝后的节点也添加到滚动列表
+list.appendChild(newListItem1);
+```
+
 # 事件监听
 通过 getElementsById 或者 getElementsByClassName 获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`、`scroll(只有scrollview支持）`示例如下：
 ``` js

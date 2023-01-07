@@ -2,6 +2,38 @@
 import { repaintAffectedStyles, reflowAffectedStyles, allStyles } from './style.js';
 import Rect from '../common/rect';
 
+export function getElementsById(tree, list = [], id) {
+  Object.keys(tree.children).forEach((key) => {
+    const child = tree.children[key];
+
+    if (child.idName === id) {
+      list.push(child);
+    }
+
+    if (Object.keys(child.children).length) {
+      getElementsById(child, list, id);
+    }
+  });
+
+  return list;
+}
+
+export function getElementsByClassName(tree, list = [], className) {
+  Object.keys(tree.children).forEach((key) => {
+    const child = tree.children[key];
+
+    if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
+      list.push(child);
+    }
+
+    if (Object.keys(child.children).length) {
+      getElementsByClassName(child, list, className);
+    }
+  });
+
+  return list;
+}
+
 const Emitter = require('tiny-emitter');
 
 // 全局事件管道
@@ -89,6 +121,7 @@ export default class Element {
     this.originStyle = style;
     this.style = style;
     this.rect = null;
+    this.classNameList = null;
   }
 
 
@@ -151,6 +184,8 @@ export default class Element {
         this.parent && this.parent.emit(eventName, e, touchMsg);
       });
     });
+
+    this.classNameList = this.className.split(/\s+/);
   }
 
   // 子类填充实现
@@ -159,6 +194,9 @@ export default class Element {
   // 子类填充实现
   render() { }
 
+  /**
+   * 参照 Web 规范：https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+   */
   getBoundingClientRect() {
     if (!this.rect) {
       this.rect = new Rect(
@@ -177,6 +215,14 @@ export default class Element {
     );
 
     return this.rect;
+  }
+
+  getElementsById(id) {
+    return getElementsById(this, [], id);
+  }
+
+  getElementsByClassName(className) {
+    return getElementsByClassName(this, [], className);
   }
 
   insert(ctx, needRender) {
@@ -209,6 +255,8 @@ export default class Element {
     this.layoutBox = null;
     this.props = null;
     this.style = null;
+    this.className = '';
+    this.classNameList = null;
   }
 
   add(element) {

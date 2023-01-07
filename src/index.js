@@ -344,13 +344,13 @@ class Layout extends Element {
     EE.off(event, callback);
   }
 
-  getElementsById(id) {
-    return getElementsById(this, [], id);
-  }
+  // getElementsById(id) {
+  //   return getElementsById(this, [], id);
+  // }
 
-  getElementsByClassName(className) {
-    return getElementsByClassName(this, [], className);
-  }
+  // getElementsByClassName(className) {
+  //   return getElementsByClassName(this, [], className);
+  // }
 
   destroyAll(tree) {
     const {
@@ -405,8 +405,8 @@ class Layout extends Element {
     this.bitMapFonts.push(font);
   }
 
-  cloneNode(element) {
-    return clone.call(this, element);
+  cloneNode(element, deep = true) {
+    return clone.call(this, element, deep);
   }
 }
 

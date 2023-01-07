@@ -162,38 +162,6 @@ export function iterateTree(element, callback = none) {
   });
 }
 
-export function getElementsById(tree, list = [], id) {
-  Object.keys(tree.children).forEach((key) => {
-    const child = tree.children[key];
-
-    if (child.idName === id) {
-      list.push(child);
-    }
-
-    if (Object.keys(child.children).length) {
-      getElementsById(child, list, id);
-    }
-  });
-
-  return list;
-}
-
-export function getElementsByClassName(tree, list = [], className) {
-  Object.keys(tree.children).forEach((key) => {
-    const child = tree.children[key];
-
-    if (child.className.split(/\s+/).indexOf(className) > -1) {
-      list.push(child);
-    }
-
-    if (Object.keys(child.children).length) {
-      getElementsByClassName(child, list, className);
-    }
-  });
-
-  return list;
-}
-
 export const repaintChildren = (children) => {
   children.forEach((child) => {
     child.repaint();
@@ -214,7 +182,7 @@ export const repaintTree = (tree) => {
   });
 };
 
-export function clone(element, parent) {
+export function clone(element, deep = true, parent) {
   const Constructor = constructorMap[element.tagName];
   this.eleCount += 1;
 
@@ -237,15 +205,16 @@ export function clone(element, parent) {
   newElemenet.insert(this.renderContext, false);
   newElemenet.observeStyleAndEvent();
 
-  // console.log(newElemenet);
-
   if (parent) {
     parent.add(newElemenet);
   }
 
-  element.children.forEach((child) => {
-    clone.call(this, child, newElemenet);
-  });
+  if (deep) {
+    element.children.forEach((child) => {
+      clone.call(this, child, deep, newElemenet);
+    });
+  }
 
   return newElemenet;
 }
+

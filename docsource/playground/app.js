@@ -31946,11 +31946,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _common_pool_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
+  var _common_pool_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
   /* harmony import */
 
 
-  var tiny_emitter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
+  var tiny_emitter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
   /* harmony import */
 
 
@@ -31958,7 +31958,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var css_layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
+  var css_layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7);
   /* harmony import */
 
 
@@ -31966,11 +31966,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _common_util_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
+  var _common_util_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(8);
   /* harmony import */
 
 
-  var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8);
+  var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(9);
   /* harmony import */
 
 
@@ -31978,23 +31978,23 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(14);
+  var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(15);
   /* harmony import */
 
 
-  var _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(16);
+  var _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(17);
   /* harmony import */
 
 
-  var _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(18);
+  var _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(19);
   /* harmony import */
 
 
-  var _common_ticker__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(19);
+  var _common_ticker__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(20);
   /* harmony import */
 
 
-  var _common_vd__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(20);
+  var _common_vd__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(21);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -32120,19 +32120,19 @@ function (module, __webpack_exports__, __webpack_require__) {
   var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
   var debugInfo = new _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
 
-  var _Layout = /*#__PURE__*/function (_Element) {
-    _inherits(_Layout, _Element);
+  var Layout = /*#__PURE__*/function (_Element) {
+    _inherits(Layout, _Element);
 
-    var _super = _createSuper(_Layout);
+    var _super = _createSuper(Layout);
 
-    function _Layout() {
+    function Layout() {
       var _this;
 
       var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
           style = _ref.style,
           name = _ref.name;
 
-      _classCallCheck(this, _Layout);
+      _classCallCheck(this, Layout);
 
       _this = _super.call(this, {
         style: style,
@@ -32144,11 +32144,13 @@ function (module, __webpack_exports__, __webpack_require__) {
       _this.renderContext = null;
       _this.renderport = {};
       _this.viewport = {};
+      _this.viewportScale = 1;
       _this.touchStart = _this.eventHandler('touchstart').bind(_assertThisInitialized(_this));
       _this.touchMove = _this.eventHandler('touchmove').bind(_assertThisInitialized(_this));
       _this.touchEnd = _this.eventHandler('touchend').bind(_assertThisInitialized(_this));
       _this.touchCancel = _this.eventHandler('touchcancel').bind(_assertThisInitialized(_this));
       _this.version = '1.0.0';
+      _this.eleCount = 0;
       _this.touchMsg = {};
       _this.hasViewPortSet = false;
       _this.realLayoutBox = {
@@ -32197,10 +32199,12 @@ function (module, __webpack_exports__, __webpack_require__) {
     } // 与老版本兼容
 
 
-    _createClass(_Layout, [{
+    _createClass(Layout, [{
       key: "debugInfo",
       get: function get() {
-        return debugInfo.log();
+        var info = debugInfo.log();
+        info += "elementCount: ".concat(this.eleCount, "\n");
+        return info;
       }
       /**
        * 更新被绘制canvas的窗口信息，本渲染引擎并不关心是否会和其他游戏引擎共同使用
@@ -32252,19 +32256,29 @@ function (module, __webpack_exports__, __webpack_require__) {
         var xmlTree = jsonObj.children[0]; // XML树生成渲染树
 
         debugInfo.start('xmlTreeToLayoutTree');
-        this.layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_11__["create"].call(this, xmlTree, style);
+
+        var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_11__["create"].call(this, xmlTree, style);
+
         debugInfo.end('xmlTreeToLayoutTree');
-        this.add(this.layoutTree);
+        this.add(layoutTree);
         this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].INITED;
       }
     }, {
       key: "reflow",
       value: function reflow() {
+        var isFirst = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+        if (!isFirst) {
+          debugInfo.reset();
+        }
+
+        debugInfo.start('reflow');
         /**
          * 计算布局树
          * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
          * Layout本身并不作为布局计算，只是作为节点树的容器
          */
+
         debugInfo.start('computeLayout');
         css_layout__WEBPACK_IMPORTED_MODULE_4___default()(this.children[0]);
         debugInfo.end('computeLayout');
@@ -32282,17 +32296,21 @@ function (module, __webpack_exports__, __webpack_require__) {
 
         _common_vd__WEBPACK_IMPORTED_MODULE_11__["layoutChildren"].call(this, this);
 
-        debugInfo.end('layoutChildren'); // 计算真实的物理像素位置，用于事件处理
-
-        debugInfo.start('updateRealLayout');
-        Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["updateRealLayout"])(this, this.viewport.width / this.renderport.width);
-        debugInfo.end('updateRealLayout');
+        debugInfo.end('layoutChildren');
+        this.viewportScale = this.viewport.width / this.renderport.width;
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext); // 遍历节点树，依次调用节点的渲染接口实现渲染
 
         debugInfo.start('renderChildren');
-        Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["renderChildren"])(this.children, this.renderContext);
+        Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["renderChildren"])(this.children, this.renderContext, false);
         debugInfo.end('renderChildren');
-        this.isDirty = false;
+        debugInfo.start('repaint');
+        this.repaint();
+        debugInfo.end('repaint');
+        this.isDirty = false; // iterateTree(this.children[0], (ele) => {
+        //   console.log(ele.id, ele.className);
+        // });
+
+        debugInfo.end('reflow');
       }
       /**
        * init阶段核心仅仅是根据xml和css创建了节点树
@@ -32305,9 +32323,8 @@ function (module, __webpack_exports__, __webpack_require__) {
        *    比如 layout.top 是指在一个父容器内的 top，最终要实现渲染，实际上要递归加上复容器的 top
        *    这样每次 repaint 的时候只需要直接使用计算好的值即可，不需要每次都递归计算
        *    这一步称为 layoutChildren，目的在于将 css-layout 进一步处理为可以渲染直接用的布局信息
-       * 4. updateRealLayout: 一般 Layout 在绘制完了之后，会背继续绘制到其他引擎，要做好事件处理，就需要做一个坐标转换
-       * 5. renderChildren：执行渲染
-       * 6. bindEvents：执行事件绑定
+       * 4. renderChildren：执行渲染
+       * 5. bindEvents：执行事件绑定
        */
 
     }, {
@@ -32319,8 +32336,13 @@ function (module, __webpack_exports__, __webpack_require__) {
           console.error('Please invoke method `updateViewPort` before method `layout`');
         }
 
-        this.reflow();
+        this.reflow(true);
         this.bindEvents();
+        debugInfo.start('observeStyleAndEvent');
+        Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["iterateTree"])(this.children[0], function (element) {
+          return element.observeStyleAndEvent();
+        });
+        debugInfo.end('observeStyleAndEvent');
         this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].RENDERED;
       }
     }, {
@@ -32330,33 +32352,12 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.isNeedRepaint = false;
         Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["repaintChildren"])(this.children);
       }
-      /**
-       * 给定节点树和触摸坐标，遍历节点树，查询被点中的所有节点
-       * 之所以要查询所有节点是因为先渲染的节点层级更低，最后一个查询到的节点才是最上面的被点中的节点
-       */
-
-    }, {
-      key: "getChildByPos",
-      value: function getChildByPos(tree, x, y, itemList) {
-        var list = Object.keys(tree.children);
-
-        for (var i = 0; i < list.length; i++) {
-          var child = tree.children[list[i]];
-          var box = child.realLayoutBox;
-
-          if (box.realX <= x && x <= box.realX + box.width && box.realY <= y && y <= box.realY + box.height) {
-            itemList.push(child);
-
-            if (child.children.length) {
-              this.getChildByPos(child, x, y, itemList);
-            }
-          }
-        }
-      }
     }, {
       key: "eventHandler",
       value: function eventHandler(eventName) {
         return function touchEventHandler(e) {
+          var _this2 = this;
+
           var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
 
           if (!touch || !touch.pageX || !touch.pageY) {
@@ -32370,7 +32371,23 @@ function (module, __webpack_exports__, __webpack_require__) {
           var list = [];
 
           if (touch) {
-            this.getChildByPos(this, touch.pageX, touch.pageY, list);
+            var x = touch.pageX;
+            var y = touch.pageY;
+            Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["iterateTree"])(this.children[0], function (ele) {
+              var _ele$layoutBox = ele.layoutBox,
+                  absoluteX = _ele$layoutBox.absoluteX,
+                  absoluteY = _ele$layoutBox.absoluteY,
+                  width = _ele$layoutBox.width,
+                  height = _ele$layoutBox.height;
+              var realX = absoluteX * _this2.viewportScale + _this2.realLayoutBox.realX;
+              var realY = absoluteY * _this2.viewportScale + _this2.realLayoutBox.realY;
+              var realWidth = width * _this2.viewportScale;
+              var realHeight = height * _this2.viewportScale;
+
+              if (realX <= x && x <= realX + realWidth && realY <= y && y <= realY + realHeight) {
+                list.push(ele);
+              }
+            });
           }
 
           if (!list.length) {
@@ -32446,13 +32463,13 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "destroyAll",
       value: function destroyAll(tree) {
-        var _this2 = this;
+        var _this3 = this;
 
         var children = tree.children;
         children.forEach(function (child) {
           child.destroy();
 
-          _this2.destroyAll(child);
+          _this3.destroyAll(child);
 
           child.destroySelf && child.destroySelf();
         });
@@ -32460,12 +32477,16 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "clear",
       value: function clear() {
+        debugInfo.reset();
+
+        _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"].removeAll();
+
         this.destroyAll(this);
         this.elementTree = null;
         this.children = [];
-        this.layoutTree = {};
         this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
+        this.eleCount = 0;
       }
     }, {
       key: "clearPool",
@@ -32499,21 +32520,26 @@ function (module, __webpack_exports__, __webpack_require__) {
         var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__["default"](name, src, config);
         this.bitMapFonts.push(font);
       }
+    }, {
+      key: "cloneNode",
+      value: function cloneNode(element) {
+        var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        return _common_vd__WEBPACK_IMPORTED_MODULE_11__["clone"].call(this, element, deep);
+      }
     }]);
 
-    return _Layout;
+    return Layout;
   }(_components_elements_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+  /* harmony default export */
 
-  var Layout = new _Layout({
+
+  __webpack_exports__["default"] = new Layout({
     style: {
       width: 0,
       height: 0
     },
     name: 'layout'
   });
-  /* harmony default export */
-
-  __webpack_exports__["default"] = Layout;
   /***/
 },
 /* 1 */
@@ -32543,6 +32569,10 @@ function (module, __webpack_exports__, __webpack_require__) {
 
 
   var _style_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+  /* harmony import */
+
+
+  var _common_rect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -32571,12 +32601,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* eslint-disable no-param-reassign */
 
 
-  var Emitter = __webpack_require__(4); // 全局事件管道
+  var Emitter = __webpack_require__(5); // 全局事件管道
 
 
   var EE = new Emitter();
   var uuid = 0;
-  var dpr = 1;
 
   function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -32609,8 +32638,6 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   var Element = /*#__PURE__*/function () {
     function Element(_ref) {
-      var _this = this;
-
       var _ref$style = _ref.style,
           style = _ref$style === void 0 ? {} : _ref$style,
           _ref$props = _ref.props,
@@ -32632,14 +32659,12 @@ function (module, __webpack_exports__, __webpack_require__) {
       this.id = id;
       this.props = props;
       this.idName = idName;
-      this.className = className;
-      this.style = style;
+      this.className = className; // this.style = style;
+
       this.EE = EE;
       this.root = null;
       this.isDestroyed = false;
-      this.layoutBox = {}; // element 在屏幕中的物理位置和尺寸信息，维护这个是因为需要做事件处理
-
-      this.realLayoutBox = {};
+      this.layoutBox = {};
       this.dataset = dataset;
 
       if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
@@ -32650,56 +32675,107 @@ function (module, __webpack_exports__, __webpack_require__) {
         style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
       }
 
-      if (typeof style.left === 'undefined') {
-        style.left = 0;
-      }
-
-      if (typeof style.top === 'undefined') {
-        style.top = 0;
-      }
-
-      Object.keys(style).forEach(function (key) {
-        if (_style_js__WEBPACK_IMPORTED_MODULE_0__["scalableStyles"].indexOf(key) > -1) {
-          _this.style[key] *= dpr;
-        }
-      });
-      var innerStyle = Object.assign({}, this.style);
-      Object.keys(this.style).forEach(function (key) {
-        Object.defineProperty(_this.style, key, {
-          configurable: true,
-          enumerable: true,
-          get: function get() {
-            return innerStyle[key];
-          },
-          set: function set(value) {
-            innerStyle[key] = value;
-
-            if (_style_js__WEBPACK_IMPORTED_MODULE_0__["layoutAffectedStyles"].indexOf(key)) {
-              _this.isDirty = true;
-              var parent = _this.parent;
-
-              while (parent) {
-                parent.isDirty = true;
-                parent = parent.parent;
-              }
-            } else {
-              _this.root.emit('repaint');
-            }
-          }
-        });
-      }); // 事件冒泡逻辑
-
-      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
-        _this.on(eventName, function (e, touchMsg) {
-          _this.parent && _this.parent.emit(eventName, e, touchMsg);
-        });
-      });
-    } // 子类填充实现
+      this.originStyle = style;
+      this.style = style;
+      this.rect = null;
+      this.classNameList = null;
+    }
+    /**
+     * 监听属性的变化判断是否需要执行 reflow、repaint 操作
+     * 经过测试，Object.defineProperty 是一个比较慢的方法， 特别是属性比较多的时候
+     * 因此会先判断是否支持 Proxy，iMac (Retina 5K, 27-inch, 2017)测试结果
+     * 总共 312 个节点，observeStyleAndEvent总耗时为：
+     * Proxy: 3ms
+     * Object.defineProperty: 20ms
+     */
 
 
     _createClass(Element, [{
+      key: "observeStyleAndEvent",
+      value: function observeStyleAndEvent() {
+        var _this = this;
+
+        if (typeof Proxy === 'function') {
+          var ele = this;
+          this.style = new Proxy(this.originStyle, {
+            get: function get(target, prop, receiver) {
+              return Reflect.get(target, prop, receiver);
+            },
+            set: function set(target, prop, val, receiver) {
+              if (_style_js__WEBPACK_IMPORTED_MODULE_0__["reflowAffectedStyles"].indexOf(prop)) {
+                ele.isDirty = true;
+                var parent = ele.parent;
+
+                while (parent) {
+                  parent.isDirty = true;
+                  parent = parent.parent;
+                }
+              } else if (_style_js__WEBPACK_IMPORTED_MODULE_0__["repaintAffectedStyles"].indexOf(prop)) {
+                ele.root.emit('repaint');
+              }
+
+              return Reflect.set(target, prop, val, receiver);
+            }
+          });
+        } else {
+          var innerStyle = Object.assign({}, this.style);
+
+          _style_js__WEBPACK_IMPORTED_MODULE_0__["allStyles"].forEach(function (key) {
+            Object.defineProperty(_this.style, key, {
+              configurable: true,
+              enumerable: true,
+              get: function get() {
+                return innerStyle[key];
+              },
+              set: function set(value) {
+                innerStyle[key] = value;
+
+                if (_style_js__WEBPACK_IMPORTED_MODULE_0__["reflowAffectedStyles"].indexOf(key)) {
+                  _this.isDirty = true;
+                  var parent = _this.parent;
+
+                  while (parent) {
+                    parent.isDirty = true;
+                    parent = parent.parent;
+                  }
+                } else if (_style_js__WEBPACK_IMPORTED_MODULE_0__["repaintAffectedStyles"].indexOf(key)) {
+                  _this.root.emit('repaint');
+                }
+              }
+            });
+          });
+        } // 事件冒泡逻辑
+
+
+        ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
+          _this.on(eventName, function (e, touchMsg) {
+            _this.parent && _this.parent.emit(eventName, e, touchMsg);
+          });
+        });
+        this.classNameList = this.className.split(/\s+/);
+      } // 子类填充实现
+
+    }, {
       key: "repaint",
-      value: function repaint() {}
+      value: function repaint() {} // 子类填充实现
+
+    }, {
+      key: "render",
+      value: function render() {}
+      /**
+       * 参照 Web 规范：https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+       */
+
+    }, {
+      key: "getBoundingClientRect",
+      value: function getBoundingClientRect() {
+        if (!this.rect) {
+          this.rect = new _common_rect__WEBPACK_IMPORTED_MODULE_1__["default"](this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
+        }
+
+        this.rect.set(this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
+        return this.rect;
+      }
     }, {
       key: "insert",
       value: function insert(ctx, needRender) {
@@ -32721,12 +32797,13 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.isDestroyed = true;
         this.EE = null;
         this.parent = null;
-        this.ctx = null;
-        this.realLayoutBox = null; // element 在画布中的位置和尺寸信息
+        this.ctx = null; // element 在画布中的位置和尺寸信息
 
         this.layoutBox = null;
         this.props = null;
         this.style = null;
+        this.className = '';
+        this.classNameList = null;
       }
     }, {
       key: "add",
@@ -32734,6 +32811,18 @@ function (module, __webpack_exports__, __webpack_require__) {
         element.parent = this;
         element.parentId = this.id;
         this.children.push(element);
+      }
+    }, {
+      key: "appendChild",
+      value: function appendChild(element) {
+        this.add(element);
+        this.isDirty = true;
+        var parent = this.parent;
+
+        while (parent) {
+          parent.isDirty = true;
+          parent = parent.parent;
+        }
       }
     }, {
       key: "emit",
@@ -32827,28 +32916,137 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony export (binding) */
 
 
-  __webpack_require__.d(__webpack_exports__, "scalableStyles", function () {
-    return scalableStyles;
+  __webpack_require__.d(__webpack_exports__, "repaintAffectedStyles", function () {
+    return repaintAffectedStyles;
   });
   /* harmony export (binding) */
 
 
-  __webpack_require__.d(__webpack_exports__, "textStyles", function () {
-    return textStyles;
+  __webpack_require__.d(__webpack_exports__, "reflowAffectedStyles", function () {
+    return reflowAffectedStyles;
   });
   /* harmony export (binding) */
 
 
-  __webpack_require__.d(__webpack_exports__, "layoutAffectedStyles", function () {
-    return layoutAffectedStyles;
+  __webpack_require__.d(__webpack_exports__, "allStyles", function () {
+    return allStyles;
   });
 
-  var textStyles = ['color', 'fontSize', 'textAlign', 'fontWeight', 'lineHeight', 'lineBreak'];
-  var scalableStyles = ['left', 'top', 'right', 'bottom', 'width', 'height', 'margin', 'marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'fontSize', 'lineHeight', 'borderRadius', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight'];
-  var layoutAffectedStyles = ['margin', 'marginTop', 'marginBottom', 'marginLeft', 'marginRight', 'padding', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight', 'width', 'height'];
+  var reflowAffectedStyles = ['width', 'height', 'minWidth', 'minHeight', 'maxWidth', 'maxHeight', 'left', 'right', 'top', 'bottom', 'margin', 'marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'borderWidth', 'borderLeftWidth', 'borderRightWidth', 'borderTopWidth', 'borderBottomWidth', 'flexDirection', 'justifyContent', 'alignItems', 'alignSelf', 'flex', 'flexWrap', 'position'];
+  var repaintAffectedStyles = ['fontSize', 'lineHeight', 'textAlign', 'verticalAlign', 'color', 'backgroundColor', 'textOverflow', 'letterSpacing', 'backgroundColor', 'borderRadius', 'borderColor'];
+  var allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
   /***/
 },
 /* 4 */
+
+/***/
+function (module, __webpack_exports__, __webpack_require__) {
+  "use strict";
+
+  __webpack_require__.r(__webpack_exports__);
+  /* harmony export (binding) */
+
+
+  __webpack_require__.d(__webpack_exports__, "default", function () {
+    return Rect;
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
+    return Constructor;
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  var Rect = /*#__PURE__*/function () {
+    function Rect() {
+      var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+      var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+
+      _classCallCheck(this, Rect);
+
+      _defineProperty(this, "width", 0);
+
+      _defineProperty(this, "height", 0);
+
+      _defineProperty(this, "left", 0);
+
+      _defineProperty(this, "right", 0);
+
+      _defineProperty(this, "top", 0);
+
+      _defineProperty(this, "bottom", 0);
+
+      this.set(left, top, width, height);
+    }
+
+    _createClass(Rect, [{
+      key: "set",
+      value: function set() {
+        var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+        var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+        this.left = left;
+        this.top = top;
+        this.width = width;
+        this.height = height;
+        this.right = this.left + this.width;
+        this.bottom = this.top + this.height;
+      }
+      /**
+       * 判断两个矩形是否相交
+       * 原理可见: https://zhuanlan.zhihu.com/p/29704064
+       */
+
+    }, {
+      key: "intersects",
+      value: function intersects(rect) {
+        return !(this.right < rect.left || rect.right < this.left || this.bottom < rect.top || rect.bottom < this.top);
+      }
+    }]);
+
+    return Rect;
+  }();
+  /***/
+
+},
+/* 5 */
 
 /***/
 function (module, exports) {
@@ -32911,7 +33109,7 @@ function (module, exports) {
   module.exports.TinyEmitter = E;
   /***/
 },
-/* 5 */
+/* 6 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -32998,7 +33196,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 6 */
+/* 7 */
 
 /***/
 function (module, exports, __webpack_require__) {
@@ -34329,7 +34527,7 @@ function (module, exports, __webpack_require__) {
   /***/
 
 },
-/* 7 */
+/* 8 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -34481,21 +34679,21 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 8 */
+/* 9 */
 
 /***/
 function (module, exports, __webpack_require__) {
   "use strict";
 
-  var nodeToJson = __webpack_require__(9);
+  var nodeToJson = __webpack_require__(10);
 
-  var xmlToNodeobj = __webpack_require__(11);
+  var xmlToNodeobj = __webpack_require__(12);
 
-  var x2xmlnode = __webpack_require__(11);
+  var x2xmlnode = __webpack_require__(12);
 
-  var buildOptions = __webpack_require__(10).buildOptions;
+  var buildOptions = __webpack_require__(11).buildOptions;
 
-  var validator = __webpack_require__(13);
+  var validator = __webpack_require__(14);
 
   exports.parse = function (xmlData, options, validationOption) {
     if (validationOption) {
@@ -34513,13 +34711,13 @@ function (module, exports, __webpack_require__) {
   /***/
 
 },
-/* 9 */
+/* 10 */
 
 /***/
 function (module, exports, __webpack_require__) {
   "use strict";
 
-  var util = __webpack_require__(10);
+  var util = __webpack_require__(11);
 
   var convertToJson = function convertToJson(node, options) {
     var jObj = {
@@ -34575,7 +34773,7 @@ function (module, exports, __webpack_require__) {
   exports.convertToJson = convertToJson;
   /***/
 },
-/* 10 */
+/* 11 */
 
 /***/
 function (module, exports, __webpack_require__) {
@@ -34676,17 +34874,17 @@ function (module, exports, __webpack_require__) {
   exports.getAllMatches = getAllMatches;
   /***/
 },
-/* 11 */
+/* 12 */
 
 /***/
 function (module, exports, __webpack_require__) {
   "use strict";
 
-  var util = __webpack_require__(10);
+  var util = __webpack_require__(11);
 
-  var buildOptions = __webpack_require__(10).buildOptions;
+  var buildOptions = __webpack_require__(11).buildOptions;
 
-  var xmlNode = __webpack_require__(12);
+  var xmlNode = __webpack_require__(13);
 
   var TagType = {
     OPENING: 1,
@@ -34939,7 +35137,7 @@ function (module, exports, __webpack_require__) {
   exports.getTraversalObj = getTraversalObj;
   /***/
 },
-/* 12 */
+/* 13 */
 
 /***/
 function (module, exports, __webpack_require__) {
@@ -34969,13 +35167,13 @@ function (module, exports, __webpack_require__) {
   /***/
 
 },
-/* 13 */
+/* 14 */
 
 /***/
 function (module, exports, __webpack_require__) {
   "use strict";
 
-  var util = __webpack_require__(10);
+  var util = __webpack_require__(11);
 
   var defaultOptions = {
     allowBooleanAttributes: false,
@@ -35357,7 +35555,7 @@ function (module, exports, __webpack_require__) {
   /***/
 
 },
-/* 14 */
+/* 15 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -35373,11 +35571,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
+  var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
   /* harmony import */
 
 
-  var _pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+  var _pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -35406,7 +35604,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
 
-  var Emitter = __webpack_require__(4);
+  var Emitter = __webpack_require__(5);
   /**
    * http://www.angelcode.com/products/bmfont/doc/file_format.html
    */
@@ -35542,7 +35740,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 15 */
+/* 16 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -35552,11 +35750,11 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+  var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
   /* harmony import */
 
 
-  var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+  var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -35647,7 +35845,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   __webpack_exports__["default"] = new ImageManager();
   /***/
 },
-/* 16 */
+/* 17 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -36677,10 +36875,10 @@ function (module, __webpack_exports__, __webpack_require__) {
 
     __webpack_exports__["default"] = exports;
     /* WEBPACK VAR INJECTION */
-  }).call(this, __webpack_require__(17));
+  }).call(this, __webpack_require__(18));
   /***/
 },
-/* 17 */
+/* 18 */
 
 /***/
 function (module, exports) {
@@ -36895,7 +37093,7 @@ function (module, exports) {
   /***/
 
 },
-/* 18 */
+/* 19 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -36980,7 +37178,7 @@ function (module, __webpack_exports__, __webpack_require__) {
           return sum;
         }, ''); // eslint-disable-next-line no-unused-vars
 
-        logInfo += "totalCost: ".concat(this.totalCost);
+        logInfo += "totalCost: ".concat(this.totalCost, "\n");
         return logInfo;
       }
     }]);
@@ -36990,7 +37188,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 19 */
+/* 20 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -37039,11 +37237,20 @@ function (module, __webpack_exports__, __webpack_require__) {
       this.started = false;
       this.animationId = null;
       this.cbs = [];
+      this.nextCbs = [];
 
       this.update = function () {
         _this.cbs.forEach(function (cb) {
           cb();
         });
+
+        if (_this.nextCbs.length) {
+          _this.nextCbs.forEach(function (cb) {
+            return cb();
+          });
+
+          _this.nextCbs = [];
+        }
 
         _this.count += 1;
         _this.animationId = requestAnimationFrame(_this.update);
@@ -37063,6 +37270,13 @@ function (module, __webpack_exports__, __webpack_require__) {
       value: function add(cb) {
         if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
           this.cbs.push(cb);
+        }
+      }
+    }, {
+      key: "next",
+      value: function next(cb) {
+        if (typeof cb === 'function') {
+          this.nextCbs.push(cb);
         }
       }
     }, {
@@ -37102,7 +37316,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 20 */
+/* 21 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -37126,12 +37340,6 @@ function (module, __webpack_exports__, __webpack_require__) {
 
   __webpack_require__.d(__webpack_exports__, "layoutChildren", function () {
     return layoutChildren;
-  });
-  /* harmony export (binding) */
-
-
-  __webpack_require__.d(__webpack_exports__, "updateRealLayout", function () {
-    return updateRealLayout;
   });
   /* harmony export (binding) */
 
@@ -37163,10 +37371,16 @@ function (module, __webpack_exports__, __webpack_require__) {
   __webpack_require__.d(__webpack_exports__, "repaintTree", function () {
     return repaintTree;
   });
+  /* harmony export (binding) */
+
+
+  __webpack_require__.d(__webpack_exports__, "clone", function () {
+    return clone;
+  });
   /* harmony import */
 
 
-  var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+  var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
   /* eslint-disable no-param-reassign */
   // components
 
@@ -37239,6 +37453,8 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {}); // 用于后续元素查询
 
     args.idName = id;
+    this.eleCount += 1;
+    args.id = this.eleCount;
     args.className = attr["class"] || '';
     var thisStyle = args.style;
 
@@ -37265,10 +37481,12 @@ function (module, __webpack_exports__, __webpack_require__) {
       if (isPercent(thisStyle.height)) {
         thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
       }
-    }
+    } // console.log(args);
+
 
     var element = new Constructor(args);
     element.root = this;
+    element.tagName = node.name;
     children.forEach(function (childNode) {
       var childElement = create.call(_this, childNode, style, args);
       element.add(childElement);
@@ -37281,18 +37499,9 @@ function (module, __webpack_exports__, __webpack_require__) {
     children.forEach(function (child) {
       child.shouldUpdate = false;
       child.isDirty = false;
-      /**
-       * ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-       * TODO: 这里感觉还有优化空间
-       */
+      child.insert(context, needRender); // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
 
-      if (child.type === 'ScrollView') {
-        child.insert(context, needRender);
-        return renderChildren(child.children, context, false);
-      }
-
-      child.insert(context, needRender);
-      return renderChildren(child.children, context, needRender);
+      return renderChildren(child.children, context, child.type === 'ScrollView' ? false : needRender);
     });
   }
   /**
@@ -37320,56 +37529,6 @@ function (module, __webpack_exports__, __webpack_require__) {
       child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
       child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
       layoutChildren.call(_this2, child);
-    });
-  }
-
-  function updateRealLayout(element, scale) {
-    element.children.forEach(function (child) {
-      child.realLayoutBox = child.realLayoutBox || {};
-      ['left', 'top', 'width', 'height'].forEach(function (prop) {
-        child.realLayoutBox[prop] = child.layout[prop] * scale;
-      });
-
-      if (child.parent) {
-        // Scrollview支持横向滚动和纵向滚动，realX和realY需要动态计算
-        Object.defineProperty(child.realLayoutBox, 'realX', {
-          configurable: true,
-          enumerable: true,
-          get: function get() {
-            var res = (child.parent.realLayoutBox.realX || 0) + child.realLayoutBox.left;
-            /**
-             * 滚动列表事件处理
-             */
-
-            if (child.parent && child.parent.type === 'ScrollView') {
-              res -= child.parent.scrollLeft * scale;
-            }
-
-            return res;
-          }
-        });
-        Object.defineProperty(child.realLayoutBox, 'realY', {
-          configurable: true,
-          enumerable: true,
-          get: function get() {
-            var res = (child.parent.realLayoutBox.realY || 0) + child.realLayoutBox.top;
-            /**
-             * 滚动列表事件处理
-             */
-
-            if (child.parent && child.parent.type === 'ScrollView') {
-              res -= child.parent.scrollTop * scale;
-            }
-
-            return res;
-          }
-        });
-      } else {
-        child.realLayoutBox.realX = child.realLayoutBox.left;
-        child.realLayoutBox.realY = child.realLayoutBox.top;
-      }
-
-      updateRealLayout(child, scale);
     });
   }
 
@@ -37406,7 +37565,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     Object.keys(tree.children).forEach(function (key) {
       var child = tree.children[key];
 
-      if (child.className.split(/\s+/).indexOf(className) > -1) {
+      if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
         list.push(child);
       }
 
@@ -37434,10 +37593,49 @@ function (module, __webpack_exports__, __webpack_require__) {
       repaintTree(child);
     });
   };
+
+  function clone(element) {
+    var _this3 = this;
+
+    var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    var parent = arguments.length > 2 ? arguments[2] : undefined;
+    var Constructor = constructorMap[element.tagName];
+    this.eleCount += 1;
+    var args = {
+      style: Object.assign({}, element.style),
+      idName: element.idName,
+      className: element.className,
+      id: this.eleCount,
+      dataset: element.dataset
+    };
+
+    if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"]) {
+      args.src = element.src;
+    } else if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Text"] || element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["BitMapText"]) {
+      args.value = element.value;
+    }
+
+    var newElemenet = new Constructor(args);
+    newElemenet.root = this;
+    newElemenet.insert(this.renderContext, false);
+    newElemenet.observeStyleAndEvent();
+
+    if (parent) {
+      parent.add(newElemenet);
+    }
+
+    if (deep) {
+      element.children.forEach(function (child) {
+        clone.call(_this3, child, deep, newElemenet);
+      });
+    }
+
+    return newElemenet;
+  }
   /***/
 
 },
-/* 21 */
+/* 22 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -37447,7 +37645,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+  var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
   /* harmony reexport (safe) */
 
 
@@ -37457,7 +37655,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+  var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(24);
   /* harmony reexport (safe) */
 
 
@@ -37467,7 +37665,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(24);
+  var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(25);
   /* harmony reexport (safe) */
 
 
@@ -37477,7 +37675,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(25);
+  var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(26);
   /* harmony reexport (safe) */
 
 
@@ -37487,7 +37685,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(29);
+  var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(30);
   /* harmony reexport (safe) */
 
 
@@ -37497,7 +37695,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 22 */
+/* 23 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -37728,7 +37926,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 23 */
+/* 24 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -37748,7 +37946,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+  var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(16);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -37909,9 +38107,11 @@ function (module, __webpack_exports__, __webpack_require__) {
             this.imgsrc = newValue;
 
             _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
-              _this2.img = img;
+              if (!_this2.isDestroyed) {
+                _this2.img = img; // 当图片加载完成，实例可能已经被销毁了
 
-              _this2.emit('repaint');
+                _this2.root.emit('repaint');
+              }
             });
           }
         },
@@ -37923,8 +38123,11 @@ function (module, __webpack_exports__, __webpack_require__) {
         if (fromCache) {
           _this.img = img;
         } else {
-          // 当图片加载完成，实例可能已经被销毁了
-          _this.root.emit('repaint', _this.className);
+          if (!_this.isDestroyed) {
+            _this.img = img; // 当图片加载完成，实例可能已经被销毁了
+
+            _this.root.emit('repaint');
+          }
         }
       });
       return _this;
@@ -37991,7 +38194,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 24 */
+/* 25 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -38011,7 +38214,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+  var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -38260,10 +38463,20 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.root = null;
       }
     }, {
+      key: "insert",
+      value: function insert(ctx, needRender) {
+        this.ctx = ctx;
+        this.toCanvasData();
+
+        if (needRender) {
+          this.render();
+        }
+      }
+    }, {
       key: "render",
       value: function render() {
-        var ctx = this.ctx;
-        this.toCanvasData();
+        var ctx = this.ctx; // this.toCanvasData();
+
         ctx.save();
         var box = this.layoutBox;
         var style = this.style;
@@ -38313,7 +38526,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 25 */
+/* 26 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -38329,15 +38542,15 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+  var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
   /* harmony import */
 
 
-  var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+  var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
   /* harmony import */
 
 
-  var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(26);
+  var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(27);
   /* harmony import */
 
 
@@ -38345,7 +38558,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _common_vd_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
+  var _common_vd_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(21);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -38465,6 +38678,8 @@ function (module, __webpack_exports__, __webpack_require__) {
     };
     return _getPrototypeOf(o);
   }
+  /* eslint-disable no-underscore-dangle */
+
   /* eslint-disable no-param-reassign */
 
 
@@ -38582,7 +38797,6 @@ function (module, __webpack_exports__, __webpack_require__) {
       key: "repaint",
       value: function repaint() {
         this.clear();
-        this.render(this.ctx);
         this.scrollRender(this.scrollLeft, this.scrollTop);
       }
     }, {
@@ -38592,6 +38806,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.isDestroyed = true;
         this.ctx = null;
         this.children = null;
+        this.root.off('touchend');
         this.root = null;
       }
     }, {
@@ -38619,19 +38834,18 @@ function (module, __webpack_exports__, __webpack_require__) {
         var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
         var box = this.layoutBox;
         this.scrollTop = top;
-        this.scrollLeft = left; // scrollview在全局节点中的Y轴位置
+        this.scrollLeft = left;
+        var startX = box.absoluteX,
+            startY = box.absoluteY,
+            width = box.width,
+            height = box.height; // 根据滚动值获取裁剪区域
 
-        var abY = box.absoluteY;
-        var abX = box.absoluteX; // 根据滚动值获取裁剪区域
-
-        var startY = abY + this.scrollTop;
-        var endY = abY + this.scrollTop + box.height;
-        var startX = abX + this.scrollLeft;
-        var endX = abX + this.scrollLeft + box.width; // 清理滚动画布和主屏画布
+        var endX = startX + width;
+        var endY = startY + height; // 清理滚动画布和主屏画布
 
         this.clear(); // ScrollView 作为容器本身的渲染
 
-        this.render(this.ctx);
+        this.render();
         /**
          * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的
          * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
@@ -38639,56 +38853,72 @@ function (module, __webpack_exports__, __webpack_require__) {
 
         this.ctx.save();
         this.ctx.beginPath();
-        this.ctx.rect(abX, abY, box.width, box.height);
+        this.ctx.rect(startX, startY, width, height);
         this.ctx.clip();
         this.children.forEach(function (child) {
-          var layoutBox = child.layoutBox;
-          var height = layoutBox.height;
-          var width = layoutBox.width;
-          var originY = layoutBox.originalAbsoluteY;
-          var originX = layoutBox.originalAbsoluteX; // 判断处于可视窗口内的子节点，递归渲染该子节点
+          var _child$layoutBox = child.layoutBox,
+              width = _child$layoutBox.width,
+              height = _child$layoutBox.height,
+              absoluteX = _child$layoutBox.absoluteX,
+              absoluteY = _child$layoutBox.absoluteY; // 判断处于可视窗口内的子节点，递归渲染该子节点
 
-          if (originY + height >= startY && originY <= endY && originX + width >= startX && originX <= endX) {
+          if (absoluteY + height >= startY && absoluteY <= endY && absoluteX + width >= startX && absoluteX <= endX) {
             _this3.renderTreeWithTop(child, _this3.scrollTop, _this3.scrollLeft);
           }
         });
         this.ctx.restore();
       }
     }, {
+      key: "scrollHandler",
+      value: function scrollHandler(left, top) {
+        var _this4 = this; // 可能被销毁了或者节点树还没准备好
+
+
+        if (!this.isDestroyed && !this.isFirstScroll) {
+          Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(this, function (ele) {
+            if (ele !== _this4) {
+              ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
+              ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
+            }
+          });
+          this.scrollRender(left, top);
+
+          if (this.currentEvent) {
+            this.emit('scroll', this.currentEvent);
+          }
+        }
+
+        if (this.isFirstScroll) {
+          this.isFirstScroll = false;
+        }
+      }
+    }, {
       key: "insert",
       value: function insert(context) {
-        var _this4 = this;
+        var _this5 = this;
 
         this.ctx = context;
 
         if (this.hasEventBind) {
           // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域
-          this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+          if (this.layoutBox.width !== this.scrollerObj.__clientWidth || this.layoutBox.height !== this.scrollerObj.__clientHeight || this.scrollWidth !== this.scrollerObj.__contentWidth || this.scrollHeight !== this.scrollerObj.__contentHeight) {
+            this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+          } // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
+
+
+          Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(this, function (ele) {
+            if (ele !== _this5) {
+              ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - _this5.scrollTop;
+              ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - _this5.scrollLeft;
+            }
+          });
           return;
         }
 
         this.hasEventBind = true;
-        this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](function (left, top) {
-          // 可能被销毁了或者节点树还没准备好
-          if (!_this4.isDestroyed) {
-            Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(_this4, function (ele) {
-              if (ele !== _this4) {
-                ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
-                ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
-              }
-            });
-
-            _this4.scrollRender(left, top);
-
-            if (_this4.currentEvent) {
-              _this4.emit('scroll', _this4.currentEvent);
-            }
-          }
-        }, this.scrollerOption);
-        requestAnimationFrame(function () {
-          // this.scrollerObj.setDimensions 本身就会触发一次 Scroll，调用渲染
-          _this4.scrollerObj.setDimensions(_this4.layoutBox.width, _this4.layoutBox.height, _this4.scrollWidth, _this4.scrollHeight);
-        });
+        this.isFirstScroll = true;
+        this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](this.scrollHandler.bind(this), this.scrollerOption);
+        this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
         this.on('touchstart', function (e) {
           if (!e.touches) {
             e.touches = [e];
@@ -38702,9 +38932,9 @@ function (module, __webpack_exports__, __webpack_require__) {
             }
           });
 
-          _this4.scrollerObj.doTouchStart(touches, e.timeStamp);
+          _this5.scrollerObj.doTouchStart(touches, e.timeStamp);
 
-          _this4.currentEvent = e;
+          _this5.currentEvent = e;
         });
         this.on('touchmove', function (e) {
           if (!e.touches) {
@@ -38719,15 +38949,15 @@ function (module, __webpack_exports__, __webpack_require__) {
             }
           });
 
-          _this4.scrollerObj.doTouchMove(touches, e.timeStamp);
+          _this5.scrollerObj.doTouchMove(touches, e.timeStamp);
 
-          _this4.currentEvent = e;
+          _this5.currentEvent = e;
         }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
 
         this.root.on('touchend', function (e) {
-          _this4.scrollerObj.doTouchEnd(e.timeStamp);
+          _this5.scrollerObj.doTouchEnd(e.timeStamp);
 
-          _this4.currentEvent = e;
+          _this5.currentEvent = e;
         });
       }
     }, {
@@ -38745,7 +38975,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /***/
 
 },
-/* 26 */
+/* 27 */
 
 /***/
 function (module, exports, __webpack_require__) {
@@ -38754,7 +38984,7 @@ function (module, exports, __webpack_require__) {
   (function (root, factory) {
     if (true) {
       // AMD
-      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(27), __webpack_require__(28)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(28), __webpack_require__(29)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else {}
   })(this, function (exports, animate, Scroller) {
     exports.animate = animate;
@@ -38763,7 +38993,7 @@ function (module, exports, __webpack_require__) {
   /***/
 
 },
-/* 27 */
+/* 28 */
 
 /***/
 function (module, exports, __webpack_require__) {
@@ -38989,7 +39219,7 @@ function (module, exports, __webpack_require__) {
   /***/
 
 },
-/* 28 */
+/* 29 */
 
 /***/
 function (module, exports, __webpack_require__) {
@@ -39012,7 +39242,7 @@ function (module, exports, __webpack_require__) {
   (function (root, factory) {
     if (true) {
       // AMD
-      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(27)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+      !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(28)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else {}
   })(this, function (animate) {
     var NOOP = function NOOP() {};
@@ -40070,7 +40300,7 @@ function (module, exports, __webpack_require__) {
   /***/
 
 },
-/* 29 */
+/* 30 */
 
 /***/
 function (module, __webpack_exports__, __webpack_require__) {
@@ -40090,7 +40320,7 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony import */
 
 
-  var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+  var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
 
   function _typeof(obj) {
     "@babel/helpers - typeof";
@@ -40288,11 +40518,11 @@ function (module, __webpack_exports__, __webpack_require__) {
         }
 
         if (this.font.ready) {
-          this.renderText(this.ctx, this.layoutBox);
+          this.renderText(this.ctx);
         } else {
           this.font.event.on('text__load__done', function () {
             if (!_this2.isDestroyed) {
-              _this2.renderText(_this2.ctx, _this2.layoutBox);
+              _this2.renderText(_this2.ctx);
             }
           });
         }

@@ -40,19 +40,32 @@ function draw(data = []) {
   //   console.log('test ticker next method');
   // })
 
+
+  // listItem.forEach(item => {
+  //   list.appendChild(Layout.cloneNode(item))
+  // });
+
+  // 获取 ScrollView
   const list = Layout.getElementsByClassName('list')[0];
-  // console.log(list)
 
+  // 对列表第一项进行深度拷贝
   const listItem = Layout.getElementsByClassName('listItem');
-  // console.log(listItem);
+  const listItem1 = listItem[0];
+  const newListItem1 = Layout.cloneNode(listItem1);
 
-  listItem.forEach(item => {
-    list.appendChild(Layout.cloneNode(item))
-  });
+  // 针对拷贝后的子节点做一些魔改
+  const listItemNum = newListItem1.getElementsByClassName('listItemNum')[0];
+  listItemNum.value = 2;
+  const listItemName = newListItem1.getElementsByClassName('listItemName')[0];
+  listItemName.value = 'zim test';
+  const listItemScore = newListItem1.getElementsByClassName('listItemScore')[0];
+  listItemScore.value = '100';
+
+  // 将拷贝后的节点也添加到滚动列表
+  list.appendChild(newListItem1);
 
   // const newListItem = Layout.cloneNode(listItem);
 
-  // list.appendChild(newListItem);
 
   Layout.ticker.next(() => {
     console.log(Layout.debugInfo)
@@ -143,13 +156,13 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     // 缓存数据，加速下次渲染
     cacheRankData = data;
 
-    // data.length = 3;
+    data.length = 1;
     // mock
-    for (let i = data.length; i < 50; i++) {
-      data[i] = JSON.parse(JSON.stringify(data[0]));
-      data[i].rank = i;
-      data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
-    }
+    // for (let i = data.length; i < 50; i++) {
+    //   data[i] = JSON.parse(JSON.stringify(data[0]));
+    //   data[i].rank = i;
+    //   data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
+    // }
 
     if (needRender) {
       draw(data, selfData, currentMaxScore);
