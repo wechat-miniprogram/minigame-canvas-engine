@@ -263,7 +263,7 @@ var Layout = /*#__PURE__*/function (_Element) {
 
     _this.TWEEN = _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"];
 
-    var tickerFunc = function tickerFunc() {
+    _this.tickerFunc = function () {
       _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"].update();
 
       if (_this.isDirty) {
@@ -272,10 +272,6 @@ var Layout = /*#__PURE__*/function (_Element) {
         _this.repaint();
       }
     };
-
-    _this.ticker.add(tickerFunc);
-
-    _this.ticker.start();
 
     return _this;
   } // 与老版本兼容
@@ -341,6 +337,8 @@ var Layout = /*#__PURE__*/function (_Element) {
       debugInfo.end('xmlTreeToLayoutTree');
       this.add(layoutTree);
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].INITED;
+      this.ticker.add(this.tickerFunc);
+      this.ticker.start();
     }
   }, {
     key: "reflow",
@@ -508,6 +506,26 @@ var Layout = /*#__PURE__*/function (_Element) {
       }
     }
   }, {
+    key: "unBindEvents",
+    value: function unBindEvents() {
+      if (typeof __env !== 'undefined') {
+        __env.offTouchStart(this.touchStart);
+
+        __env.offTouchMove(this.touchMove);
+
+        __env.offTouchEnd(this.touchEnd);
+
+        __env.offTouchCancel(this.touchCancel);
+      } else {
+        document.onmousedown = null;
+        document.onmousemove = null;
+        document.onmouseup = null;
+        document.onmouseleave = null;
+      }
+
+      this.hasEventHandler = false;
+    }
+  }, {
     key: "emit",
     value: function emit(event, data) {
       EE.emit(event, data);
@@ -526,13 +544,7 @@ var Layout = /*#__PURE__*/function (_Element) {
     key: "off",
     value: function off(event, callback) {
       EE.off(event, callback);
-    } // getElementsById(id) {
-    //   return getElementsById(this, [], id);
-    // }
-    // getElementsByClassName(className) {
-    //   return getElementsByClassName(this, [], className);
-    // }
-
+    }
   }, {
     key: "destroyAll",
     value: function destroyAll(tree) {
@@ -550,14 +562,24 @@ var Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "clear",
     value: function clear() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var _options$removeTicker = options.removeTicker,
+          removeTicker = _options$removeTicker === void 0 ? true : _options$removeTicker;
       debugInfo.reset();
       _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"].removeAll();
       this.destroyAll(this);
       this.elementTree = null;
       this.children = [];
       this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
+      this.isDirty = false;
       Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
       this.eleCount = 0;
+      this.unBindEvents();
+
+      if (removeTicker) {
+        this.ticker.remove();
+        this.ticker.stop();
+      }
     }
   }, {
     key: "clearPool",
@@ -4795,6 +4817,10 @@ var Ticker = /*#__PURE__*/function () {
   }, {
     key: "remove",
     value: function remove(cb) {
+      if (cb === undefined) {
+        this.cbs = [];
+      }
+
       if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
         this.cbs.splice(this.cbs.indexOf(cb), 1);
       }

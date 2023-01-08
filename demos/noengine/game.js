@@ -48,6 +48,12 @@ function initSharedCanvas() {
   y = GAME_HEIGHT / 2 - sharedCanvas.height / 2;
   
   flag = true;
+
+  setTimeout(() => {
+    openDataContext.postMessage({
+      event: 'close',
+    });
+  }, 3000)
 }
 
 function loop() {
@@ -64,8 +70,9 @@ function loop() {
 
 loop()
 
-// wx.onTouchStart((result) => {
-//   initSharedCanvas();
-// })
+wx.onTouchStart((result) => {
+  initSharedCanvas();
+})
 
-initSharedCanvas();
+// initSharedCanvas();
+

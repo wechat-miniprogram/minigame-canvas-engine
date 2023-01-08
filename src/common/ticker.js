@@ -43,6 +43,10 @@ export default class Ticker {
   }
 
   remove(cb) {
+    if (cb === undefined) {
+      this.cbs = [];
+    }
+
     if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
       this.cbs.splice(this.cbs.indexOf(cb), 1);
     }

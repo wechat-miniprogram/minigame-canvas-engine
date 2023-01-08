@@ -18,8 +18,6 @@ import {
   create,
   renderChildren,
   layoutChildren,
-  getElementsById,
-  getElementsByClassName,
   repaintChildren,
   iterateTree,
   clone,
@@ -90,7 +88,7 @@ class Layout extends Element {
      */
     this.TWEEN = TWEEN;
 
-    const tickerFunc = () => {
+    this.tickerFunc = () => {
       TWEEN.update();
       if (this.isDirty) {
         this.reflow();
@@ -98,10 +96,8 @@ class Layout extends Element {
         this.repaint();
       }
     };
-
-    this.ticker.add(tickerFunc);
-    this.ticker.start();
   }
+
 
   // 与老版本兼容
   get debugInfo() {
@@ -166,6 +162,9 @@ class Layout extends Element {
     this.add(layoutTree);
 
     this.state = STATE.INITED;
+
+    this.ticker.add(this.tickerFunc);
+    this.ticker.start();
   }
 
   reflow(isFirst = false) {
@@ -328,6 +327,22 @@ class Layout extends Element {
     }
   }
 
+  unBindEvents() {
+    if (typeof __env !== 'undefined') {
+      __env.offTouchStart(this.touchStart);
+      __env.offTouchMove(this.touchMove);
+      __env.offTouchEnd(this.touchEnd);
+      __env.offTouchCancel(this.touchCancel);
+    } else {
+      document.onmousedown = null;
+      document.onmousemove = null;
+      document.onmouseup = null;
+      document.onmouseleave = null;
+    }
+
+    this.hasEventHandler = false;
+  }
+
   emit(event, data) {
     EE.emit(event, data);
   }
@@ -344,14 +359,6 @@ class Layout extends Element {
     EE.off(event, callback);
   }
 
-  // getElementsById(id) {
-  //   return getElementsById(this, [], id);
-  // }
-
-  // getElementsByClassName(className) {
-  //   return getElementsByClassName(this, [], className);
-  // }
-
   destroyAll(tree) {
     const {
       children,
@@ -364,15 +371,24 @@ class Layout extends Element {
     });
   }
 
-  clear() {
+  clear(options = {}) {
+    const { removeTicker = true } = options;
+
     debugInfo.reset();
     TWEEN.removeAll();
     this.destroyAll(this);
     this.elementTree = null;
     this.children = [];
     this.state = STATE.CLEAR;
+    this.isDirty = false;
     clearCanvas(this.renderContext);
     this.eleCount = 0;
+    this.unBindEvents();
+
+    if (removeTicker) {
+      this.ticker.remove();
+      this.ticker.stop();
+    }
   }
 
   clearPool() {

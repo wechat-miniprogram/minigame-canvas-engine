@@ -93,9 +93,19 @@ function draw(data = []) {
       }
     });
   }
+
+  window.manualTween = manualTween;
+
+  // listItems.forEach(item => {
+  //   let globalStyle = { width: 90, height: 90 }
+  //   new Layout.TWEEN.Tween(item.style).to({
+  //     width: 70,
+  //     height: 70
+  //   }).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
+  // })
   
   // 记得在必要的时候执行 Layout.ticker.remove(manualTween)，比如每次 Layout.init 之前
-  // Layout.ticker.add(manualTween);
+  Layout.ticker.add(manualTween);
 
   // setInterval(() => {
   //   console.log(Layout.debugInfo)
@@ -156,13 +166,13 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     // 缓存数据，加速下次渲染
     cacheRankData = data;
 
-    data.length = 1;
+    // data.length = ;
     // mock
-    // for (let i = data.length; i < 50; i++) {
-    //   data[i] = JSON.parse(JSON.stringify(data[0]));
-    //   data[i].rank = i;
-    //   data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
-    // }
+    for (let i = data.length; i < 50; i++) {
+      data[i] = JSON.parse(JSON.stringify(data[0]));
+      data[i].rank = i;
+      data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
+    }
 
     if (needRender) {
       draw(data, selfData, currentMaxScore);
@@ -182,6 +192,9 @@ function init() {
         userinfo = info;
         loadFriendDataAndRender(key, info);
       });
+    } else if (data.event === 'close') {
+      Layout.clear();
+      console.log(Layout)
     }
   });
 }
