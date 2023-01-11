@@ -166,13 +166,13 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     // 缓存数据，加速下次渲染
     cacheRankData = data;
 
-    // data.length = ;
+    data.length = 3;
     // mock
-    for (let i = data.length; i < 50; i++) {
-      data[i] = JSON.parse(JSON.stringify(data[0]));
-      data[i].rank = i;
-      data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
-    }
+    // for (let i = data.length; i < 50; i++) {
+    //   data[i] = JSON.parse(JSON.stringify(data[0]));
+    //   data[i].rank = i;
+    //   data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
+    // }
 
     if (needRender) {
       draw(data, selfData, currentMaxScore);

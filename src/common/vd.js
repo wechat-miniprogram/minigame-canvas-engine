@@ -20,7 +20,7 @@ function convertPercent(data, parentData) {
   }
   const matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
   if (matchData) {
-    return parentData * matchData * 0.01;
+    return parentData * matchData * 0.01;q
   }
 }
 
@@ -191,7 +191,7 @@ export function clone(element, deep = true, parent) {
     idName: element.idName,
     className: element.className,
     id: this.eleCount,
-    dataset: element.dataset,
+    dataset: Object.assign({}, element.dataset),
   };
 
   if (element instanceof Image) {
