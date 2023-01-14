@@ -49,11 +49,11 @@ function initSharedCanvas() {
   
   flag = true;
 
-  setTimeout(() => {
-    openDataContext.postMessage({
-      event: 'close',
-    });
-  }, 3000)
+  // setTimeout(() => {
+  //   openDataContext.postMessage({
+  //     event: 'close',
+  //   });
+  // }, 3000)
 }
 
 function loop() {
@@ -70,9 +70,9 @@ function loop() {
 
 loop()
 
-wx.onTouchStart((result) => {
-  initSharedCanvas();
-})
+// wx.onTouchStart((result) => {
+//   initSharedCanvas();
+// })
 
-// initSharedCanvas();
+initSharedCanvas();
 

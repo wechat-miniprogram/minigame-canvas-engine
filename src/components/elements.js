@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { repaintAffectedStyles, reflowAffectedStyles, allStyles } from './style.js';
 import Rect from '../common/rect';
+import imageManager from '../common/imageManager';
 
 export function getElementsById(tree, list = [], id) {
   Object.keys(tree.children).forEach((key) => {
@@ -78,6 +79,9 @@ const toEventName = (event, id) => {
   return `element-${id}-${event}`;
 };
 
+
+const isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
+
 export default class Element {
   constructor({
     style = {},
@@ -116,6 +120,23 @@ export default class Element {
       && style.backgroundColor.indexOf('#') > -1
     ) {
       style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
+    }
+
+    if (typeof style.backgroundImage === 'string') {
+      const list = style.backgroundImage.match(isValidUrlPropReg);
+      if (list) {
+        const url = list[1].replace(/('|")/g, '');
+        console.log(url)
+        imageManager.loadImage(url, (img) => {
+          if (!this.isDestroyed) {
+            this.backgroundImage = img;
+            // 当图片加载完成，实例可能已经被销毁了
+            this.root && this.root.emit('repaint');
+          }
+        });
+      } else {
+        console.error(`[Layout]: ${style.backgroundImage} is not a valid backgroundImage`);
+      }
     }
 
     this.originStyle = style;
@@ -306,7 +327,6 @@ export default class Element {
     const x = box.absoluteX;
     const y = box.absoluteY;
     const { width, height } = box;
-
 
     const hasRadius = radius
       || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius;

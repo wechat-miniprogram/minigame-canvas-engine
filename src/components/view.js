@@ -55,7 +55,7 @@ export default class View extends Element {
     const borderTopWidth    = style.borderTopWidth    || borderWidth;
     const borderBottomWidth = style.borderBottomWidth || borderWidth;
 
-    this.renderBorder(ctx);
+    // this.renderBorder(ctx);
     const { needClip, needStroke } = this.renderBorder(ctx);
 
     if (needClip) {
@@ -70,6 +70,10 @@ export default class View extends Element {
         box.width - (borderLeftWidth + borderRightWidth),
         box.height - (borderTopWidth + borderBottomWidth),
       );
+    }
+
+    if (style.backgroundImage && this.backgroundImage) {
+      ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
     }
 
     if (needStroke) {

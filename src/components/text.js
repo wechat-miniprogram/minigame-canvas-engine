@@ -161,6 +161,10 @@ export default class Text extends Element {
       ctx.fillRect(drawX, drawY, box.width, box.height);
     }
 
+    if (style.backgroundImage && this.backgroundImage) {
+      ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+    }
+
     if (needStroke) {
       ctx.stroke();
     }

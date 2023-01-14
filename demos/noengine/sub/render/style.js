@@ -30,7 +30,8 @@ export default {
   rankList: {
     width: 960,
     height: 1000,
-    backgroundColor: "#ffffff",
+    // backgroundColor: "red",
+    // backgroundImage: 'url(https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM7mL9dDQ8VibStCkTOfNVluNXh3rqZnWAKF27npl0S04l2EFgRutKI7LNxfibiakibE3VA84HNAswmoyg/132)'
   },
 
   list: {
@@ -39,6 +40,8 @@ export default {
     backgroundColor: "#ffffff",
     marginTop: 30,
     // borderWidth: 1,
+    // backgroundColor: "red",
+    // backgroundImage: 'url(https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM7mL9dDQ8VibStCkTOfNVluNXh3rqZnWAKF27npl0S04l2EFgRutKI7LNxfibiakibE3VA84HNAswmoyg/132)'
   },
 
   listItem: {
@@ -77,6 +80,7 @@ export default {
     lineHeight: 150,
     width: 300,
     textAlign: "right",
+    // backgroundColor: 'red'
   },
 
   listItemName: {

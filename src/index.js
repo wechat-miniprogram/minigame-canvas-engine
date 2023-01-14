@@ -46,7 +46,13 @@ class Layout extends Element {
     this.renderport = {};
     this.viewport = {};
     this.viewportScale = 1;
+    this.hasViewPortSet = false;
+    this.realLayoutBox = {
+      realX: 0,
+      realY: 0,
+    };
 
+    this.touchMsg = {};
     this.touchStart = this.eventHandler('touchstart').bind(this);
     this.touchMove = this.eventHandler('touchmove').bind(this);
     this.touchEnd = this.eventHandler('touchend').bind(this);
@@ -54,14 +60,6 @@ class Layout extends Element {
 
     this.version = '1.0.0';
     this.eleCount = 0;
-
-    this.touchMsg = {};
-
-    this.hasViewPortSet = false;
-    this.realLayoutBox = {
-      realX: 0,
-      realY: 0,
-    };
 
     this.state = STATE.UNINIT;
 

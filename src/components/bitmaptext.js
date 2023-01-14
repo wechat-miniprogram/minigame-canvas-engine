@@ -123,6 +123,15 @@ export default class BitMapText extends Element {
     const scaleY    = lineHeight / defaultLineHeight;
     const realWidth = scaleY * bounds.width;
 
+    if (style.backgroundColor) {
+      ctx.fillStyle = style.backgroundColor;
+      ctx.fillRect(x, y, box.width, box.height);
+    }
+
+    if (style.backgroundImage && this.backgroundImage) {
+      ctx.drawImage(this.backgroundImage, x, y, box.width, box.height);
+    }
+
     // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
     if (lineHeight < height) {
       if (verticalAlign === 'middle') {

@@ -100,7 +100,7 @@ export default class ScrollView extends View {
   }
 
   repaint() {
-    this.clear();
+    // this.clear();
 
     this.scrollRender(this.scrollLeft, this.scrollTop);
   }
@@ -141,7 +141,7 @@ export default class ScrollView extends View {
 
 
     // 清理滚动画布和主屏画布
-    this.clear();
+    // this.clear();
 
     // ScrollView 作为容器本身的渲染
     this.render();

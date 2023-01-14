@@ -97,11 +97,16 @@ export default class Image extends Element {
       ctx.clip();
     }
 
-    try {
-      ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
-    } catch (e) {
-      debugger;
+    if (style.backgroundColor) {
+      ctx.fillStyle = style.backgroundColor;
+      ctx.fillRect(drawX, drawY, box.width, box.height);
     }
+
+    if (style.backgroundImage && this.backgroundImage) {
+      ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+    }
+
+    ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
 
     if (needStroke) {
       ctx.stroke();
