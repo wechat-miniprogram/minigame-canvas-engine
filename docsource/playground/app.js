@@ -32351,11 +32351,34 @@ function (module, __webpack_exports__, __webpack_require__) {
         Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["repaintChildren"])(this.children);
       }
     }, {
+      key: "getChildByPos",
+      value: function getChildByPos(tree, x, y, itemList) {
+        var _this2 = this;
+
+        tree.children.forEach(function (ele) {
+          var _ele$layoutBox = ele.layoutBox,
+              absoluteX = _ele$layoutBox.absoluteX,
+              absoluteY = _ele$layoutBox.absoluteY,
+              width = _ele$layoutBox.width,
+              height = _ele$layoutBox.height;
+          var realX = absoluteX * _this2.viewportScale + _this2.realLayoutBox.realX;
+          var realY = absoluteY * _this2.viewportScale + _this2.realLayoutBox.realY;
+          var realWidth = width * _this2.viewportScale;
+          var realHeight = height * _this2.viewportScale;
+
+          if (realX <= x && x <= realX + realWidth && realY <= y && y <= realY + realHeight) {
+            if (ele.children.length) {
+              _this2.getChildByPos(ele, x, y, itemList);
+            } else {
+              itemList.push(ele);
+            }
+          }
+        });
+      }
+    }, {
       key: "eventHandler",
       value: function eventHandler(eventName) {
         return function touchEventHandler(e) {
-          var _this2 = this;
-
           var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
 
           if (!touch || !touch.pageX || !touch.pageY) {
@@ -32369,23 +32392,7 @@ function (module, __webpack_exports__, __webpack_require__) {
           var list = [];
 
           if (touch) {
-            var x = touch.pageX;
-            var y = touch.pageY;
-            Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["iterateTree"])(this.children[0], function (ele) {
-              var _ele$layoutBox = ele.layoutBox,
-                  absoluteX = _ele$layoutBox.absoluteX,
-                  absoluteY = _ele$layoutBox.absoluteY,
-                  width = _ele$layoutBox.width,
-                  height = _ele$layoutBox.height;
-              var realX = absoluteX * _this2.viewportScale + _this2.realLayoutBox.realX;
-              var realY = absoluteY * _this2.viewportScale + _this2.realLayoutBox.realY;
-              var realWidth = width * _this2.viewportScale;
-              var realHeight = height * _this2.viewportScale;
-
-              if (realX <= x && x <= realX + realWidth && realY <= y && y <= realY + realHeight) {
-                list.push(ele);
-              }
-            });
+            this.getChildByPos(this, touch.pageX, touch.pageY, list);
           }
 
           if (!list.length) {

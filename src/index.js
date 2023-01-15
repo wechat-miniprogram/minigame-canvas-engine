@@ -254,6 +254,29 @@ class Layout extends Element {
     repaintChildren(this.children);
   }
 
+  getChildByPos(tree, x, y, itemList) {
+    tree.children.forEach((ele) => {
+      const {
+        absoluteX,
+        absoluteY,
+        width,
+        height,
+      } = ele.layoutBox;
+      const realX = absoluteX * this.viewportScale + this.realLayoutBox.realX;
+      const realY = absoluteY * this.viewportScale + this.realLayoutBox.realY;
+      const realWidth = width * this.viewportScale;
+      const realHeight = height * this.viewportScale;
+
+      if ((realX <= x && x <= realX + realWidth) && (realY <= y && y <= realY + realHeight)) {
+        if (ele.children.length) {
+          this.getChildByPos(ele, x, y, itemList);
+        } else {
+          itemList.push(ele);
+        }
+      }
+    });
+  }
+
   eventHandler(eventName) {
     return function touchEventHandler(e) {
       const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
@@ -267,25 +290,7 @@ class Layout extends Element {
 
       const list = [];
       if (touch) {
-        const x = touch.pageX;
-        const y = touch.pageY;
-
-        iterateTree(this.children[0], (ele) => {
-          const {
-            absoluteX,
-            absoluteY,
-            width,
-            height,
-          } = ele.layoutBox;
-          const realX = absoluteX * this.viewportScale + this.realLayoutBox.realX;
-          const realY = absoluteY * this.viewportScale + this.realLayoutBox.realY;
-          const realWidth = width * this.viewportScale;
-          const realHeight = height * this.viewportScale;
-
-          if ((realX <= x && x <= realX + realWidth) && (realY <= y && y <= realY + realHeight)) {
-            list.push(ele);
-          }
-        });
+        this.getChildByPos(this, touch.pageX, touch.pageY, list);
       }
 
       if (!list.length) {
