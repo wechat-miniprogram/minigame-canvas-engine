@@ -26,7 +26,7 @@ const template = `
           <text class="listItemNum" value="{{= it.selfIndex}}"></text>
           <image class="listHeadImg" src="{{= it.self.avatarUrl }}"></image>
           <text class="listItemName" value="{{= it.self.nickname}}"></text>
-          <text class="listItemScore" value="{{= item.rankScore}}"></text>
+          <text class="listItemScore" value="{{= item.rankScore}}"><text>
           <text class="listScoreUnit" value="分"></text>
       </view>
     </view>

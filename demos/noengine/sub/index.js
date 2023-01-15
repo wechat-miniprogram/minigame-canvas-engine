@@ -171,6 +171,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     for (let i = data.length; i < 50; i++) {
       data[i] = JSON.parse(JSON.stringify(data[0]));
       data[i].rank = i;
+      data[i].nickname = ''
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
     }
 
