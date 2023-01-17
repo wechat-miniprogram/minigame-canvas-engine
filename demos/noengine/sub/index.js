@@ -86,6 +86,25 @@ function draw(data = []) {
   const listItems = Layout.getElementsByClassName('listHeadImg');
   const scrollRect = scrollList.getBoundingClientRect();
 
+  listItems.forEach((item) => {
+    const height = item.style.height;
+    const width = item.style.height;
+    item.on('touchstart', () => {
+      item.style.width = width * 0.9;
+      item.style.height = height * 0.9;
+    });
+
+    item.on('touchend', () => {
+      item.style.height = height;
+      item.style.width = width;
+    });
+
+    item.on('touchcancel', () => {
+      item.style.height = height;
+      item.style.width = width;
+    });
+  });
+
   function manualTween() {
     listItems.forEach((item) => {
       if (scrollRect.intersects(item.getBoundingClientRect())) {
@@ -105,7 +124,7 @@ function draw(data = []) {
   // })
   
   // 记得在必要的时候执行 Layout.ticker.remove(manualTween)，比如每次 Layout.init 之前
-  Layout.ticker.add(manualTween);
+  // Layout.ticker.add(manualTween);
 
   // setInterval(() => {
   //   console.log(Layout.debugInfo)
