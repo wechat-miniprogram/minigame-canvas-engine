@@ -23,7 +23,6 @@
     "@babel/register": "^7.7.0",
     "babel-loader": "^8.0.6",
     "babel-polyfill": "^6.26.0",
-    "canvas": "^2.8.0",
     "coveralls": "^3.0.7",
     "cz-conventional-changelog": "^3.0.2",
     "eslint": "^8.30.0",

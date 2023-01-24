@@ -161,7 +161,7 @@ list.forEach(item => {
 });
 ```
 
-## TWEEN
+<!-- ## TWEEN
 Layout 默认挂载了[tween.js](https://github.com/tweenjs/tween.js/)模块，TWEEN 的使用与 tween.js 的使用并无差异。
 缓动系统的更多细节可见[缓动系统](/api/tween.html)。
 ```js
@@ -171,7 +171,7 @@ new Layout.TWEEN.Tween(ball.style)
   .to({ top: 250 }, 1000)
   .easing(Layout.TWEEN.Easing.Bounce.Out)
   .start();
-```
+``` -->
 
 ## ticker
 类似游戏引擎，Layout 本身会依赖 requestAnimationFrame 维护个循环，每帧检测是否需要重渲染、重布局之类的操作。
@@ -190,7 +190,7 @@ Layout.ticker.add(selfTickerFunc);
 从 Layout 的循环移除事件回调。
 
 ### Layout.ticker.start()
-开始 Layout 的循环，Layout.ticker 默认是 started 状态，不需要手动开启。
+开始 Layout 的循环，Layout.init 之后 Layout.ticker 默认是 started 状态，不需要手动开启。
 
 ### Layout.ticker.stop()
 结束 Layout 的循环。
@@ -203,7 +203,6 @@ Layout.ticker.next(() => {
   console.log(ball.getBoundingClientRect());
 });
 ```
-
 
 
 # 属性API

@@ -6,9 +6,15 @@ export default class Ticker {
 
     this.cbs = [];
     this.nextCbs = [];
+    this.innerCbs = [];
 
     this.update = () => {
+      // 优先执行业务的ticker回调，因为有可能会触发reflow
       this.cbs.forEach((cb) => {
+        cb();
+      });
+
+      this.innerCbs.forEach((cb) => {
         cb();
       });
 
@@ -30,9 +36,9 @@ export default class Ticker {
     }
   }
 
-  add(cb) {
+  add(cb, isInner = false) {
     if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
-      this.cbs.push(cb);
+      isInner ? this.innerCbs.push(cb) :  this.cbs.push(cb);
     }
   }
 
@@ -42,16 +48,19 @@ export default class Ticker {
     }
   }
 
-  remove(cb) {
+  remove(cb, isInner = false) {
     if (cb === undefined) {
       this.cbs = [];
+      this.innerCbs = [];
+      this.nextCbs = [];
     }
 
     if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
-      this.cbs.splice(this.cbs.indexOf(cb), 1);
+      const list = isInner ? this.innerCbs : this.cbs;
+      list.splice(this.cbs.indexOf(cb), 1);
     }
 
-    if (!this.cbs.length) {
+    if (!this.cbs.length && !this.innerCbs.length) {
       this.cancelIfNeed();
     }
   }
@@ -60,7 +69,7 @@ export default class Ticker {
     if (!this.started) {
       this.started = true;
 
-      if (this.animationId === null && this.cbs.length) {
+      if (this.animationId === null && (this.cbs.length || this.innerCbs.length)) {
         this.animationId = requestAnimationFrame(this.update);
       }
     }

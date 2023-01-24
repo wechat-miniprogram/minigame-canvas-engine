@@ -32145,18 +32145,18 @@ function (module, __webpack_exports__, __webpack_require__) {
       _this.renderport = {};
       _this.viewport = {};
       _this.viewportScale = 1;
+      _this.hasViewPortSet = false;
+      _this.realLayoutBox = {
+        realX: 0,
+        realY: 0
+      };
+      _this.touchMsg = {};
       _this.touchStart = _this.eventHandler('touchstart').bind(_assertThisInitialized(_this));
       _this.touchMove = _this.eventHandler('touchmove').bind(_assertThisInitialized(_this));
       _this.touchEnd = _this.eventHandler('touchend').bind(_assertThisInitialized(_this));
       _this.touchCancel = _this.eventHandler('touchcancel').bind(_assertThisInitialized(_this));
       _this.version = '1.0.0';
       _this.eleCount = 0;
-      _this.touchMsg = {};
-      _this.hasViewPortSet = false;
-      _this.realLayoutBox = {
-        realX: 0,
-        realY: 0
-      };
       _this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].UNINIT;
       _this.bitMapFonts = [];
       /**
@@ -32181,7 +32181,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
       _this.TWEEN = _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"];
 
-      var tickerFunc = function tickerFunc() {
+      _this.tickerFunc = function () {
         _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"].update();
 
         if (_this.isDirty) {
@@ -32190,10 +32190,6 @@ function (module, __webpack_exports__, __webpack_require__) {
           _this.repaint();
         }
       };
-
-      _this.ticker.add(tickerFunc);
-
-      _this.ticker.start();
 
       return _this;
     } // 与老版本兼容
@@ -32262,6 +32258,8 @@ function (module, __webpack_exports__, __webpack_require__) {
         debugInfo.end('xmlTreeToLayoutTree');
         this.add(layoutTree);
         this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].INITED;
+        this.ticker.add(this.tickerFunc);
+        this.ticker.start();
       }
     }, {
       key: "reflow",
@@ -32353,11 +32351,34 @@ function (module, __webpack_exports__, __webpack_require__) {
         Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["repaintChildren"])(this.children);
       }
     }, {
+      key: "getChildByPos",
+      value: function getChildByPos(tree, x, y, itemList) {
+        var _this2 = this;
+
+        tree.children.forEach(function (ele) {
+          var _ele$layoutBox = ele.layoutBox,
+              absoluteX = _ele$layoutBox.absoluteX,
+              absoluteY = _ele$layoutBox.absoluteY,
+              width = _ele$layoutBox.width,
+              height = _ele$layoutBox.height;
+          var realX = absoluteX * _this2.viewportScale + _this2.realLayoutBox.realX;
+          var realY = absoluteY * _this2.viewportScale + _this2.realLayoutBox.realY;
+          var realWidth = width * _this2.viewportScale;
+          var realHeight = height * _this2.viewportScale;
+
+          if (realX <= x && x <= realX + realWidth && realY <= y && y <= realY + realHeight) {
+            if (ele.children.length) {
+              _this2.getChildByPos(ele, x, y, itemList);
+            } else {
+              itemList.push(ele);
+            }
+          }
+        });
+      }
+    }, {
       key: "eventHandler",
       value: function eventHandler(eventName) {
         return function touchEventHandler(e) {
-          var _this2 = this;
-
           var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
 
           if (!touch || !touch.pageX || !touch.pageY) {
@@ -32371,23 +32392,7 @@ function (module, __webpack_exports__, __webpack_require__) {
           var list = [];
 
           if (touch) {
-            var x = touch.pageX;
-            var y = touch.pageY;
-            Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["iterateTree"])(this.children[0], function (ele) {
-              var _ele$layoutBox = ele.layoutBox,
-                  absoluteX = _ele$layoutBox.absoluteX,
-                  absoluteY = _ele$layoutBox.absoluteY,
-                  width = _ele$layoutBox.width,
-                  height = _ele$layoutBox.height;
-              var realX = absoluteX * _this2.viewportScale + _this2.realLayoutBox.realX;
-              var realY = absoluteY * _this2.viewportScale + _this2.realLayoutBox.realY;
-              var realWidth = width * _this2.viewportScale;
-              var realHeight = height * _this2.viewportScale;
-
-              if (realX <= x && x <= realX + realWidth && realY <= y && y <= realY + realHeight) {
-                list.push(ele);
-              }
-            });
+            this.getChildByPos(this, touch.pageX, touch.pageY, list);
           }
 
           if (!list.length) {
@@ -32431,6 +32436,26 @@ function (module, __webpack_exports__, __webpack_require__) {
         }
       }
     }, {
+      key: "unBindEvents",
+      value: function unBindEvents() {
+        if (typeof __env !== 'undefined') {
+          __env.offTouchStart(this.touchStart);
+
+          __env.offTouchMove(this.touchMove);
+
+          __env.offTouchEnd(this.touchEnd);
+
+          __env.offTouchCancel(this.touchCancel);
+        } else {
+          document.onmousedown = null;
+          document.onmousemove = null;
+          document.onmouseup = null;
+          document.onmouseleave = null;
+        }
+
+        this.hasEventHandler = false;
+      }
+    }, {
       key: "emit",
       value: function emit(event, data) {
         EE.emit(event, data);
@@ -32451,16 +32476,6 @@ function (module, __webpack_exports__, __webpack_require__) {
         EE.off(event, callback);
       }
     }, {
-      key: "getElementsById",
-      value: function getElementsById(id) {
-        return Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["getElementsById"])(this, [], id);
-      }
-    }, {
-      key: "getElementsByClassName",
-      value: function getElementsByClassName(className) {
-        return Object(_common_vd__WEBPACK_IMPORTED_MODULE_11__["getElementsByClassName"])(this, [], className);
-      }
-    }, {
       key: "destroyAll",
       value: function destroyAll(tree) {
         var _this3 = this;
@@ -32477,6 +32492,9 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "clear",
       value: function clear() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var _options$removeTicker = options.removeTicker,
+            removeTicker = _options$removeTicker === void 0 ? true : _options$removeTicker;
         debugInfo.reset();
 
         _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_8__["default"].removeAll();
@@ -32485,8 +32503,15 @@ function (module, __webpack_exports__, __webpack_require__) {
         this.elementTree = null;
         this.children = [];
         this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
+        this.isDirty = false;
         Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
         this.eleCount = 0;
+        this.unBindEvents();
+
+        if (removeTicker) {
+          this.ticker.remove();
+          this.ticker.stop();
+        }
       }
     }, {
       key: "clearPool",
@@ -32562,6 +32587,18 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony export (binding) */
 
 
+  __webpack_require__.d(__webpack_exports__, "getElementsById", function () {
+    return _getElementsById;
+  });
+  /* harmony export (binding) */
+
+
+  __webpack_require__.d(__webpack_exports__, "getElementsByClassName", function () {
+    return _getElementsByClassName;
+  });
+  /* harmony export (binding) */
+
+
   __webpack_require__.d(__webpack_exports__, "default", function () {
     return Element;
   });
@@ -32573,6 +32610,10 @@ function (module, __webpack_exports__, __webpack_require__) {
 
 
   var _common_rect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+  /* harmony import */
+
+
+  var _common_imageManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(16);
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -32600,6 +32641,40 @@ function (module, __webpack_exports__, __webpack_require__) {
   }
   /* eslint-disable no-param-reassign */
 
+
+  function _getElementsById(tree) {
+    var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+    var id = arguments.length > 2 ? arguments[2] : undefined;
+    Object.keys(tree.children).forEach(function (key) {
+      var child = tree.children[key];
+
+      if (child.idName === id) {
+        list.push(child);
+      }
+
+      if (Object.keys(child.children).length) {
+        _getElementsById(child, list, id);
+      }
+    });
+    return list;
+  }
+
+  function _getElementsByClassName(tree) {
+    var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+    var className = arguments.length > 2 ? arguments[2] : undefined;
+    Object.keys(tree.children).forEach(function (key) {
+      var child = tree.children[key];
+
+      if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
+        list.push(child);
+      }
+
+      if (Object.keys(child.children).length) {
+        _getElementsByClassName(child, list, className);
+      }
+    });
+    return list;
+  }
 
   var Emitter = __webpack_require__(5); // 全局事件管道
 
@@ -32636,8 +32711,12 @@ function (module, __webpack_exports__, __webpack_require__) {
     return "element-".concat(id, "-").concat(event);
   };
 
+  var isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
+
   var Element = /*#__PURE__*/function () {
     function Element(_ref) {
+      var _this = this;
+
       var _ref$style = _ref.style,
           style = _ref$style === void 0 ? {} : _ref$style,
           _ref$props = _ref.props,
@@ -32675,6 +32754,25 @@ function (module, __webpack_exports__, __webpack_require__) {
         style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
       }
 
+      if (typeof style.backgroundImage === 'string') {
+        var list = style.backgroundImage.match(isValidUrlPropReg);
+
+        if (list) {
+          var url = list[1].replace(/('|")/g, '');
+          console.log(url);
+
+          _common_imageManager__WEBPACK_IMPORTED_MODULE_2__["default"].loadImage(url, function (img) {
+            if (!_this.isDestroyed) {
+              _this.backgroundImage = img; // 当图片加载完成，实例可能已经被销毁了
+
+              _this.root && _this.root.emit('repaint');
+            }
+          });
+        } else {
+          console.error("[Layout]: ".concat(style.backgroundImage, " is not a valid backgroundImage"));
+        }
+      }
+
       this.originStyle = style;
       this.style = style;
       this.rect = null;
@@ -32693,7 +32791,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     _createClass(Element, [{
       key: "observeStyleAndEvent",
       value: function observeStyleAndEvent() {
-        var _this = this;
+        var _this2 = this;
 
         if (typeof Proxy === 'function') {
           var ele = this;
@@ -32721,7 +32819,7 @@ function (module, __webpack_exports__, __webpack_require__) {
           var innerStyle = Object.assign({}, this.style);
 
           _style_js__WEBPACK_IMPORTED_MODULE_0__["allStyles"].forEach(function (key) {
-            Object.defineProperty(_this.style, key, {
+            Object.defineProperty(_this2.style, key, {
               configurable: true,
               enumerable: true,
               get: function get() {
@@ -32731,15 +32829,15 @@ function (module, __webpack_exports__, __webpack_require__) {
                 innerStyle[key] = value;
 
                 if (_style_js__WEBPACK_IMPORTED_MODULE_0__["reflowAffectedStyles"].indexOf(key)) {
-                  _this.isDirty = true;
-                  var parent = _this.parent;
+                  _this2.isDirty = true;
+                  var parent = _this2.parent;
 
                   while (parent) {
                     parent.isDirty = true;
                     parent = parent.parent;
                   }
                 } else if (_style_js__WEBPACK_IMPORTED_MODULE_0__["repaintAffectedStyles"].indexOf(key)) {
-                  _this.root.emit('repaint');
+                  _this2.root.emit('repaint');
                 }
               }
             });
@@ -32748,8 +32846,8 @@ function (module, __webpack_exports__, __webpack_require__) {
 
 
         ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
-          _this.on(eventName, function (e, touchMsg) {
-            _this.parent && _this.parent.emit(eventName, e, touchMsg);
+          _this2.on(eventName, function (e, touchMsg) {
+            _this2.parent && _this2.parent.emit(eventName, e, touchMsg);
           });
         });
         this.classNameList = this.className.split(/\s+/);
@@ -32777,6 +32875,16 @@ function (module, __webpack_exports__, __webpack_require__) {
         return this.rect;
       }
     }, {
+      key: "getElementsById",
+      value: function getElementsById(id) {
+        return _getElementsById(this, [], id);
+      }
+    }, {
+      key: "getElementsByClassName",
+      value: function getElementsByClassName(className) {
+        return _getElementsByClassName(this, [], className);
+      }
+    }, {
       key: "insert",
       value: function insert(ctx, needRender) {
         this.ctx = ctx;
@@ -32789,10 +32897,10 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "destroy",
       value: function destroy() {
-        var _this2 = this;
+        var _this3 = this;
 
         ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
-          _this2.off(eventName);
+          _this3.off(eventName);
         });
         this.isDestroyed = true;
         this.EE = null;
@@ -37282,6 +37390,10 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "remove",
       value: function remove(cb) {
+        if (cb === undefined) {
+          this.cbs = [];
+        }
+
         if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
           this.cbs.splice(this.cbs.indexOf(cb), 1);
         }
@@ -37350,18 +37462,6 @@ function (module, __webpack_exports__, __webpack_require__) {
   /* harmony export (binding) */
 
 
-  __webpack_require__.d(__webpack_exports__, "getElementsById", function () {
-    return getElementsById;
-  });
-  /* harmony export (binding) */
-
-
-  __webpack_require__.d(__webpack_exports__, "getElementsByClassName", function () {
-    return getElementsByClassName;
-  });
-  /* harmony export (binding) */
-
-
   __webpack_require__.d(__webpack_exports__, "repaintChildren", function () {
     return repaintChildren;
   });
@@ -37406,6 +37506,7 @@ function (module, __webpack_exports__, __webpack_require__) {
 
     if (matchData) {
       return parentData * matchData * 0.01;
+      q;
     }
   }
 
@@ -37542,40 +37643,6 @@ function (module, __webpack_exports__, __webpack_require__) {
     });
   }
 
-  function getElementsById(tree) {
-    var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-    var id = arguments.length > 2 ? arguments[2] : undefined;
-    Object.keys(tree.children).forEach(function (key) {
-      var child = tree.children[key];
-
-      if (child.idName === id) {
-        list.push(child);
-      }
-
-      if (Object.keys(child.children).length) {
-        getElementsById(child, list, id);
-      }
-    });
-    return list;
-  }
-
-  function getElementsByClassName(tree) {
-    var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-    var className = arguments.length > 2 ? arguments[2] : undefined;
-    Object.keys(tree.children).forEach(function (key) {
-      var child = tree.children[key];
-
-      if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
-        list.push(child);
-      }
-
-      if (Object.keys(child.children).length) {
-        getElementsByClassName(child, list, className);
-      }
-    });
-    return list;
-  }
-
   var repaintChildren = function repaintChildren(children) {
     children.forEach(function (child) {
       child.repaint();
@@ -37606,7 +37673,7 @@ function (module, __webpack_exports__, __webpack_require__) {
       idName: element.idName,
       className: element.className,
       id: this.eleCount,
-      dataset: element.dataset
+      dataset: Object.assign({}, element.dataset)
     };
 
     if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"]) {
@@ -37892,8 +37959,7 @@ function (module, __webpack_exports__, __webpack_require__) {
         var borderLeftWidth = style.borderLeftWidth || borderWidth;
         var borderRightWidth = style.borderRightWidth || borderWidth;
         var borderTopWidth = style.borderTopWidth || borderWidth;
-        var borderBottomWidth = style.borderBottomWidth || borderWidth;
-        this.renderBorder(ctx);
+        var borderBottomWidth = style.borderBottomWidth || borderWidth; // this.renderBorder(ctx);
 
         var _this$renderBorder = this.renderBorder(ctx),
             needClip = _this$renderBorder.needClip,
@@ -37906,6 +37972,10 @@ function (module, __webpack_exports__, __webpack_require__) {
         if (style.backgroundColor) {
           ctx.fillStyle = style.backgroundColor;
           ctx.fillRect(drawX + borderLeftWidth, drawY + borderRightWidth, box.width - (borderLeftWidth + borderRightWidth), box.height - (borderTopWidth + borderBottomWidth));
+        }
+
+        if (style.backgroundImage && this.backgroundImage) {
+          ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
         }
 
         if (needStroke) {
@@ -38175,11 +38245,16 @@ function (module, __webpack_exports__, __webpack_require__) {
           ctx.clip();
         }
 
-        try {
-          ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
-        } catch (e) {
-          debugger;
+        if (style.backgroundColor) {
+          ctx.fillStyle = style.backgroundColor;
+          ctx.fillRect(drawX, drawY, box.width, box.height);
         }
+
+        if (style.backgroundImage && this.backgroundImage) {
+          ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+        }
+
+        ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
 
         if (needStroke) {
           ctx.stroke();
@@ -38499,6 +38574,10 @@ function (module, __webpack_exports__, __webpack_require__) {
           ctx.fillRect(drawX, drawY, box.width, box.height);
         }
 
+        if (style.backgroundImage && this.backgroundImage) {
+          ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+        }
+
         if (needStroke) {
           ctx.stroke();
         }
@@ -38796,7 +38875,7 @@ function (module, __webpack_exports__, __webpack_require__) {
     }, {
       key: "repaint",
       value: function repaint() {
-        this.clear();
+        // this.clear();
         this.scrollRender(this.scrollLeft, this.scrollTop);
       }
     }, {
@@ -38842,8 +38921,8 @@ function (module, __webpack_exports__, __webpack_require__) {
 
         var endX = startX + width;
         var endY = startY + height; // 清理滚动画布和主屏画布
-
-        this.clear(); // ScrollView 作为容器本身的渲染
+        // this.clear();
+        // ScrollView 作为容器本身的渲染
 
         this.render();
         /**
@@ -40582,7 +40661,17 @@ function (module, __webpack_exports__, __webpack_require__) {
         var x = box.absoluteX;
         var y = box.absoluteY;
         var scaleY = lineHeight / defaultLineHeight;
-        var realWidth = scaleY * bounds.width; // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
+        var realWidth = scaleY * bounds.width;
+
+        if (style.backgroundColor) {
+          ctx.fillStyle = style.backgroundColor;
+          ctx.fillRect(x, y, box.width, box.height);
+        }
+
+        if (style.backgroundImage && this.backgroundImage) {
+          ctx.drawImage(this.backgroundImage, x, y, box.width, box.height);
+        } // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
+
 
         if (lineHeight < height) {
           if (verticalAlign === 'middle') {

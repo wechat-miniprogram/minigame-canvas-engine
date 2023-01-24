@@ -3,11 +3,8 @@
 ## 简介
 缓动动画是很常见的需求，游戏引擎一般会内置缓动系统，如果没有内置的缓动系统，通过引入缓动引擎也能够很容易实现缓动动画能力。
 
-Layout 默认挂载了[tween.js](https://github.com/tweenjs/tween.js/)模块，使用 tween.js 来实现动画能力与浏览器插件的 DOM 动画差异不大。
+出于代码体积考虑，Layout 没有默认挂载了缓动模块，但引用并使用 [tween.js](https://github.com/tweenjs/tween.js/) 来实现动画能力与浏览器的 DOM 动画差异不大。
 
-::: tip
-支持缓动系统的版本改动较大，请先手动引用[index.js](https://github.com/wechat-miniprogram/minigame-canvas-engine/blob/master/index.js)来使用，版本稳定会会发布至 npm 和小游戏插件。
-:::
 ## 简单示例
 下面分别是示例需要的 xml、style 和缓动函数调用示例，省略 Layout 初始化和 layout 等逻辑。
 ``` xml
@@ -33,19 +30,29 @@ Layout 默认挂载了[tween.js](https://github.com/tweenjs/tween.js/)模块，�
 }
 ```
 ``` js
+/**
+ * 安装引用缓动库，tween.js 只是推荐使用，可以使用任意缓动引擎
+ * npm i @tweenjs/tween.js@^18
+ */
+const TWEEN = require('@tweenjs/tween.js');
+
+// 将缓动系统的 update 逻辑加入 Layout 的帧循环
+Layout.ticker.add(() => {
+  TWEEN.update();
+});
+
 const ball = Layout.getElementsByClassName('ball')[0];
 
-new Layout.TWEEN.Tween(ball.style)
+new TWEEN.Tween(ball.style)
   .to({ top: 250 }, 1000)
-  .easing(Layout.TWEEN.Easing.Bounce.Out)
+  .easing(TWEEN.Easing.Bounce.Out)
   .start();
 ```
 
 ## 接口限制
-Layout 仅仅是引用了 tween.js，缓动相关的接口并没有做任何定制，因此缓动相关的能力主要查看 [tween.js 的文档](https://github.com/tweenjs/tween.js/blob/main/docs/user_guide.md)。
 
-借助 tween.js，主要是能够实现两类动画
-1. 改变位置相关动画: 如示例所示，改变 **style.left**、**style.top**、**style.right**、**style.bottom** 即可，特别注意的是，left/top/right/bottom默认是没有值的，需要指定个默认值 TWEEN 才能够生效。
+借助缓动引擎主要是能够实现两类动画：
+1. 改变位置相关动画: 如示例所示，改变 **style.left**、**style.top**、**style.right**、**style.bottom** 即可，特别注意的是，left/top/right/bottom默认是没有值的，需要指定个默认值缓动才能够生效。
 2. 改变布局的动画：更改 **style.width**、**style.height**等会改变布局的属性，布局属性列表可见[布局属性](/api/style.html#布局);
 
 ## 原理简介
@@ -71,10 +78,10 @@ Layout 里面实现动画也是类似的，当改变元素的 style 属性，Lay
  * 每次 Layout.clear 记得清理或者重置 globalTween
  */
 let globalStyle = { width: 90, height: 90 };
-new Layout.TWEEN.Tween(globalStyle).to({
+new TWEEN.Tween(globalStyle).to({
   width: 70,
   height: 70
-}).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
+}).repeat(Infinity).yoyo(true).easing(TWEEN.Easing.Bounce.Out).start();
 
 const scrollList = Layout.getElementsByClassName('list')[0];
 const listItems = Layout.getElementsByClassName('listHeadImg');

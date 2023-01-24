@@ -11,7 +11,7 @@ import {
 } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
-import TWEEN from '@tweenjs/tween.js';
+// import TWEEN from '@tweenjs/tween.js';
 import DebugInfo from './common/debugInfo.js';
 import Ticker from './common/ticker';
 import {
@@ -84,10 +84,10 @@ class Layout extends Element {
      * 只不过当 Tween 改动了节点会触发 repaint、reflow 的属性时，Layout 会执行相应的操作
      * 业务侧不用感知到 repaint 和 reflow
      */
-    this.TWEEN = TWEEN;
+    // this.TWEEN = TWEEN;
 
     this.tickerFunc = () => {
-      TWEEN.update();
+      // TWEEN.update();
       if (this.isDirty) {
         this.reflow();
       } else if (this.isNeedRepaint) {
@@ -161,7 +161,7 @@ class Layout extends Element {
 
     this.state = STATE.INITED;
 
-    this.ticker.add(this.tickerFunc);
+    this.ticker.add(this.tickerFunc, true);
     this.ticker.start();
   }
 
@@ -378,7 +378,7 @@ class Layout extends Element {
     const { removeTicker = true } = options;
 
     debugInfo.reset();
-    TWEEN.removeAll();
+    // TWEEN.removeAll();
     this.destroyAll(this);
     this.elementTree = null;
     this.children = [];

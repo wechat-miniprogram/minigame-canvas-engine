@@ -1,7 +1,9 @@
 import style from "render/style.js";
 import tplFn from "render/tplfn.js";
 import Layout from "./engine.js";
+const TWEEN = require('./tween.js');
 // const Layout = requirePlugin('Layout').default;
+console.log(TWEEN)
 
 import {
   getFriendData,
@@ -31,15 +33,6 @@ function draw(data = []) {
   Layout.clear();
   Layout.init(template, style);
   Layout.layout(sharedContext);
-  console.log(Layout);
-
-  console.log(Layout.debugInfo)
-
-
-  // Layout.ticker.next(() => {
-  //   console.log('test ticker next method');
-  // })
-
 
   // listItem.forEach(item => {
   //   list.appendChild(Layout.cloneNode(item))
@@ -77,10 +70,10 @@ function draw(data = []) {
    * 每次 Layout.clear 记得清理或者重置 globalTween
    */
   let globalStyle = { width: 90, height: 90 }
-  new Layout.TWEEN.Tween(globalStyle).to({
+  new TWEEN.Tween(globalStyle).to({
     width: 70,
     height: 70
-  }).repeat(Infinity).yoyo(true).easing(Layout.TWEEN.Easing.Bounce.Out).start();
+  }).repeat(Infinity).yoyo(true).easing(TWEEN.Easing.Bounce.Out).start();
 
   const scrollList = Layout.getElementsByClassName('list')[0];
   const listItems = Layout.getElementsByClassName('listHeadImg');
@@ -105,6 +98,10 @@ function draw(data = []) {
     });
   });
 
+  // 将缓动系统的 update 逻辑加入 Layout 的帧循环
+  Layout.ticker.add(() => {
+    TWEEN.update();
+  });
   function manualTween() {
     listItems.forEach((item) => {
       if (scrollRect.intersects(item.getBoundingClientRect())) {
@@ -114,6 +111,7 @@ function draw(data = []) {
   }
 
   window.manualTween = manualTween;
+  Layout.ticker.add(manualTween);
 
   // listItems.forEach(item => {
   //   let globalStyle = { width: 90, height: 90 }
@@ -190,7 +188,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
     for (let i = data.length; i < 50; i++) {
       data[i] = JSON.parse(JSON.stringify(data[0]));
       data[i].rank = i;
-      data[i].nickname = ''
+      // data[i].nickname = ''
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
     }
 
