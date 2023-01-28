@@ -4,6 +4,7 @@ import Image from './image.js';
 import Text from './text.js';
 import ScrollView from './scrollview.js';
 import BitMapText from './bitmaptext.js';
+import Canvas from './canvas.js';
 
 export {
   View,
@@ -11,4 +12,5 @@ export {
   Text,
   ScrollView,
   BitMapText,
+  Canvas,
 };

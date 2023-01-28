@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 // components
-import { View, Text, Image, ScrollView, BitMapText } from '../components/index.js';
+import { View, Text, Image, ScrollView, BitMapText, Canvas } from '../components/index.js';
 
 const constructorMap = {
   view: View,
@@ -8,6 +8,7 @@ const constructorMap = {
   image: Image,
   scrollview: ScrollView,
   bitmaptext: BitMapText,
+  canvas: Canvas,
 };
 
 function isPercent(data) {

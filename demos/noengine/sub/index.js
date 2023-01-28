@@ -39,23 +39,23 @@ function draw(data = []) {
   // });
 
   // 获取 ScrollView
-  const list = Layout.getElementsByClassName('list')[0];
+  // const list = Layout.getElementsByClassName('list')[0];
 
-  // 对列表第一项进行深度拷贝
-  const listItem = Layout.getElementsByClassName('listItem');
-  const listItem1 = listItem[0];
-  const newListItem1 = Layout.cloneNode(listItem1);
+  // // 对列表第一项进行深度拷贝
+  // const listItem = Layout.getElementsByClassName('listItem');
+  // const listItem1 = listItem[0];
+  // const newListItem1 = Layout.cloneNode(listItem1);
 
-  // 针对拷贝后的子节点做一些魔改
-  const listItemNum = newListItem1.getElementsByClassName('listItemNum')[0];
-  listItemNum.value = 2;
-  const listItemName = newListItem1.getElementsByClassName('listItemName')[0];
-  listItemName.value = 'zim test';
-  const listItemScore = newListItem1.getElementsByClassName('listItemScore')[0];
-  listItemScore.value = '100';
+  // // 针对拷贝后的子节点做一些魔改
+  // const listItemNum = newListItem1.getElementsByClassName('listItemNum')[0];
+  // listItemNum.value = 2;
+  // const listItemName = newListItem1.getElementsByClassName('listItemName')[0];
+  // listItemName.value = 'zim test';
+  // const listItemScore = newListItem1.getElementsByClassName('listItemScore')[0];
+  // listItemScore.value = '100';
 
-  // 将拷贝后的节点也添加到滚动列表
-  list.appendChild(newListItem1);
+  // // 将拷贝后的节点也添加到滚动列表
+  // list.appendChild(newListItem1);
 
   // const newListItem = Layout.cloneNode(listItem);
 
@@ -110,8 +110,8 @@ function draw(data = []) {
     });
   }
 
-  window.manualTween = manualTween;
-  Layout.ticker.add(manualTween);
+  // window.manualTween = manualTween;
+  // Layout.ticker.add(manualTween);
 
   // listItems.forEach(item => {
   //   let globalStyle = { width: 90, height: 90 }

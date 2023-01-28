@@ -4,6 +4,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 module.exports = {
   entry: {
     'demos/noengine/sub/engine': './src/index',
+    'demos/noengine/engine': './src/index',
     './index': './src/index',
   },
   output: {
