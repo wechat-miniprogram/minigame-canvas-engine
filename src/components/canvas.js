@@ -11,6 +11,7 @@ export default class Canvas extends Element {
       dataset,
       width = 100,
       height = 100,
+      autoCreateCanvas = true,
     } = opts;
 
     super({
@@ -21,23 +22,28 @@ export default class Canvas extends Element {
       style,
     });
 
-    this.canvas = createCanvas();
-    this.canvas.width = Number(width);
-    this.canvas.height = Number(height);
+    this.canvasInstance = null;
 
-    console.log(this.canvas, width, height);
-
-    this.canvasCtx = null;
+    /**
+     * 微信小游戏场景下，sharedCanvas 实例不方便自动创建，提供 setter 手动设置
+     */
+    if (autoCreateCanvas) {
+      this.canvasInstance = createCanvas();
+      this.canvasInstance.width = Number(width);
+      this.canvasInstance.height = Number(height);  
+    }
   }
 
-  getContext(contextType, contextAttributes) {
-    if (!this.canvasCtx) {
-      this.canvasCtx = this.canvas.getContext(contextType, contextAttributes);
-    }
+  get canvas() {
+    return this.canvasInstance;
+  }
 
+  set canvas(cvs) {
+    this.canvasInstance = cvs;
+  }
+
+  update() {
     this.root.emit('repaint');
-
-    return this.canvasCtx;
   }
 
   repaint() {
@@ -48,12 +54,11 @@ export default class Canvas extends Element {
   destroySelf() {
     this.isDestroyed = true;
     this.root = null;
-    this.canvas = null;
-    this.canvasCtx = null;
+    this.canvasInstance = null;
   }
 
   render() {
-    if (!this.canvasCtx) {
+    if (!this.canvasInstance) {
       return;
     }
 
@@ -87,7 +92,7 @@ export default class Canvas extends Element {
       ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
     }
 
-    ctx.drawImage(this.canvas, drawX, drawY, box.width, box.height);
+    ctx.drawImage(this.canvasInstance, drawX, drawY, box.width, box.height);
 
     if (needStroke) {
       ctx.stroke();

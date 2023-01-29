@@ -206,6 +206,7 @@ function init() {
     console.log("onMessage", data);
     if (data.event === "updateViewPort") {
       Layout.updateViewPort(data.box);
+    } else if (data.event === 'showFriendRank') {
       getUserInfo((info) => {
         userinfo = info;
         loadFriendDataAndRender(key, info);

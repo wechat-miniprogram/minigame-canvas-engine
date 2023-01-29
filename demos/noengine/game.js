@@ -1,105 +1,79 @@
-// import './libs/adapter/index';
-// import App from './src/index.js';
-
-// new App();
 import Layout from './engine';
-console.log(Layout);
 
+// 设置游戏画布尺寸
 const info = wx.getSystemInfoSync();
-const scale = 3;
-const GAME_WIDTH = info.windowWidth * scale;
-const GAME_HEIGHT = info.windowHeight * scale;
+const GAME_WIDTH = info.windowWidth * info.pixelRatio;
+const GAME_HEIGHT = info.windowHeight * info.pixelRatio;
 
-let canvas;
-let ctx;
-
-let flag = false;
-let x, y;
-
-canvas = wx.createCanvas();
+// 初始化游戏画布
+const canvas = wx.createCanvas();
 canvas.width = GAME_WIDTH;
 canvas.height = GAME_HEIGHT;
-ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d');
 
-function initSharedCanvas() {
-  const openDataContext = wx.getOpenDataContext();
-  const sharedCanvas = openDataContext.canvas;
+// 初始化开放数据域
+const RANK_WIDTH = 960;
+const RANK_HEIGHT = 1410;
+let openDataContext = wx.getOpenDataContext();
+let sharedCanvas = openDataContext.canvas;
+sharedCanvas.width = RANK_WIDTH;
+sharedCanvas.height = RANK_HEIGHT;
 
-  // 中间挖了个坑用填充排行榜
-  sharedCanvas.width = 960;
-  sharedCanvas.height = 1410;
-
-  const realWidth = sharedCanvas.width / GAME_WIDTH * info.windowWidth;
-  const realHeight = sharedCanvas.height / GAME_HEIGHT * info.windowHeight;
-  // console.log(realHeight, realWidth)
+function updateRankViewPort(rankCanvas) {
+  console.log(rankCanvas.getViewportRect())
+  const rect = rankCanvas.getViewportRect();
   openDataContext.postMessage({
     event: 'updateViewPort',
     box: {
-      width: realWidth,
-      height: realHeight,
-      x: (info.windowWidth - realWidth) / 2,
-      y: (info.windowHeight - realHeight) / 2,
+      width: rect.width,
+      height: rect.height,
+      x: rect.left,
+      y: rect.top,
     }
   });
+}
 
+function showRank() {
   openDataContext.postMessage({
     event: 'showFriendRank',
   });
-
-  x = GAME_WIDTH / 2 - sharedCanvas.width / 2;
-  y = GAME_HEIGHT / 2 - sharedCanvas.height / 2;
-
-  flag = true;
-
-  // setTimeout(() => {
-  //   openDataContext.postMessage({
-  //     event: 'close',
-  //   });
-  // }, 3000)
 }
-
-function loop() {
-  ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
-
-  ctx.fillStyle = '#f3f3f3';
-  ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
-  if (flag) {
-    ctx.drawImage(sharedCanvas, x, y, sharedCanvas.width, sharedCanvas.height)
-  }
-
-  requestAnimationFrame(loop)
+function closeRank() {
+  openDataContext.postMessage({
+    event: 'close',
+  });
 }
-
-// initSharedCanvas();
 
 let template = `
   <view id="container">
-    <text id="testText" value="打开排行榜"></text>
     <canvas id="rank" width="960" height="1410"></canvas>
+    <text id="rankText" value="打开排行榜"></text>
   </view>
-`
+`;
 
 let style = {
   container: {
     width: GAME_WIDTH,
     height: GAME_HEIGHT,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f3f3f3',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  testText: {
-    color: 'green',
-    width: '100%',
-    height: 200,
-    lineHeight: 200,
-    fontSize: 40,
+  rankText: {
+    color: '#ffffff',
+    backgroundColor: '#34a123',
+    borderRadius: 10,
+    width: 400,
+    height: 120,
+    lineHeight: 120,
+    fontSize: 50,
     textAlign: 'center',
+    marginTop: 20,
   },
   
   rank: {
-    width: 960,
-    height: 1410,
-    backgroundColor: '#f3f3f3'
+    width: RANK_WIDTH,
+    height: RANK_HEIGHT,
   }
 }
 
@@ -114,12 +88,23 @@ Layout.updateViewPort({
 
 Layout.layout(ctx);
 
-const testText = Layout.getElementsById('testText')[0];
+const testText = Layout.getElementsById('rankText')[0];
 const rank = Layout.getElementsById('rank')[0];
 
-const rankContext = rank.getContext('2d');
-console.log(rankContext)
+const updateRank = () => {
+  rank.update();
+}
 
 testText.on('click', () => {
-  console.log(testText);
+  // 更新开放数据域最终被绘制到屏幕的位置，方便开放数据域做事件处理
+  updateRankViewPort(rank);
+
+  // 手动指定排行榜的 canvas 实例
+  rank.canvas = sharedCanvas;
+
+  showRank();
+
+  // 要求Layout每帧刷新开放数据域 canvas 的绘制
+  Layout.ticker.add(updateRank);
 });
+
