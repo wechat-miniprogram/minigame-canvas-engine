@@ -4,7 +4,6 @@ const TWEEN = require('./tween.js');
 
 // import Layout from "./engine.js";
 const Layout = requirePlugin('Layout').default;
-console.log(TWEEN)
 
 import {
   getFriendData,
