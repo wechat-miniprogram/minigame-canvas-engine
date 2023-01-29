@@ -6,6 +6,7 @@ module.exports = {
     'demos/noengine/sub/engine': './src/index',
     'demos/noengine/engine': './src/index',
     './index': './src/index',
+    'packages/plugin/plugin/engine': './src/index',
   },
   output: {
     path: path.resolve(__dirname, ''),

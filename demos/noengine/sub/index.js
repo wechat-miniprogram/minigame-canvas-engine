@@ -1,8 +1,9 @@
 import style from "render/style.js";
 import tplFn from "render/tplfn.js";
-import Layout from "./engine.js";
 const TWEEN = require('./tween.js');
-// const Layout = requirePlugin('Layout').default;
+
+// import Layout from "./engine.js";
+const Layout = requirePlugin('Layout').default;
 console.log(TWEEN)
 
 import {
