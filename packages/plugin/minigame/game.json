@@ -3,9 +3,9 @@
     "openDataContext": "sub",
     "plugins": {
       "Layout": {
-        "version": "dev",
+        "version": "dev-1e3737b0f316a7eb843024fde80694fc",
         "provider": "wx7a727ff7d940bb3f",
-        "contexts":[{"type":"openDataContext"}]
+        "contexts":[{"type":"openDataContext"}, {"type": "gameContext"}]
       }
     }
 }
