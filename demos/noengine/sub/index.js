@@ -243,39 +243,3 @@ function showFriendRank() {
 }
 
 init();
-
-// let sharedCanvas = wx.getSharedCanvas()
-// let context = sharedCanvas.getContext('2d')
-
-// const img = new wx.createImage();
-
-// img.src = 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJBjcbgQdZeahMWPibgH4OuJ7ia3qUv5CKzkLib5v3M7X1eoKJBMY9OcnYuJhrWtGWmY1fGOicQjlOXJg/132'
-
-// const canvas = wx.createCanvas();
-// canvas.width = 100;
-// canvas.height = 100;
-
-// const ctx = canvas.getContext('2d');
-
-// function render() {
-//     ctx.fillStyle = 'blue'
-//     ctx.fillRect(0, 0, 100, 100)
-
-//   context.drawImage(img, 0, 0, 200, 200)
-
-// //   context.drawImage(canvas, 0, 0, 200, 200)
-
-//   requestAnimationFrame(render)
-// }
-
-// render()
-
-// setTimeout(() => {
-//     try {
-//         console.log(window)
-//         console.log(XMLHttpRequest)
-//         console.log(URL)
-//     } catch(e) {
-//         console.log(e)
-//     }
-// }, 7000)

@@ -38,6 +38,7 @@ function showRank() {
     event: 'showFriendRank',
   });
 }
+
 function closeRank() {
   openDataContext.postMessage({
     event: 'close',
@@ -70,7 +71,7 @@ let style = {
     textAlign: 'center',
     marginTop: 20,
   },
-  
+
   rank: {
     width: RANK_WIDTH,
     height: RANK_HEIGHT,
@@ -96,15 +97,23 @@ const updateRank = () => {
 }
 
 testText.on('click', () => {
-  // 更新开放数据域最终被绘制到屏幕的位置，方便开放数据域做事件处理
-  updateRankViewPort(rank);
+  console.log(testText.value)
+  if (testText.value === '打开排行榜') {
+    testText.value = '关闭排行榜';
+    // 更新开放数据域最终被绘制到屏幕的位置，方便开放数据域做事件处理
+    updateRankViewPort(rank);
 
-  // 手动指定排行榜的 canvas 实例
-  rank.canvas = sharedCanvas;
+    // 手动指定排行榜的 canvas 实例
+    rank.canvas = sharedCanvas;
 
-  showRank();
+    // 发送事件到开放数据域，要求加载好友数据并展示
+    showRank();
 
-  // 要求Layout每帧刷新开放数据域 canvas 的绘制
-  Layout.ticker.add(updateRank);
+    // 要求Layout每帧刷新开放数据域 canvas 的绘制
+    Layout.ticker.add(updateRank);
+  } else {
+    testText.value = '打开排行榜';
+    closeRank();
+    Layout.ticker.remove(updateRank);
+  }
 });
-

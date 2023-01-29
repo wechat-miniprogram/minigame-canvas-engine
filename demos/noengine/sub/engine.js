@@ -4520,7 +4520,7 @@ var Text = /*#__PURE__*/function (_Element) {
       set: function set(newValue) {
         if (newValue !== this.valuesrc) {
           this.valuesrc = newValue;
-          this.emit('repaint');
+          this.root.emit('repaint');
         }
       },
       enumerable: true,

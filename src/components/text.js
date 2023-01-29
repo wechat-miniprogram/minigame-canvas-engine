@@ -98,7 +98,7 @@ export default class Text extends Element {
         if (newValue !== this.valuesrc) {
           this.valuesrc = newValue;
 
-          this.emit('repaint');
+          this.root.emit('repaint');
         }
       },
       enumerable: true,
