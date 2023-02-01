@@ -11,7 +11,7 @@ export default class Canvas extends Element {
       dataset,
       width = 100,
       height = 100,
-      autoCreateCanvas = true,
+      autoCreateCanvas = false,
     } = opts;
 
     super({

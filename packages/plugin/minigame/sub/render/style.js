@@ -1,4 +1,4 @@
-export default {
+export const style = {
     container: {
         width: 960,
         height: 1410,

@@ -9,6 +9,7 @@
 | image          | 图片标签 |
 | text           | 文本标签 |
 | bitmaptext| bitmapfont文本标签|
+| canvas | 对齐 Web，允许获取 context执行渲染 |
 
 
 ## 公共属性
@@ -16,7 +17,7 @@
 
 |      属性      |  类型  | 是否必填 |          说明          |
 |----------------|--------|--------|------------------------|
-| id  | string |    否 | 非唯一标识，两个标签可以共用id |
+| id  | string |    否 | 非唯一标识，两个标签可以共用id，可以通过 **Layout.getElementsById** 获取到元素实例 |
 | class | string |    否    | 与浏览器相同 |
 | dataset | string |    否    | 与浏览器相同，详见[文档](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset) |
 
@@ -99,3 +100,44 @@ title: {
 
 ### 示例
 <img :src="$withBase('/imgs/bitmapfont.png')" width=400>
+
+## canvas
+### 特殊属性
+|      属性      |  类型  | 是否必填 |          说明          |
+|----------------|--------|--------|------------------------|
+| width | Number |    否  | canvas 画布的尺寸，与样式的尺寸不是一个概念 |
+| height | Number |    否  | canvas 画布的尺寸，与样式的尺寸不是一个概念 |
+| autoCreateCanvas | String | 否 | 是否自动创建 canvas，默认为 "false"，有些场景如微信小游戏场景，sharedCavans非业务创建，则需要手动设置canvas 实例|
+
+``` html
+<view id="container">
+  <canvas id="rank" width="300" height="300"></canvas>
+</view>
+```
+```js
+let style = {
+  container: {
+    width: 500,
+    height: 500,
+    backgroundColor: '#f3f3f3',
+  },
+  rank: {
+    width: 300,
+    height: 300,
+  }
+}
+```
+```js
+const rank = Layout.getElementsById('rank')[0];
+
+const updateRank = () => {
+  rank.update();
+}
+
+// 手动指定 canvas 实例
+rank.canvas = sharedCanvas; // sharedCanvas 为业务自己管理的 canvas 实例
+
+// 要求Layout每帧刷新开放数据域 canvas 的绘制
+Layout.ticker.add(updateRank);
+
+```

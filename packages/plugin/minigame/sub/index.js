@@ -1,7 +1,5 @@
-import style    from 'render/style.js';
-import tplFn    from 'render/tplfn.js';
-// import Layout   from './engine.js'
-
+import { style }    from 'render/style.js';
+import { tplFn }    from 'render/tplfn.js';
 const Layout = requirePlugin('Layout').default;
 
 import {

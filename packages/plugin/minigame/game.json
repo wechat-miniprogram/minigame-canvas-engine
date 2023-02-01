@@ -1,11 +1,18 @@
 {
-    "deviceOrientation": "portrait",
-    "openDataContext": "sub",
-    "plugins": {
-      "Layout": {
-        "version": "dev-bf8a7559bb792c8f8405d720070eab4e",
-        "provider": "wx7a727ff7d940bb3f",
-        "contexts":[{"type":"openDataContext"}, {"type": "gameContext"}]
-      }
+  "deviceOrientation": "portrait",
+  "openDataContext": "sub",
+  "plugins": {
+    "Layout": {
+      "version": "dev",
+      "provider": "wx7a727ff7d940bb3f",
+      "contexts": [
+        {
+          "type": "openDataContext"
+        },
+        {
+          "type": "gameContext"
+        }
+      ]
     }
+  }
 }
