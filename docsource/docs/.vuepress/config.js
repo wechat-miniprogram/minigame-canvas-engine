@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'minigame-canvas-engine',
+  title: 'Layout',
   base: "/minigame-canvas-engine/",
   description: '轻量级canvas渲染引擎',
   head: [
@@ -31,8 +31,21 @@ module.exports = {
         sidebarDepth: 1,    // 可选的, 默认值是 1
         children: [
           '/api/api',
-          '/api/tags',
-          '/api/style',
+          {
+            title: '组件',
+            collapsable: false, // 可选的, 默认值是 true,
+            sidebarDepth: 1,    // 可选的, 默认值是 1
+            children: [
+              '/components/overview.md',
+              '/components/element.md',
+              '/components/view.md',
+              '/components/image.md',
+              '/components/text.md',
+              '/components/bitmapfont.md',
+              '/components/canvas.md',
+              '/components/scrollview.md',
+            ]
+          },
           '/api/tween',
         ]
       },
