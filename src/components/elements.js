@@ -239,8 +239,8 @@ export default class Element {
   }
 
   getViewportRect() {
-    const realLayoutBox = this.root.realLayoutBox;
-    const viewportScale = this.root.viewportScale;
+    const { realLayoutBox } = this.root;
+    const { viewportScale } = this.root;
     const {
       absoluteX,
       absoluteY,
