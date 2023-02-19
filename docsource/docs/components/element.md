@@ -27,8 +27,7 @@ Element 是所有组件的基类，Element 描述了所有组件所普遍具有�
 
 ## 方法
 
-## getElementsById
-Layout.getElementsById(String elementId)
+### getElementsById(elementId: string): Element[]
 
 获取元素id为**elementId**的一组元素，之所以是一组元素是因为这里 id 的实现没有对齐 Web，id并不是唯一的，只是一个标识。
 ```js
@@ -36,8 +35,7 @@ Layout.getElementsById(String elementId)
 const container = Layout.getElementsById('container')[0];
 ```
 
-## getElementsByClassName
-Layout.getElementsByClassName(String className)
+### getElementsByClassName(className: string): Element[]
 
 获取包含class为**className**的一组元素。
 
