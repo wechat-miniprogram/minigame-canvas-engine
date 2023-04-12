@@ -23,6 +23,8 @@ import {
   clone,
 } from './common/vd';
 
+import imageManager from './common/imageManager.js';
+
 // 全局事件管道
 export const EE = new Emitter();
 const imgPool = new Pool('imgPool');
@@ -410,19 +412,8 @@ class Layout extends Element {
     this.clearPool();
   }
 
-  loadImgs(arr) {
-    arr.forEach((src) => {
-      const img = createImage();
-
-      imgPool.set(src, img);
-
-      img.onload = () => {
-        img.loadDone = true;
-      };
-
-      img.onloadcbks = [];
-      img.src = src;
-    });
+  loadImgs(arr = []) {
+    return Promise.all(arr.map(src => imageManager.loadImagePromise(src)));
   }
 
   registBitMapFont(name, src, config) {

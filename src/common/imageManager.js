@@ -1,4 +1,4 @@
-import Pool     from './pool';
+import Pool from './pool';
 import { none, createImage } from './util';
 
 const imgPool = new Pool('imgPool');
@@ -8,8 +8,14 @@ class ImageManager {
     return imgPool.get(src);
   }
 
-  loadImage(src, callback = none) {
-    let img     = null;
+  loadImagePromise(src) {
+    return new Promise((resolve, reject) => {
+      this.loadImage(src, resolve, reject);
+    });
+  }
+
+  loadImage(src, callback = none, fail = none) {
+    let img = null;
     const cache = this.getRes(src);
 
     if (!src) {
@@ -25,20 +31,25 @@ class ImageManager {
       img = cache;
 
       cache.onloadcbks.push(callback);
+      cache.onerrorcbks.push(fail);
     } else {
       // 创建图片，将回调函数推入回调函数栈
       img = createImage();
       img.onloadcbks = [callback];
+      img.onerrorcbks = [fail];
       imgPool.set(src, img);
 
       img.onload = () => {
-        img.loadDone   = true;
+        img.loadDone = true;
         img.onloadcbks.forEach(fn => fn(img, false));
         img.onloadcbks = [];
+        img.onerrorcbks = [];
       };
 
-      img.onerror = (e) => {
-        console.log('img load error', e);
+      img.onerror = () => {
+        img.onerrorcbks.forEach(fn => fn(img, false));
+        img.onerrorcbks = [];
+        img.onloadcbks = [];
       };
 
       img.src = src;

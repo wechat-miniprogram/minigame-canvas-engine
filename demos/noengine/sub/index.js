@@ -2,8 +2,8 @@ import style from "render/style.js";
 import tplFn from "render/tplfn.js";
 const TWEEN = require('./tween.js');
 
-// import Layout from "./engine.js";
-const Layout = requirePlugin('Layout').default;
+import Layout from "./engine.js";
+// const Layout = requirePlugin('Layout').default;
 
 import {
   getFriendData,
@@ -192,9 +192,15 @@ function loadFriendDataAndRender(key, info, needRender = true) {
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
     }
 
-    if (needRender) {
-      draw(data, selfData, currentMaxScore);
-    }
+    let start = new Date();
+    Layout.loadImgs(data.map(item => item.avatarUrl)).then(res => {
+      console.log(new Date() - start);
+      Layout.ticker.next(() => {
+        console.log('异步资源加载并渲染完成')
+      });
+    });
+
+    draw(data, selfData, currentMaxScore);
   });
 }
 
