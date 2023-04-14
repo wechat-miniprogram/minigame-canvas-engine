@@ -37,7 +37,8 @@
     "ignoreUploadUnusedFiles": true,
     "minifyWXML": true,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": false,
+    "condition": false
   },
   "compileType": "game",
   "simulatorType": "wechat",
