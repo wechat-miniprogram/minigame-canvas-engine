@@ -47,11 +47,10 @@ const Layout = requirePlugin('Layout').default;
     "Layout": {
       "version": "0.0.14",
       "provider": "wx7a727ff7d940bb3f",
-      "contexts":[{"type":"isolatedContext"}]
+      "contexts":[{"type":"gameContext"}]
     }
   }
 }
-
 ```
 
 2.在开放数据域内引用插件：
@@ -61,7 +60,24 @@ const Layout = requirePlugin('Layout').default;
 
 3. 正常使用Layout来进行渲染。
 
+
+### 同时在游戏域和开放数据域使用
+配置方式如下
+``` json
+{
+  "deviceOrientation": "portrait",
+  "plugins": {
+    "Layout": {
+      "version": "0.0.14",
+      "provider": "wx7a727ff7d940bb3f",
+      "contexts":[{"type":"gameContext"}, {"type":"openDataContext"}]
+    }
+  }
+}
+```
+
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
 | 0.0.14        | 起始版本，之前的版本小修小补一些问题，不建议引用 |
+

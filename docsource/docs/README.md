@@ -21,3 +21,9 @@
 小游戏官方示例
 
 <img :src="$withBase('/imgs/demo.png')" width=200>
+
+<style>
+    .theme-default-content:not(.custom) {
+        max-width: 960px;
+    }
+</style>

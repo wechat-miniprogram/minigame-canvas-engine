@@ -39,7 +39,7 @@ Layout.updateViewPort(Object box)
 比起 Layout.clear 更彻底的清理，会清空图片对象池，减少内存占用。
 
 ## loadImgs
-Layout.loadImgs(Array imgarr)
+Layout.loadImgs(Array imgarr): Promise
 
 对于图片资源，如果不提前加载，渲染过程中可能出现挨个出现图片效果，影响体验。通过Layout.loadImgs可以预加载图片资源，在调用Layout.layout的时候渲染性能更好，体验更佳。
 ```js
@@ -48,7 +48,9 @@ Layout.loadImgs([
     'sub/Buffet_icon_GiftPlate_0.png',
     'sub/Buffet_icon_GiftPlate.png',
     'sub/UI_Icon_Rating.png',
-]);
+]).then(() => {
+  console.log('所有资源加载完成')；
+})
 ```
 
 ## registBitMapFont

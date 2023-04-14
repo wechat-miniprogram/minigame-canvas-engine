@@ -1,5 +1,4 @@
 # 快速入门
-
 ## 安装
 
 ``` shell
@@ -96,3 +95,10 @@ text.on('click', (e) => {
 ```
 
 上述示例代码可见：[https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/helloworld](https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/helloworld)
+
+也可以在线编辑和查看效果：
+<iframe height="615.2017211914062" style="width: 100%;" scrolling="no" title="Layout Hello Canvas" src="https://codepen.io/yuanzm/embed/VwEeLKw?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/yuanzm/pen/VwEeLKw">
+  Layout Hello Canvas</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
