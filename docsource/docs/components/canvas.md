@@ -1,13 +1,4 @@
 # Canvas
-
-
-<iframe height="621.406982421875" style="width: 100%;" scrolling="no" title="Untitled" src="https://codepen.io/yuanzm/embed/ExdPJKW?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-  See the Pen <a href="https://codepen.io/yuanzm/pen/ExdPJKW">
-  Untitled</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
-  on <a href="https://codepen.io">CodePen</a>.
-</iframe>
-
-
 与浏览器的canvas标签类似，Layout 标签允许你插入一个画布自由更新画布内容，这在某些场景会非常有用，比如你想通过Layout完成构建小游戏示例，包括游戏和开放数据域，例如[noengine demo](https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/noengine)。
 
 ### 特殊属性
@@ -49,3 +40,10 @@ rank.canvas = sharedCanvas; // sharedCanvas 为业务自己管理的 canvas 实�
 Layout.ticker.add(updateRank);
 
 ```
+
+### 示例
+<iframe height="621.406982421875" style="width: 100%;" scrolling="no" title="Untitled" src="https://codepen.io/yuanzm/embed/ExdPJKW?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/yuanzm/pen/ExdPJKW">
+  Untitled</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>

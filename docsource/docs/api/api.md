@@ -64,38 +64,12 @@ Layout.registBitMapFont(name, src, config)
 | src| String| bitMapFont字体的图片链接|
 | config| String| BitMapFont的配置信息|
 
-``` js
-Layout.registBitMapFont(
-'fnt_number-export',
-'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20200314/fnt_number-export.png',
-`info face="fnt_number-export" size=50 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1
-common lineHeight=60 base=26 scaleW=190 scaleH=181 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
-page id=0 file="fnt_number-export.png"
-chars count=15
-char id=31561 x=0 y=61 width=60 height=61 xoffset=0 yoffset=2 xadvance=57 page=0 chnl=0 letter="等"
-char id=32423 x=0 y=0 width=62 height=60 xoffset=0 yoffset=2 xadvance=59 page=0 chnl=0 letter="级"
-char id=46 x=168 y=116 width=21 height=21 xoffset=0 yoffset=39 xadvance=18 page=0 chnl=0 letter="."
-char id=49 x=145 y=0 width=27 height=57 xoffset=0 yoffset=3 xadvance=24 page=0 chnl=0 letter="1"
-char id=50 x=44 y=123 width=41 height=57 xoffset=0 yoffset=3 xadvance=38 page=0 chnl=0 letter="2"
-char id=51 x=102 y=58 width=40 height=57 xoffset=0 yoffset=3 xadvance=37 page=0 chnl=0 letter="3"
-char id=52 x=143 y=58 width=40 height=57 xoffset=0 yoffset=3 xadvance=37 page=0 chnl=0 letter="4"
-char id=53 x=0 y=123 width=43 height=57 xoffset=0 yoffset=3 xadvance=40 page=0 chnl=0 letter="5"
-char id=54 x=127 y=116 width=40 height=57 xoffset=0 yoffset=3 xadvance=37 page=0 chnl=0 letter="6"
-char id=55 x=86 y=119 width=40 height=57 xoffset=0 yoffset=3 xadvance=37 page=0 chnl=0 letter="7"
-char id=56 x=63 y=0 width=40 height=57 xoffset=0 yoffset=3 xadvance=37 page=0 chnl=0 letter="8"
-char id=57 x=104 y=0 width=40 height=57 xoffset=0 yoffset=3 xadvance=37 page=0 chnl=0 letter="9"
-char id=48 x=61 y=61 width=40 height=57 xoffset=0 yoffset=3 xadvance=37 page=0 chnl=0 letter="0"
-char id=32 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=0 page=0 chnl=0 letter=" "
-char id=9 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=0 page=0 chnl=0 letter="	"
+<iframe height="599.1077270507812" style="width: 100%;" scrolling="no" title="Layout BitMapText" src="https://codepen.io/yuanzm/embed/LYgGvQm?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/yuanzm/pen/LYgGvQm">
+  Layout BitMapText</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
 
-kernings count=0`
-)
-
-```
-注册之后 bitmaptext 设置 font 属性即可使用。
-```xml
-<bitmaptext font="fnt_number-export" class="title" value="等级"></bitmaptext>
-```
 
 
 ## getElementsById
@@ -151,17 +125,11 @@ listItemScore.value = '100';
 list.appendChild(newListItem1);
 ```
 
-# 事件监听
-通过 getElementsById 或者 getElementsByClassName 获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`、`scroll(只有scrollview支持）`示例如下：
-``` js
-const list = Layout.getElementsByClassName('listItem');
-
-list.forEach(item => {
-  item.on('touchstart', (e) => {
-    console.log(e, item);
-  });
-});
-```
+<iframe height="634.6032409667969" style="width: 100%;" scrolling="no" title="Layout CloneNode" src="https://codepen.io/yuanzm/embed/oNaxvPv?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/yuanzm/pen/oNaxvPv">
+  Layout CloneNode</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
 
 <!-- ## TWEEN
 Layout 默认挂载了[tween.js](https://github.com/tweenjs/tween.js/)模块，TWEEN 的使用与 tween.js 的使用并无差异。
@@ -205,15 +173,3 @@ Layout.ticker.next(() => {
   console.log(ball.getBoundingClientRect());
 });
 ```
-
-
-# 属性API
-通过Layout.getElementsById和Layout.getElementsByClassName获取image和text之后，修改图片的链接或者文本的值会自动重渲染界面。
-``` js
-let img = Layout.getElementsById('testimgid')[0];
-img.src = 'newimgsrc';
-
-let text = Layout.getElementsById('tesettextid')[0];
-text.value = 'newtextvalue';
-```
-

@@ -1,12 +1,6 @@
 # BitMapText
 
 
-<iframe height="599.1077270507812" style="width: 100%;" scrolling="no" title="Layout BitMapText" src="https://codepen.io/yuanzm/embed/LYgGvQm?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-  See the Pen <a href="https://codepen.io/yuanzm/pen/LYgGvQm">
-  Layout BitMapText</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
-  on <a href="https://codepen.io">CodePen</a>.
-</iframe>
-
 在游戏开发里面，为了更好的视觉效果，经常要将一些常用文字经过设计成图片，然后打包成特殊的字体，称为BitmapFont，基本上所有的游戏引擎都支持了这种技术。
 
 本渲染引擎调研了常见的H5游戏引擎Laya、Cocos、Egret，他们普遍支持[AngelCode.com](https://www.angelcode.com/products/bmfont/)打包后的配置文件规范，因此 BitMapText同样只支持通过该工具打包后的文件。
@@ -24,3 +18,10 @@
 | textAlign| String |   否  | 文字水平居中方式，默认left，支持right、center |
 | verticalAlign| String |   否  | 文字垂直居中的方式，默认为middle，支持top和bottom|
 | letterSpacing | Number|   否   | 字符间距|
+
+### 示例
+<iframe height="599.1077270507812" style="width: 100%;" scrolling="no" title="Layout BitMapText" src="https://codepen.io/yuanzm/embed/LYgGvQm?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/yuanzm/pen/LYgGvQm">
+  Layout BitMapText</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>

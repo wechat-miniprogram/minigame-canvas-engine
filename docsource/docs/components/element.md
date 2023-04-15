@@ -70,3 +70,15 @@ listItem.forEach(item => {
   list.appendChild(Layout.cloneNode(item))
 });
 ```
+
+# 事件
+通过 getElementsById 或者 getElementsByClassName 获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`、`scroll(只有scrollview支持）`示例如下：
+``` js
+const list = Layout.getElementsByClassName('listItem');
+
+list.forEach(item => {
+  item.on('touchstart', (e) => {
+    console.log(e, item);
+  });
+});
+```
