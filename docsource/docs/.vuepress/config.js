@@ -26,6 +26,15 @@ module.exports = {
         ]
       },
       {
+        title: '更多示例',
+        collapsable: false, // 可选的, 默认值是 true,
+        sidebarDepth: 2,    // 可选的, 默认值是 1
+        children: [
+          '/demos/invite',
+          '/demos/rank',
+        ]
+      },
+      {
         title: 'API 文档',
         collapsable: false, // 可选的, 默认值是 true,
         sidebarDepth: 1,    // 可选的, 默认值是 1

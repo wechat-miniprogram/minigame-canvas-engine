@@ -68,6 +68,8 @@ export function getDpr() {
   }
   if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
     _dpr = __env.getSystemInfoSync().devicePixelRatio;
+  } else if (window.devicePixelRatio) {
+    _dpr = window.devicePixelRatio;
   } else {
     console.warn('failed to access device pixel ratio, fallback to 1');
     _dpr = 1;
