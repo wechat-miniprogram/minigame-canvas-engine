@@ -6,7 +6,7 @@ import Test from './ui.vue';
 // PrimeVue style
 import "primevue/resources/themes/lara-light-indigo/theme.css";
 import "primevue/resources/primevue.min.css";
-import "primeicons/primeicons.css";
+import "./primeicons/primeicons.css";
 
 import 'highlight.js/styles/stackoverflow-light.css'
 import hljs from 'highlight.js/lib/core';
@@ -16,7 +16,6 @@ import hljsVuePlugin from "@highlightjs/vue-plugin";
 
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('xml', xml);
-
 
 class App {
   constructor() {
