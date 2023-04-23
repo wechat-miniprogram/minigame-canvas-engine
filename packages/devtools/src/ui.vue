@@ -1,12 +1,31 @@
 <script lang="ts">
 import { template, templateSettings } from 'dot';
 const beautify = require('js-beautify').js;
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import Message from 'primevue/message';
+
+import { clipboard } from './util';
+
+interface CoptMessage {
+  id: number
+  content: string
+  severity: string
+}
 
 export default {
   data() {
     return {
-      count: 0
+      visible: false,
+      code: '',
+      messages: [] as CoptMessage[],
     }
+  },
+
+  components: {
+    Button,
+    Dialog,
+    Message,
   },
 
   methods: {
@@ -24,22 +43,44 @@ export default {
         varname: 'data',
       })));
 
-      const beautifyFunc = beautify(tplFunc);
+      const beautifyFunc = beautify(tplFunc, { indent_size: 2 });
 
-      const res = `${comment}export default ${beautifyFunc}`.replace('export default function anonymous', 'export default function tplFunc');
+      this.code = `${comment}export default ${beautifyFunc}`.replace('export default function anonymous', 'export default function tplFunc');
+      this.visible = true;
+    },
 
-      console.log(res)
+    copyCode() {
+      clipboard(this.code);
+      this.messages = [
+        { severity: 'success', content: '已拷贝到剪切板', id: Math.random() },
+      ] as CoptMessage[];
+    },
+
+    hideDialog() {
+      this.message = [];
     }
   }
 }
 </script>
 
 <template>
-  <button @click="doTCompile">doT</button>
+  <!-- <Button click="doT Compile">doT</Button> -->
+  <Button @click="doTCompile" label="doT编译" severity="success" size="small" />
+  <Dialog @hide="hideDialog" v-model:visible="visible" modal header="模板函数" :style="{ width: '50vw' }">
+    <!-- <Message severity="success" v-if="showCopyMessage" :sticky="false">已拷贝到剪切板</Message> -->
+    <Message v-for="msg of messages" :key="msg.id" :severity="msg.severity">{{ msg.content }}</Message>
+    <highlightjs language='javascript' :code="code" />
+    <Button @click="copyCode" label="复制到剪切板" severity="success" size="small" />
+  </Dialog>
 </template>
 
 <style scoped>
-button {
-  font-weight: bold;
+html {
+  font-size: 14px;
+}
+
+body {
+  font-family: (--font-family);
+  font-size: 14px;
 }
 </style>
