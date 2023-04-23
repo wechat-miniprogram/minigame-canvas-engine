@@ -16,3 +16,11 @@ export function clipboard(value: string): void {
     document.body.removeChild(textarea);
   }
 }
+
+export const xmlDemo = `
+<script type="text/template" id="template">
+  <view id="container">
+    <text id="testText" class="redText" value="hello canvas"></text>
+  </view>
+</script>
+`;
