@@ -14,7 +14,8 @@
   "author": "yuanzm",
   "license": "MIT",
   "devDependencies": {
-    "@types/dot": "^1.1.5"
+    "@types/dot": "^1.1.5",
+    "@types/js-beautify": "^1.13.3"
   },
   "dependencies": {
     "css-loader": "^6.7.3",
