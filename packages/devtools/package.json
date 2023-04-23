@@ -1,6 +1,6 @@
 {
   "name": "minigame-canvas-engine-devtools",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "一些工具函数和方法，在调试阶段用于提高效率",
   "main": "dist/index.js",
   "scripts": {
@@ -15,7 +15,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/dot": "^1.1.5",
-    "@types/js-beautify": "^1.13.3"
+    "@types/js-beautify": "^1.13.3",
+    "@types/stats.js": "^0.17.0"
   },
   "dependencies": {
     "@highlightjs/vue-plugin": "^2.1.0",
@@ -25,7 +26,9 @@
     "highlight.js": "^11.7.0",
     "html-webpack-plugin": "^5.5.1",
     "js-beautify": "^1.14.7",
+    "minigame-canvas-engine": "file:../..",
     "primevue": "^3.26.0",
+    "stats.js": "^0.17.0",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.4",
     "vue": "^3.2.47",

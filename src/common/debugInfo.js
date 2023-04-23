@@ -3,13 +3,14 @@ export default class DebugInfo {
     this.reset();
   }
 
-  start(name) {
+  start(name, isInner = false) {
     if (this.totalStart === 0) {
       this.totalStart = Date.now();
     }
 
     this.info[name] = {
       start: Date.now(),
+      isInner,
     };
   }
 
@@ -29,9 +30,13 @@ export default class DebugInfo {
     this.totalCost = 0;
   }
 
-  log() {
+  log(needInner = false) {
+    console.log(this.info)
     let logInfo = 'Layout debug info: \n';
     logInfo += Object.keys(this.info).reduce((sum, curr) => {
+      if (this.info[curr].isInner && !needInner) {
+        return sum;
+      }
       // eslint-disable-next-line no-param-reassign
       sum += `${curr}: ${this.info[curr].cost}\n`;
 

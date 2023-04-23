@@ -130,6 +130,7 @@ class Layout extends Element {
   }
 
   init(template, style, attrValueProcessor) {
+    debugInfo.start('init');
     const parseConfig = {
       attributeNamePrefix: '',
       attrNodeName: 'attr', // default is 'false'
@@ -147,17 +148,17 @@ class Layout extends Element {
       parseConfig.attrValueProcessor = attrValueProcessor;
     }
 
-    debugInfo.start('xmlParse');
+    debugInfo.start('init_xmlParse');
     // 将xml字符串解析成xml节点树
     const jsonObj = parser.parse(template, parseConfig, true);
-    debugInfo.end('xmlParse');
+    debugInfo.end('init_xmlParse');
 
     const xmlTree = jsonObj.children[0];
 
     // XML树生成渲染树
-    debugInfo.start('xmlTreeToLayoutTree');
+    debugInfo.start('init_xml2Layout');
     const layoutTree = create.call(this, xmlTree, style);
-    debugInfo.end('xmlTreeToLayoutTree');
+    debugInfo.end('init_xml2Layout');
 
     this.add(layoutTree);
 
@@ -165,6 +166,8 @@ class Layout extends Element {
 
     this.ticker.add(this.tickerFunc, true);
     this.ticker.start();
+
+    debugInfo.end('init');
   }
 
   reflow(isFirst = false) {
@@ -172,13 +175,13 @@ class Layout extends Element {
       debugInfo.reset();
     }
 
-    debugInfo.start('reflow');
+    debugInfo.start('layout_reflow');
     /**
      * 计算布局树
      * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
      * Layout本身并不作为布局计算，只是作为节点树的容器
      */
-    debugInfo.start('computeLayout');
+    debugInfo.start('computeLayout', true);
     computeLayout(this.children[0]);
     debugInfo.end('computeLayout');
 
@@ -192,7 +195,7 @@ class Layout extends Element {
     }
 
     // 将布局树的布局信息加工赋值到渲染树
-    debugInfo.start('layoutChildren');
+    debugInfo.start('layoutChildren', true);
     layoutChildren.call(this, this);
     debugInfo.end('layoutChildren');
 
@@ -201,11 +204,11 @@ class Layout extends Element {
     clearCanvas(this.renderContext);
 
     // 遍历节点树，依次调用节点的渲染接口实现渲染
-    debugInfo.start('renderChildren');
+    debugInfo.start('renderChildren', true);
     renderChildren(this.children, this.renderContext, false);
     debugInfo.end('renderChildren');
 
-    debugInfo.start('repaint');
+    debugInfo.start('repaint', true);
     this.repaint();
     debugInfo.end('repaint');
     this.isDirty = false;
@@ -214,7 +217,7 @@ class Layout extends Element {
     //   console.log(ele.id, ele.className);
     // });
 
-    debugInfo.end('reflow');
+    debugInfo.end('layout_reflow');
   }
 
   /**
@@ -238,15 +241,21 @@ class Layout extends Element {
       console.error('Please invoke method `updateViewPort` before method `layout`');
     }
 
+    debugInfo.start('layout');
+
     this.reflow(true);
 
+    debugInfo.start('layout_other');
     this.bindEvents();
 
-    debugInfo.start('observeStyleAndEvent');
+    debugInfo.start('observeStyleAndEvent', true);
     iterateTree(this.children[0], element => element.observeStyleAndEvent());
-    debugInfo.end('observeStyleAndEvent');
+    debugInfo.end('layout_observeStyleAndEvent');
 
     this.state = STATE.RENDERED;
+
+    debugInfo.end('layout');
+    debugInfo.end('layout_other');
   }
 
   repaint() {

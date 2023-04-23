@@ -18,17 +18,30 @@ hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('xml', xml);
 
 class App {
-  constructor() {
-    this.init();
-  }
+  public Layout: any;
+  private vueApp: any;
 
-  init() {
+  constructor() {
     const appDiv = document.createElement('div');
     appDiv.id = 'app';
     document.body.prepend(appDiv);
 
-    createApp(Test).use(PrimeVue).use(hljsVuePlugin).mount('#app');
+    const vueApp = createApp(Test).use(PrimeVue).use(hljsVuePlugin).mount('#app');
+
+    if (process.env.NODE_ENV !== 'production') {
+      //@ts-ignore
+      const Layout = require('minigame-canvas-engine').default;
+      //@ts-ignore
+      vueApp.initLayout(Layout);
+    }
+
+    this.vueApp = vueApp;
+  }
+
+  init(Layout: any) {
+    this.vueApp.initLayout(Layout);
   }
 }
 
 new App();
+

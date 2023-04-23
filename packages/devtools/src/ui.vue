@@ -1,11 +1,12 @@
 <script lang="ts">
 import { template, templateSettings } from 'dot';
-const beautify = require('js-beautify').js;
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Message from 'primevue/message';
-
+const Stats = require('stats.js');
+const beautify = require('js-beautify').js;
 import { clipboard, xmlDemo } from './util';
+import { defineComponent } from 'vue';
 
 interface CoptMessage {
   id: number
@@ -13,7 +14,7 @@ interface CoptMessage {
   severity: string
 }
 
-export default {
+export default defineComponent({
   data() {
     return {
       visible: false,
@@ -35,6 +36,10 @@ export default {
   },
 
   methods: {
+    initLayout(Layout: any) {
+      this.Layout = Layout;  
+    },
+
     doTCompile() {
       let xml = document.getElementById('template')?.innerHTML;
 
@@ -70,9 +75,17 @@ export default {
     
     goToDoc() {
       window.open("https://wechat-miniprogram.github.io/minigame-canvas-engine/");
+    },
+
+    toggleStat() {
+      const stats = new Stats();
+      stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+      document.body.appendChild( stats.dom );
+
+      console.log(this.Layout)
     }
   }
-}
+})
 </script>
 
 <template>
@@ -80,6 +93,7 @@ export default {
     <span>Layout调试工具箱</span>
     <Button @click="doTCompile" label="doT编译" severity="secondary" outlined size="small" />
     <Button @click="goToDoc" label="文档" severity="secondary" outlined size="small" />
+    <Button @click="toggleStat" label="stat" severity="secondary" outlined size="small" />
   </div>
 
   <Dialog @hide="hideDialog" v-model:visible="visible" modal header="模板函数" :style="{ width: '50vw' }">
@@ -111,6 +125,7 @@ body {
   display: flex;
   align-items: center;
   padding: 10px 0;
+  border-bottom: solid 1px #f3f3f3;
 }
 
 .p-button.p-button-sm {
