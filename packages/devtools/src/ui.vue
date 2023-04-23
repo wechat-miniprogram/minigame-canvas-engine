@@ -24,6 +24,10 @@ export default {
     }
   },
 
+  mounted() {
+    document.documentElement.style.fontSize = '14px';
+  },
+
   components: {
     Button,
     Dialog,
@@ -62,14 +66,22 @@ export default {
 
     hideDialog() {
       this.message = [];
+    },
+    
+    goToDoc() {
+      window.open("https://wechat-miniprogram.github.io/minigame-canvas-engine/");
     }
   }
 }
 </script>
 
 <template>
-  <!-- <Button click="doT Compile">doT</Button> -->
-  <Button @click="doTCompile" label="doT编译" severity="success" size="small" />
+  <div class="dev__container">
+    <span>Layout调试工具箱</span>
+    <Button @click="doTCompile" label="doT编译" severity="secondary" outlined size="small" />
+    <Button @click="goToDoc" label="文档" severity="secondary" outlined size="small" />
+  </div>
+
   <Dialog @hide="hideDialog" v-model:visible="visible" modal header="模板函数" :style="{ width: '50vw' }">
     <Message v-for="msg of messages" :key="msg.id" :severity="msg.severity">{{ msg.content }}</Message>
 
@@ -93,5 +105,19 @@ html {
 body {
   font-family: (--font-family);
   font-size: 14px;
+}
+
+.dev__container {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.p-button.p-button-sm {
+  padding: 0.45rem 1.1rem;
+}
+
+.p-button {
+  margin-left: 5px;
 }
 </style>
