@@ -19,6 +19,4 @@
 <img :src="$withBase('/imgs/screenshot.gif')" width=300>
 
 ## 谁在使用
-小游戏官方示例
-
-<img :src="$withBase('/imgs/demo.png')" width=200>
+<img :src="$withBase('/imgs/demo.png')" width=150> <img :src="$withBase('/imgs/ditiepaoku.png')" width=150> <img :src="$withBase('/imgs/dazhanggui.jpeg')" width=150> <img :src="$withBase('/imgs/jiuchongshilian.jpeg')" width=150> <img :src="$withBase('/imgs/lvxingchuanchuan.jpeg')" width=150>
