@@ -7,6 +7,12 @@ module.exports = {
     ["meta", { name: "robots", content: "all" }],
     ["meta", { name: "author", content: "yuanzm" }],
     ["meta", { name: "keywords", content: "minigame-canvans-engine, minigame, canvas, engine, game engine" }],
+    ["script", {}, `
+      var sc_project=12873270; 
+      var sc_invisible=1; 
+      var sc_security="efed24b4"; 
+    `],
+    ["script", { src: "https://www.statcounter.com/counter/counter.js", async: true }]
   ],
   themeConfig: {
     repo: 'wechat-miniprogram/minigame-canvas-engine',

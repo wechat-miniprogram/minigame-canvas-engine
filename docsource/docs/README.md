@@ -21,3 +21,5 @@
 小游戏官方示例
 
 <img :src="$withBase('/imgs/demo.png')" width=200>
+
+
