@@ -24,3 +24,8 @@ export const xmlDemo = `
   </view>
 </script>
 `;
+
+export const devtoolsNotInitCode = `
+// 引入minigame-canvas-engine-devtools之后，layoutDevtools会自动挂载到windows
+window.layoutDevtools.init(Layout);
+`

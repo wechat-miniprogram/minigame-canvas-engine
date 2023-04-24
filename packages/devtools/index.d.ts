@@ -6,4 +6,5 @@ declare module '*.vue' {
 
 interface Window {
   Layout: any;
+  layoutDevtools: any;
 }

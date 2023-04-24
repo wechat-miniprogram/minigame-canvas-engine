@@ -5,7 +5,7 @@ import Dialog from 'primevue/dialog';
 import Message from 'primevue/message';
 const Stats = require('stats.js');
 const beautify = require('js-beautify').js;
-import { clipboard, xmlDemo } from './util';
+import { clipboard, xmlDemo, devtoolsNotInitCode } from './util';
 import { defineComponent } from 'vue';
 
 interface CoptMessage {
@@ -19,9 +19,11 @@ export default defineComponent({
     return {
       visible: false,
       showNoXMLDialog: false,
+      showDevToolsNotInit: false,
       code: '',
       messages: [] as CoptMessage[],
       xmlDemo,
+      devtoolsNotInitCode,
       statShow: false,
       stats: null,
       statTicker: null,
@@ -81,6 +83,10 @@ export default defineComponent({
     },
 
     toggleStat() {
+      if (!this.detectDevtoolsInit()) {
+        return;
+      }
+
       if (!this.stats) {
         const stats = new Stats();
         this.stats = stats;
@@ -95,12 +101,22 @@ export default defineComponent({
           stats.update();
         }
 
-        Layout.ticker.add(this.statTicker);
+        this.Layout.ticker.add(this.statTicker);
       } else {
-        Layout.ticker.remove(this.statTicker);
+        this.Layout.ticker.remove(this.statTicker);
         this.stats.dom.remove();
         this.stats = null;
       }
+    },
+
+    detectDevtoolsInit() {
+      if (this.Layout) {
+        return true;
+      }
+
+      this.showDevToolsNotInit = true;
+
+      return false;
     }
   }
 })
@@ -122,10 +138,16 @@ export default defineComponent({
     <Button @click="copyCode" label="复制到剪切板" severity="success" size="small" />
   </Dialog>
 
-  <Dialog v-model:visible="showNoXMLDialog" modal header="模板示意" :style="{ width: '50vw', 'min-width': '400px' }">
+  <Dialog v-model:visible="showNoXMLDialog" modal header="温馨提示" :style="{ width: '50vw', 'min-width': '400px' }">
     <Message :closable="false">没有监听到模板，请参照下面的格式在html内注入模板</Message>
 
     <highlightjs language='xml' :code="xmlDemo" />
+  </Dialog>
+
+  <Dialog v-model:visible="showDevToolsNotInit" modal header="温馨提示" :style="{ width: '50vw', 'min-width': '400px' }">
+    <Message :closable="false">LayoutDevtools没有初始化，请执行下列代码</Message>
+
+    <highlightjs language='javascript' :code="devtoolsNotInitCode" />
   </Dialog>
 </template>
 

@@ -17,7 +17,7 @@ import hljsVuePlugin from "@highlightjs/vue-plugin";
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('xml', xml);
 
-class App {
+class LayoutDevtools {
   public Layout: any;
   private vueApp: any;
 
@@ -47,5 +47,5 @@ class App {
   }
 }
 
-new App();
-
+window.layoutDevtools = new LayoutDevtools();
+export default window.layoutDevtools;
