@@ -22,6 +22,9 @@ export default defineComponent({
       code: '',
       messages: [] as CoptMessage[],
       xmlDemo,
+      statShow: false,
+      stats: null,
+      statTicker: null,
     }
   },
 
@@ -78,25 +81,40 @@ export default defineComponent({
     },
 
     toggleStat() {
-      const stats = new Stats();
-      stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-      document.body.appendChild( stats.dom );
+      if (!this.stats) {
+        const stats = new Stats();
+        this.stats = stats;
+        stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        this.$refs.container.appendChild(stats.dom);
+        stats.dom.style.opacity = 0.6;
+        stats.dom.style.right = '10px';
+        stats.dom.style.top = '5px';
+        stats.dom.style.left = 'auto';
 
-      console.log(this.Layout)
+        this.statTicker = () => {
+          stats.update();
+        }
+
+        Layout.ticker.add(this.statTicker);
+      } else {
+        Layout.ticker.remove(this.statTicker);
+        this.stats.dom.remove();
+        this.stats = null;
+      }
     }
   }
 })
 </script>
 
 <template>
-  <div class="dev__container">
+  <div class="dev__container" ref="container">
     <span>Layout调试工具箱</span>
     <Button @click="doTCompile" label="doT编译" severity="secondary" outlined size="small" />
     <Button @click="goToDoc" label="文档" severity="secondary" outlined size="small" />
-    <Button @click="toggleStat" label="stat" severity="secondary" outlined size="small" />
+    <Button @click="toggleStat" label="stats" severity="secondary" outlined size="small" />
   </div>
 
-  <Dialog @hide="hideDialog" v-model:visible="visible" modal header="模板函数" :style="{ width: '50vw' }">
+  <Dialog @hide="hideDialog" v-model:visible="visible" modal header="模板函数" :style="{ width: '50vw', 'min-width': '400px' }">
     <Message v-for="msg of messages" :key="msg.id" :severity="msg.severity">{{ msg.content }}</Message>
 
     <highlightjs language='javascript' :code="code" />
@@ -104,7 +122,7 @@ export default defineComponent({
     <Button @click="copyCode" label="复制到剪切板" severity="success" size="small" />
   </Dialog>
 
-  <Dialog v-model:visible="showNoXMLDialog" modal header="模板示意" :style="{ width: '50vw' }">
+  <Dialog v-model:visible="showNoXMLDialog" modal header="模板示意" :style="{ width: '50vw', 'min-width': '400px' }">
     <Message :closable="false">没有监听到模板，请参照下面的格式在html内注入模板</Message>
 
     <highlightjs language='xml' :code="xmlDemo" />

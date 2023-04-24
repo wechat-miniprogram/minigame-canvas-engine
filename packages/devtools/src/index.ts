@@ -33,6 +33,10 @@ class App {
       const Layout = require('minigame-canvas-engine').default;
       //@ts-ignore
       vueApp.initLayout(Layout);
+
+      window.Layout = Layout;
+
+      require('./layoutTest');
     }
 
     this.vueApp = vueApp;
