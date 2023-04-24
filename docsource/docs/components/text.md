@@ -1,5 +1,6 @@
 # Text
 
+继承自 [Element](/components/element.html)。
 
 ### 特殊属性
 |      属性      |  类型  | 是否必填 |          说明          |

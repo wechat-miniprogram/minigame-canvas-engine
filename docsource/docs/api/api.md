@@ -32,8 +32,10 @@ Layout.updateViewPort(Object box)
 这一步非常重要，决定了点击、滑动等事件能否正确处理。
 :::
 
-<!-- ## Layout.repaint()
-在某些场景下执行重渲染逻辑，比如通过getElementsById获取一个元素并且改变他的背景颜色，因为不涉及布局变更，执行Layout.repaint()即可。 -->
+在 Web 模式下，可以直接调用 Web 的API取得Canvas在屏幕中的位置：
+```js
+Layout.updateViewPort(canvas.getBoundingClientRect());
+```
 
 ## clearAll
 比起 Layout.clear 更彻底的清理，会清空图片对象池，减少内存占用。

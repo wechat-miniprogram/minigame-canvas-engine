@@ -8,12 +8,12 @@ import "primevue/resources/themes/lara-light-indigo/theme.css";
 import "primevue/resources/primevue.min.css";
 import "./primeicons/primeicons.css";
 
+// highlight.js init
 import 'highlight.js/styles/stackoverflow-light.css'
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import xml from 'highlight.js/lib/languages/xml';
 import hljsVuePlugin from "@highlightjs/vue-plugin";
-
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('xml', xml);
 
@@ -48,4 +48,5 @@ class LayoutDevtools {
 }
 
 window.layoutDevtools = new LayoutDevtools();
+
 export default window.layoutDevtools;

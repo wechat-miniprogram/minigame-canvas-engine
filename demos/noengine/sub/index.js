@@ -192,9 +192,7 @@ function loadFriendDataAndRender(key, info, needRender = true) {
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
     }
 
-    let start = new Date();
     Layout.loadImgs(data.map(item => item.avatarUrl)).then(res => {
-      console.log(new Date() - start);
       Layout.ticker.next(() => {
         console.log('异步资源加载并渲染完成')
       });

@@ -1,4 +1,7 @@
 # Canvas
+
+继承自 [Element](/components/element.html)。
+
 与浏览器的canvas标签类似，Layout 标签允许你插入一个画布自由更新画布内容，这在某些场景会非常有用，比如你想通过Layout完成构建小游戏示例，包括游戏和开放数据域，例如[noengine demo](https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/noengine)。
 
 ### 特殊属性

@@ -12,7 +12,8 @@
 有兴趣可以查看详细原理介绍[文章](https://segmentfault.com/a/1190000021297495?_ea=27021986)。
 
 ## web端调试
-为了方便UI调试，可以在线编辑预览效果: [Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html)
+
+为了方便调试，可以基于 codepen [模板](https://codepen.io/pen?template=VwEeLKw) 构建demo，旧版本[Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html)已不再维护。
 
 ## 效果预览
 <img :src="$withBase('/imgs/screenshot.gif')" width=300>
@@ -21,5 +22,3 @@
 小游戏官方示例
 
 <img :src="$withBase('/imgs/demo.png')" width=200>
-
-

@@ -82,6 +82,10 @@ export default defineComponent({
       window.open("https://wechat-miniprogram.github.io/minigame-canvas-engine/");
     },
 
+    goToDemos() {
+      window.open("https://codepen.io/collection/PYrdpO?grid_type=grid");
+    },
+
     toggleStat() {
       if (!this.detectDevtoolsInit()) {
         return;
@@ -125,8 +129,9 @@ export default defineComponent({
 <template>
   <div class="dev__container" ref="container">
     <span>Layout调试工具箱</span>
-    <Button @click="doTCompile" label="doT编译" severity="secondary" outlined size="small" />
-    <Button @click="goToDoc" label="文档" severity="secondary" outlined size="small" />
+    <Button @click="doTCompile" label="doT" severity="secondary" outlined size="small" />
+    <Button @click="goToDoc" label="doc" severity="secondary" outlined size="small" />
+    <Button @click="goToDemos" label="demos" severity="secondary" outlined size="small" />
     <Button @click="toggleStat" label="stats" severity="secondary" outlined size="small" />
   </div>
 
@@ -166,10 +171,11 @@ body {
   align-items: center;
   padding: 10px 0;
   border-bottom: solid 1px #f3f3f3;
+  margin-bottom: 10px;
 }
 
 .p-button.p-button-sm {
-  padding: 0.45rem 1.1rem;
+  padding: 0.30rem 1.1rem;
 }
 
 .p-button {

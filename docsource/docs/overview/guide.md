@@ -34,7 +34,7 @@ let style = {
         width: 400,
         height: 200,
         backgroundColor: '#ffffff',
-        justContent: 'center',
+        justifyContent: 'center',
         alignItems: 'center',
     },
     testText: {

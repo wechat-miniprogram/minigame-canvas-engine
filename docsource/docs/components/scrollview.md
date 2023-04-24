@@ -1,5 +1,7 @@
 # ScrollView
 
+继承自 [View](/components/view.html)。
+
 滚动内容的容器，滚动的前提是正确调用[updateViewPort](/api/api.html#updateviewport)
 ### 特殊属性
 |      属性      |  类型  | 是否必填 |          说明          |
