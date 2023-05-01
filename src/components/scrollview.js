@@ -10,15 +10,13 @@ const dpr = getDpr();
 export default class ScrollView extends View {
   constructor({
     style = {},
-    props = {},
     idName = '',
     className = '',
-    scrollX = false,
-    scrollY = false,
+    scrollX,
+    scrollY,
     dataset,
   }) {
     super({
-      props,
       style,
       idName,
       dataset,
@@ -35,9 +33,11 @@ export default class ScrollView extends View {
 
     this.requestID = null;
 
+    this.scrollYProp = scrollY;
+
     this.innerScrollerOption = {
-      scrollingX: scrollX,
-      scrollingY: scrollY,
+      scrollingX: !!scrollX,
+      scrollingY: !!scrollY,
     };
   }
 
@@ -100,8 +100,6 @@ export default class ScrollView extends View {
   }
 
   repaint() {
-    // this.clear();
-
     this.scrollRender(this.scrollLeft, this.scrollTop);
   }
 
@@ -189,6 +187,15 @@ export default class ScrollView extends View {
 
   insert(context) {
     this.ctx = context;
+
+    /**
+     * 这里有个非常特殊的兼容逻辑，在低版本没有重构 ScrollView之前，并没有提供单独的 ScrollX 和 ScrollY 属性
+     * 而是判断 scrollHeiht 大于容器高度的时候自动实现了纵向滚动（且没有横向滚动能力）
+     * 因此这里做一个兼容逻辑，如果 scrollHeight > this.layoutBox.height 自动开启纵向滚动
+     */
+    if (this.scrollHeight > this.layoutBox.height && typeof this.scrollYProp === 'undefined') {
+      this.scrollY = true;
+    }
 
     if (this.hasEventBind) {
       // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域

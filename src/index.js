@@ -6,7 +6,6 @@ import computeLayout from 'css-layout';
 import {
   isClick,
   STATE,
-  createImage,
   clearCanvas,
 } from './common/util.js';
 import parser from './libs/fast-xml-parser/parser.js';
@@ -214,7 +213,7 @@ class Layout extends Element {
     this.isDirty = false;
 
     // iterateTree(this.children[0], (ele) => {
-    //   console.log(ele.id, ele.className);
+    //   console.log(ele.props);
     // });
 
     debugInfo.end('layout_reflow');
@@ -287,9 +286,6 @@ class Layout extends Element {
         if (ele.children.length) {
           this.getChildByPos(ele, x, y, itemList);
         }
-        // else {
-        //   itemList.push(ele);
-        // }
       }
     });
   }
@@ -395,7 +391,6 @@ class Layout extends Element {
     const { removeTicker = true } = options;
 
     debugInfo.reset();
-    // TWEEN.removeAll();
     this.destroyAll(this);
     this.elementTree = null;
     this.children = [];

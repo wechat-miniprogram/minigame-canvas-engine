@@ -85,7 +85,6 @@ const isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
 export default class Element {
   constructor({
     style = {},
-    props = {},
     idName = '',
     className = '',
     id = uuid += 1,
@@ -95,7 +94,6 @@ export default class Element {
     this.parent = null;
     this.parentId = 0;
     this.id = id;
-    this.props = props;
     this.idName = idName;
     this.className = className;
     // this.style = style;
@@ -144,7 +142,6 @@ export default class Element {
     this.viewportRect = null;
     this.classNameList = null;
   }
-
 
   /**
    * 监听属性的变化判断是否需要执行 reflow、repaint 操作
@@ -308,7 +305,6 @@ export default class Element {
 
     // element 在画布中的位置和尺寸信息
     this.layoutBox = null;
-    this.props = null;
     this.style = null;
     this.className = '';
     this.classNameList = null;

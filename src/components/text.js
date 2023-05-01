@@ -65,7 +65,6 @@ function parseText(style, value) {
 export default class Text extends Element {
   constructor({
     style = {},
-    props = {},
     idName = '',
     className = '',
     value = '',
@@ -79,7 +78,6 @@ export default class Text extends Element {
     }
 
     super({
-      props,
       idName,
       className,
       style,

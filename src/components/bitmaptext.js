@@ -7,7 +7,6 @@ export default class BitMapText extends Element {
   constructor(opts) {
     const {
       style = {},
-      props = {},
       idName = '',
       className = '',
       value = '',
@@ -15,7 +14,6 @@ export default class BitMapText extends Element {
       dataset,
     } = opts;
     super({
-      props,
       idName,
       className,
       style,

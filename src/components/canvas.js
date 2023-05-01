@@ -5,7 +5,6 @@ export default class Canvas extends Element {
   constructor(opts) {
     const {
       style = {},
-      props = {},
       idName = '',
       className = '',
       dataset,
@@ -15,7 +14,6 @@ export default class Canvas extends Element {
     } = opts;
 
     super({
-      props,
       idName,
       className,
       dataset,

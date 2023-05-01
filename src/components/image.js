@@ -5,7 +5,6 @@ export default class Image extends Element {
   constructor(opts) {
     const {
       style = {},
-      props = {},
       idName = '',
       className = '',
       src = '',
@@ -13,7 +12,6 @@ export default class Image extends Element {
     } = opts;
 
     super({
-      props,
       idName,
       className,
       dataset,

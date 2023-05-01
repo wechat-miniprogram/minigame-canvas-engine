@@ -3,13 +3,11 @@ import Element from './elements.js';
 export default class View extends Element {
   constructor({
     style = {},
-    props = {},
     idName = '',
     className = '',
     dataset,
   }) {
     super({
-      props,
       idName,
       className,
       style,
