@@ -1,5 +1,5 @@
 <script lang="ts">
-import { template, templateSettings } from 'dot';
+import { template } from 'dot';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Message from 'primevue/message';
@@ -57,9 +57,7 @@ export default defineComponent({
       let comment =
         `/**\n * xml经过doT.js编译出的模板函数\n * 因为小游戏不支持new Function，模板函数只能外部编译\n * 可直接拷贝本函数到小游戏中使用\n */\n`;
 
-      const tplFunc = String(template(xml, Object.assign(templateSettings, {
-        varname: 'data',
-      })));
+      const tplFunc = String(template(xml));
 
       const beautifyFunc = beautify(tplFunc, { indent_size: 2 });
 
