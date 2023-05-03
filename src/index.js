@@ -97,7 +97,6 @@ class Layout extends Element {
     };
   }
 
-
   // 与老版本兼容
   get debugInfo() {
     let info = debugInfo.log();

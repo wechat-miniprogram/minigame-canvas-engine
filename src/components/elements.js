@@ -328,6 +328,25 @@ export default class Element {
     }
   }
 
+  removeChild(element) {
+    const index = this.children.indexOf(element);
+    if (index !== -1) {
+      this.isDirty = true;
+
+      element.parent = null;
+      this.children.splice(this.children.indexOf(element), 1);
+
+      this.isDirty = true;
+      let { parent } = this;
+      while (parent) {
+        parent.isDirty = true;
+        parent = parent.parent;
+      }
+    } else {
+      console.warn('[Layout] the element to be removed is not a child of this element');
+    }
+  }
+
   emit(event, ...theArgs) {
     EE.emit(toEventName(event, this.id), ...theArgs);
   }
