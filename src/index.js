@@ -95,6 +95,8 @@ class Layout extends Element {
         this.repaint();
       }
     };
+
+    console.log(`[Layout] v${this.version}`);
   }
 
   // 与老版本兼容
@@ -186,7 +188,7 @@ class Layout extends Element {
     const rootEle = this.children[0];
 
     if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
-      console.error('Please set width and height property for root element');
+      console.error('[Layout] Please set width and height property for root element');
     } else {
       this.renderport.width = rootEle.style.width;
       this.renderport.height = rootEle.style.height;

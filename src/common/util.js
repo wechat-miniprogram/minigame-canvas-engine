@@ -71,7 +71,7 @@ export function getDpr() {
   } else if (window.devicePixelRatio) {
     _dpr = window.devicePixelRatio;
   } else {
-    console.warn('failed to access device pixel ratio, fallback to 1');
+    console.warn('[Layout] failed to access device pixel ratio, fallback to 1');
     _dpr = 1;
   }
   return _dpr;

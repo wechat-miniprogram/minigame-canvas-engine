@@ -217,6 +217,7 @@ var Layout = /*#__PURE__*/function (_Element) {
       }
     };
 
+    console.log("[Layout] v".concat(_this.version));
     return _this;
   } // 与老版本兼容
 
@@ -308,7 +309,7 @@ var Layout = /*#__PURE__*/function (_Element) {
       var rootEle = this.children[0];
 
       if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
-        console.error('Please set width and height property for root element');
+        console.error('[Layout] Please set width and height property for root element');
       } else {
         this.renderport.width = rootEle.style.width;
         this.renderport.height = rootEle.style.height;
@@ -1361,7 +1362,7 @@ function getDpr() {
   } else if (window.devicePixelRatio) {
     _dpr = window.devicePixelRatio;
   } else {
-    console.warn('failed to access device pixel ratio, fallback to 1');
+    console.warn('[Layout] failed to access device pixel ratio, fallback to 1');
     _dpr = 1;
   }
 

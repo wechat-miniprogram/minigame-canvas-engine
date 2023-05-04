@@ -20,7 +20,6 @@ sharedCanvas.width = RANK_WIDTH;
 sharedCanvas.height = RANK_HEIGHT;
 
 function updateRankViewPort(rankCanvas) {
-  console.log(rankCanvas.getViewportRect())
   const rect = rankCanvas.getViewportRect();
   openDataContext.postMessage({
     event: 'updateViewPort',
