@@ -137,9 +137,8 @@ export default class ScrollView extends View {
     const endX = startX + width;
     const endY = startY + height;
 
-
     // 清理滚动画布和主屏画布
-    this.clear();
+    // this.clear();
 
     // ScrollView 作为容器本身的渲染
     this.render();
@@ -175,7 +174,8 @@ export default class ScrollView extends View {
           ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
         }
       });
-      this.scrollRender(left, top);
+      // this.scrollRender(left, top);
+      this.root.emit('repaint');
       if (this.currentEvent) {
         this.emit('scroll', this.currentEvent);
       }
