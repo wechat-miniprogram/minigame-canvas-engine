@@ -142,6 +142,7 @@ class Layout extends Element {
       parseAttributeValue: false,
       trimValues: true,
       parseTrueNumberOnly: false,
+      alwaysCreateTextNode: true,
     };
 
     if (attrValueProcessor && typeof attrValueProcessor === 'function') {
@@ -152,6 +153,8 @@ class Layout extends Element {
     // 将xml字符串解析成xml节点树
     const jsonObj = parser.parse(template, parseConfig, true);
     debugInfo.end('init_xmlParse');
+
+    console.log(jsonObj)
 
     const xmlTree = jsonObj.children[0];
 
