@@ -154,8 +154,6 @@ class Layout extends Element {
     const jsonObj = parser.parse(template, parseConfig, true);
     debugInfo.end('init_xmlParse');
 
-    console.log(jsonObj)
-
     const xmlTree = jsonObj.children[0];
 
     // XML树生成渲染树
