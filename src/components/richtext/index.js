@@ -1,10 +1,7 @@
 import Element from "../elements";
+
 const parser = require('./htmlparser/html2json')
-
-import config from './config';
-
-const { presetChars } = config;
-const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
+const DEFAULT_FONT_FAMILY = 'sans-serif';
 import { createCanvas } from '../../common/util';
 
 let ctx;
@@ -19,15 +16,10 @@ export const getCharWidth = (char, fontSize) => {
     const canvas = createCanvas();
     ctx = canvas.getContext('2d')
   }
-  let width = 0;
-  // @ts-ignore
-  // width = presetChars[char] > 0 ? presetChars[char] : ctx.measureText(char, fontSize).width;
-  // width = presetChars[char] > 0 ? presetChars[char] : 10;
 
-  width = ctx.measureText(char, fontSize).width
+  let width = ctx.measureText(char).width;
 
   return (width * fontSize) / 10;
-  // return ctx.measureText(char, fontSize).width;
 };
 
 
@@ -85,56 +77,54 @@ export default class RichText extends Element {
     return this.innerText;
   }
 
-  createDc() {
-    return {
-      filleStyle: null,
-      fontSize: null,
-      textAlign: null,
-      text: '',
-      x: 0,
-      y: 0,
-    }
-  }
-
   buildDrawCallFromJsonData(jsonData) {
-    let dcs = [];
-    let lines = 0;
-    let linesData = [];
-    let yStart = 0;
-    let lineWidth = 0;
-    linesData[lines] = '';
-
+    console.log(jsonData)
     const { width, lineHeight = 16, fontSize = 12, } = this.style;
 
-    let currDc = this.createDc();
-    dcs.push(currDc);
-    currDc.y = lineHeight * lines;
+    // 针对整个节点树进行解析，算出最后需要独立调用 canvas API 绘制的列表
+    let dcs = [];
+    // 换行标记
+    let lines = -1;
+    // 当前行宽度标记
+    let lineWidth = 0;
+
+    let currDc;
+
+    function createDc() {
+      let dc = {
+        filleStyle: null,
+        fontSize: null,
+        textAlign: null,
+        text: '',
+        x: 0,
+        y: 0,
+      }
+
+      dcs.push(dc);
+
+      currDc = dc;
+      currDc.x = lineWidth;
+      currDc.y = lineHeight * lines;      
+
+      return dc;
+    }
 
     iterateTree(jsonData, (node) => {
-      // if (node.node === 'element') {
-      //   console.log(node);
-      // }
-
       // tagType： block、inline
       const { tagType, tag, styleStr } = node;
       // block类型新起一行
       if (tagType === 'block') {
         lines += 1;
-        linesData[lines] = '';
         lineWidth = 0;
 
-        currDc = this.createDc();
-        dcs.push(currDc);
-        currDc.y = lineHeight * lines;
+        createDc();
       }
 
       // 加粗
       if (tag === 'strong') {
-        if (currDc.text && currDc.fontWeight !== 'bold') {
-          // 创建新的dc
-          currDc = this.createDc();
-          dcs.push(currDc);
-          currDc.y = lineHeight * lines;
+        // 当前dc并不是加粗文本且并不为空，需要创建新的 dc
+        if (currDc.fontWeight !== 'bold' && currDc.text) {
+          createDc();
           currDc.fontWeight = 'bold';
         }
 
@@ -142,23 +132,39 @@ export default class RichText extends Element {
         if (currDc.text === '') {
           currDc.fontWeight = 'bold';
         }
+
+        if (!node.styleObj) {
+          node.styleObj = {}
+        }
+
+        node.styleObj['font-weight'] = 'bold';
       }
 
+      let styleObj = {};
+      /**
+       * 当前标签有样式的情况
+       * 1. 处理样式，目前支持颜色、加粗、字体大小
+       * 2. 目前暴力处理，不管当前dc什么状态，只要是有 style 就创建新的dc
+       */
       if (styleStr) {
-        const styleObj = styleStr.split(';').reduce((res, curr) => {
+        styleObj = styleStr.split(';').reduce((res, curr) => {
           const temp = curr.split(':');
-          res[temp[0]] = temp[1];
+          res[temp[0]] = temp[1].trim();
 
           return res;
         }, {});
 
         if (styleObj.color || styleObj['font-weight'] || styleObj['font-size']) {
-          currDc = this.createDc();
+          createDc();
 
-          dcs.push(currDc);
-
-          currDc.y = lineHeight * lines;
-          currDc.x = lineWidth;
+          // 继承父节点的样式
+          let parent = node.parent;
+          while (parent) {
+            if (parent.styleObj) {
+              styleObj = Object.assign({}, parent.styleObj, styleObj);
+            }
+            parent = parent.parent;
+          }
 
           if (styleObj['font-weight']) {
             currDc.fontWeight = 'bold';
@@ -169,59 +175,54 @@ export default class RichText extends Element {
           }
 
           if (styleObj['font-size']) {
-            currDc.fontSize = styleObj['font-size'];
+            currDc.fontSize = styleObj['font-size'].replace('px', '');
           }
+
+          node.styleObj = styleObj;
         }
       } else {
         const nodeIndex = node.parent?.nodes.indexOf(node);
         // 前一个节点同样存在样式，新建dc
-        if (nodeIndex > 0 && node.parent?.nodes[nodeIndex - 1].styleStr) {
-          currDc = this.createDc();
-
-          dcs.push(currDc);
-  
-          currDc.y = lineHeight * lines;
-          currDc.x = lineWidth;
+        if (nodeIndex > 0 && (node.parent?.nodes[nodeIndex - 1].styleStr || node.parent?.nodes[nodeIndex - 1].tag === 'strong')) {
+          createDc();
         }        
       }
 
+      const localFontSize = styleObj['font-size'] ? Number(styleObj['font-size'].replace('px', '')) : fontSize;
       // 文本类型
       if (node.text) {
+        if (!currDc) {
+          createDc();
+        }
         for (let i = 0; i < node.text.length; i++) {
           const char = node.text[i];
-          const charWidth = getCharWidth(char, fontSize);
+          const charWidth = getCharWidth(char, currDc && currDc.fontSize || fontSize);
 
           // 触发了换行逻辑
           if (lineWidth + charWidth > width) {
             lines += 1;
-            linesData[lines] = '';
             lineWidth = 0;
 
             let lastDc = currDc;
-            currDc = this.createDc();
+            createDc();
             // 因为字符太长触发的换行样式继承到下一个dc
             Object.assign(currDc, lastDc);
-            dcs.push(currDc);
             currDc.text = '';
             currDc.y = lineHeight * lines;
             currDc.x = 0;
-          } else {
-            linesData[lines] += char;
-            lineWidth += charWidth;
-
-            currDc.text += char;
           }
+
+          lineWidth += charWidth;
+          currDc.text += char;
         }
       }
     });
 
-    this.linesData = linesData;
     this.dcs = dcs;
 
-    this.style.height = this.linesData.length * lineHeight;
+    this.style.height = lines * lineHeight;
 
-    // console.log('linesData', linesData, dcs)
-
+    console.log(dcs)
   }
 
   repaint() {
@@ -286,31 +287,27 @@ export default class RichText extends Element {
       ctx.stroke();
     }
 
-    if (this.linesData) {
+    if (this.dcs && this.dcs.length) {
       let start = new Date()
       const { width, lineHeight = 12, fontSize = 12, } = this.style;
 
 
-      // this.linesData.forEach((line, index) => {
-      //   ctx.fillText(line, drawX, drawY + index * lineHeight)
-      // });
-
       this.dcs.forEach((dc, index) => {
-        if (dc.fontWeight || dc.fontSize || dc.filleStyle) {
-          ctx.save();
-          if (dc.filleStyle) {
-            ctx.fillStyle = dc.filleStyle
+        if (dc.text) {
+          if (dc.fontWeight || dc.fontSize || dc.filleStyle) {
+            ctx.save();
+            if (dc.filleStyle) {
+              ctx.fillStyle = dc.filleStyle
+            }
+  
+            ctx.font = `${dc.fontWeight || ''} ${dc.fontSize || fontSize}px ${DEFAULT_FONT_FAMILY}`;
+            ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
+            ctx.restore();
+          } else {
+            ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
           }
-
-          ctx.font = `${dc.fontWeight || ''} ${dc.fontSize || fontSize}px ${DEFAULT_FONT_FAMILY}`;
-          ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
-          ctx.restore();
-        } else {
-          ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
         }
       })
-
-      // console.log('render', new Date() - start)
     }
 
     ctx.restore();
