@@ -6822,6 +6822,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RichText; });
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(33);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6850,6 +6851,10 @@ var parser = __webpack_require__(31);
 
 
 var presetChars = _config__WEBPACK_IMPORTED_MODULE_1__["default"].presetChars;
+var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
+
+var canvas = Object(_common_util__WEBPACK_IMPORTED_MODULE_2__["createCanvas"])();
+var ctx = canvas.getContext('2d');
 /**
  * @description 获取字符宽度
  * @param char
@@ -6858,9 +6863,11 @@ var presetChars = _config__WEBPACK_IMPORTED_MODULE_1__["default"].presetChars;
 
 var getCharWidth = function getCharWidth(_char, fontSize) {
   var width = 0; // @ts-ignore
+  // width = presetChars[char] > 0 ? presetChars[char] : ctx.measureText(char, fontSize).width;
+  // width = presetChars[char] > 0 ? presetChars[char] : 10;
 
-  width = presetChars[_char] > 0 ? presetChars[_char] : 10;
-  return width * fontSize / 10;
+  width = ctx.measureText(_char, fontSize).width;
+  return width * fontSize / 10; // return ctx.measureText(char, fontSize).width;
 };
 
 function iterateTree(element, callback) {
@@ -6919,31 +6926,74 @@ var RichText = /*#__PURE__*/function (_Element) {
       this.root.emit('repaint');
       console.log(jsonData);
       console.log('[Layout] set text', value);
+      var start = new Date();
       this.buildDrawCallFromJsonData(jsonData);
+      console.log('buildDrawCallFromJsonData', new Date() - start);
+    }
+  }, {
+    key: "createDc",
+    value: function createDc() {
+      return {
+        filleStyle: null,
+        fontSize: null,
+        textAlign: null,
+        text: ''
+      };
     }
   }, {
     key: "buildDrawCallFromJsonData",
     value: function buildDrawCallFromJsonData(jsonData) {
       var dcs = [];
-      var lines = -1;
+      var lines = 0;
+      var linesData = [];
       var yStart = 0;
+      var lineWidth = 0;
+      linesData[lines] = '';
+      var currDc = this.createDc();
+      dcs.push(currDc);
       var _this$style = this.style,
           width = _this$style.width,
           _this$style$lineHeigh = _this$style.lineHeight,
-          lineHeight = _this$style$lineHeigh === void 0 ? 12 : _this$style$lineHeigh;
-      iterateTree(jsonData, function (node) {
-        console.log(node); // tagType： block、inline
+          lineHeight = _this$style$lineHeigh === void 0 ? 12 : _this$style$lineHeigh,
+          _this$style$fontSize = _this$style.fontSize,
+          fontSize = _this$style$fontSize === void 0 ? 12 : _this$style$fontSize;
+      console.log(width, lineHeight, fontSize);
+      jsonData.nodes.forEach(function (nodeTree) {
+        iterateTree(nodeTree, function (node) {
+          // console.log(node);
+          if (node.node === 'element') {
+            console.log(node);
+          } // 文本类型
 
-        var tagType = node.tagType; // block类型新起一行
+
+          if (node.text) {
+            for (var i = 0; i < node.text.length; i++) {
+              var _char2 = node.text[i];
+              var charWidth = getCharWidth(_char2, fontSize); // 触发了换行逻辑
+
+              if (lineWidth + charWidth > width) {
+                lines += 1;
+                linesData[lines] = '';
+                lineWidth = 0;
+              } else {
+                linesData[lines] += _char2;
+                lineWidth += charWidth;
+              }
+            }
+          }
+        }); // tagType： block、inline
+
+        var tagType = nodeTree.tagType; // block类型新起一行
 
         if (tagType === 'block') {
           lines += 1;
-          yStart = lines * lineHeight;
-        } // 文本类型
-
-
-        if (node.text) {}
+          linesData[lines] = '';
+          lineWidth = 0;
+        }
       });
+      this.linesData = linesData;
+      this.style.height = this.linesData.length * lineHeight;
+      console.log('linesData', linesData, this.style.height);
     }
   }, {
     key: "repaint",
@@ -6959,10 +7009,21 @@ var RichText = /*#__PURE__*/function (_Element) {
     key: "insert",
     value: function insert(ctx, needRender) {
       this.ctx = ctx;
+      this.toCanvasData();
 
       if (needRender) {
         this.render();
       }
+    }
+  }, {
+    key: "toCanvasData",
+    value: function toCanvasData() {
+      var style = this.style || {};
+      this.fontSize = style.fontSize || 12;
+      this.textBaseline = 'top';
+      this.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize || 12, "px ").concat(DEFAULT_FONT_FAMILY);
+      this.textAlign = style.textAlign || 'left';
+      this.fillStyle = style.color || '#000';
     }
   }, {
     key: "render",
@@ -6972,6 +7033,9 @@ var RichText = /*#__PURE__*/function (_Element) {
       ctx.save();
       var box = this.layoutBox;
       var style = this.style;
+      ctx.textBaseline = this.textBaseline;
+      ctx.font = this.font;
+      ctx.textAlign = this.textAlign;
       var drawX = box.absoluteX;
       var drawY = box.absoluteY;
 
@@ -6996,7 +7060,20 @@ var RichText = /*#__PURE__*/function (_Element) {
         ctx.stroke();
       }
 
-      if (this.jsonData) {}
+      if (this.linesData) {
+        var start = new Date();
+        var _this$style2 = this.style,
+            width = _this$style2.width,
+            _this$style2$lineHeig = _this$style2.lineHeight,
+            lineHeight = _this$style2$lineHeig === void 0 ? 12 : _this$style2$lineHeig,
+            _this$style2$fontSize = _this$style2.fontSize,
+            fontSize = _this$style2$fontSize === void 0 ? 12 : _this$style2$fontSize;
+        this.linesData.forEach(function (line, index) {
+          ctx.fillText(line, drawX, drawY + index * lineHeight);
+        }); // console.log('render', new Date() - start)
+      }
+
+      ctx.restore();
     }
   }]);
 
