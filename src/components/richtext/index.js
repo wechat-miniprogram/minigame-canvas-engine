@@ -2,7 +2,16 @@ import Element from "../elements";
 
 const parser = require('./htmlparser/html2json')
 const DEFAULT_FONT_FAMILY = 'sans-serif';
-import { createCanvas } from '../../common/util';
+
+function createCanvas() {
+  /* istanbul ignore if*/
+  if (typeof __env !== 'undefined') {
+    return __env.createCanvas();
+  }
+
+  return document.createElement('canvas');
+}
+
 
 let ctx;
 
@@ -75,6 +84,21 @@ export default class RichText extends Element {
 
   get text() {
     return this.innerText;
+  }
+
+  setStyleForDc(currDc, styleObj) {
+    if (styleObj['font-weight']) {
+      currDc.fontWeight = styleObj['font-weight'];
+    }
+
+    if (styleObj.color) {
+      currDc.filleStyle = styleObj.color;
+    }
+
+    if (styleObj['font-size']) {
+      currDc.fontSize = styleObj['font-size'].replace('px', '');
+    }
+
   }
 
   buildDrawCallFromJsonData(jsonData) {
@@ -166,26 +190,27 @@ export default class RichText extends Element {
             parent = parent.parent;
           }
 
-          if (styleObj['font-weight']) {
-            currDc.fontWeight = 'bold';
-          }
-
-          if (styleObj.color) {
-            currDc.filleStyle = styleObj.color;
-          }
-
-          if (styleObj['font-size']) {
-            currDc.fontSize = styleObj['font-size'].replace('px', '');
-          }
-
+          this.setStyleForDc(currDc, styleObj);
+          
           node.styleObj = styleObj;
         }
       } else {
+        // 继承父节点的样式
+        let parent = node.parent;
+        while (parent) {
+          if (parent.styleObj) {
+            styleObj = Object.assign({}, parent.styleObj, styleObj);
+          }
+          parent = parent.parent;
+        }
+
         const nodeIndex = node.parent?.nodes.indexOf(node);
         // 前一个节点同样存在样式，新建dc
         if (nodeIndex > 0 && (node.parent?.nodes[nodeIndex - 1].styleStr || node.parent?.nodes[nodeIndex - 1].tag === 'strong')) {
           createDc();
-        }        
+        }
+
+        this.setStyleForDc(currDc, styleObj);
       }
 
       const localFontSize = styleObj['font-size'] ? Number(styleObj['font-size'].replace('px', '')) : fontSize;
