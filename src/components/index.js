@@ -5,14 +5,14 @@ import Text from './text.js';
 import ScrollView from './scrollview.js';
 import BitMapText from './bitmaptext.js';
 import Canvas from './canvas.js';
-import RichText from './richtext';
+import Element from './elements.js';
 
 export {
+  Element,
   View,
   Image,
   Text,
   ScrollView,
   BitMapText,
   Canvas,
-  RichText,
 };

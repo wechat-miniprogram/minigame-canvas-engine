@@ -20,9 +20,12 @@ import {
   repaintChildren,
   iterateTree,
   clone,
+  registerComponent,
 } from './common/vd';
 
 import imageManager from './common/imageManager.js';
+
+import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components/index.js';
 
 // 全局事件管道
 export const EE = new Emitter();
@@ -98,7 +101,7 @@ class Layout extends Element {
 
     console.log(`[Layout] v${this.version}`);
   }
-
+  
   // 与老版本兼容
   get debugInfo() {
     let info = debugInfo.log();
@@ -430,6 +433,16 @@ class Layout extends Element {
   cloneNode(element, deep = true) {
     return clone.call(this, element, deep);
   }
+
+  Element = Element
+  View = View
+  Text = Text
+  Image = Image
+  ScrollView = ScrollView
+  BitMapText = BitMapText
+  Canvas = Canvas
+
+  registerComponent = registerComponent
 }
 
 export default new Layout({

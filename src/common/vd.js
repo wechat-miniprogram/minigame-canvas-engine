@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 // components
-import { View, Text, Image, ScrollView, BitMapText, Canvas, RichText } from '../components/index.js';
+import { View, Text, Image, ScrollView, BitMapText, Canvas } from '../components/index.js';
 
 const constructorMap = {
   view: View,
@@ -9,8 +9,11 @@ const constructorMap = {
   scrollview: ScrollView,
   bitmaptext: BitMapText,
   canvas: Canvas,
-  richtext: RichText,
 };
+
+export function registerComponent(name, Constructor) {
+  constructorMap[name] = Constructor;
+}
 
 function isPercent(data) {
   return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
@@ -22,12 +25,17 @@ function convertPercent(data, parentData) {
   }
   const matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
   if (matchData) {
-    return parentData * matchData * 0.01;q
+    return parentData * matchData * 0.01;
   }
 }
 
 export function create(node, style, parent) {
   const Constructor = constructorMap[node.name];
+
+  if (!Constructor) {
+    console.error(`[Layout] 不支持组件 ${node.name}`)
+    return null;
+  }
 
   const children = node.children || [];
 
@@ -111,7 +119,9 @@ export function create(node, style, parent) {
   children.forEach((childNode) => {
     const childElement = create.call(this, childNode, style, args);
 
-    element.add(childElement);
+    if (childElement) {
+      element.add(childElement);
+    }
   });
 
   return element;
