@@ -108,6 +108,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(18);
 /* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(19);
 /* harmony import */ var _common_imageManager_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(5);
+/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(20);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -130,6 +131,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -138,6 +141,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
  // import TWEEN from '@tweenjs/tween.js';
+
 
 
 
@@ -167,6 +171,23 @@ var Layout = /*#__PURE__*/function (_Element) {
       id: 0,
       name: name
     });
+
+    _defineProperty(_assertThisInitialized(_this), "Element", _components_elements_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+    _defineProperty(_assertThisInitialized(_this), "View", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["View"]);
+
+    _defineProperty(_assertThisInitialized(_this), "Text", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["Text"]);
+
+    _defineProperty(_assertThisInitialized(_this), "Image", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["Image"]);
+
+    _defineProperty(_assertThisInitialized(_this), "ScrollView", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["ScrollView"]);
+
+    _defineProperty(_assertThisInitialized(_this), "BitMapText", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["BitMapText"]);
+
+    _defineProperty(_assertThisInitialized(_this), "Canvas", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["Canvas"]);
+
+    _defineProperty(_assertThisInitialized(_this), "registerComponent", _common_vd__WEBPACK_IMPORTED_MODULE_10__["registerComponent"]);
+
     _this.hasEventHandler = false;
     _this.elementTree = null;
     _this.renderContext = null;
@@ -277,7 +298,6 @@ var Layout = /*#__PURE__*/function (_Element) {
 
       var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6___default.a.parse(template, parseConfig, true);
       debugInfo.end('init_xmlParse');
-      console.log(jsonObj);
       var xmlTree = jsonObj.children[0]; // XML树生成渲染树
 
       debugInfo.start('init_xml2Layout');
@@ -3910,6 +3930,7 @@ var Ticker = /*#__PURE__*/function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerComponent", function() { return registerComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderChildren", function() { return renderChildren; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layoutChildren", function() { return layoutChildren; });
@@ -3927,9 +3948,11 @@ var constructorMap = {
   image: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"],
   scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["ScrollView"],
   bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["BitMapText"],
-  canvas: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Canvas"],
-  richtext: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["RichText"]
+  canvas: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Canvas"]
 };
+function registerComponent(name, Constructor) {
+  constructorMap[name] = Constructor;
+}
 
 function isPercent(data) {
   return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
@@ -3944,7 +3967,6 @@ function convertPercent(data, parentData) {
 
   if (matchData) {
     return parentData * matchData * 0.01;
-    q;
   }
 }
 
@@ -3952,6 +3974,12 @@ function create(node, style, parent) {
   var _this = this;
 
   var Constructor = constructorMap[node.name];
+
+  if (!Constructor) {
+    console.error("[Layout] \u4E0D\u652F\u6301\u7EC4\u4EF6 ".concat(node.name));
+    return null;
+  }
+
   var children = node.children || [];
   var attr = node.attr || {};
   var dataset = {};
@@ -4028,7 +4056,10 @@ function create(node, style, parent) {
   element.tagName = node.name;
   children.forEach(function (childNode) {
     var childElement = create.call(_this, childNode, style, args);
-    element.add(childElement);
+
+    if (childElement) {
+      element.add(childElement);
+    }
   });
   return element;
 }
@@ -4157,8 +4188,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _canvas_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(29);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Canvas", function() { return _canvas_js__WEBPACK_IMPORTED_MODULE_5__["default"]; });
 
-/* harmony import */ var _richtext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(30);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RichText", function() { return _richtext__WEBPACK_IMPORTED_MODULE_6__["default"]; });
+/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Element", function() { return _elements_js__WEBPACK_IMPORTED_MODULE_6__["default"]; });
 
 
 
@@ -6811,813 +6842,6 @@ var Canvas = /*#__PURE__*/function (_Element) {
 }(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
-
-/***/ }),
-/* 30 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCharWidth", function() { return getCharWidth; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RichText; });
-/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(33);
-/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var parser = __webpack_require__(31);
-
-
-var presetChars = _config__WEBPACK_IMPORTED_MODULE_1__["default"].presetChars;
-var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
-
-var canvas = Object(_common_util__WEBPACK_IMPORTED_MODULE_2__["createCanvas"])();
-var ctx = canvas.getContext('2d');
-/**
- * @description 获取字符宽度
- * @param char
- * @param fontSize
- */
-
-var getCharWidth = function getCharWidth(_char, fontSize) {
-  var width = 0; // @ts-ignore
-  // width = presetChars[char] > 0 ? presetChars[char] : ctx.measureText(char, fontSize).width;
-  // width = presetChars[char] > 0 ? presetChars[char] : 10;
-
-  width = ctx.measureText(_char, fontSize).width;
-  return width * fontSize / 10; // return ctx.measureText(char, fontSize).width;
-};
-
-function iterateTree(element, callback) {
-  if (callback) {
-    callback(element);
-  }
-
-  if (element.nodes) {
-    element.nodes.forEach(function (child) {
-      iterateTree(child, callback);
-    });
-  }
-}
-
-var RichText = /*#__PURE__*/function (_Element) {
-  _inherits(RichText, _Element);
-
-  var _super = _createSuper(RichText);
-
-  function RichText(opts) {
-    var _this;
-
-    _classCallCheck(this, RichText);
-
-    var _opts$style = opts.style,
-        style = _opts$style === void 0 ? {} : _opts$style,
-        _opts$idName = opts.idName,
-        idName = _opts$idName === void 0 ? '' : _opts$idName,
-        _opts$className = opts.className,
-        className = _opts$className === void 0 ? '' : _opts$className,
-        dataset = opts.dataset;
-    _this = _super.call(this, {
-      idName: idName,
-      className: className,
-      dataset: dataset,
-      style: style
-    });
-    _this.innerText = '';
-    _this.jsonData = null;
-    return _this;
-  }
-
-  _createClass(RichText, [{
-    key: "text",
-    get: function get() {
-      return this.innerText;
-    },
-    set: function set(value) {
-      if (value === this.innerText) {
-        return;
-      }
-
-      this.innerText = value;
-      var jsonData = parser.html2json(this.innerText);
-      this.jsonData = jsonData;
-      this.root.emit('repaint');
-      console.log(jsonData);
-      console.log('[Layout] set text', value);
-      var start = new Date();
-      this.buildDrawCallFromJsonData(jsonData);
-      console.log('buildDrawCallFromJsonData', new Date() - start);
-    }
-  }, {
-    key: "createDc",
-    value: function createDc() {
-      return {
-        filleStyle: null,
-        fontSize: null,
-        textAlign: null,
-        text: ''
-      };
-    }
-  }, {
-    key: "buildDrawCallFromJsonData",
-    value: function buildDrawCallFromJsonData(jsonData) {
-      var dcs = [];
-      var lines = 0;
-      var linesData = [];
-      var yStart = 0;
-      var lineWidth = 0;
-      linesData[lines] = '';
-      var currDc = this.createDc();
-      dcs.push(currDc);
-      var _this$style = this.style,
-          width = _this$style.width,
-          _this$style$lineHeigh = _this$style.lineHeight,
-          lineHeight = _this$style$lineHeigh === void 0 ? 12 : _this$style$lineHeigh,
-          _this$style$fontSize = _this$style.fontSize,
-          fontSize = _this$style$fontSize === void 0 ? 12 : _this$style$fontSize;
-      console.log(width, lineHeight, fontSize);
-      jsonData.nodes.forEach(function (nodeTree) {
-        iterateTree(nodeTree, function (node) {
-          // console.log(node);
-          if (node.node === 'element') {
-            console.log(node);
-          } // 文本类型
-
-
-          if (node.text) {
-            for (var i = 0; i < node.text.length; i++) {
-              var _char2 = node.text[i];
-              var charWidth = getCharWidth(_char2, fontSize); // 触发了换行逻辑
-
-              if (lineWidth + charWidth > width) {
-                lines += 1;
-                linesData[lines] = '';
-                lineWidth = 0;
-              } else {
-                linesData[lines] += _char2;
-                lineWidth += charWidth;
-              }
-            }
-          }
-        }); // tagType： block、inline
-
-        var tagType = nodeTree.tagType; // block类型新起一行
-
-        if (tagType === 'block') {
-          lines += 1;
-          linesData[lines] = '';
-          lineWidth = 0;
-        }
-      });
-      this.linesData = linesData;
-      this.style.height = this.linesData.length * lineHeight;
-      console.log('linesData', linesData, this.style.height);
-    }
-  }, {
-    key: "repaint",
-    value: function repaint() {
-      this.render();
-    }
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.root = null;
-    }
-  }, {
-    key: "insert",
-    value: function insert(ctx, needRender) {
-      this.ctx = ctx;
-      this.toCanvasData();
-
-      if (needRender) {
-        this.render();
-      }
-    }
-  }, {
-    key: "toCanvasData",
-    value: function toCanvasData() {
-      var style = this.style || {};
-      this.fontSize = style.fontSize || 12;
-      this.textBaseline = 'top';
-      this.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize || 12, "px ").concat(DEFAULT_FONT_FAMILY);
-      this.textAlign = style.textAlign || 'left';
-      this.fillStyle = style.color || '#000';
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var ctx = this.ctx; // this.toCanvasData();
-
-      ctx.save();
-      var box = this.layoutBox;
-      var style = this.style;
-      ctx.textBaseline = this.textBaseline;
-      ctx.font = this.font;
-      ctx.textAlign = this.textAlign;
-      var drawX = box.absoluteX;
-      var drawY = box.absoluteY;
-
-      var _this$renderBorder = this.renderBorder(ctx),
-          needClip = _this$renderBorder.needClip,
-          needStroke = _this$renderBorder.needStroke;
-
-      if (needClip) {
-        ctx.clip();
-      }
-
-      if (style.backgroundColor) {
-        ctx.fillStyle = style.backgroundColor;
-        ctx.fillRect(drawX, drawY, box.width, box.height);
-      }
-
-      if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
-      }
-
-      if (needStroke) {
-        ctx.stroke();
-      }
-
-      if (this.linesData) {
-        var start = new Date();
-        var _this$style2 = this.style,
-            width = _this$style2.width,
-            _this$style2$lineHeig = _this$style2.lineHeight,
-            lineHeight = _this$style2$lineHeig === void 0 ? 12 : _this$style2$lineHeig,
-            _this$style2$fontSize = _this$style2.fontSize,
-            fontSize = _this$style2$fontSize === void 0 ? 12 : _this$style2$fontSize;
-        this.linesData.forEach(function (line, index) {
-          ctx.fillText(line, drawX, drawY + index * lineHeight);
-        }); // console.log('render', new Date() - start)
-      }
-
-      ctx.restore();
-    }
-  }]);
-
-  return RichText;
-}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable */
-var __placeImgeUrlHttps = 'https';
-var __emojisReg = '';
-var __emojisBaseSrc = '';
-var __emojis = {};
-
-var HTMLParser = __webpack_require__(32); // Block Elements - HTML 5
-
-
-var block = makeMap('br,a,code,address,article,applet,aside,audio,blockquote,button,canvas,center,dd,del,dir,div,dl,dt,fieldset,figcaption,figure,footer,form,frameset,h1,h2,h3,h4,h5,h6,header,hgroup,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,output,p,pre,section,script,table,tbody,td,tfoot,th,thead,tr,ul,video'); // Inline Elements - HTML 5
-
-var inline = makeMap('abbr,acronym,applet,b,basefont,bdo,big,button,cite,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var'); // Elements that you can, intentionally, leave open
-// (and which close themselves)
-
-var closeSelf = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr');
-
-function makeMap(str) {
-  var obj = {};
-  var items = str.split(',');
-
-  for (var i = 0; i < items.length; i++) {
-    obj[items[i]] = true;
-  }
-
-  return obj;
-}
-
-function q(v) {
-  return "\"".concat(v, "\"");
-}
-
-function removeDOCTYPE(html) {
-  return html.replace(/<\?xml.*\?>\n/, '').replace(/<.*!doctype.*\>\n/, '').replace(/<.*!DOCTYPE.*\>\n/, '');
-}
-
-function trimHtml(html) {
-  return html.replace(/\r?\n+/g, '').replace(/<!--.*?-->/ig, '').replace(/\/\*.*?\*\//ig, '').replace(/[ ]+</ig, '<');
-}
-
-function html2json(html) {
-  // 处理字符串
-  html = removeDOCTYPE(html);
-  html = trimHtml(html);
-  html = strDiscode(html); // 生成node节点
-
-  var bufArray = [];
-  var results = {
-    node: '',
-    nodes: [],
-    images: [],
-    imageUrls: []
-  };
-  var index = 0;
-  HTMLParser(html, {
-    start: function start(tag, attrs, unary) {
-      // debug(tag, attrs, unary);
-      // node for this element
-      var node = {
-        node: 'element',
-        tag: tag
-      };
-
-      if (bufArray.length === 0) {
-        node.index = index.toString();
-        index += 1;
-      } else {
-        var parent = bufArray[0];
-
-        if (parent.nodes === undefined) {
-          parent.nodes = [];
-        }
-
-        node.index = "".concat(parent.index, ".").concat(parent.nodes.length);
-      }
-
-      if (block[tag]) {
-        node.tagType = 'block';
-      } else if (inline[tag]) {
-        node.tagType = 'inline';
-      } else if (closeSelf[tag]) {
-        node.tagType = 'closeSelf';
-      }
-
-      if (attrs.length !== 0) {
-        node.attr = attrs.reduce(function (pre, attr) {
-          var name = attr.name;
-          var value = attr.value;
-
-          if (name == 'class') {
-            console.dir(value); //  value = value.join("")
-
-            node.classStr = value;
-          } // has multi attibutes
-          // make it array of attribute
-
-
-          if (name == 'style') {
-            console.dir(value); //  value = value.join("")
-
-            node.styleStr = value;
-          }
-
-          if (value.match(/ /)) {
-            value = value.split(' ');
-          } // if attr already exists
-          // merge it
-
-
-          if (pre[name]) {
-            if (Array.isArray(pre[name])) {
-              // already array, push to last
-              pre[name].push(value);
-            } else {
-              // single value, make it array
-              pre[name] = [pre[name], value];
-            }
-          } else {
-            // not exist, put it
-            pre[name] = value;
-          }
-
-          return pre;
-        }, {});
-      }
-
-      if (unary) {
-        // if this tag doesn't have end tag
-        // like <img src="hoge.png"/>
-        // add to parents
-        var parent = bufArray[0] || results;
-
-        if (parent.nodes === undefined) {
-          parent.nodes = [];
-        }
-
-        parent.nodes.push(node);
-      } else {
-        bufArray.unshift(node);
-      }
-    },
-    end: function end(tag) {
-      // debug(tag);
-      // merge into parent tag
-      var node = bufArray.shift();
-      if (node.tag !== tag) console.error('invalid state: mismatch end tag'); // 当有缓存source资源时于于video补上src资源
-
-      if (node.tag === 'video' && results.source) {
-        node.attr.src = results.source;
-        delete results.source;
-      }
-
-      if (bufArray.length === 0) {
-        results.nodes.push(node);
-      } else {
-        var parent = bufArray[0];
-
-        if (parent.nodes === undefined) {
-          parent.nodes = [];
-        }
-
-        parent.nodes.push(node);
-      }
-    },
-    chars: function chars(text) {
-      // debug(text);
-      var node = {
-        node: 'text',
-        text: text // textArray: transEmojiStr(text),
-
-      };
-
-      if (bufArray.length === 0) {
-        node.index = index.toString();
-        index += 1;
-        results.nodes.push(node);
-      } else {
-        var parent = bufArray[0];
-
-        if (parent.nodes === undefined) {
-          parent.nodes = [];
-        }
-
-        node.index = "".concat(parent.index, ".").concat(parent.nodes.length);
-        parent.nodes.push(node);
-      }
-    },
-    comment: function comment(text) {}
-  });
-  return results;
-}
-
-function strcharacterDiscode(str) {
-  str = str.replace(/&nbsp;/g, ' ');
-  str = str.replace(/&quot;/g, "'");
-  str = str.replace(/&amp;/g, '&');
-  str = str.replace(/&lt;/g, '<');
-  str = str.replace(/&gt;/g, '>');
-  str = str.replace(/&#8226;/g, '•');
-  return str;
-}
-
-function strMoreDiscode(str) {
-  str = str.replace(/\r\n/g, '');
-  str = str.replace(/\n/g, '');
-  str = str.replace(/code/g, 'wxxxcode-style');
-  return str;
-}
-
-function strDiscode(str) {
-  str = strcharacterDiscode(str);
-  str = strMoreDiscode(str);
-  return str;
-}
-
-function transEmojiStr(str) {
-  var emojiObjs = []; // 如果正则表达式为空
-
-  if (__emojisReg.length == 0 || !__emojis) {
-    var emojiObj = {};
-    emojiObj.node = 'text';
-    emojiObj.text = str;
-    array = [emojiObj];
-    return array;
-  } // 这个地方需要调整
-
-
-  str = str.replace(/\[([^\[\]]+)\]/g, ':$1:');
-  var eReg = new RegExp('[:]');
-  var array = str.split(eReg);
-
-  for (var i = 0; i < array.length; i++) {
-    var ele = array[i];
-    var emojiObj = {};
-
-    if (__emojis[ele]) {
-      emojiObj.node = 'element';
-      emojiObj.tag = 'emoji';
-      emojiObj.text = __emojis[ele];
-      emojiObj.baseSrc = __emojisBaseSrc;
-    } else {
-      emojiObj.node = 'text';
-      emojiObj.text = ele;
-    }
-
-    emojiObjs.push(emojiObj);
-  }
-
-  return emojiObjs;
-}
-
-module.exports = {
-  html2json: html2json
-};
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports) {
-
-/* eslint-disable */
-// Regular Expressions for parsing tags and attributes
-var startTag = /^<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/;
-var endTag = /^<\/([-A-Za-z0-9_]+)[^>]*>/;
-var attr = /([a-zA-Z_:][-a-zA-Z0-9_:.]*)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g; // Empty Elements - HTML 5
-
-var empty = makeMap('area,base,basefont,br,col,frame,hr,img,input,link,meta,param,embed,command,keygen,source,track,wbr'); // Block Elements - HTML 5
-
-var block = makeMap('a,address,code,article,applet,aside,audio,blockquote,button,canvas,center,dd,del,dir,div,dl,dt,fieldset,figcaption,figure,footer,form,frameset,h1,h2,h3,h4,h5,h6,header,hgroup,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,output,p,pre,section,script,table,tbody,td,tfoot,th,thead,tr,ul,video'); // Inline Elements - HTML 5
-
-var inline = makeMap('abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var'); // Elements that you can, intentionally, leave open
-// (and which close themselves)
-
-var closeSelf = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr'); // Attributes that have their values filled in disabled="disabled"
-
-var fillAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected'); // Special Elements (can contain anything)
-
-var special = makeMap('wxxxcode-style,script,style,view,scroll-view,block');
-
-function HTMLParser(html, handler) {
-  var index;
-  var chars;
-  var match;
-  var stack = [];
-  var last = html;
-
-  stack.last = function () {
-    return this[this.length - 1];
-  };
-
-  while (html) {
-    chars = true; // Make sure we're not in a script or style element
-
-    if (!stack.last() || !special[stack.last()]) {
-      // Comment
-      if (html.indexOf('<!--') == 0) {
-        index = html.indexOf('-->');
-
-        if (index >= 0) {
-          if (handler.comment) {
-            handler.comment(html.substring(4, index));
-          }
-
-          html = html.substring(index + 3);
-          chars = false;
-        } // end tag
-
-      } else if (html.indexOf('</') == 0) {
-        match = html.match(endTag);
-
-        if (match) {
-          html = html.substring(match[0].length);
-          match[0].replace(endTag, parseEndTag);
-          chars = false;
-        } // start tag
-
-      } else if (html.indexOf('<') == 0) {
-        match = html.match(startTag);
-
-        if (match) {
-          html = html.substring(match[0].length);
-          match[0].replace(startTag, parseStartTag);
-          chars = false;
-        }
-      }
-
-      if (chars) {
-        index = html.indexOf('<');
-        var text = '';
-
-        while (index === 0) {
-          text += '<';
-          html = html.substring(1);
-          index = html.indexOf('<');
-        }
-
-        text += index < 0 ? html : html.substring(0, index);
-        html = index < 0 ? '' : html.substring(index);
-
-        if (handler.chars) {
-          handler.chars(text);
-        }
-      }
-    } else {
-      html = html.replace(new RegExp("([\\s\\S]*?)</".concat(stack.last(), "[^>]*>")), function (all, text) {
-        text = text.replace(/<!--([\s\S]*?)-->|<!\[CDATA\[([\s\S]*?)]]>/g, '$1$2');
-
-        if (handler.chars) {
-          handler.chars(text);
-        }
-
-        return '';
-      });
-      parseEndTag('', stack.last());
-    }
-
-    if (html == last) {
-      throw "Parse Error: ".concat(html);
-    }
-
-    last = html;
-  } // Clean up any remaining tags
-
-
-  parseEndTag();
-
-  function parseStartTag(tag, tagName, rest, unary) {
-    tagName = tagName.toLowerCase();
-
-    if (block[tagName]) {
-      while (stack.last() && inline[stack.last()]) {
-        parseEndTag('', stack.last());
-      }
-    }
-
-    if (closeSelf[tagName] && stack.last() == tagName) {
-      parseEndTag('', tagName);
-    }
-
-    unary = empty[tagName] || !!unary;
-
-    if (!unary) {
-      stack.push(tagName);
-    }
-
-    if (handler.start) {
-      var attrs = [];
-      rest.replace(attr, function (match, name) {
-        var value = arguments[2] ? arguments[2] : arguments[3] ? arguments[3] : arguments[4] ? arguments[4] : fillAttrs[name] ? name : '';
-        attrs.push({
-          name: name,
-          value: value,
-          escaped: value.replace(/(^|[^\\])"/g, '$1\\\"') // "
-
-        });
-      });
-
-      if (handler.start) {
-        handler.start(tagName, attrs, unary);
-      }
-    }
-  }
-
-  function parseEndTag(tag, tagName) {
-    // If no tag name is provided, clean shop
-    if (!tagName) {
-      var pos = 0;
-    } // Find the closest opened tag of the same type
-    else {
-      tagName = tagName.toLowerCase();
-
-      for (var pos = stack.length - 1; pos >= 0; pos--) {
-        if (stack[pos] == tagName) {
-          break;
-        }
-      }
-    }
-
-    if (pos >= 0) {
-      // Close all the open elements, up the stack
-      for (var i = stack.length - 1; i >= pos; i--) {
-        if (handler.end) {
-          handler.end(stack[i]);
-        }
-      } // Remove the open elements from the stack
-
-
-      stack.length = pos;
-    }
-  }
-}
-
-function makeMap(str) {
-  var obj = {};
-  var items = str.split(',');
-
-  for (var i = 0; i < items.length; i++) {
-    obj[items[i]] = true;
-  }
-
-  return obj;
-}
-
-module.exports = HTMLParser;
-
-/***/ }),
-/* 33 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ({
-  /**
-   * 小游戏的标题和简介只允许中文、数字和英文字母等常见字符
-   * 在现有的框架设计下面，给定一行文案是没法确定他最终的尺寸的，因为cover-view跟随的是系统字体，不能自定义设置。
-   * 因此对于超长字符串截断处理，就要预先判断字符串的宽度，这里肯定不能用measureText这么费性能的操作，换一个思路，预先将一些非中文
-   * 常见字符最终会占据的宽度通过measureText跑一份配置存起来，这样给定一个字符串就可以大概计算宽度，及时截断。
-   */
-  presetChars: {
-    0: 5.5615234375,
-    1: 5.5615234375,
-    2: 5.5615234375,
-    3: 5.5615234375,
-    4: 5.5615234375,
-    5: 5.5615234375,
-    6: 5.5615234375,
-    7: 5.5615234375,
-    8: 5.5615234375,
-    9: 5.5615234375,
-    '%': 8.8916015625,
-    '(': 3.330078125,
-    ')': 3.330078125,
-    '-': 3.330078125,
-    '.': 2.7783203125,
-    '/': 2.7783203125,
-    A: 6.669921875,
-    B: 6.669921875,
-    C: 7.2216796875,
-    D: 7.2216796875,
-    E: 6.669921875,
-    F: 6.1083984375,
-    G: 7.7783203125,
-    H: 7.2216796875,
-    I: 2.7783203125,
-    J: 5,
-    K: 6.669921875,
-    L: 5.5615234375,
-    M: 8.330078125,
-    N: 7.2216796875,
-    O: 7.7783203125,
-    P: 6.669921875,
-    Q: 7.7783203125,
-    R: 7.2216796875,
-    S: 6.669921875,
-    T: 6.1083984375,
-    U: 7.2216796875,
-    V: 6.669921875,
-    W: 9.4384765625,
-    X: 6.669921875,
-    Y: 6.669921875,
-    Z: 6.1083984375,
-    a: 5.5615234375,
-    b: 5.5615234375,
-    c: 5,
-    d: 5.5615234375,
-    e: 5.5615234375,
-    f: 2.7783203125,
-    g: 5.5615234375,
-    h: 5.5615234375,
-    i: 2.2216796875,
-    j: 2.2216796875,
-    k: 5,
-    l: 2.2216796875,
-    m: 8.330078125,
-    n: 5.5615234375,
-    o: 5.5615234375,
-    p: 5.5615234375,
-    q: 5.5615234375,
-    r: 3.330078125,
-    s: 5,
-    t: 2.7783203125,
-    u: 5.5615234375,
-    v: 5,
-    w: 7.2216796875,
-    x: 5,
-    y: 5,
-    z: 5,
-    '|': 2.59765625
-  },
-  // 字体集
-  font: {
-    iOSFont: 'PingFangSC-Regular, SF Pro Display, SF Pro Text'
-  }
-});
 
 /***/ })
 /******/ ]);
