@@ -1,6 +1,6 @@
 
-import Element from '../../../src/components/elements'
-const parser = require('./htmlparser/html2json')
+import Element from '../../../src/components/elements';
+const parser = require('./htmlparser/html2json');
 const DEFAULT_FONT_FAMILY = 'sans-serif';
 
 function createCanvas() {
@@ -22,10 +22,10 @@ let ctx;
 export const getCharWidth = (char, fontSize) => {
   if (!ctx) {
     const canvas = createCanvas();
-    ctx = canvas.getContext('2d')
+    ctx = canvas.getContext('2d');
   }
 
-  let width = ctx.measureText(char).width;
+  const { width } = ctx.measureText(char);
 
   return (width * fontSize) / 10;
 };
@@ -87,6 +87,10 @@ export default class RichText extends Element {
       currDc.fontWeight = styleObj['font-weight'];
     }
 
+    if (styleObj['font-style']) {
+      currDc.fontStyle = styleObj['font-style'];
+    }
+
     if (styleObj.color) {
       currDc.filleStyle = styleObj.color;
     }
@@ -94,7 +98,6 @@ export default class RichText extends Element {
     if (styleObj['font-size']) {
       currDc.fontSize = styleObj['font-size'].replace('px', '');
     }
-
   }
 
   buildDrawCallFromJsonData(jsonData) {
@@ -112,12 +115,13 @@ export default class RichText extends Element {
     function createDc() {
       let dc = {
         filleStyle: null,
+        fontStyle: null,
         fontSize: null,
         textAlign: null,
         text: '',
         x: 0,
         y: 0,
-      }
+      };
 
       dcs.push(dc);
 
@@ -173,7 +177,7 @@ export default class RichText extends Element {
           return res;
         }, {});
 
-        if (styleObj.color || styleObj['font-weight'] || styleObj['font-size']) {
+        if (styleObj) {
           createDc();
 
           // 继承父节点的样式
@@ -239,7 +243,6 @@ export default class RichText extends Element {
     });
 
     this.dcs = dcs;
-
     this.style.height = lines * lineHeight;
   }
 
@@ -306,26 +309,25 @@ export default class RichText extends Element {
     }
 
     if (this.dcs && this.dcs.length) {
-      let start = new Date()
-      const { width, lineHeight = 12, fontSize = 12, } = this.style;
+      const { width, lineHeight = 12, fontSize = 12 } = this.style;
 
 
-      this.dcs.forEach((dc, index) => {
+      this.dcs.forEach((dc) => {
         if (dc.text) {
-          if (dc.fontWeight || dc.fontSize || dc.filleStyle) {
+          if (dc.fontWeight || dc.fontSize || dc.filleStyle || dc.fontStyle) {
             ctx.save();
             if (dc.filleStyle) {
-              ctx.fillStyle = dc.filleStyle
+              ctx.fillStyle = dc.filleStyle;
             }
 
-            ctx.font = `${dc.fontWeight || ''} ${dc.fontSize || fontSize}px ${DEFAULT_FONT_FAMILY}`;
+            ctx.font = `${dc.fontStyle || ''} ${dc.fontWeight || ''} ${dc.fontSize || fontSize}px ${DEFAULT_FONT_FAMILY}`;
             ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
             ctx.restore();
           } else {
             ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
           }
         }
-      })
+      });
     }
 
     ctx.restore();

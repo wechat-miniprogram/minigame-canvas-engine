@@ -94,15 +94,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCharWidth", function() { return getCharWidth; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RichText; });
 /* harmony import */ var _src_components_elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
@@ -144,7 +144,9 @@ var getCharWidth = function getCharWidth(_char, fontSize) {
     ctx = canvas.getContext('2d');
   }
 
-  var width = ctx.measureText(_char).width;
+  var _ctx$measureText = ctx.measureText(_char),
+      width = _ctx$measureText.width;
+
   return width * fontSize / 10;
 };
 
@@ -212,6 +214,10 @@ var RichText = /*#__PURE__*/function (_Element) {
         currDc.fontWeight = styleObj['font-weight'];
       }
 
+      if (styleObj['font-style']) {
+        currDc.fontStyle = styleObj['font-style'];
+      }
+
       if (styleObj.color) {
         currDc.filleStyle = styleObj.color;
       }
@@ -242,6 +248,7 @@ var RichText = /*#__PURE__*/function (_Element) {
       function createDc() {
         var dc = {
           filleStyle: null,
+          fontStyle: null,
           fontSize: null,
           textAlign: null,
           text: '',
@@ -301,7 +308,7 @@ var RichText = /*#__PURE__*/function (_Element) {
             return res;
           }, {});
 
-          if (styleObj.color || styleObj['font-weight'] || styleObj['font-size']) {
+          if (styleObj) {
             createDc(); // 继承父节点的样式
 
             var parent = node.parent;
@@ -438,23 +445,22 @@ var RichText = /*#__PURE__*/function (_Element) {
       }
 
       if (this.dcs && this.dcs.length) {
-        var start = new Date();
         var _this$style2 = this.style,
             width = _this$style2.width,
             _this$style2$lineHeig = _this$style2.lineHeight,
             lineHeight = _this$style2$lineHeig === void 0 ? 12 : _this$style2$lineHeig,
             _this$style2$fontSize = _this$style2.fontSize,
             fontSize = _this$style2$fontSize === void 0 ? 12 : _this$style2$fontSize;
-        this.dcs.forEach(function (dc, index) {
+        this.dcs.forEach(function (dc) {
           if (dc.text) {
-            if (dc.fontWeight || dc.fontSize || dc.filleStyle) {
+            if (dc.fontWeight || dc.fontSize || dc.filleStyle || dc.fontStyle) {
               ctx.save();
 
               if (dc.filleStyle) {
                 ctx.fillStyle = dc.filleStyle;
               }
 
-              ctx.font = "".concat(dc.fontWeight || '', " ").concat(dc.fontSize || fontSize, "px ").concat(DEFAULT_FONT_FAMILY);
+              ctx.font = "".concat(dc.fontStyle || '', " ").concat(dc.fontWeight || '', " ").concat(dc.fontSize || fontSize, "px ").concat(DEFAULT_FONT_FAMILY);
               ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
               ctx.restore();
             } else {
@@ -489,7 +495,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 /* eslint-disable no-param-reassign */
 
@@ -951,7 +957,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -1022,7 +1028,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 
 
@@ -1115,7 +1121,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 var pools = [];
 
