@@ -1,6 +1,7 @@
 {
   "deviceOrientation": "portrait",
   "openDataContext": "sub",
+  "iOSHighPerformance": true,
   "plugins": {
     "Layout": {
       "version": "dev",
