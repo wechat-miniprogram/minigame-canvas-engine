@@ -29,7 +29,7 @@ module.exports = {
   },
   plugins: [
     new BundleAnalyzerPlugin({
-      openAnalyzer: false,
+      openAnalyzer: true,
     }),
   ],
   mode: 'none',

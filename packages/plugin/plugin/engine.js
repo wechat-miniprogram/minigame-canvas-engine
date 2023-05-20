@@ -4883,8 +4883,8 @@ var ScrollView = /*#__PURE__*/function (_View) {
 
       var endX = startX + width;
       var endY = startY + height; // 清理滚动画布和主屏画布
-
-      this.clear(); // ScrollView 作为容器本身的渲染
+      // this.clear();
+      // ScrollView 作为容器本身的渲染
 
       this.render();
       /**
@@ -4921,8 +4921,9 @@ var ScrollView = /*#__PURE__*/function (_View) {
             ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
             ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
           }
-        });
-        this.scrollRender(left, top);
+        }); // this.scrollRender(left, top);
+
+        this.root.emit('repaint');
 
         if (this.currentEvent) {
           this.emit('scroll', this.currentEvent);
