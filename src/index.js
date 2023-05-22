@@ -62,7 +62,7 @@ class Layout extends Element {
     this.touchEnd = this.eventHandler('touchend').bind(this);
     this.touchCancel = this.eventHandler('touchcancel').bind(this);
 
-    this.version = '1.0.0';
+    this.version = '1.0.1';
     this.eleCount = 0;
 
     this.state = STATE.UNINIT;

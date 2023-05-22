@@ -58,7 +58,7 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | textAlign | left, center, right | left |
 | verticalAlign | top, middle, bottom | top |
 | color | string | #000000 |
-| backgroundColor | string | transparent |
+| backgroundColor | string | | 背景的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色 |
 | textOverflow | ellipsis, clip | 默认为空，出于性能考虑，只有显式指定 textOverflow 属性的时候才会对文字进行截断处理 |
 | letterSpacing | number | 默认值为 0，只对 bitmaptext 标签生效 |
 
@@ -68,6 +68,7 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | 属性 | 类型 | 默认值 | 说明 |
 |---------------|--------|--------|--------------------------|
 | backgroundColor | string | | 背景的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色 |
+| backgroundImage | string | | 背景图，格式为 url(https:/www.foo.com/xxx.png)  |
 
 ### 边框
 

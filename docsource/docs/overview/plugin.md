@@ -17,7 +17,7 @@
   "openDataContext": "sub",
   "plugins": {
     "Layout": {
-      "version": "0.0.14",
+      "version": "1.0.1",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"openDataContext"}]
     }
@@ -45,7 +45,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "0.0.14",
+      "version": "1.0.1",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}]
     }
@@ -68,7 +68,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "0.0.14",
+      "version": "1.0.1",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}, {"type":"openDataContext"}]
     }
@@ -79,5 +79,7 @@ const Layout = requirePlugin('Layout').default;
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
+| 1.0.1        | 修复style.backgroundImage调用不生效问题 |
+| 1.0.0        | 修复一些渲染问题；支持缓动特性；支持canvas组件 |
 | 0.0.14        | 起始版本，之前的版本小修小补一些问题，不建议引用 |
 

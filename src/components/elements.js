@@ -121,7 +121,32 @@ export default class Element {
     }
 
     if (typeof style.backgroundImage === 'string') {
-      const list = style.backgroundImage.match(isValidUrlPropReg);
+      // const list = style.backgroundImage.match(isValidUrlPropReg);
+      // if (list) {
+      //   const url = list[1].replace(/('|")/g, '');
+      //   imageManager.loadImage(url, (img) => {
+      //     if (!this.isDestroyed) {
+      //       this.backgroundImage = img;
+      //       // 当图片加载完成，实例可能已经被销毁了
+      //       this.root && this.root.emit('repaint');
+      //     }
+      //   });
+      // } else {
+      //   console.error(`[Layout]: ${style.backgroundImage} is not a valid backgroundImage`);
+      // }
+      this.backgroundImageSetHandler(style.backgroundImage);
+    }
+
+    this.originStyle = style;
+    this.style = style;
+    this.rect = null;
+    this.viewportRect = null;
+    this.classNameList = null;
+  }
+
+  backgroundImageSetHandler(backgroundImage) {
+    if (typeof backgroundImage === 'string') {
+      const list = backgroundImage.match(isValidUrlPropReg);
       if (list) {
         const url = list[1].replace(/('|")/g, '');
         imageManager.loadImage(url, (img) => {
@@ -132,15 +157,9 @@ export default class Element {
           }
         });
       } else {
-        console.error(`[Layout]: ${style.backgroundImage} is not a valid backgroundImage`);
+        console.error(`[Layout]: ${backgroundImage} is not a valid backgroundImage`);
       }
     }
-
-    this.originStyle = style;
-    this.style = style;
-    this.rect = null;
-    this.viewportRect = null;
-    this.classNameList = null;
   }
 
   /**
@@ -159,15 +178,17 @@ export default class Element {
           return Reflect.get(target, prop, receiver);
         },
         set(target, prop, val, receiver) {
-          if (reflowAffectedStyles.indexOf(prop)) {
+          if (reflowAffectedStyles.indexOf(prop) > -1) {
             ele.isDirty = true;
             let { parent } = ele;
             while (parent) {
               parent.isDirty = true;
               parent = parent.parent;
             }
-          } else if (repaintAffectedStyles.indexOf(prop)) {
+          } else if (repaintAffectedStyles.indexOf(prop) > -1) {
             ele.root.emit('repaint');
+          } else if (prop === 'backgroundImage') {
+            ele.backgroundImageSetHandler(val);
           }
           return Reflect.set(target, prop, val, receiver);
         },
@@ -181,15 +202,17 @@ export default class Element {
           get: () => innerStyle[key],
           set: (value) => {
             innerStyle[key] = value;
-            if (reflowAffectedStyles.indexOf(key)) {
+            if (reflowAffectedStyles.indexOf(key) > -1) {
               this.isDirty = true;
               let { parent } = this;
               while (parent) {
                 parent.isDirty = true;
                 parent = parent.parent;
               }
-            } else if (repaintAffectedStyles.indexOf(key)) {
+            } else if (repaintAffectedStyles.indexOf(key) > -1) {
               this.root.emit('repaint');
+            } else if (key === 'backgroundImage') {
+              this.backgroundImageSetHandler(value);
             }
           },
         });
