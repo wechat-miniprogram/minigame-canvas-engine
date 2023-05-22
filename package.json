@@ -37,6 +37,7 @@
     "should-sinon": "0.0.6",
     "sinon": "^7.5.0",
     "typescript": "^5.0.4",
+    "vuepress": "^1.9.9",
     "webpack": "^5.83.1",
     "webpack-bundle-analyzer": "^4.8.0",
     "webpack-cli": "^5.1.1",

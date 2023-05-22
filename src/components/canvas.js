@@ -28,7 +28,7 @@ export default class Canvas extends Element {
     if (autoCreateCanvas) {
       this.canvasInstance = createCanvas();
       this.canvasInstance.width = Number(width);
-      this.canvasInstance.height = Number(height);  
+      this.canvasInstance.height = Number(height);
     }
   }
 

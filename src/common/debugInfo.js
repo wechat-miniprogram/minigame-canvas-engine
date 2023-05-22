@@ -31,7 +31,6 @@ export default class DebugInfo {
   }
 
   log(needInner = false) {
-    console.log(this.info)
     let logInfo = 'Layout debug info: \n';
     logInfo += Object.keys(this.info).reduce((sum, curr) => {
       if (this.info[curr].isInner && !needInner) {

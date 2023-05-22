@@ -101,7 +101,7 @@ class Layout extends Element {
 
     console.log(`[Layout] v${this.version}`);
   }
-  
+
   // 与老版本兼容
   get debugInfo() {
     let info = debugInfo.log();
@@ -434,15 +434,15 @@ class Layout extends Element {
     return clone.call(this, element, deep);
   }
 
-  Element = Element
-  View = View
-  Text = Text
-  Image = Image
-  ScrollView = ScrollView
-  BitMapText = BitMapText
-  Canvas = Canvas
+  Element = Element;
+  View = View;
+  Text = Text;
+  Image = Image;
+  ScrollView = ScrollView;
+  BitMapText = BitMapText;
+  Canvas = Canvas;
 
-  registerComponent = registerComponent
+  registerComponent = registerComponent;
 }
 
 export default new Layout({

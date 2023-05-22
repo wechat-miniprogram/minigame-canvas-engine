@@ -33,7 +33,7 @@ export function create(node, style, parent) {
   const Constructor = constructorMap[node.name];
 
   if (!Constructor) {
-    console.error(`[Layout] 不支持组件 ${node.name}`)
+    console.error(`[Layout] 不支持组件 ${node.name}`);
     return null;
   }
 
