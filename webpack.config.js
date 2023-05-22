@@ -20,17 +20,15 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
         },
       },
     ],
   },
   plugins: [
     new BundleAnalyzerPlugin({
-      openAnalyzer: true,
+      openAnalyzer: false,
     }),
   ],
   mode: 'none',
+  // mode: 'production',
 };
