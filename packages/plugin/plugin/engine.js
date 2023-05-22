@@ -762,7 +762,6 @@ var Element = /*#__PURE__*/function () {
 
         if (list) {
           var url = list[1].replace(/('|")/g, '');
-          console.log('url', url);
           _common_imageManager__WEBPACK_IMPORTED_MODULE_2__["default"].loadImage(url, function (img) {
             if (!_this.isDestroyed) {
               _this.backgroundImage = img; // 当图片加载完成，实例可能已经被销毁了

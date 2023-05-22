@@ -149,7 +149,6 @@ export default class Element {
       const list = backgroundImage.match(isValidUrlPropReg);
       if (list) {
         const url = list[1].replace(/('|")/g, '');
-        console.log('url', url)
         imageManager.loadImage(url, (img) => {
           if (!this.isDestroyed) {
             this.backgroundImage = img;
