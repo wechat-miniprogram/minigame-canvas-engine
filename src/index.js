@@ -1,4 +1,4 @@
-import './env.js';
+import './env';
 import Element from './components/elements';
 import Pool from './common/pool';
 import Emitter from 'tiny-emitter';
@@ -7,7 +7,7 @@ import {
   isClick,
   STATE,
   clearCanvas,
-} from './common/util.js';
+} from './common/util';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 // import TWEEN from '@tweenjs/tween.js';
@@ -25,7 +25,7 @@ import {
 
 import imageManager from './common/imageManager';
 
-import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components/index.js';
+import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components';
 
 // 全局事件管道
 export const EE = new Emitter();

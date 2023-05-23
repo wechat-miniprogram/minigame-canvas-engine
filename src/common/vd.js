@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 // components
-import { View, Text, Image, ScrollView, BitMapText, Canvas } from '../components/index.js';
+import { View, Text, Image, ScrollView, BitMapText, Canvas } from '../components';
 
 const constructorMap = {
   view: View,

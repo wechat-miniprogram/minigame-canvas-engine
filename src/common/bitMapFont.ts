@@ -1,7 +1,7 @@
 import imageManager from './imageManager';
 import Pool from './pool';
 
-const bitMapPool = new Pool('bitMapPool');
+const bitMapPool = new Pool<BitMapFont>('bitMapPool');
 const Emitter = require('tiny-emitter');
 
 /**

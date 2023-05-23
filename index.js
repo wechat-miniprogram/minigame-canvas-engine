@@ -780,7 +780,37 @@ var Rect = /*#__PURE__*/function () {
 
 
 /***/ }),
-/* 16 */,
+/* 16 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BitMapText: () => (/* reexport safe */ _bitmaptext__WEBPACK_IMPORTED_MODULE_4__["default"]),
+/* harmony export */   Canvas: () => (/* reexport safe */ _canvas__WEBPACK_IMPORTED_MODULE_5__["default"]),
+/* harmony export */   Element: () => (/* reexport safe */ _elements__WEBPACK_IMPORTED_MODULE_6__["default"]),
+/* harmony export */   Image: () => (/* reexport safe */ _image__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   ScrollView: () => (/* reexport safe */ _scrollview__WEBPACK_IMPORTED_MODULE_3__["default"]),
+/* harmony export */   Text: () => (/* reexport safe */ _text__WEBPACK_IMPORTED_MODULE_2__["default"]),
+/* harmony export */   View: () => (/* reexport safe */ _view__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(32);
+/* harmony import */ var _image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(33);
+/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(34);
+/* harmony import */ var _scrollview__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(35);
+/* harmony import */ var _bitmaptext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(39);
+/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(40);
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(13);
+
+
+
+
+
+
+
+
+
+/***/ }),
 /* 17 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -844,94 +874,132 @@ var Pool = /*#__PURE__*/function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   STATE: () => (/* binding */ STATE),
-/* harmony export */   clearCanvas: () => (/* binding */ clearCanvas),
-/* harmony export */   copyTouchArray: () => (/* binding */ copyTouchArray),
-/* harmony export */   createCanvas: () => (/* binding */ createCanvas),
-/* harmony export */   createImage: () => (/* binding */ createImage),
-/* harmony export */   getDpr: () => (/* binding */ getDpr),
-/* harmony export */   isClick: () => (/* binding */ isClick),
-/* harmony export */   none: () => (/* binding */ none)
+/* harmony export */   "default": () => (/* binding */ BitMapFont)
 /* harmony export */ });
-/* istanbul ignore next */
-function none() {}
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
+/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(41);
+/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
+
+
+
+
+var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_3__["default"]('bitMapPool');
+var Emitter = __webpack_require__(19);
 
 /**
- * 根据触摸时长和触摸位置变化来判断是否属于点击事件
+ * http://www.angelcode.com/products/bmfont/doc/file_format.html
  */
-function isClick(touchMsg) {
-  var start = touchMsg.touchstart;
-  var end = touchMsg.touchend;
-  if (!start || !end || !start.timeStamp || !end.timeStamp || start.pageX === undefined || start.pageY === undefined || end.pageX === undefined || end.pageY === undefined) {
-    return false;
-  }
-  var startPosX = start.pageX;
-  var startPosY = start.pageY;
-  var endPosX = end.pageX;
-  var endPosY = end.pageY;
-  var touchTimes = end.timeStamp - start.timeStamp;
-  return !!(Math.abs(endPosY - startPosY) < 30 && Math.abs(endPosX - startPosX) < 30 && touchTimes < 300);
-}
-function createCanvas() {
-  /* istanbul ignore if*/
-  if (typeof __env !== 'undefined') {
-    return __env.createCanvas();
-  }
-  return document.createElement('canvas');
-}
-function createImage() {
-  /* istanbul ignore if*/
-  if (typeof __env !== 'undefined') {
-    return __env.createImage();
-  }
-  return document.createElement('img');
-}
-var _dpr;
-// only Baidu platform need to recieve system info from main context
-if (typeof swan !== 'undefined') {
-  __env.onMessage(function (res) {
-    if (res && res.type === 'engine') {
-      if (res.event === 'systemInfo') {
-        _dpr = res.systemInfo.devicePixelRatio;
-      }
+var BitMapFont = /*#__PURE__*/function () {
+  function BitMapFont(name, src, config) {
+    var _this = this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, BitMapFont);
+    var cache = bitMapPool.get(name);
+    if (cache) {
+      return cache;
     }
-  });
-}
-function getDpr() {
-  // return 3;
-  if (typeof _dpr !== 'undefined') {
-    return _dpr;
+    this.config = config;
+    this.chars = this.parseConfig(config);
+    this.ready = false;
+    this.event = new Emitter();
+    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_2__["default"].loadImage(src, function (texture, fromCache) {
+      if (fromCache) {
+        _this.texture = texture;
+      }
+      _this.ready = true;
+      _this.event.emit('text__load__done');
+    });
+    bitMapPool.set(name, this);
   }
-  if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
-    _dpr = __env.getSystemInfoSync().devicePixelRatio;
-  } else if (window.devicePixelRatio) {
-    _dpr = window.devicePixelRatio;
-  } else {
-    console.warn('[Layout] failed to access device pixel ratio, fallback to 1');
-    _dpr = 1;
-  }
-  return _dpr;
-}
-var STATE = {
-  UNINIT: 'UNINIT',
-  INITED: 'INITED',
-  RENDERED: 'RENDERED',
-  CLEAR: 'CLEAR'
-};
-function clearCanvas(ctx) {
-  ctx && ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-}
-function copyTouchArray(touches) {
-  return touches.map(function (touch) {
-    return {
-      identifier: touch.identifier,
-      pageX: touch.pageX,
-      pageY: touch.pageY,
-      clientX: touch.clientX,
-      clientY: touch.clientY
-    };
-  });
-}
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(BitMapFont, [{
+    key: "parseConfig",
+    value: function parseConfig(fntText) {
+      fntText = fntText.split('\r\n').join('\n');
+      var lines = fntText.split('\n');
+      var linesParsed = lines.map(function (line) {
+        return line.trim().split(' ');
+      });
+      var charsLine = this.getConfigByLineName(linesParsed, 'chars');
+      var charsCount = this.getConfigByKeyInOneLine(charsLine.line, 'count');
+      var commonLine = this.getConfigByLineName(linesParsed, 'common');
+      this.lineHeight = this.getConfigByKeyInOneLine(commonLine.line, 'lineHeight');
+      var infoLine = this.getConfigByLineName(linesParsed, 'info');
+      this.fontSize = this.getConfigByKeyInOneLine(infoLine.line, 'size');
+
+      // 接卸 kernings
+      var kerningsLine = this.getConfigByLineName(linesParsed, 'kernings');
+      var kerningsCount = 0;
+      var kerningsStart = -1;
+      if (kerningsLine.line) {
+        kerningsCount = this.getConfigByKeyInOneLine(kerningsLine.line, 'count');
+        kerningsStart = kerningsLine.index + 1;
+      }
+      var chars = {};
+      for (var i = 4; i < 4 + charsCount; i++) {
+        var charText = lines[i];
+        var letter = String.fromCharCode(this.getConfigByKeyInOneLine(charText, 'id'));
+        var c = {};
+        chars[letter] = c;
+        c.x = this.getConfigByKeyInOneLine(charText, 'x');
+        c.y = this.getConfigByKeyInOneLine(charText, 'y');
+        c.w = this.getConfigByKeyInOneLine(charText, 'width');
+        c.h = this.getConfigByKeyInOneLine(charText, 'height');
+        c.offX = this.getConfigByKeyInOneLine(charText, 'xoffset');
+        c.offY = this.getConfigByKeyInOneLine(charText, 'yoffset');
+        c.xadvance = this.getConfigByKeyInOneLine(charText, 'xadvance');
+        c.kerning = {};
+      }
+
+      // parse kernings
+      if (kerningsCount) {
+        for (var _i = kerningsStart; _i <= kerningsStart + kerningsCount; _i++) {
+          var line = linesParsed[_i];
+          var first = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'first'));
+          var second = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'second'));
+          var amount = this.getConfigByKeyInOneLine(line, 'amount');
+          if (chars[second]) {
+            chars[second].kerning[first] = amount;
+          }
+        }
+      }
+      return chars;
+    }
+  }, {
+    key: "getConfigByLineName",
+    value: function getConfigByLineName(linesParsed) {
+      var lineName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+      var index = -1;
+      var line = null;
+      var len = linesParsed.length;
+      for (var i = 0; i < len; i++) {
+        var item = linesParsed[i];
+        if (item[0] === lineName) {
+          index = i;
+          line = item;
+        }
+      }
+      return {
+        line: line,
+        index: index
+      };
+    }
+  }, {
+    key: "getConfigByKeyInOneLine",
+    value: function getConfigByKeyInOneLine(configText, key) {
+      var itemConfigTextList = Array.isArray(configText) ? configText : configText.split(' ');
+      for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
+        var itemConfigText = itemConfigTextList[i];
+        if (key === itemConfigText.substring(0, key.length)) {
+          var value = itemConfigText.substring(key.length + 1);
+          return parseInt(value);
+        }
+      }
+      return 0;
+    }
+  }]);
+  return BitMapFont;
+}();
+
 
 /***/ }),
 /* 19 */
@@ -3001,140 +3069,7 @@ function validateTagName(tagname, regxTagName) {
 }
 
 /***/ }),
-/* 27 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ BitMapFont)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(41);
-/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
-
-
-
-
-var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_3__["default"]('bitMapPool');
-var Emitter = __webpack_require__(19);
-
-/**
- * http://www.angelcode.com/products/bmfont/doc/file_format.html
- */
-var BitMapFont = /*#__PURE__*/function () {
-  function BitMapFont(name, src, config) {
-    var _this = this;
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, BitMapFont);
-    var cache = bitMapPool.get(name);
-    if (cache) {
-      return cache;
-    }
-    this.config = config;
-    this.chars = this.parseConfig(config);
-    this.ready = false;
-    this.event = new Emitter();
-    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_2__["default"].loadImage(src, function (texture, fromCache) {
-      if (fromCache) {
-        _this.texture = texture;
-      }
-      _this.ready = true;
-      _this.event.emit('text__load__done');
-    });
-    bitMapPool.set(name, this);
-  }
-  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(BitMapFont, [{
-    key: "parseConfig",
-    value: function parseConfig(fntText) {
-      fntText = fntText.split('\r\n').join('\n');
-      var lines = fntText.split('\n');
-      var linesParsed = lines.map(function (line) {
-        return line.trim().split(' ');
-      });
-      var charsLine = this.getConfigByLineName(linesParsed, 'chars');
-      var charsCount = this.getConfigByKeyInOneLine(charsLine.line, 'count');
-      var commonLine = this.getConfigByLineName(linesParsed, 'common');
-      this.lineHeight = this.getConfigByKeyInOneLine(commonLine.line, 'lineHeight');
-      var infoLine = this.getConfigByLineName(linesParsed, 'info');
-      this.fontSize = this.getConfigByKeyInOneLine(infoLine.line, 'size');
-
-      // 接卸 kernings
-      var kerningsLine = this.getConfigByLineName(linesParsed, 'kernings');
-      var kerningsCount = 0;
-      var kerningsStart = -1;
-      if (kerningsLine.line) {
-        kerningsCount = this.getConfigByKeyInOneLine(kerningsLine.line, 'count');
-        kerningsStart = kerningsLine.index + 1;
-      }
-      var chars = {};
-      for (var i = 4; i < 4 + charsCount; i++) {
-        var charText = lines[i];
-        var letter = String.fromCharCode(this.getConfigByKeyInOneLine(charText, 'id'));
-        var c = {};
-        chars[letter] = c;
-        c.x = this.getConfigByKeyInOneLine(charText, 'x');
-        c.y = this.getConfigByKeyInOneLine(charText, 'y');
-        c.w = this.getConfigByKeyInOneLine(charText, 'width');
-        c.h = this.getConfigByKeyInOneLine(charText, 'height');
-        c.offX = this.getConfigByKeyInOneLine(charText, 'xoffset');
-        c.offY = this.getConfigByKeyInOneLine(charText, 'yoffset');
-        c.xadvance = this.getConfigByKeyInOneLine(charText, 'xadvance');
-        c.kerning = {};
-      }
-
-      // parse kernings
-      if (kerningsCount) {
-        for (var _i = kerningsStart; _i <= kerningsStart + kerningsCount; _i++) {
-          var line = linesParsed[_i];
-          var first = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'first'));
-          var second = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'second'));
-          var amount = this.getConfigByKeyInOneLine(line, 'amount');
-          if (chars[second]) {
-            chars[second].kerning[first] = amount;
-          }
-        }
-      }
-      return chars;
-    }
-  }, {
-    key: "getConfigByLineName",
-    value: function getConfigByLineName(linesParsed) {
-      var lineName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-      var index = -1;
-      var line = null;
-      var len = linesParsed.length;
-      for (var i = 0; i < len; i++) {
-        var item = linesParsed[i];
-        if (item[0] === lineName) {
-          index = i;
-          line = item;
-        }
-      }
-      return {
-        line: line,
-        index: index
-      };
-    }
-  }, {
-    key: "getConfigByKeyInOneLine",
-    value: function getConfigByKeyInOneLine(configText, key) {
-      var itemConfigTextList = Array.isArray(configText) ? configText : configText.split(' ');
-      for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
-        var itemConfigText = itemConfigTextList[i];
-        if (key === itemConfigText.substring(0, key.length)) {
-          var value = itemConfigText.substring(key.length + 1);
-          return parseInt(value);
-        }
-      }
-      return 0;
-    }
-  }]);
-  return BitMapFont;
-}();
-
-
-/***/ }),
+/* 27 */,
 /* 28 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -3213,102 +3148,97 @@ var DebugInfo = /*#__PURE__*/function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Ticker)
+/* harmony export */   STATE: () => (/* binding */ STATE),
+/* harmony export */   clearCanvas: () => (/* binding */ clearCanvas),
+/* harmony export */   copyTouchArray: () => (/* binding */ copyTouchArray),
+/* harmony export */   createCanvas: () => (/* binding */ createCanvas),
+/* harmony export */   createImage: () => (/* binding */ createImage),
+/* harmony export */   getDpr: () => (/* binding */ getDpr),
+/* harmony export */   isClick: () => (/* binding */ isClick),
+/* harmony export */   none: () => (/* binding */ none)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-
-
-var Ticker = /*#__PURE__*/function () {
-  function Ticker() {
-    var _this = this;
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, Ticker);
-    this.count = 0;
-    this.started = false;
-    this.animationId = null;
-    this.cbs = [];
-    this.nextCbs = [];
-    this.innerCbs = [];
-    this.update = function () {
-      // 优先执行业务的ticker回调，因为有可能会触发reflow
-      _this.cbs.forEach(function (cb) {
-        cb();
-      });
-      _this.innerCbs.forEach(function (cb) {
-        cb();
-      });
-      if (_this.nextCbs.length) {
-        _this.nextCbs.forEach(function (cb) {
-          return cb();
-        });
-        _this.nextCbs = [];
-      }
-      _this.count += 1;
-      _this.animationId = requestAnimationFrame(_this.update);
-    };
+/* istanbul ignore next */
+function none() {}
+/**
+ * 根据触摸时长和触摸位置变化来判断是否属于点击事件
+ */
+function isClick(touchMsg) {
+  var start = touchMsg.touchstart;
+  var end = touchMsg.touchend;
+  if (!start || !end || !start.timeStamp || !end.timeStamp || start.pageX === undefined || start.pageY === undefined || end.pageX === undefined || end.pageY === undefined) {
+    return false;
   }
-  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Ticker, [{
-    key: "cancelIfNeed",
-    value: function cancelIfNeed() {
-      if (this.animationId !== null) {
-        cancelAnimationFrame(this.animationId);
-        this.animationId = null;
+  var startPosX = start.pageX;
+  var startPosY = start.pageY;
+  var endPosX = end.pageX;
+  var endPosY = end.pageY;
+  var touchTimes = end.timeStamp - start.timeStamp;
+  return !!(Math.abs(endPosY - startPosY) < 30 && Math.abs(endPosX - startPosX) < 30 && touchTimes < 300);
+}
+function createCanvas() {
+  /* istanbul ignore if*/
+  // @ts-ignore
+  if (typeof __env !== 'undefined') {
+    // @ts-ignore
+    return __env.createCanvas();
+  }
+  return document.createElement('canvas');
+}
+function createImage() {
+  /* istanbul ignore if*/
+  // @ts-ignore
+  if (typeof __env !== 'undefined') {
+    // @ts-ignore
+    return __env.createImage();
+  }
+  return document.createElement('img');
+}
+var _dpr;
+// only Baidu platform need to recieve system info from main context
+if (typeof swan !== 'undefined') {
+  __env.onMessage(function (res) {
+    if (res && res.type === 'engine') {
+      if (res.event === 'systemInfo') {
+        _dpr = res.systemInfo.devicePixelRatio;
       }
     }
-  }, {
-    key: "add",
-    value: function add(cb) {
-      var isInner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
-        isInner ? this.innerCbs.push(cb) : this.cbs.push(cb);
-      }
-    }
-  }, {
-    key: "next",
-    value: function next(cb) {
-      if (typeof cb === 'function') {
-        this.nextCbs.push(cb);
-      }
-    }
-  }, {
-    key: "remove",
-    value: function remove(cb) {
-      var isInner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      if (cb === undefined) {
-        this.cbs = [];
-        this.innerCbs = [];
-        this.nextCbs = [];
-      }
-      if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
-        var list = isInner ? this.innerCbs : this.cbs;
-        list.splice(this.cbs.indexOf(cb), 1);
-      }
-      if (!this.cbs.length && !this.innerCbs.length) {
-        this.cancelIfNeed();
-      }
-    }
-  }, {
-    key: "start",
-    value: function start() {
-      if (!this.started) {
-        this.started = true;
-        if (this.animationId === null && (this.cbs.length || this.innerCbs.length)) {
-          this.animationId = requestAnimationFrame(this.update);
-        }
-      }
-    }
-  }, {
-    key: "stop",
-    value: function stop() {
-      if (this.started) {
-        this.started = false;
-        this.cancelIfNeed();
-      }
-    }
-  }]);
-  return Ticker;
-}();
-
+  });
+}
+function getDpr() {
+  // return 3;
+  if (typeof _dpr !== 'undefined') {
+    return _dpr;
+  }
+  if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
+    _dpr = __env.getSystemInfoSync().devicePixelRatio;
+  } else if (window.devicePixelRatio) {
+    _dpr = window.devicePixelRatio;
+  } else {
+    console.warn('[Layout] failed to access device pixel ratio, fallback to 1');
+    _dpr = 1;
+  }
+  return _dpr;
+}
+var STATE = {
+  UNINIT: 'UNINIT',
+  INITED: 'INITED',
+  RENDERED: 'RENDERED',
+  CLEAR: 'CLEAR'
+};
+function clearCanvas(ctx) {
+  ctx && ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+function copyTouchArray(touches) {
+  return touches.map(function (touch) {
+    return {
+      identifier: touch.identifier,
+      pageX: touch.pageX,
+      pageY: touch.pageY,
+      clientX: touch.clientX,
+      clientY: touch.clientY
+    };
+  });
+}
 
 /***/ }),
 /* 30 */
@@ -3326,17 +3256,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   repaintChildren: () => (/* binding */ repaintChildren),
 /* harmony export */   repaintTree: () => (/* binding */ repaintTree)
 /* harmony export */ });
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(31);
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
 /* eslint-disable no-param-reassign */
 // components
 
 var constructorMap = {
-  view: _components_index_js__WEBPACK_IMPORTED_MODULE_0__.View,
-  text: _components_index_js__WEBPACK_IMPORTED_MODULE_0__.Text,
-  image: _components_index_js__WEBPACK_IMPORTED_MODULE_0__.Image,
-  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_0__.ScrollView,
-  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_0__.BitMapText,
-  canvas: _components_index_js__WEBPACK_IMPORTED_MODULE_0__.Canvas
+  view: _components__WEBPACK_IMPORTED_MODULE_0__.View,
+  text: _components__WEBPACK_IMPORTED_MODULE_0__.Text,
+  image: _components__WEBPACK_IMPORTED_MODULE_0__.Image,
+  scrollview: _components__WEBPACK_IMPORTED_MODULE_0__.ScrollView,
+  bitmaptext: _components__WEBPACK_IMPORTED_MODULE_0__.BitMapText,
+  canvas: _components__WEBPACK_IMPORTED_MODULE_0__.Canvas
 };
 function registerComponent(name, Constructor) {
   constructorMap[name] = Constructor;
@@ -3506,9 +3436,9 @@ function clone(element) {
     id: this.eleCount,
     dataset: Object.assign({}, element.dataset)
   };
-  if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__.Image) {
+  if (element instanceof _components__WEBPACK_IMPORTED_MODULE_0__.Image) {
     args.src = element.src;
-  } else if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__.Text || element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__.BitMapText) {
+  } else if (element instanceof _components__WEBPACK_IMPORTED_MODULE_0__.Text || element instanceof _components__WEBPACK_IMPORTED_MODULE_0__.BitMapText) {
     args.value = element.value;
   }
   var newElemenet = new Constructor(args);
@@ -3533,28 +3463,103 @@ function clone(element) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   BitMapText: () => (/* reexport safe */ _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]),
-/* harmony export */   Canvas: () => (/* reexport safe */ _canvas_js__WEBPACK_IMPORTED_MODULE_5__["default"]),
-/* harmony export */   Element: () => (/* reexport safe */ _elements__WEBPACK_IMPORTED_MODULE_6__["default"]),
-/* harmony export */   Image: () => (/* reexport safe */ _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]),
-/* harmony export */   ScrollView: () => (/* reexport safe */ _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]),
-/* harmony export */   Text: () => (/* reexport safe */ _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]),
-/* harmony export */   View: () => (/* reexport safe */ _view_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */   "default": () => (/* binding */ Ticker)
 /* harmony export */ });
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(32);
-/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(33);
-/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(34);
-/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(35);
-/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(39);
-/* harmony import */ var _canvas_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(40);
-/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(13);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
 
 
 
-
-
-
-
+var Ticker = /*#__PURE__*/function () {
+  function Ticker() {
+    var _this = this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, Ticker);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "count", 0);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "started", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "animationId", null);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "cbs", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "nextCbs", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "innerCbs", []);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "update", function () {
+      // 优先执行业务的ticker回调，因为有可能会触发reflow
+      _this.cbs.forEach(function (cb) {
+        cb();
+      });
+      _this.innerCbs.forEach(function (cb) {
+        cb();
+      });
+      if (_this.nextCbs.length) {
+        _this.nextCbs.forEach(function (cb) {
+          return cb();
+        });
+        _this.nextCbs = [];
+      }
+      _this.count += 1;
+      _this.animationId = requestAnimationFrame(_this.update);
+    });
+  }
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Ticker, [{
+    key: "cancelIfNeed",
+    value: function cancelIfNeed() {
+      if (this.animationId !== null) {
+        cancelAnimationFrame(this.animationId);
+        this.animationId = null;
+      }
+    }
+  }, {
+    key: "add",
+    value: function add(cb) {
+      var isInner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
+        isInner ? this.innerCbs.push(cb) : this.cbs.push(cb);
+      }
+    }
+  }, {
+    key: "next",
+    value: function next(cb) {
+      if (typeof cb === 'function') {
+        this.nextCbs.push(cb);
+      }
+    }
+  }, {
+    key: "remove",
+    value: function remove(cb) {
+      var isInner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      if (cb === undefined) {
+        this.cbs = [];
+        this.innerCbs = [];
+        this.nextCbs = [];
+      }
+      if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
+        var list = isInner ? this.innerCbs : this.cbs;
+        list.splice(this.cbs.indexOf(cb), 1);
+      }
+      if (!this.cbs.length && !this.innerCbs.length) {
+        this.cancelIfNeed();
+      }
+    }
+  }, {
+    key: "start",
+    value: function start() {
+      if (!this.started) {
+        this.started = true;
+        if (this.animationId === null && (this.cbs.length || this.innerCbs.length)) {
+          this.animationId = requestAnimationFrame(this.update);
+        }
+      }
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      if (this.started) {
+        this.started = false;
+        this.cancelIfNeed();
+      }
+    }
+  }]);
+  return Ticker;
+}();
 
 
 /***/ }),
@@ -3818,7 +3823,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(13);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(18);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(29);
 
 
 
@@ -3835,7 +3840,7 @@ var getContext = function getContext() {
   if (context) {
     return context;
   }
-  var canvas = (0,_common_util_js__WEBPACK_IMPORTED_MODULE_7__.createCanvas)();
+  var canvas = (0,_common_util__WEBPACK_IMPORTED_MODULE_7__.createCanvas)();
   canvas.width = 1;
   canvas.height = 1;
   context = canvas.getContext('2d');
@@ -4021,7 +4026,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(10);
 /* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(32);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(18);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(29);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(36);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _common_vd_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(30);
@@ -4038,7 +4043,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 
 
-var dpr = (0,_common_util_js__WEBPACK_IMPORTED_MODULE_6__.getDpr)();
+var dpr = (0,_common_util__WEBPACK_IMPORTED_MODULE_6__.getDpr)();
 var ScrollView = /*#__PURE__*/function (_View) {
   (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__["default"])(ScrollView, _View);
   var _super = _createSuper(ScrollView);
@@ -4263,7 +4268,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
         if (!e.touches) {
           e.touches = [e];
         }
-        var touches = (0,_common_util_js__WEBPACK_IMPORTED_MODULE_6__.copyTouchArray)(e.touches);
+        var touches = (0,_common_util__WEBPACK_IMPORTED_MODULE_6__.copyTouchArray)(e.touches);
         touches.forEach(function (touch) {
           if (dpr !== 1) {
             touch.pageX *= dpr;
@@ -4277,7 +4282,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
         if (!e.touches) {
           e.touches = [e];
         }
-        var touches = (0,_common_util_js__WEBPACK_IMPORTED_MODULE_6__.copyTouchArray)(e.touches);
+        var touches = (0,_common_util__WEBPACK_IMPORTED_MODULE_6__.copyTouchArray)(e.touches);
         touches.forEach(function (touch) {
           if (dpr !== 1) {
             touch.pageX *= dpr;
@@ -5927,7 +5932,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(10);
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(13);
-/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(18);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(29);
 
 
 
@@ -6054,7 +6059,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
 /* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(18);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(29);
 
 
 
@@ -6217,22 +6222,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(11);
-/* harmony import */ var _env_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(12);
-/* harmony import */ var _env_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_env_js__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(12);
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_env__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _components_elements__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(13);
 /* harmony import */ var _common_pool__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(17);
 /* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(19);
 /* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(20);
 /* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(18);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(29);
 /* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(21);
-/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(27);
+/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(18);
 /* harmony import */ var _common_debugInfo__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(28);
-/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(29);
+/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(31);
 /* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(30);
 /* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(41);
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(31);
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(16);
 
 
 
@@ -6276,12 +6281,12 @@ var Layout = /*#__PURE__*/function (_Element) {
       name: name
     });
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Element", _components_elements__WEBPACK_IMPORTED_MODULE_8__["default"]);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "View", _components_index_js__WEBPACK_IMPORTED_MODULE_19__.View);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Text", _components_index_js__WEBPACK_IMPORTED_MODULE_19__.Text);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Image", _components_index_js__WEBPACK_IMPORTED_MODULE_19__.Image);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "ScrollView", _components_index_js__WEBPACK_IMPORTED_MODULE_19__.ScrollView);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "BitMapText", _components_index_js__WEBPACK_IMPORTED_MODULE_19__.BitMapText);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Canvas", _components_index_js__WEBPACK_IMPORTED_MODULE_19__.Canvas);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "View", _components__WEBPACK_IMPORTED_MODULE_19__.View);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Text", _components__WEBPACK_IMPORTED_MODULE_19__.Text);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Image", _components__WEBPACK_IMPORTED_MODULE_19__.Image);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "ScrollView", _components__WEBPACK_IMPORTED_MODULE_19__.ScrollView);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "BitMapText", _components__WEBPACK_IMPORTED_MODULE_19__.BitMapText);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Canvas", _components__WEBPACK_IMPORTED_MODULE_19__.Canvas);
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "registerComponent", _common_vd__WEBPACK_IMPORTED_MODULE_17__.registerComponent);
     _this.hasEventHandler = false;
     _this.elementTree = null;
@@ -6301,7 +6306,7 @@ var Layout = /*#__PURE__*/function (_Element) {
     _this.touchCancel = _this.eventHandler('touchcancel').bind((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this));
     _this.version = '1.0.2';
     _this.eleCount = 0;
-    _this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_12__.STATE.UNINIT;
+    _this.state = _common_util__WEBPACK_IMPORTED_MODULE_12__.STATE.UNINIT;
     _this.bitMapFonts = [];
 
     /**
@@ -6396,7 +6401,7 @@ var Layout = /*#__PURE__*/function (_Element) {
       var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_17__.create.call(this, xmlTree, style);
       debugInfo.end('init_xml2Layout');
       this.add(layoutTree);
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_12__.STATE.INITED;
+      this.state = _common_util__WEBPACK_IMPORTED_MODULE_12__.STATE.INITED;
       this.ticker.add(this.tickerFunc, true);
       this.ticker.start();
       debugInfo.end('init');
@@ -6430,7 +6435,7 @@ var Layout = /*#__PURE__*/function (_Element) {
       _common_vd__WEBPACK_IMPORTED_MODULE_17__.layoutChildren.call(this, this);
       debugInfo.end('layoutChildren');
       this.viewportScale = this.viewport.width / this.renderport.width;
-      (0,_common_util_js__WEBPACK_IMPORTED_MODULE_12__.clearCanvas)(this.renderContext);
+      (0,_common_util__WEBPACK_IMPORTED_MODULE_12__.clearCanvas)(this.renderContext);
 
       // 遍历节点树，依次调用节点的渲染接口实现渲染
       debugInfo.start('renderChildren', true);
@@ -6478,14 +6483,14 @@ var Layout = /*#__PURE__*/function (_Element) {
         return element.observeStyleAndEvent();
       });
       debugInfo.end('layout_observeStyleAndEvent');
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_12__.STATE.RENDERED;
+      this.state = _common_util__WEBPACK_IMPORTED_MODULE_12__.STATE.RENDERED;
       debugInfo.end('layout');
       debugInfo.end('layout_other');
     }
   }, {
     key: "repaint",
     value: function repaint() {
-      (0,_common_util_js__WEBPACK_IMPORTED_MODULE_12__.clearCanvas)(this.renderContext);
+      (0,_common_util__WEBPACK_IMPORTED_MODULE_12__.clearCanvas)(this.renderContext);
       this.isNeedRepaint = false;
       (0,_common_vd__WEBPACK_IMPORTED_MODULE_17__.repaintChildren)(this.children);
     }
@@ -6538,7 +6543,7 @@ var Layout = /*#__PURE__*/function (_Element) {
         if (eventName === 'touchstart' || eventName === 'touchend') {
           this.touchMsg[eventName] = touch;
         }
-        if (eventName === 'touchend' && (0,_common_util_js__WEBPACK_IMPORTED_MODULE_12__.isClick)(this.touchMsg)) {
+        if (eventName === 'touchend' && (0,_common_util__WEBPACK_IMPORTED_MODULE_12__.isClick)(this.touchMsg)) {
           item && item.emit('click', e);
         }
       };
@@ -6619,9 +6624,9 @@ var Layout = /*#__PURE__*/function (_Element) {
       this.destroyAll(this);
       this.elementTree = null;
       this.children = [];
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_12__.STATE.CLEAR;
+      this.state = _common_util__WEBPACK_IMPORTED_MODULE_12__.STATE.CLEAR;
       this.isDirty = false;
-      (0,_common_util_js__WEBPACK_IMPORTED_MODULE_12__.clearCanvas)(this.renderContext);
+      (0,_common_util__WEBPACK_IMPORTED_MODULE_12__.clearCanvas)(this.renderContext);
       this.eleCount = 0;
       this.unBindEvents();
       if (removeTicker) {

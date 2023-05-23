@@ -188,7 +188,7 @@ export default class Element {
       const list = backgroundImage.match(isValidUrlPropReg);
       if (list) {
         const url = list[1].replace(/('|")/g, '');
-        imageManager.loadImage(url, (img: any) => {
+        imageManager.loadImage(url, (img: HTMLImageElement) => {
           if (!this.isDestroyed) {
             this.backgroundImage = img;
             // 当图片加载完成，实例可能已经被销毁了

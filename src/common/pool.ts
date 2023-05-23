@@ -1,4 +1,4 @@
-const pools: Pool[] = [];
+const pools: Pool<any>[] = [];
 
 export default class Pool<T> {
   public name = 'pool'

@@ -1,32 +1,33 @@
+
+type Callback = (...args: any[]) => void;
+
 export default class Ticker {
-  constructor() {
-    this.count = 0;
-    this.started = false;
-    this.animationId = null;
+  private count: number = 0;
+  private started: boolean = false;
+  private animationId: number | null = null;
 
-    this.cbs = [];
-    this.nextCbs = [];
-    this.innerCbs = [];
+  private cbs: Callback[] = [];
+  private nextCbs: Callback[] = [];
+  private innerCbs: Callback[] = [];
 
-    this.update = () => {
-      // 优先执行业务的ticker回调，因为有可能会触发reflow
-      this.cbs.forEach((cb) => {
-        cb();
-      });
+  private update = () => {
+    // 优先执行业务的ticker回调，因为有可能会触发reflow
+    this.cbs.forEach((cb: Callback) => {
+      cb();
+    });
 
-      this.innerCbs.forEach((cb) => {
-        cb();
-      });
+    this.innerCbs.forEach((cb: Callback) => {
+      cb();
+    });
 
-      if (this.nextCbs.length) {
-        this.nextCbs.forEach(cb => cb());
+    if (this.nextCbs.length) {
+      this.nextCbs.forEach(cb => cb());
 
-        this.nextCbs = [];
-      }
+      this.nextCbs = [];
+    }
 
-      this.count += 1;
-      this.animationId = requestAnimationFrame(this.update);
-    };
+    this.count += 1;
+    this.animationId = requestAnimationFrame(this.update);
   }
 
   cancelIfNeed() {
@@ -36,19 +37,19 @@ export default class Ticker {
     }
   }
 
-  add(cb, isInner = false) {
+  add(cb: Callback, isInner = false) {
     if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
       isInner ? this.innerCbs.push(cb) :  this.cbs.push(cb);
     }
   }
 
-  next(cb) {
+  next(cb: Callback) {
     if (typeof cb === 'function') {
       this.nextCbs.push(cb);
     }
   }
 
-  remove(cb, isInner = false) {
+  remove(cb: Callback, isInner = false) {
     if (cb === undefined) {
       this.cbs = [];
       this.innerCbs = [];

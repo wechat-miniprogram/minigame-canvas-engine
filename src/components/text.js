@@ -1,5 +1,5 @@
 import Element from './elements';
-import { createCanvas } from '../common/util.js';
+import { createCanvas } from '../common/util';
 
 const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
 let context = null;

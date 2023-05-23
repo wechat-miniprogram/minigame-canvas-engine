@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import View from './view.js';
-import { getDpr, copyTouchArray } from '../common/util.js';
+import { getDpr, copyTouchArray } from '../common/util';
 import { Scroller } from 'scroller';
 import { iterateTree } from '../common/vd.js';
 
