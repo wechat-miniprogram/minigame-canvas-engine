@@ -70,7 +70,7 @@ export default class Image extends Element {
   }
 
   render() {
-    if (!this.img || !this.img.loadDone) {
+    if (!this.img || !this.img?.complete) {
       return;
     }
 

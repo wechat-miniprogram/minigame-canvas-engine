@@ -58,6 +58,12 @@ interface IStyle {
   borderRightWidth?: number;
   borderTopWidth?: number;
   borderBottomWidth?: number;
+
+  borderTopLeftRadius?: number;
+  borderTopRightRadius?: number;
+  borderBottomLeftRadius?: number;
+  borderBottomRightRadius?: number;
+
   flexDirection?: 'column' | 'row';
   flexShrink?: number;
   flexGrow?: number;

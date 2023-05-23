@@ -253,7 +253,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
 /* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(14);
 /* harmony import */ var _common_rect__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(15);
-/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(16);
+/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(41);
 
 
 
@@ -261,17 +261,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import { TinyEmitter } from '../../node_modules/tiny-emitter/index';
-
 function _getElementsById(tree) {
   var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
   var id = arguments.length > 2 ? arguments[2] : undefined;
-  Object.keys(tree.children).forEach(function (key) {
-    var child = tree.children[key];
+  tree.children.forEach(function (child) {
     if (child.idName === id) {
       list.push(child);
     }
-    if (Object.keys(child.children).length) {
+    if (child.children.length) {
       _getElementsById(child, list, id);
     }
   });
@@ -286,12 +283,11 @@ function _getElementById(tree, id) {
 function _getElementsByClassName(tree) {
   var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
   var className = arguments.length > 2 ? arguments[2] : undefined;
-  Object.keys(tree.children).forEach(function (key) {
-    var child = tree.children[key];
+  tree.children.forEach(function (child) {
     if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
       list.push(child);
     }
-    if (Object.keys(child.children).length) {
+    if (child.children.length) {
       _getElementsByClassName(child, list, className);
     }
   });
@@ -315,6 +311,9 @@ function getRgba(hex, opacity) {
   var rgbObj = hexToRgb(hex);
   if (opacity === undefined) {
     opacity = 1;
+  }
+  if (!rgbObj) {
+    return null;
   }
   return "rgba(".concat(rgbObj.r, ", ").concat(rgbObj.g, ", ").concat(rgbObj.b, ", ").concat(opacity, ")");
 }
@@ -363,10 +362,12 @@ var Element = /*#__PURE__*/function () {
     };
     this.dataset = dataset;
     if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
-      style.color = getRgba(style.color, style.opacity);
+      // 颜色解析失败，降级为 hex
+      style.color = getRgba(style.color, style.opacity) || style.color;
     }
     if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf('#') > -1) {
-      style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
+      // 颜色解析失败，降级为 hex
+      style.backgroundColor = getRgba(style.backgroundColor, style.opacity) || style.backgroundColor;
     }
     if (typeof style.backgroundImage === 'string') {
       this.backgroundImageSetHandler(style.backgroundImage);
@@ -417,17 +418,20 @@ var Element = /*#__PURE__*/function () {
             return Reflect.get(target, prop, receiver);
           },
           set: function set(target, prop, val, receiver) {
-            if (_style__WEBPACK_IMPORTED_MODULE_3__.reflowAffectedStyles.indexOf(prop) > -1) {
-              ele.isDirty = true;
-              var parent = ele.parent;
-              while (parent) {
-                parent.isDirty = true;
-                parent = parent.parent;
+            if (typeof prop === 'string') {
+              if (_style__WEBPACK_IMPORTED_MODULE_3__.reflowAffectedStyles.indexOf(prop) > -1) {
+                ele.isDirty = true;
+                var parent = ele.parent;
+                while (parent) {
+                  parent.isDirty = true;
+                  parent = parent.parent;
+                }
+              } else if (_style__WEBPACK_IMPORTED_MODULE_3__.repaintAffectedStyles.indexOf(prop) > -1) {
+                var _ele$root;
+                (_ele$root = ele.root) === null || _ele$root === void 0 ? void 0 : _ele$root.emit('repaint');
+              } else if (prop === 'backgroundImage') {
+                ele.backgroundImageSetHandler(val);
               }
-            } else if (_style__WEBPACK_IMPORTED_MODULE_3__.repaintAffectedStyles.indexOf(prop) > -1) {
-              ele.root.emit('repaint');
-            } else if (prop === 'backgroundImage') {
-              ele.backgroundImageSetHandler(val);
             }
             return Reflect.set(target, prop, val, receiver);
           }
@@ -451,7 +455,8 @@ var Element = /*#__PURE__*/function () {
                   parent = parent.parent;
                 }
               } else if (_style__WEBPACK_IMPORTED_MODULE_3__.repaintAffectedStyles.indexOf(key) > -1) {
-                _this2.root.emit('repaint');
+                var _this2$root;
+                (_this2$root = _this2.root) === null || _this2$root === void 0 ? void 0 : _this2$root.emit('repaint');
               } else if (key === 'backgroundImage') {
                 _this2.backgroundImageSetHandler(value);
               }
@@ -556,6 +561,9 @@ var Element = /*#__PURE__*/function () {
     key: "remove",
     value: function remove() {
       var parent = this.parent;
+      if (!parent) {
+        return;
+      }
       var index = parent.children.indexOf(this);
       if (index !== -1) {
         parent.children.splice(index, 1);
@@ -579,8 +587,8 @@ var Element = /*#__PURE__*/function () {
       this.ctx = null;
 
       // element 在画布中的位置和尺寸信息
-      this.layoutBox = null;
-      this.style = null;
+      // this.layoutBox = null;
+      // this.style = null;
       this.className = '';
       this.classNameList = null;
     }
@@ -643,7 +651,8 @@ var Element = /*#__PURE__*/function () {
       var borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
       var borderBottomRightRadius = style.borderBottomRightRadius || radius;
       var box = this.layoutBox;
-      var borderColor = style.borderColor;
+      var _style$borderColor = style.borderColor,
+        borderColor = _style$borderColor === void 0 ? '' : _style$borderColor;
       var x = box.absoluteX;
       var y = box.absoluteY;
       var width = box.width,
@@ -771,91 +780,7 @@ var Rect = /*#__PURE__*/function () {
 
 
 /***/ }),
-/* 16 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(18);
-
-
-
-
-var imgPool = new _pool__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
-var ImageManager = /*#__PURE__*/function () {
-  function ImageManager() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, ImageManager);
-  }
-  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(ImageManager, [{
-    key: "getRes",
-    value: function getRes(src) {
-      return imgPool.get(src);
-    }
-  }, {
-    key: "loadImagePromise",
-    value: function loadImagePromise(src) {
-      var _this = this;
-      return new Promise(function (resolve, reject) {
-        _this.loadImage(src, resolve, reject);
-      });
-    }
-  }, {
-    key: "loadImage",
-    value: function loadImage(src) {
-      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _util__WEBPACK_IMPORTED_MODULE_3__.none;
-      var fail = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _util__WEBPACK_IMPORTED_MODULE_3__.none;
-      var img = null;
-      var cache = this.getRes(src);
-      if (!src) {
-        return img;
-      }
-
-      // 图片已经被加载过，直接返回图片并且执行回调
-      if (cache && cache.loadDone) {
-        img = cache;
-        callback(img, true);
-      } else if (cache && !cache.loadDone) {
-        // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
-        img = cache;
-        cache.onloadcbks.push(callback);
-        cache.onerrorcbks.push(fail);
-      } else {
-        // 创建图片，将回调函数推入回调函数栈
-        img = (0,_util__WEBPACK_IMPORTED_MODULE_3__.createImage)();
-        img.onloadcbks = [callback];
-        img.onerrorcbks = [fail];
-        imgPool.set(src, img);
-        img.onload = function () {
-          img.loadDone = true;
-          img.onloadcbks.forEach(function (fn) {
-            return fn(img, false);
-          });
-          img.onloadcbks = [];
-          img.onerrorcbks = [];
-        };
-        img.onerror = function () {
-          img.onerrorcbks.forEach(function (fn) {
-            return fn(img, false);
-          });
-          img.onerrorcbks = [];
-          img.onloadcbks = [];
-        };
-        img.src = src;
-      }
-      return img;
-    }
-  }]);
-  return ImageManager;
-}();
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new ImageManager());
-
-/***/ }),
+/* 16 */,
 /* 17 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -3086,7 +3011,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(16);
+/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(41);
 /* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
 
 
@@ -3754,7 +3679,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(13);
-/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(16);
+/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(41);
 
 
 
@@ -3839,7 +3764,8 @@ var Image = /*#__PURE__*/function (_Element) {
   }, {
     key: "render",
     value: function render() {
-      if (!this.img || !this.img.loadDone) {
+      var _this$img;
+      if (!this.img || !((_this$img = this.img) !== null && _this$img !== void 0 && _this$img.complete)) {
         return;
       }
       var style = this.style || {};
@@ -6115,6 +6041,97 @@ var Canvas = /*#__PURE__*/function (_Element) {
 }(_elements__WEBPACK_IMPORTED_MODULE_5__["default"]);
 
 
+/***/ }),
+/* 41 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
+/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(18);
+
+
+
+
+
+var ImageManager = /*#__PURE__*/function () {
+  function ImageManager() {
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, ImageManager);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "imgPool", new _pool__WEBPACK_IMPORTED_MODULE_3__["default"]('imgPool'));
+  }
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(ImageManager, [{
+    key: "getRes",
+    value: function getRes(src) {
+      return this.imgPool.get(src);
+    }
+  }, {
+    key: "loadImagePromise",
+    value: function loadImagePromise(src) {
+      var _this = this;
+      return new Promise(function (resolve, reject) {
+        _this.loadImage(src, resolve, reject);
+      });
+    }
+  }, {
+    key: "loadImage",
+    value: function loadImage(src) {
+      var success = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _util__WEBPACK_IMPORTED_MODULE_4__.none;
+      var fail = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _util__WEBPACK_IMPORTED_MODULE_4__.none;
+      if (!src) {
+        return null;
+      }
+      var img;
+      var cache = this.getRes(src);
+
+      // 图片已经被加载过，直接返回图片并且执行回调
+      if (cache && cache.loadDone) {
+        img = cache.img;
+        success(img, true);
+      } else if (cache && !cache.loadDone) {
+        // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
+        img = cache.img;
+        cache.onloadcbks.push(success);
+        cache.onerrorcbks.push(fail);
+      } else {
+        // 创建图片，将回调函数推入回调函数栈
+        img = (0,_util__WEBPACK_IMPORTED_MODULE_4__.createImage)();
+        var newCache = {
+          img: img,
+          loadDone: false,
+          onloadcbks: [success],
+          onerrorcbks: [fail]
+        };
+        this.imgPool.set(src, newCache);
+        img.onload = function () {
+          newCache.loadDone = true;
+          newCache.onloadcbks.forEach(function (fn) {
+            return fn(img, false);
+          });
+          newCache.onloadcbks = [];
+          newCache.onerrorcbks = [];
+        };
+        img.onerror = function () {
+          newCache.onerrorcbks.forEach(function (fn) {
+            return fn(img, false);
+          });
+          newCache.onerrorcbks = [];
+          newCache.onloadcbks = [];
+        };
+        img.src = src;
+      }
+      return img;
+    }
+  }]);
+  return ImageManager;
+}();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new ImageManager());
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -6214,7 +6231,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_debugInfo__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(28);
 /* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(29);
 /* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(30);
-/* harmony import */ var _common_imageManager_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(16);
+/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(41);
 /* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(31);
 
 
@@ -6628,7 +6645,7 @@ var Layout = /*#__PURE__*/function (_Element) {
     value: function loadImgs() {
       var arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       return Promise.all(arr.map(function (src) {
-        return _common_imageManager_js__WEBPACK_IMPORTED_MODULE_18__["default"].loadImagePromise(src);
+        return _common_imageManager__WEBPACK_IMPORTED_MODULE_18__["default"].loadImagePromise(src);
       }));
     }
   }, {

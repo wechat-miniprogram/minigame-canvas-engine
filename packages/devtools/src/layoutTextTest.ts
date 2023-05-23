@@ -93,11 +93,14 @@ function main() {
   Layout.layout(context);
 
   const text = Layout.getElementsByClassName('testtext');
-  console.log(text);
 
   text[3].on('click', () => {
     text[3].value = '测试文本加长' + Math.random()
   })
+
+  // setTimeout(() => {
+  //   Layout.clear();
+  // }, 3000)
 }
 
 main();

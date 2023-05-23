@@ -2,17 +2,14 @@
 import { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle } from './style';
 import Rect from '../common/rect';
 import imageManager from '../common/imageManager';
-// import { TinyEmitter } from '../../node_modules/tiny-emitter/index';
 
-export function getElementsById(tree: Element, list = [], id: string) {
-  Object.keys(tree.children).forEach((key) => {
-    const child = tree.children[key];
-
+export function getElementsById(tree: Element, list: Element[] = [], id: string) {
+  tree.children.forEach((child: Element) => {
     if (child.idName === id) {
       list.push(child);
     }
 
-    if (Object.keys(child.children).length) {
+    if (child.children.length) {
       getElementsById(child, list, id);
     }
   });
@@ -20,21 +17,19 @@ export function getElementsById(tree: Element, list = [], id: string) {
   return list;
 }
 
-export function getElementById(tree, id) {
+export function getElementById(tree: Element, id: string) {
   const list = getElementsById(tree, [], id);
 
   return list?.[0] || null;
 }
 
-export function getElementsByClassName(tree, list = [], className) {
-  Object.keys(tree.children).forEach((key) => {
-    const child = tree.children[key];
-
+export function getElementsByClassName(tree: Element, list: Element[] = [], className: string) {
+  tree.children.forEach((child: Element) => {
     if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
       list.push(child);
     }
 
-    if (Object.keys(child.children).length) {
+    if (child.children.length) {
       getElementsByClassName(child, list, className);
     }
   });
@@ -49,7 +44,7 @@ const EE = new Emitter();
 
 let uuid = 0;
 
-function hexToRgb(hex) {
+function hexToRgb(hex: string) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -60,17 +55,21 @@ function hexToRgb(hex) {
     : null;
 }
 
-function getRgba(hex, opacity) {
+function getRgba(hex: string, opacity: number) {
   const rgbObj = hexToRgb(hex);
 
   if (opacity === undefined) {
     opacity = 1;
   }
 
+  if (!rgbObj) {
+    return null;
+  }
+
   return `rgba(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b}, ${opacity})`;
 }
 
-const toEventName = (event, id) => {
+const toEventName = (event: string, id: number) => {
   const elementEvent = [
     'click',
     'touchstart',
@@ -97,6 +96,8 @@ interface ILayoutBox {
   originalAbsoluteY: number;
 }
 
+type Callback = (...args: any[]) => void;
+
 const isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
 
 export default class Element {
@@ -120,7 +121,7 @@ export default class Element {
 
   private originStyle: IStyle;
   private isDirty = false;
-  
+
   constructor({
     style = {},
     idName = '',
@@ -158,7 +159,8 @@ export default class Element {
       && style.color
       && style.color.indexOf('#') > -1
     ) {
-      style.color = getRgba(style.color, style.opacity);
+      // 颜色解析失败，降级为 hex
+      style.color = getRgba(style.color, style.opacity) || style.color;
     }
 
     if (
@@ -166,7 +168,8 @@ export default class Element {
       && style.backgroundColor
       && style.backgroundColor.indexOf('#') > -1
     ) {
-      style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
+      // 颜色解析失败，降级为 hex
+      style.backgroundColor = getRgba(style.backgroundColor, style.opacity) || style.backgroundColor;
     }
 
     if (typeof style.backgroundImage === 'string') {
@@ -214,30 +217,33 @@ export default class Element {
           return Reflect.get(target, prop, receiver);
         },
         set(target, prop, val, receiver) {
-          if (reflowAffectedStyles.indexOf(prop) > -1) {
-            ele.isDirty = true;
-            let { parent } = ele;
-            while (parent) {
-              parent.isDirty = true;
-              parent = parent.parent;
+          if (typeof prop === 'string') {
+            if (reflowAffectedStyles.indexOf(prop) > -1) {
+              ele.isDirty = true;
+              let { parent } = ele;
+              while (parent) {
+                parent.isDirty = true;
+                parent = parent.parent;
+              }
+            } else if (repaintAffectedStyles.indexOf(prop) > -1) {
+              ele.root?.emit('repaint');
+            } else if (prop === 'backgroundImage') {
+              ele.backgroundImageSetHandler(val);
             }
-          } else if (repaintAffectedStyles.indexOf(prop) > -1) {
-            ele.root.emit('repaint');
-          } else if (prop === 'backgroundImage') {
-            ele.backgroundImageSetHandler(val);
           }
+
           return Reflect.set(target, prop, val, receiver);
         },
       });
     } else {
-      const innerStyle = Object.assign({}, this.style);
+      const innerStyle = Object.assign({}, this.style) as IStyle;
       allStyles.forEach((key) => {
         Object.defineProperty(this.style, key, {
           configurable: true,
           enumerable: true,
-          get: () => innerStyle[key],
+          get: () => innerStyle[key as keyof IStyle],
           set: (value) => {
-            innerStyle[key] = value;
+            innerStyle[key as keyof IStyle] = value;
             if (reflowAffectedStyles.indexOf(key) > -1) {
               this.isDirty = true;
               let { parent } = this;
@@ -246,7 +252,7 @@ export default class Element {
                 parent = parent.parent;
               }
             } else if (repaintAffectedStyles.indexOf(key) > -1) {
-              this.root.emit('repaint');
+              this.root?.emit('repaint');
             } else if (key === 'backgroundImage') {
               this.backgroundImageSetHandler(value);
             }
@@ -373,6 +379,10 @@ export default class Element {
   remove() {
     const { parent } = this;
 
+    if (!parent) {
+      return;
+    }
+
     const index = parent.children.indexOf(this);
 
     if (index !== -1) {
@@ -396,26 +406,26 @@ export default class Element {
     this.ctx = null;
 
     // element 在画布中的位置和尺寸信息
-    this.layoutBox = null;
-    this.style = null;
+    // this.layoutBox = null;
+    // this.style = null;
     this.className = '';
     this.classNameList = null;
   }
 
-  add(element) {
+  add(element: Element) {
     element.parent = this;
     element.parentId = this.id;
 
     this.children.push(element);
   }
 
-  appendChild(element) {
+  appendChild(element: Element) {
     this.add(element);
 
     this.setDirty();
   }
 
-  removeChild(element) {
+  removeChild(element: Element) {
     const index = this.children.indexOf(element);
     if (index !== -1) {
       element.remove();
@@ -425,23 +435,23 @@ export default class Element {
     }
   }
 
-  emit(event, ...theArgs) {
+  emit(event: string, ...theArgs: any[]) {
     EE.emit(toEventName(event, this.id), ...theArgs);
   }
 
-  on(event, callback) {
+  on(event: string, callback: Callback) {
     EE.on(toEventName(event, this.id), callback);
   }
 
-  once(event, callback) {
+  once(event: string, callback: Callback) {
     EE.once(toEventName(event, this.id), callback);
   }
 
-  off(event, callback) {
+  off(event: string, callback?: Callback) {
     EE.off(toEventName(event, this.id), callback);
   }
 
-  renderBorder(ctx) {
+  renderBorder(ctx: CanvasRenderingContext2D) {
     const style = this.style || {};
     const radius = style.borderRadius || 0;
     const { borderWidth = 0 } = style;
@@ -450,7 +460,7 @@ export default class Element {
     const borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
     const borderBottomRightRadius = style.borderBottomRightRadius || radius;
     const box = this.layoutBox;
-    const { borderColor } = style;
+    const { borderColor = '' } = style;
     const x = box.absoluteX;
     const y = box.absoluteY;
     const { width, height } = box;

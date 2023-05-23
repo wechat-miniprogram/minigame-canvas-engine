@@ -23,7 +23,7 @@ import {
   registerComponent,
 } from './common/vd';
 
-import imageManager from './common/imageManager.js';
+import imageManager from './common/imageManager';
 
 import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components/index.js';
 
