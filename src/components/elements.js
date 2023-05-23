@@ -19,6 +19,12 @@ export function getElementsById(tree, list = [], id) {
   return list;
 }
 
+export function getElementById(tree, id) {
+  const list = getElementsById(tree, [], id);
+
+  return list?.[0] || null;
+}
+
 export function getElementsByClassName(tree, list = [], className) {
   Object.keys(tree.children).forEach((key) => {
     const child = tree.children[key];
@@ -121,19 +127,6 @@ export default class Element {
     }
 
     if (typeof style.backgroundImage === 'string') {
-      // const list = style.backgroundImage.match(isValidUrlPropReg);
-      // if (list) {
-      //   const url = list[1].replace(/('|")/g, '');
-      //   imageManager.loadImage(url, (img) => {
-      //     if (!this.isDestroyed) {
-      //       this.backgroundImage = img;
-      //       // 当图片加载完成，实例可能已经被销毁了
-      //       this.root && this.root.emit('repaint');
-      //     }
-      //   });
-      // } else {
-      //   console.error(`[Layout]: ${style.backgroundImage} is not a valid backgroundImage`);
-      // }
       this.backgroundImageSetHandler(style.backgroundImage);
     }
 
@@ -290,6 +283,10 @@ export default class Element {
     );
 
     return this.viewportRect;
+  }
+
+  getElementById(id) {
+    return getElementById(this, id);
   }
 
   getElementsById(id) {

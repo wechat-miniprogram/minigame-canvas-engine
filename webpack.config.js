@@ -13,10 +13,13 @@ module.exports = {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
   },
+  resolve: {
+    extensions: ['.ts', '.js'], // 添加此行以解析类型'.ts'和'.js'的文件
+  },
   module: {
     rules: [
       {
-        test: /\.m?js$/,
+        test: /\.(ts|js)$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',

@@ -1,5 +1,7 @@
 const Layout = requirePlugin('Layout').default;
 
+GameGlobal.Layout = Layout;
+
 // 设置游戏画布尺寸
 const info = wx.getSystemInfoSync();
 const GAME_WIDTH = info.windowWidth * info.pixelRatio;

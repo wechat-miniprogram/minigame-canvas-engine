@@ -1,5 +1,5 @@
-// import Layout from './engine';
-const Layout = requirePlugin('Layout').default;
+import Layout from './engine';
+// const Layout = requirePlugin('Layout').default;
 
 // 设置游戏画布尺寸
 const info = wx.getSystemInfoSync();

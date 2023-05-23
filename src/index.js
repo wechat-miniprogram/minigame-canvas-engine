@@ -1,6 +1,6 @@
 import './env.js';
 import Element from './components/elements.js';
-import Pool from './common/pool.js';
+import Pool from './common/pool';
 import Emitter from 'tiny-emitter';
 import computeLayout from 'css-layout';
 import {
@@ -11,7 +11,7 @@ import {
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 // import TWEEN from '@tweenjs/tween.js';
-import DebugInfo from './common/debugInfo.js';
+import DebugInfo from './common/debugInfo';
 import Ticker from './common/ticker';
 import {
   create,
@@ -62,7 +62,7 @@ class Layout extends Element {
     this.touchEnd = this.eventHandler('touchend').bind(this);
     this.touchCancel = this.eventHandler('touchcancel').bind(this);
 
-    this.version = '1.0.1';
+    this.version = '1.0.2';
     this.eleCount = 0;
 
     this.state = STATE.UNINIT;

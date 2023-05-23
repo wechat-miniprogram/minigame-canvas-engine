@@ -70,8 +70,9 @@ export default class Text extends Element {
     value = '',
     dataset,
   }) {
+    let originStyleWidth = style.width;
     // 没有设置宽度的时候通过canvas计算出文字宽度
-    if (style.width === undefined) {
+    if (originStyleWidth === undefined) {
       style.width = getTextWidth(style, value);
     } else if (style.textOverflow === 'ellipsis') {
       value = parseText(style, value);
@@ -94,9 +95,20 @@ export default class Text extends Element {
       },
       set(newValue) {
         if (newValue !== this.valuesrc) {
+          if (originStyleWidth === undefined) {
+            style.width = getTextWidth(style, newValue);
+          } else if (style.textOverflow === 'ellipsis') {
+            value = parseText(style, newValue);
+          }
+
           this.valuesrc = newValue;
 
-          this.root.emit('repaint');
+          this.isDirty = true;
+          let { parent } = this;
+          while (parent) {
+            parent.isDirty = true;
+            parent = parent.parent;
+          }
         }
       },
       enumerable: true,

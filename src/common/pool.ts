@@ -1,6 +1,9 @@
-const pools = [];
+const pools: Pool[] = [];
 
-export default class Pool {
+export default class Pool<T> {
+  public name = 'pool'
+  public pool: { [key: string]: T } = {};
+
   constructor(name = 'pool') {
     const curr = pools.find(item => item.name === name);
 
@@ -14,11 +17,11 @@ export default class Pool {
     pools.push(this);
   }
 
-  get(key) {
+  get(key: string): T {
     return this.pool[key];
   }
 
-  set(key, value) {
+  set(key: string, value: T) {
     this.pool[key] = value;
   }
 
@@ -26,7 +29,7 @@ export default class Pool {
     this.pool = {};
   }
 
-  getList() {
+  getList(): T[] {
     return Object.values(this.pool);
   }
 }

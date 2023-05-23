@@ -1,5 +1,5 @@
 import Element from './elements.js';
-import Pool from '../common/pool.js';
+import Pool from '../common/pool';
 
 const bitMapPool = new Pool('bitMapPool');
 
