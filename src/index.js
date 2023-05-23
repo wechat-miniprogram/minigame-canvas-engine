@@ -1,5 +1,5 @@
 import './env.js';
-import Element from './components/elements.js';
+import Element from './components/elements';
 import Pool from './common/pool';
 import Emitter from 'tiny-emitter';
 import computeLayout from 'css-layout';

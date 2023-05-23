@@ -5,7 +5,7 @@ import Text from './text.js';
 import ScrollView from './scrollview.js';
 import BitMapText from './bitmaptext.js';
 import Canvas from './canvas.js';
-import Element from './elements.js';
+import Element from './elements';
 
 export {
   Element,

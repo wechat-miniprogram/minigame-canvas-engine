@@ -1,4 +1,4 @@
-import Element from './elements.js';
+import Element from './elements';
 
 export default class View extends Element {
   constructor({

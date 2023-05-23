@@ -1,4 +1,4 @@
-import Element from './elements.js';
+import Element from './elements';
 import Pool from '../common/pool';
 
 const bitMapPool = new Pool('bitMapPool');

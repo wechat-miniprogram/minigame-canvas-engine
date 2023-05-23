@@ -1,4 +1,4 @@
-import Element from './elements.js';
+import Element from './elements';
 import { createCanvas } from '../common/util';
 
 export default class Canvas extends Element {

@@ -1,4 +1,4 @@
-import Element from './elements.js';
+import Element from './elements';
 import imageManager from '../common/imageManager';
 
 export default class Image extends Element {

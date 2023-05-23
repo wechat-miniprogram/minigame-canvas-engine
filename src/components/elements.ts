@@ -1,9 +1,10 @@
 /* eslint-disable no-param-reassign */
-import { repaintAffectedStyles, reflowAffectedStyles, allStyles } from './style.js';
+import { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle } from './style';
 import Rect from '../common/rect';
 import imageManager from '../common/imageManager';
+// import { TinyEmitter } from '../../node_modules/tiny-emitter/index';
 
-export function getElementsById(tree, list = [], id) {
+export function getElementsById(tree: Element, list = [], id: string) {
   Object.keys(tree.children).forEach((key) => {
     const child = tree.children[key];
 
@@ -85,28 +86,70 @@ const toEventName = (event, id) => {
   return `element-${id}-${event}`;
 };
 
+interface ILayoutBox {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  absoluteX: number;
+  absoluteY: number;
+  originalAbsoluteX: number;
+  originalAbsoluteY: number;
+}
 
 const isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
 
 export default class Element {
+  public children: Element[] = [];
+  public parent: Element | null = null;
+  public parentId = 0;
+  public id: number;
+  public idName: string;
+  public className: string;
+  public root: Element | null;
+  public EE: any;
+  public isDestroyed = false;
+  public dataset: Record<string, string>;
+  public style: IStyle;
+  public rect: Rect | null;
+  public viewportRect: Rect | null;
+  public classNameList: string[] | null;
+  public layoutBox: ILayoutBox;
+  public backgroundImage: any;
+  public ctx: CanvasRenderingContext2D | null = null
+
+  private originStyle: IStyle;
+  private isDirty = false;
+  
   constructor({
     style = {},
     idName = '',
     className = '',
     id = uuid += 1,
     dataset = {},
+  }: {
+    style?: IStyle;
+    idName?: string;
+    className?: string;
+    id?: number;
+    dataset?: Record<string, string>;
   }) {
-    this.children = [];
-    this.parent = null;
-    this.parentId = 0;
     this.id = id;
     this.idName = idName;
     this.className = className;
     // this.style = style;
     this.EE = EE;
     this.root = null;
-    this.isDestroyed = false;
-    this.layoutBox = {};
+    this.layoutBox = {
+      left: 0,
+      top: 0,
+      width: 0,
+      height: 0,
+      absoluteX: 0,
+      absoluteY: 0,
+      originalAbsoluteX: 0,
+      originalAbsoluteY: 0,
+    };
 
     this.dataset = dataset;
 
@@ -137,12 +180,12 @@ export default class Element {
     this.classNameList = null;
   }
 
-  backgroundImageSetHandler(backgroundImage) {
+  backgroundImageSetHandler(backgroundImage: string) {
     if (typeof backgroundImage === 'string') {
       const list = backgroundImage.match(isValidUrlPropReg);
       if (list) {
         const url = list[1].replace(/('|")/g, '');
-        imageManager.loadImage(url, (img) => {
+        imageManager.loadImage(url, (img: any) => {
           if (!this.isDestroyed) {
             this.backgroundImage = img;
             // 当图片加载完成，实例可能已经被销毁了
@@ -285,19 +328,19 @@ export default class Element {
     return this.viewportRect;
   }
 
-  getElementById(id) {
+  getElementById(id: string): Element | null {
     return getElementById(this, id);
   }
 
-  getElementsById(id) {
+  getElementsById(id: string): (Element | null)[] {
     return getElementsById(this, [], id);
   }
 
-  getElementsByClassName(className) {
+  getElementsByClassName(className: string): (Element | null)[] {
     return getElementsByClassName(this, [], className);
   }
 
-  insert(ctx, needRender) {
+  insert(ctx: CanvasRenderingContext2D, needRender: boolean) {
     this.ctx = ctx;
 
     if (needRender) {

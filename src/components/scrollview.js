@@ -100,7 +100,7 @@ export default class ScrollView extends View {
   }
 
   repaint() {
-    this.scrollRender(this.scrollLeft, this.scrollTop);
+    this.scrollRender();
   }
 
   destroySelf() {
@@ -113,11 +113,11 @@ export default class ScrollView extends View {
     this.root = null;
   }
 
-  renderTreeWithTop(tree, top, left) {
+  renderTreeWithTop(tree) {
     tree.render();
 
     tree.children.forEach((child) => {
-      this.renderTreeWithTop(child, top, left);
+      this.renderTreeWithTop(child);
     });
   }
 
@@ -126,19 +126,14 @@ export default class ScrollView extends View {
     this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
   }
 
-  scrollRender(left = 0, top = 0) {
+  scrollRender() {
     const box = this.layoutBox;
-    this.scrollTop = top;
-    this.scrollLeft = left;
 
     const { absoluteX: startX, absoluteY: startY, width, height } = box;
 
     // 根据滚动值获取裁剪区域
     const endX = startX + width;
     const endY = startY + height;
-
-    // 清理滚动画布和主屏画布
-    // this.clear();
 
     // ScrollView 作为容器本身的渲染
     this.render();
@@ -158,7 +153,7 @@ export default class ScrollView extends View {
       // 判断处于可视窗口内的子节点，递归渲染该子节点
       if (absoluteY + height >= startY && absoluteY <= endY
         && absoluteX + width >= startX && absoluteX <= endX) {
-        this.renderTreeWithTop(child, this.scrollTop, this.scrollLeft);
+        this.renderTreeWithTop(child);
       }
     });
 
@@ -174,8 +169,13 @@ export default class ScrollView extends View {
           ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
         }
       });
-      // this.scrollRender(left, top);
+
+      // 这里要把滚动状态保存起来，因为在reflow的时候需要做重置，渲染并不依赖这两个信息
+      this.scrollTop = top;
+      this.scrollLeft = left;
+
       this.root.emit('repaint');
+
       if (this.currentEvent) {
         this.emit('scroll', this.currentEvent);
       }
