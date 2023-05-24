@@ -375,7 +375,6 @@ var Element = /*#__PURE__*/function () {
     this.originStyle = style;
     this.style = style;
     this.rect = null;
-    this.viewportRect = null;
     this.classNameList = null;
   }
   (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Element, [{
@@ -495,26 +494,6 @@ var Element = /*#__PURE__*/function () {
       }
       this.rect.set(this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
       return this.rect;
-    }
-  }, {
-    key: "getViewportRect",
-    value: function getViewportRect() {
-      var realLayoutBox = this.root.realLayoutBox;
-      var viewportScale = this.root.viewportScale;
-      var _this$layoutBox = this.layoutBox,
-        absoluteX = _this$layoutBox.absoluteX,
-        absoluteY = _this$layoutBox.absoluteY,
-        width = _this$layoutBox.width,
-        height = _this$layoutBox.height;
-      var realX = absoluteX * viewportScale + realLayoutBox.realX;
-      var realY = absoluteY * viewportScale + realLayoutBox.realY;
-      var realWidth = width * viewportScale;
-      var realHeight = height * viewportScale;
-      if (!this.viewportRect) {
-        this.viewportRect = new _common_rect__WEBPACK_IMPORTED_MODULE_4__["default"](realX, realY, realWidth, realHeight);
-      }
-      this.viewportRect.set(realX, realY, realWidth, realHeight);
-      return this.viewportRect;
     }
   }, {
     key: "getElementById",
@@ -6236,8 +6215,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_debugInfo__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(28);
 /* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(31);
 /* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(30);
-/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(41);
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(16);
+/* harmony import */ var _common_rect__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(15);
+/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(41);
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(16);
 
 
 
@@ -6256,6 +6236,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 
 // import TWEEN from '@tweenjs/tween.js';
+
 
 
 
@@ -6281,12 +6262,12 @@ var Layout = /*#__PURE__*/function (_Element) {
       name: name
     });
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Element", _components_elements__WEBPACK_IMPORTED_MODULE_8__["default"]);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "View", _components__WEBPACK_IMPORTED_MODULE_19__.View);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Text", _components__WEBPACK_IMPORTED_MODULE_19__.Text);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Image", _components__WEBPACK_IMPORTED_MODULE_19__.Image);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "ScrollView", _components__WEBPACK_IMPORTED_MODULE_19__.ScrollView);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "BitMapText", _components__WEBPACK_IMPORTED_MODULE_19__.BitMapText);
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Canvas", _components__WEBPACK_IMPORTED_MODULE_19__.Canvas);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "View", _components__WEBPACK_IMPORTED_MODULE_20__.View);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Text", _components__WEBPACK_IMPORTED_MODULE_20__.Text);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Image", _components__WEBPACK_IMPORTED_MODULE_20__.Image);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "ScrollView", _components__WEBPACK_IMPORTED_MODULE_20__.ScrollView);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "BitMapText", _components__WEBPACK_IMPORTED_MODULE_20__.BitMapText);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "Canvas", _components__WEBPACK_IMPORTED_MODULE_20__.Canvas);
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "registerComponent", _common_vd__WEBPACK_IMPORTED_MODULE_17__.registerComponent);
     _this.hasEventHandler = false;
     _this.elementTree = null;
@@ -6495,6 +6476,22 @@ var Layout = /*#__PURE__*/function (_Element) {
       (0,_common_vd__WEBPACK_IMPORTED_MODULE_17__.repaintChildren)(this.children);
     }
   }, {
+    key: "getElementViewportRect",
+    value: function getElementViewportRect(element) {
+      var realLayoutBox = this.realLayoutBox,
+        viewportScale = this.viewportScale;
+      var _element$layoutBox = element.layoutBox,
+        absoluteX = _element$layoutBox.absoluteX,
+        absoluteY = _element$layoutBox.absoluteY,
+        width = _element$layoutBox.width,
+        height = _element$layoutBox.height;
+      var realX = absoluteX * viewportScale + realLayoutBox.realX;
+      var realY = absoluteY * viewportScale + realLayoutBox.realY;
+      var realWidth = width * viewportScale;
+      var realHeight = height * viewportScale;
+      return new _common_rect__WEBPACK_IMPORTED_MODULE_18__["default"](realX, realY, realWidth, realHeight);
+    }
+  }, {
     key: "getChildByPos",
     value: function getChildByPos(tree, x, y, itemList) {
       var _this2 = this;
@@ -6650,7 +6647,7 @@ var Layout = /*#__PURE__*/function (_Element) {
     value: function loadImgs() {
       var arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       return Promise.all(arr.map(function (src) {
-        return _common_imageManager__WEBPACK_IMPORTED_MODULE_18__["default"].loadImagePromise(src);
+        return _common_imageManager__WEBPACK_IMPORTED_MODULE_19__["default"].loadImagePromise(src);
       }));
     }
   }, {
