@@ -170,7 +170,7 @@ export default class RichText extends Element {
        * 2. 目前暴力处理，不管当前dc什么状态，只要是有 style 就创建新的dc
        */
       if (styleStr) {
-        styleObj = styleStr.split(';').reduce((res, curr) => {
+        styleObj = styleStr.split(';').filter(item => !!item).reduce((res, curr) => {
           const temp = curr.split(':');
           res[temp[0]] = temp[1].trim();
 
