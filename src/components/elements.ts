@@ -113,7 +113,6 @@ export default class Element {
   public dataset: Record<string, string>;
   public style: IStyle;
   public rect: Rect | null;
-  public viewportRect: Rect | null;
   public classNameList: string[] | null;
   public layoutBox: ILayoutBox;
   public backgroundImage: any;
@@ -179,7 +178,6 @@ export default class Element {
     this.originStyle = style;
     this.style = style;
     this.rect = null;
-    this.viewportRect = null;
     this.classNameList = null;
   }
 
@@ -298,40 +296,6 @@ export default class Element {
     );
 
     return this.rect;
-  }
-
-  getViewportRect() {
-    const { realLayoutBox } = this.root;
-    const { viewportScale } = this.root;
-    const {
-      absoluteX,
-      absoluteY,
-      width,
-      height,
-    } = this.layoutBox;
-
-    const realX = absoluteX * viewportScale + realLayoutBox.realX;
-    const realY = absoluteY * viewportScale + realLayoutBox.realY;
-    const realWidth = width * viewportScale;
-    const realHeight = height * viewportScale;
-
-    if (!this.viewportRect) {
-      this.viewportRect = new Rect(
-        realX,
-        realY,
-        realWidth,
-        realHeight,
-      );
-    }
-
-    this.viewportRect.set(
-      realX,
-      realY,
-      realWidth,
-      realHeight,
-    );
-
-    return this.viewportRect;
   }
 
   getElementById(id: string): Element | null {

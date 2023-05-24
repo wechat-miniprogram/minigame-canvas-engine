@@ -22,6 +22,7 @@ import {
   clone,
   registerComponent,
 } from './common/vd';
+import Rect from './common/rect';
 
 import imageManager from './common/imageManager';
 
@@ -267,6 +268,28 @@ class Layout extends Element {
 
     this.isNeedRepaint = false;
     repaintChildren(this.children);
+  }
+
+  getElementViewportRect(element) {
+    const { realLayoutBox, viewportScale } = this;
+    const {
+      absoluteX,
+      absoluteY,
+      width,
+      height,
+    } = element.layoutBox;
+
+    const realX = absoluteX * viewportScale + realLayoutBox.realX;
+    const realY = absoluteY * viewportScale + realLayoutBox.realY;
+    const realWidth = width * viewportScale;
+    const realHeight = height * viewportScale;
+
+    return new Rect(
+      realX,
+      realY,
+      realWidth,
+      realHeight,
+    );
   }
 
   getChildByPos(tree, x, y, itemList) {
