@@ -27,6 +27,11 @@ declare module "scroller" {
 
   export class Scroller {
     constructor(callback: (left: number, top: number, zoom: number) => void, options?: Scroller.Options);
+    __clientWidth: number;
+    __clientHeight: number;
+    __contentWidth: number;
+    __contentHeight: number;
+    options: Scroller.Options;
     setDimensions(clientWidth: number, clientHeight: number, contentWidth: number, contentHeight: number): void;
     setPosition(clientLeft: number, clientTop: number): void;
     setSnapSize(width: number, height: number): void;

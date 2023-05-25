@@ -453,7 +453,7 @@ class Layout extends Element {
   registBitMapFont(name, src, config) {
     if (!bitMapPool.get(name)) {
       const font = new BitMapFont(name, src, config);
-      this.bitMapFonts.push(font);        
+      this.bitMapFonts.push(font);
       bitMapPool.set(name, font)
     }
   }

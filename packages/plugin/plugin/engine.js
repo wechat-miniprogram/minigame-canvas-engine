@@ -3733,6 +3733,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 var dpr = (0,_common_util__WEBPACK_IMPORTED_MODULE_1__.getDpr)();
+;
 var ScrollView = /** @class */ (function (_super) {
     __extends(ScrollView, _super);
     function ScrollView(_a) {
@@ -3812,7 +3813,6 @@ var ScrollView = /** @class */ (function (_super) {
             return this.innerScrollerOption;
         },
         set: function (value) {
-            if (value === void 0) { value = {}; }
             Object.assign(this.innerScrollerOption, value);
             if (this.scrollerObj) {
                 Object.assign(this.scrollerObj.options, this.scrollerOption);
@@ -3825,10 +3825,10 @@ var ScrollView = /** @class */ (function (_super) {
         this.scrollRender();
     };
     ScrollView.prototype.destroySelf = function () {
-        this.touch = null;
+        // this.touch = null;
         this.isDestroyed = true;
         this.ctx = null;
-        this.children = null;
+        this.children = [];
         this.root.off('touchend');
         this.root = null;
     };
@@ -3847,6 +3847,7 @@ var ScrollView = /** @class */ (function (_super) {
         var _this = this;
         var box = this.layoutBox;
         var startX = box.absoluteX, startY = box.absoluteY, width = box.width, height = box.height;
+        var ctx = this.ctx;
         // 根据滚动值获取裁剪区域
         var endX = startX + width;
         var endY = startY + height;
@@ -3856,10 +3857,10 @@ var ScrollView = /** @class */ (function (_super) {
          * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的
          * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
          */
-        this.ctx.save();
-        this.ctx.beginPath();
-        this.ctx.rect(startX, startY, width, height);
-        this.ctx.clip();
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(startX, startY, width, height);
+        ctx.clip();
         this.children.forEach(function (child) {
             var _a = child.layoutBox, width = _a.width, height = _a.height, absoluteX = _a.absoluteX, absoluteY = _a.absoluteY;
             // 判断处于可视窗口内的子节点，递归渲染该子节点
@@ -3868,7 +3869,7 @@ var ScrollView = /** @class */ (function (_super) {
                 _this.renderTreeWithTop(child);
             }
         });
-        this.ctx.restore();
+        ctx.restore();
     };
     ScrollView.prototype.scrollHandler = function (left, top) {
         var _this = this;
