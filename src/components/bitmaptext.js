@@ -39,6 +39,7 @@ export default class BitMapText extends Element {
       configurable: true,
     });
 
+    console.log(bitMapPool)
     this.font = bitMapPool.get(font);
     if (!this.font) {
       console.error(`Missing BitmapFont "${font}", please invoke API "registBitMapFont" before using "BitMapText"`);

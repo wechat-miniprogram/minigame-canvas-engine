@@ -31,6 +31,7 @@ import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components'
 // 全局事件管道
 export const EE = new Emitter();
 const imgPool = new Pool('imgPool');
+const bitMapPool = new Pool('bitMapPool');
 const debugInfo = new DebugInfo();
 
 class Layout extends Element {
@@ -449,8 +450,11 @@ class Layout extends Element {
   }
 
   registBitMapFont(name, src, config) {
-    const font = new BitMapFont(name, src, config);
-    this.bitMapFonts.push(font);
+    if (!bitMapPool.get(name)) {
+      const font = new BitMapFont(name, src, config);
+      this.bitMapFonts.push(font);        
+      bitMapPool.set(name, font)
+    }
   }
 
   cloneNode(element, deep = true) {
