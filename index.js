@@ -324,6 +324,7 @@ var toEventName = function toEventName(event, id) {
   }
   return "element-".concat(id, "-").concat(event);
 };
+;
 var isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
 var Element = /*#__PURE__*/function () {
   function Element(_ref) {
@@ -344,6 +345,7 @@ var Element = /*#__PURE__*/function () {
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "isDestroyed", false);
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "ctx", null);
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "isDirty", false);
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "shouldUpdate", false);
     this.id = id;
     this.idName = idName;
     this.className = className;
@@ -857,38 +859,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(41);
-/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(17);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
+/* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(41);
 
 
 
 
-var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_3__["default"]('bitMapPool');
 var Emitter = __webpack_require__(19);
-
 /**
  * http://www.angelcode.com/products/bmfont/doc/file_format.html
  */
 var BitMapFont = /*#__PURE__*/function () {
+  // pool的实现放到类里面实现并不优雅，先去掉了
   function BitMapFont(name, src, config) {
     var _this = this;
     (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, BitMapFont);
-    var cache = bitMapPool.get(name);
-    if (cache) {
-      return cache;
-    }
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__["default"])(this, "ready", false);
     this.config = config;
     this.chars = this.parseConfig(config);
-    this.ready = false;
     this.event = new Emitter();
-    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_2__["default"].loadImage(src, function (texture, fromCache) {
+    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_3__["default"].loadImage(src, function (texture, fromCache) {
       if (fromCache) {
         _this.texture = texture;
       }
       _this.ready = true;
       _this.event.emit('text__load__done');
     });
-    bitMapPool.set(name, this);
   }
   (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(BitMapFont, [{
     key: "parseConfig",
@@ -917,16 +913,17 @@ var BitMapFont = /*#__PURE__*/function () {
       for (var i = 4; i < 4 + charsCount; i++) {
         var charText = lines[i];
         var letter = String.fromCharCode(this.getConfigByKeyInOneLine(charText, 'id'));
-        var c = {};
+        var c = {
+          x: this.getConfigByKeyInOneLine(charText, 'x'),
+          y: this.getConfigByKeyInOneLine(charText, 'y'),
+          w: this.getConfigByKeyInOneLine(charText, 'width'),
+          h: this.getConfigByKeyInOneLine(charText, 'height'),
+          offX: this.getConfigByKeyInOneLine(charText, 'xoffset'),
+          offY: this.getConfigByKeyInOneLine(charText, 'yoffset'),
+          xadvance: this.getConfigByKeyInOneLine(charText, 'xadvance'),
+          kerning: {}
+        };
         chars[letter] = c;
-        c.x = this.getConfigByKeyInOneLine(charText, 'x');
-        c.y = this.getConfigByKeyInOneLine(charText, 'y');
-        c.w = this.getConfigByKeyInOneLine(charText, 'width');
-        c.h = this.getConfigByKeyInOneLine(charText, 'height');
-        c.offX = this.getConfigByKeyInOneLine(charText, 'xoffset');
-        c.offY = this.getConfigByKeyInOneLine(charText, 'yoffset');
-        c.xadvance = this.getConfigByKeyInOneLine(charText, 'xadvance');
-        c.kerning = {};
       }
 
       // parse kernings
@@ -948,7 +945,7 @@ var BitMapFont = /*#__PURE__*/function () {
     value: function getConfigByLineName(linesParsed) {
       var lineName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
       var index = -1;
-      var line = null;
+      var line = [];
       var len = linesParsed.length;
       for (var i = 0; i < len; i++) {
         var item = linesParsed[i];
@@ -3048,7 +3045,223 @@ function validateTagName(tagname, regxTagName) {
 }
 
 /***/ }),
-/* 27 */,
+/* 27 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clone: () => (/* binding */ clone),
+/* harmony export */   create: () => (/* binding */ create),
+/* harmony export */   iterateTree: () => (/* binding */ iterateTree),
+/* harmony export */   layoutChildren: () => (/* binding */ layoutChildren),
+/* harmony export */   registerComponent: () => (/* binding */ registerComponent),
+/* harmony export */   renderChildren: () => (/* binding */ renderChildren),
+/* harmony export */   repaintChildren: () => (/* binding */ repaintChildren),
+/* harmony export */   repaintTree: () => (/* binding */ repaintTree)
+/* harmony export */ });
+/* harmony import */ var _components_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
+/* eslint-disable no-param-reassign */
+// components
+
+var constructorMap = {
+  view: _components_index__WEBPACK_IMPORTED_MODULE_0__.View,
+  text: _components_index__WEBPACK_IMPORTED_MODULE_0__.Text,
+  image: _components_index__WEBPACK_IMPORTED_MODULE_0__.Image,
+  scrollview: _components_index__WEBPACK_IMPORTED_MODULE_0__.ScrollView,
+  bitmaptext: _components_index__WEBPACK_IMPORTED_MODULE_0__.BitMapText,
+  canvas: _components_index__WEBPACK_IMPORTED_MODULE_0__.Canvas
+};
+function registerComponent(name, Constructor) {
+  constructorMap[name] = Constructor;
+}
+function isPercent(data) {
+  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
+}
+function convertPercent(data, parentData) {
+  if (typeof data === 'number' || data === null) {
+    return data;
+  }
+  var matchData = data.match(/(\d+(?:\.\d+)?)%/);
+  if (matchData && matchData[1]) {
+    return parentData * parseFloat(matchData[1]) * 0.01;
+  }
+}
+function create(node, style, parent) {
+  var _this = this;
+  var Constructor = constructorMap[node.name];
+  if (!Constructor) {
+    console.error("[Layout] \u4E0D\u652F\u6301\u7EC4\u4EF6 ".concat(node.name));
+    return null;
+  }
+  var children = node.children || [];
+  var attr = node.attr || {};
+  var dataset = {};
+  var id = attr.id || '';
+  var args = Object.keys(attr).reduce(function (obj, key) {
+    var value = attr[key];
+    var attribute = key;
+    if (key === 'id') {
+      obj.style = Object.assign(obj.style || {}, style[id] || {});
+      return obj;
+    }
+    if (key === 'class') {
+      obj.style = value.split(/\s+/).reduce(function (res, oneClass) {
+        return Object.assign(res, style[oneClass]);
+      }, obj.style || {});
+      return obj;
+    }
+    if (value === 'true') {
+      obj[attribute] = true;
+    } else if (value === 'false') {
+      obj[attribute] = false;
+    } else {
+      obj[attribute] = value;
+    }
+    if (attribute.startsWith('data-')) {
+      var dataKey = attribute.substring(5);
+      dataset[dataKey] = value;
+    }
+    obj.dataset = dataset;
+    return obj;
+  }, {});
+
+  // 用于后续元素查询
+  args.idName = id;
+  // @ts-ignore
+  this.eleCount += 1;
+  // @ts-ignore
+  args.id = this.eleCount;
+  args.className = attr["class"] || '';
+  var thisStyle = args.style;
+  if (thisStyle) {
+    var parentStyle;
+    if (parent) {
+      parentStyle = parent.style;
+    } else if (typeof sharedCanvas !== 'undefined') {
+      parentStyle = sharedCanvas;
+    } else if (typeof __env !== 'undefined') {
+      parentStyle = __env.getSharedCanvas();
+    } else {
+      parentStyle = {
+        width: 300,
+        height: 150
+      };
+    }
+    if (isPercent(thisStyle.width)) {
+      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
+    }
+    if (isPercent(thisStyle.height)) {
+      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
+    }
+  }
+
+  // console.log(args);
+  var element = new Constructor(args);
+  // @ts-ignore
+  element.root = this;
+  element.tagName = node.name;
+  children.forEach(function (childNode) {
+    // @ts-ignore
+    var childElement = create.call(_this, childNode, style, args);
+    if (childElement) {
+      element.add(childElement);
+    }
+  });
+  return element;
+}
+function renderChildren(children, context) {
+  var needRender = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  children.forEach(function (child) {
+    child.shouldUpdate = false;
+    child.isDirty = false;
+    child.insert(context, needRender);
+
+    // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
+    return renderChildren(child.children, context, child.type === 'ScrollView' ? false : needRender);
+  });
+}
+
+/**
+ * 将布局树的布局信息加工赋值到渲染树
+ */
+function layoutChildren(element) {
+  element.children.forEach(function (child) {
+    child.layoutBox = child.layoutBox || {};
+    ['left', 'top', 'width', 'height'].forEach(function (prop) {
+      var _child$layout;
+      child.layoutBox[prop] = (_child$layout = child.layout) === null || _child$layout === void 0 ? void 0 : _child$layout[prop];
+    });
+    if (child.parent) {
+      child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
+      child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
+    } else {
+      child.layoutBox.absoluteX = child.layoutBox.left;
+      child.layoutBox.absoluteY = child.layoutBox.top;
+    }
+    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
+    layoutChildren(child);
+  });
+}
+function none() {}
+function iterateTree(element) {
+  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : none;
+  callback(element);
+  element.children.forEach(function (child) {
+    iterateTree(child, callback);
+  });
+}
+var repaintChildren = function repaintChildren(children) {
+  children.forEach(function (child) {
+    child.repaint();
+    if (child.type !== 'ScrollView') {
+      repaintChildren(child.children);
+    }
+  });
+};
+var repaintTree = function repaintTree(tree) {
+  tree.repaint();
+  tree.children.forEach(function (child) {
+    child.repaint();
+    repaintTree(child);
+  });
+};
+function clone(root, element) {
+  var deep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  var parent = arguments.length > 3 ? arguments[3] : undefined;
+  var Constructor = constructorMap[element.tagName];
+  // @ts-ignore
+  root.eleCount += 1;
+  var args = {
+    style: Object.assign({}, element.style),
+    idName: element.idName,
+    className: element.className,
+    // @ts-ignore
+    id: root.eleCount,
+    dataset: Object.assign({}, element.dataset)
+  };
+  if (element instanceof _components_index__WEBPACK_IMPORTED_MODULE_0__.Image) {
+    args.src = element.src;
+  } else if (element instanceof _components_index__WEBPACK_IMPORTED_MODULE_0__.Text || element instanceof _components_index__WEBPACK_IMPORTED_MODULE_0__.BitMapText) {
+    args.value = element.value;
+  }
+  var newElemenet = new Constructor(args);
+  newElemenet.root = root;
+  newElemenet.insert(root.renderContext, false);
+  newElemenet.observeStyleAndEvent();
+  if (parent) {
+    parent.add(newElemenet);
+  }
+  if (deep) {
+    element.children.forEach(function (child) {
+      clone(root, child, deep, newElemenet);
+    });
+  }
+  return newElemenet;
+}
+
+/***/ }),
 /* 28 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -3220,222 +3433,7 @@ function copyTouchArray(touches) {
 }
 
 /***/ }),
-/* 30 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   clone: () => (/* binding */ clone),
-/* harmony export */   create: () => (/* binding */ create),
-/* harmony export */   iterateTree: () => (/* binding */ iterateTree),
-/* harmony export */   layoutChildren: () => (/* binding */ layoutChildren),
-/* harmony export */   registerComponent: () => (/* binding */ registerComponent),
-/* harmony export */   renderChildren: () => (/* binding */ renderChildren),
-/* harmony export */   repaintChildren: () => (/* binding */ repaintChildren),
-/* harmony export */   repaintTree: () => (/* binding */ repaintTree)
-/* harmony export */ });
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
-/* eslint-disable no-param-reassign */
-// components
-
-var constructorMap = {
-  view: _components__WEBPACK_IMPORTED_MODULE_0__.View,
-  text: _components__WEBPACK_IMPORTED_MODULE_0__.Text,
-  image: _components__WEBPACK_IMPORTED_MODULE_0__.Image,
-  scrollview: _components__WEBPACK_IMPORTED_MODULE_0__.ScrollView,
-  bitmaptext: _components__WEBPACK_IMPORTED_MODULE_0__.BitMapText,
-  canvas: _components__WEBPACK_IMPORTED_MODULE_0__.Canvas
-};
-function registerComponent(name, Constructor) {
-  constructorMap[name] = Constructor;
-}
-function isPercent(data) {
-  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
-}
-function convertPercent(data, parentData) {
-  if (typeof data === 'number') {
-    return data;
-  }
-  var matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
-  if (matchData) {
-    return parentData * matchData * 0.01;
-  }
-}
-function create(node, style, parent) {
-  var _this = this;
-  var Constructor = constructorMap[node.name];
-  if (!Constructor) {
-    console.error("[Layout] \u4E0D\u652F\u6301\u7EC4\u4EF6 ".concat(node.name));
-    return null;
-  }
-  var children = node.children || [];
-  var attr = node.attr || {};
-  var dataset = {};
-  var id = attr.id || '';
-  var args = Object.keys(attr).reduce(function (obj, key) {
-    var value = attr[key];
-    var attribute = key;
-    if (key === 'id') {
-      obj.style = Object.assign(obj.style || {}, style[id] || {});
-      return obj;
-    }
-    if (key === 'class') {
-      obj.style = value.split(/\s+/).reduce(function (res, oneClass) {
-        return Object.assign(res, style[oneClass]);
-      }, obj.style || {});
-      return obj;
-    }
-
-    // if (/\{\{.+\}\}/.test(value)) {
-
-    // }
-    if (value === 'true') {
-      obj[attribute] = true;
-    } else if (value === 'false') {
-      obj[attribute] = false;
-    } else {
-      obj[attribute] = value;
-    }
-    if (attribute.startsWith('data-')) {
-      var dataKey = attribute.substring(5);
-      dataset[dataKey] = value;
-    }
-    obj.dataset = dataset;
-    return obj;
-  }, {});
-
-  // 用于后续元素查询
-  args.idName = id;
-  this.eleCount += 1;
-  args.id = this.eleCount;
-  args.className = attr["class"] || '';
-  var thisStyle = args.style;
-  if (thisStyle) {
-    var parentStyle;
-    if (parent) {
-      parentStyle = parent.style;
-    } else if (typeof sharedCanvas !== 'undefined') {
-      parentStyle = sharedCanvas;
-    } else if (typeof __env !== 'undefined') {
-      parentStyle = __env.getSharedCanvas();
-    } else {
-      parentStyle = {
-        width: 300,
-        height: 150
-      };
-    }
-    if (isPercent(thisStyle.width)) {
-      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
-    }
-    if (isPercent(thisStyle.height)) {
-      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
-    }
-  }
-
-  // console.log(args);
-  var element = new Constructor(args);
-  element.root = this;
-  element.tagName = node.name;
-  children.forEach(function (childNode) {
-    var childElement = create.call(_this, childNode, style, args);
-    if (childElement) {
-      element.add(childElement);
-    }
-  });
-  return element;
-}
-function renderChildren(children, context) {
-  var needRender = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  children.forEach(function (child) {
-    child.shouldUpdate = false;
-    child.isDirty = false;
-    child.insert(context, needRender);
-
-    // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-    return renderChildren(child.children, context, child.type === 'ScrollView' ? false : needRender);
-  });
-}
-
-/**
- * 将布局树的布局信息加工赋值到渲染树
- */
-function layoutChildren(element) {
-  var _this2 = this;
-  element.children.forEach(function (child) {
-    child.layoutBox = child.layoutBox || {};
-    ['left', 'top', 'width', 'height'].forEach(function (prop) {
-      child.layoutBox[prop] = child.layout[prop];
-    });
-    if (child.parent) {
-      child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
-      child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
-    } else {
-      child.layoutBox.absoluteX = child.layoutBox.left;
-      child.layoutBox.absoluteY = child.layoutBox.top;
-    }
-    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
-    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
-    layoutChildren.call(_this2, child);
-  });
-}
-function none() {}
-function iterateTree(element) {
-  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : none;
-  callback(element);
-  element.children.forEach(function (child) {
-    iterateTree(child, callback);
-  });
-}
-var repaintChildren = function repaintChildren(children) {
-  children.forEach(function (child) {
-    child.repaint();
-    if (child.type !== 'ScrollView') {
-      repaintChildren(child.children);
-    }
-  });
-};
-var repaintTree = function repaintTree(tree) {
-  tree.repaint();
-  tree.children.forEach(function (child) {
-    child.repaint();
-    repaintTree(child);
-  });
-};
-function clone(element) {
-  var _this3 = this;
-  var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  var parent = arguments.length > 2 ? arguments[2] : undefined;
-  var Constructor = constructorMap[element.tagName];
-  this.eleCount += 1;
-  var args = {
-    style: Object.assign({}, element.style),
-    idName: element.idName,
-    className: element.className,
-    id: this.eleCount,
-    dataset: Object.assign({}, element.dataset)
-  };
-  if (element instanceof _components__WEBPACK_IMPORTED_MODULE_0__.Image) {
-    args.src = element.src;
-  } else if (element instanceof _components__WEBPACK_IMPORTED_MODULE_0__.Text || element instanceof _components__WEBPACK_IMPORTED_MODULE_0__.BitMapText) {
-    args.value = element.value;
-  }
-  var newElemenet = new Constructor(args);
-  newElemenet.root = this;
-  newElemenet.insert(this.renderContext, false);
-  newElemenet.observeStyleAndEvent();
-  if (parent) {
-    parent.add(newElemenet);
-  }
-  if (deep) {
-    element.children.forEach(function (child) {
-      clone.call(_this3, child, deep, newElemenet);
-    });
-  }
-  return newElemenet;
-}
-
-/***/ }),
+/* 30 */,
 /* 31 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -4008,7 +4006,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(29);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(36);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _common_vd_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(30);
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(27);
 
 
 
@@ -4191,7 +4189,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
       var _this4 = this;
       // 可能被销毁了或者节点树还没准备好
       if (!this.isDestroyed && !this.isFirstScroll) {
-        (0,_common_vd_js__WEBPACK_IMPORTED_MODULE_8__.iterateTree)(this, function (ele) {
+        (0,_common_vd__WEBPACK_IMPORTED_MODULE_8__.iterateTree)(this, function (ele) {
           if (ele !== _this4) {
             ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
             ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
@@ -4231,7 +4229,7 @@ var ScrollView = /*#__PURE__*/function (_View) {
         }
 
         // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
-        (0,_common_vd_js__WEBPACK_IMPORTED_MODULE_8__.iterateTree)(this, function (ele) {
+        (0,_common_vd__WEBPACK_IMPORTED_MODULE_8__.iterateTree)(this, function (ele) {
           if (ele !== _this5) {
             ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - _this5.scrollTop;
             ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - _this5.scrollLeft;
@@ -5765,6 +5763,7 @@ var BitMapText = /*#__PURE__*/function (_Element) {
       enumerable: true,
       configurable: true
     });
+    console.log(bitMapPool);
     _this.font = bitMapPool.get(font);
     if (!_this.font) {
       console.error("Missing BitmapFont \"".concat(font, "\", please invoke API \"registBitMapFont\" before using \"BitMapText\""));
@@ -6214,7 +6213,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(18);
 /* harmony import */ var _common_debugInfo__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(28);
 /* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(31);
-/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(30);
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(27);
 /* harmony import */ var _common_rect__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(15);
 /* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(41);
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(16);
@@ -6246,6 +6245,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 // 全局事件管道
 var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_10___default())();
 var imgPool = new _common_pool__WEBPACK_IMPORTED_MODULE_9__["default"]('imgPool');
+var bitMapPool = new _common_pool__WEBPACK_IMPORTED_MODULE_9__["default"]('bitMapPool');
 var debugInfo = new _common_debugInfo__WEBPACK_IMPORTED_MODULE_15__["default"]();
 var Layout = /*#__PURE__*/function (_Element) {
   (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__["default"])(Layout, _Element);
@@ -6374,6 +6374,7 @@ var Layout = /*#__PURE__*/function (_Element) {
       debugInfo.start('init_xmlParse');
       // 将xml字符串解析成xml节点树
       var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_13__.parse(template, parseConfig, true);
+      console.log(jsonObj);
       debugInfo.end('init_xmlParse');
       var xmlTree = jsonObj.children[0];
 
@@ -6413,7 +6414,7 @@ var Layout = /*#__PURE__*/function (_Element) {
 
       // 将布局树的布局信息加工赋值到渲染树
       debugInfo.start('layoutChildren', true);
-      _common_vd__WEBPACK_IMPORTED_MODULE_17__.layoutChildren.call(this, this);
+      (0,_common_vd__WEBPACK_IMPORTED_MODULE_17__.layoutChildren)(this);
       debugInfo.end('layoutChildren');
       this.viewportScale = this.viewport.width / this.renderport.width;
       (0,_common_util__WEBPACK_IMPORTED_MODULE_12__.clearCanvas)(this.renderContext);
@@ -6653,14 +6654,17 @@ var Layout = /*#__PURE__*/function (_Element) {
   }, {
     key: "registBitMapFont",
     value: function registBitMapFont(name, src, config) {
-      var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_14__["default"](name, src, config);
-      this.bitMapFonts.push(font);
+      if (!bitMapPool.get(name)) {
+        var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_14__["default"](name, src, config);
+        this.bitMapFonts.push(font);
+        bitMapPool.set(name, font);
+      }
     }
   }, {
     key: "cloneNode",
     value: function cloneNode(element) {
       var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      return _common_vd__WEBPACK_IMPORTED_MODULE_17__.clone.call(this, element, deep);
+      return (0,_common_vd__WEBPACK_IMPORTED_MODULE_17__.clone)(this, element, deep);
     }
   }]);
   return Layout;
