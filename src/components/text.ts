@@ -1,9 +1,11 @@
 import Element from './elements';
 import { createCanvas } from '../common/util';
+import { IStyle } from './style';
 
 const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
-let context = null;
-const getContext = () => {
+let context: CanvasRenderingContext2D | null = null;
+
+const getContext = (): CanvasRenderingContext2D => {
   if (context) {
     return context;
   }
@@ -11,13 +13,13 @@ const getContext = () => {
   const canvas = createCanvas();
   canvas.width = 1;
   canvas.height = 1;
-  context = canvas.getContext('2d');
+  context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
   return context;
 };
 
 
-function getTextWidth(style, value) {
+function getTextWidth(style: IStyle, value: string) {
   const context = getContext();
 
   context.font = `${style.fontWeight || 'normal'} ${style.fontSize || 12}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
@@ -25,14 +27,14 @@ function getTextWidth(style, value) {
   return context.measureText(value).width || 0;
 }
 
-function getTextWidthWithoutSetFont(value) {
+function getTextWidthWithoutSetFont(value: string) {
   return getContext().measureText(value).width || 0;
 }
 
-function parseText(style, value) {
+function parseText(style: IStyle, value: string): string {
   value = String(value);
 
-  let maxWidth = style.width;
+  let maxWidth = style.width as number;
   const wordWidth = getTextWidth(style, value);
 
   // 对文字溢出的处理，默认用...
@@ -61,15 +63,30 @@ function parseText(style, value) {
     : str);
 }
 
+interface ITextProps {
+  style?: IStyle;
+  idName?: string;
+  className?: string;
+  value?: string;
+  dataset?: Record<string, string>;
+}
 
 export default class Text extends Element {
+  private valuesrc = '';
+  private originStyleWidth: number | undefined;
+  public fontSize?: number;
+  public textBaseline: CanvasTextBaseline = 'top';
+  public font = '';
+  public textAlign: CanvasTextAlign = 'left';
+  public fillStyle = '#000000';
+
   constructor({
     style = {},
     idName = '',
     className = '',
     value = '',
     dataset,
-  }) {
+  }: ITextProps) {
     let originStyleWidth = style.width;
     // 没有设置宽度的时候通过canvas计算出文字宽度
     if (originStyleWidth === undefined) {
@@ -88,32 +105,30 @@ export default class Text extends Element {
     this.type = 'Text';
     this.ctx = null;
     this.valuesrc = value;
+    this.originStyleWidth = originStyleWidth;
+  }
 
-    Object.defineProperty(this, 'value', {
-      get() {
-        return this.valuesrc;
-      },
-      set(newValue) {
-        if (newValue !== this.valuesrc) {
-          if (originStyleWidth === undefined) {
-            style.width = getTextWidth(style, newValue);
-          } else if (style.textOverflow === 'ellipsis') {
-            value = parseText(style, newValue);
-          }
+  get value() {
+    return this.valuesrc;
+  }
 
-          this.valuesrc = newValue;
+  set value(newValue) {
+    if (newValue !== this.valuesrc) {
+      if (this.originStyleWidth === undefined) {
+        this.style.width = getTextWidth(this.style, newValue);
+      } else if (this.style.textOverflow === 'ellipsis') {
+        newValue = parseText(this.style, newValue);
+      }
 
-          this.isDirty = true;
-          let { parent } = this;
-          while (parent) {
-            parent.isDirty = true;
-            parent = parent.parent;
-          }
-        }
-      },
-      enumerable: true,
-      configurable: true,
-    });
+      this.valuesrc = newValue;
+
+      this.isDirty = true;
+      let { parent } = this;
+      while (parent) {
+        parent.isDirty = true;
+        parent = parent.parent;
+      }
+    }
   }
 
   toCanvasData() {
@@ -134,7 +149,7 @@ export default class Text extends Element {
     this.root = null;
   }
 
-  insert(ctx, needRender) {
+  insert(ctx: CanvasRenderingContext2D, needRender: boolean) {
     this.ctx = ctx;
 
     this.toCanvasData();
@@ -146,7 +161,7 @@ export default class Text extends Element {
 
 
   render() {
-    const { ctx } = this;
+    const ctx = this.ctx as CanvasRenderingContext2D;
     // this.toCanvasData();
     ctx.save();
 
@@ -189,7 +204,7 @@ export default class Text extends Element {
 
     if (style.lineHeight) {
       ctx.textBaseline = 'middle';
-      drawY += style.lineHeight / 2;
+      drawY += (style.lineHeight as number) / 2;
     }
 
     ctx.fillText(

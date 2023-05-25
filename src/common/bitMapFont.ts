@@ -27,7 +27,7 @@ type ConfigLineData = {
  */
 export default class BitMapFont {
   private config: string;
-  private event: any;
+  public event: any;
 
   public chars: Chars;
 

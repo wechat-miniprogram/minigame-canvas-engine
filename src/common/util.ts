@@ -78,7 +78,7 @@ export function createImage() {
 let _dpr: number;
 // only Baidu platform need to recieve system info from main context
 if (typeof swan !== 'undefined') {
-  __env.onMessage((res) => {
+  __env.onMessage((res: any) => {
     if (res && res.type === 'engine') {
       if (res.event === 'systemInfo') {
         _dpr = res.systemInfo.devicePixelRatio;

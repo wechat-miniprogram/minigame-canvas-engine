@@ -1,8 +1,21 @@
 import Element from './elements';
 import imageManager from '../common/imageManager';
+import { IStyle } from './style';
+
+interface IImageOptions {
+  style?: IStyle;
+  idName?: string
+  className?: string;
+  src?: string;
+  dataset?: Record<string, string>
+}
 
 export default class Image extends Element {
-  constructor(opts) {
+  private imgsrc: string;
+  public type = 'Image';
+  public img: HTMLImageElement | null;
+
+  constructor(opts: IImageOptions) {
     const {
       style = {},
       idName = '',
@@ -20,27 +33,25 @@ export default class Image extends Element {
 
     this.imgsrc = src;
 
-    Object.defineProperty(this, 'src', {
-      get() {
-        return this.imgsrc;
-      },
-      set(newValue) {
-        if (newValue !== this.imgsrc) {
-          this.imgsrc = newValue;
-          imageManager.loadImage(this.src, (img) => {
-            if (!this.isDestroyed) {
-              this.img = img;
-              // 当图片加载完成，实例可能已经被销毁了
-              this.root.emit('repaint');
-            }
-          });
-        }
-      },
-      enumerable: true,
-      configurable: true,
-    });
-
-    this.type = 'Image';
+    // Object.defineProperty(this, 'src', {
+    //   get() {
+    //     return this.imgsrc;
+    //   },
+    //   set(newValue) {
+    //     if (newValue !== this.imgsrc) {
+    //       this.imgsrc = newValue;
+    //       imageManager.loadImage(this.src, (img: HTMLImageElement) => {
+    //         if (!this.isDestroyed) {
+    //           this.img = img;
+    //           // 当图片加载完成，实例可能已经被销毁了
+    //           this.root.emit('repaint');
+    //         }
+    //       });
+    //     }
+    //   },
+    //   enumerable: true,
+    //   configurable: true,
+    // });
 
     this.img = imageManager.loadImage(this.src, (img, fromCache) => {
       if (fromCache) {
@@ -49,10 +60,27 @@ export default class Image extends Element {
         if (!this.isDestroyed) {
           this.img = img;
           // 当图片加载完成，实例可能已经被销毁了
-          this.root.emit('repaint');
+          this.root?.emit('repaint');
         }
       }
     });
+  }
+
+  get src(): string {
+    return this.imgsrc;
+  }
+
+  set src(newValue: string) {
+    if (newValue !== this.imgsrc) {
+      this.imgsrc = newValue;
+      imageManager.loadImage(this.src, (img: HTMLImageElement) => {
+        if (!this.isDestroyed) {
+          this.img = img;
+          // 当图片加载完成，实例可能已经被销毁了
+          this.root?.emit('repaint');
+        }
+      });
+    }
   }
 
   repaint() {
@@ -64,8 +92,7 @@ export default class Image extends Element {
     this.isDestroyed = true;
     this.img = null;
 
-    delete this.src;
-
+    this.src = '';
     this.root = null;
   }
 
@@ -76,7 +103,7 @@ export default class Image extends Element {
 
     const style = this.style || {};
     const box = this.layoutBox;
-    const { ctx } = this;
+    const ctx = this.ctx as CanvasRenderingContext2D;
 
     ctx.save();
 

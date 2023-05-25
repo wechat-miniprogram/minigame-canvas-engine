@@ -1,10 +1,26 @@
 import Element from './elements';
 import Pool from '../common/pool';
+import { IStyle } from './style';
+import BitMapFont from '../common/bitMapFont';
 
-const bitMapPool = new Pool('bitMapPool');
+const bitMapPool = new Pool<BitMapFont>('bitMapPool');
+
+interface IBitMapTextOptions {
+  style?: IStyle;
+  idName?: string;
+  className?: string;
+  value?: string;
+  font?: string;
+  dataset?: Record<string, string>;
+}
 
 export default class BitMapText extends Element {
-  constructor(opts) {
+  public ctx: CanvasRenderingContext2D | null;
+  public type = 'BitMapText';
+  private valuesrc: string;
+  public font: BitMapFont;
+  
+  constructor(opts: IBitMapTextOptions) {
     const {
       style = {},
       idName = '',
@@ -20,29 +36,39 @@ export default class BitMapText extends Element {
       dataset,
     });
 
-    this.type = 'BitMapText';
     this.ctx  = null;
     this.valuesrc = value;
 
-    Object.defineProperty(this, 'value', {
-      get() {
-        return this.valuesrc;
-      },
-      set(newValue) {
-        if (newValue !== this.valuesrc) {
-          this.valuesrc = newValue;
+    // Object.defineProperty(this, 'value', {
+    //   get() {
+    //     return this.valuesrc;
+    //   },
+    //   set(newValue) {
+    //     if (newValue !== this.valuesrc) {
+    //       this.valuesrc = newValue;
 
-          this.emit('repaint');
-        }
-      },
-      enumerable: true,
-      configurable: true,
-    });
+    //       this.emit('repaint');
+    //     }
+    //   },
+    //   enumerable: true,
+    //   configurable: true,
+    // });
 
-    console.log(bitMapPool)
     this.font = bitMapPool.get(font);
     if (!this.font) {
       console.error(`Missing BitmapFont "${font}", please invoke API "registBitMapFont" before using "BitMapText"`);
+    }
+  }
+
+  get value(): string {
+    return this.valuesrc;
+  }
+
+  set value(newValue: string) {
+    if (newValue !== this.valuesrc) {
+      this.valuesrc = newValue;
+
+      this.emit('repaint');
     }
   }
 
@@ -60,11 +86,11 @@ export default class BitMapText extends Element {
     }
 
     if (this.font.ready) {
-      this.renderText(this.ctx);
+      this.renderText(this.ctx as CanvasRenderingContext2D);
     } else {
       this.font.event.on('text__load__done', () => {
         if (!this.isDestroyed) {
-          this.renderText(this.ctx);
+          this.renderText(this.ctx as CanvasRenderingContext2D);
         }
       });
     }
@@ -91,7 +117,7 @@ export default class BitMapText extends Element {
     return { width, height: this.font.lineHeight };
   }
 
-  renderText(ctx) {
+  renderText(ctx: CanvasRenderingContext2D) {
     const bounds = this.getTextBounds();
     const defaultLineHeight = this.font.lineHeight;
 
@@ -107,18 +133,21 @@ export default class BitMapText extends Element {
     const { style } = this;
 
     const {
-      width, // 没有设置采用计算出来的宽度
-      height, // 没有设置则采用计算出来的宽度
-      lineHeight = defaultLineHeight, // 没有设置则采用计算出来的高度
+      width = 0, // 没有设置采用计算出来的宽度
+      height = 0, // 没有设置则采用计算出来的宽度
+      // lineHeight = defaultLineHeight, // 没有设置则采用计算出来的高度
       textAlign, // 文字左右对齐方式
       verticalAlign,
       letterSpacing = 0,
     } =  style;
+    // 没有设置则采用计算出来的高度
+    const lineHeight = (style.lineHeight || defaultLineHeight) as number
 
     // 元素包围盒的左上角坐标
     let x = box.absoluteX;
     let y = box.absoluteY;
 
+    // @ts-ignore
     const scaleY    = lineHeight / defaultLineHeight;
     const realWidth = scaleY * bounds.width;
 
@@ -162,7 +191,7 @@ export default class BitMapText extends Element {
 
       if (cfg) {
         ctx.drawImage(
-          this.font.texture,
+          this.font.texture as HTMLImageElement,
           cfg.x,
           cfg.y,
           cfg.w,
@@ -186,4 +215,3 @@ export default class BitMapText extends Element {
     ctx.restore();
   }
 }
-

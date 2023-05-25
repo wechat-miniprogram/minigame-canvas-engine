@@ -242,6 +242,7 @@ export function clone(root: Element, element: Element, deep = true, parent?: Ele
 
   const newElemenet = new Constructor(args);
   newElemenet.root = root;
+  // @ts-ignore
   newElemenet.insert(root.renderContext, false);
   newElemenet.observeStyleAndEvent();
 

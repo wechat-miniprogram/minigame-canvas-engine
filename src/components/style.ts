@@ -14,6 +14,7 @@ const reflowAffectedStyles = [
   'flex',
   'flexWrap',
   'position',
+  'fontWeight',
 ];
 
 const repaintAffectedStyles = [
@@ -87,6 +88,8 @@ interface IStyle {
   backgroundImage?: string;
 
   opacity?: number;
+  fontWeight?: string;
+  fontFamily?: string;
 }
 
 export { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle };

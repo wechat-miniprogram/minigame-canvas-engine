@@ -157,7 +157,7 @@ class Layout extends Element {
     debugInfo.start('init_xmlParse');
     // 将xml字符串解析成xml节点树
     const jsonObj = parser.parse(template, parseConfig, true);
-    console.log(jsonObj)
+    // console.log(jsonObj)
     debugInfo.end('init_xmlParse');
 
     const xmlTree = jsonObj.children[0];
