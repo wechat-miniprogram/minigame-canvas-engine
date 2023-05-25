@@ -85,7 +85,12 @@ interface IStyle {
   letterSpacing?: number;
   borderRadius?: number;
   borderColor?: string;
+  borderTopColor?: string;
+
   backgroundImage?: string;
+  borderBottomColor?: string;
+  borderLeftColor?: string;
+  borderRightColor?: string;
 
   opacity?: number;
   fontWeight?: string;

@@ -38,8 +38,8 @@ class LayoutDevtools {
 
       // require('./layoutTest');
       // require('./layoutRichTextTest');
-      // require('./layoutTextTest');
-      require('./layoutBitMapTextTest');
+      require('./layoutTextTest');
+      // require('./layoutBitMapTextTest');
     }
 
     this.vueApp = vueApp;

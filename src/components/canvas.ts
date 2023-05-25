@@ -1,8 +1,21 @@
 import Element from './elements';
 import { createCanvas } from '../common/util';
+import { IStyle } from './style';
+
+interface ICanvasOptions {
+  style?: IStyle
+  idName?: string;
+  className?: string;
+  dataset?: Record<string, string>;
+  width?: number;
+  height?: number;
+  autoCreateCanvas?: boolean;
+}
 
 export default class Canvas extends Element {
-  constructor(opts) {
+  private canvasInstance: HTMLCanvasElement | null = null
+
+  constructor(opts: ICanvasOptions) {
     const {
       style = {},
       idName = '',
@@ -20,13 +33,11 @@ export default class Canvas extends Element {
       style,
     });
 
-    this.canvasInstance = null;
-
     /**
      * 微信小游戏场景下，sharedCanvas 实例不方便自动创建，提供 setter 手动设置
      */
     if (autoCreateCanvas) {
-      this.canvasInstance = createCanvas();
+      this.canvasInstance = createCanvas() as HTMLCanvasElement;
       this.canvasInstance.width = Number(width);
       this.canvasInstance.height = Number(height);
     }
@@ -36,12 +47,12 @@ export default class Canvas extends Element {
     return this.canvasInstance;
   }
 
-  set canvas(cvs) {
+  set canvas(cvs: HTMLCanvasElement | null) {
     this.canvasInstance = cvs;
   }
 
   update() {
-    this.root.emit('repaint');
+    this.root!.emit('repaint');
   }
 
   repaint() {
@@ -62,7 +73,7 @@ export default class Canvas extends Element {
 
     const style = this.style || {};
     const box = this.layoutBox;
-    const { ctx } = this;
+    const ctx = this.ctx as CanvasRenderingContext2D;
 
     ctx.save();
 

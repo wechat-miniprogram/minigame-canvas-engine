@@ -1,5 +1,5 @@
-// import Layout from './engine';
-const Layout = requirePlugin('Layout').default;
+import Layout from './engine';
+// const Layout = requirePlugin('Layout').default;
 
 // 设置游戏画布尺寸
 const info = wx.getSystemInfoSync();
@@ -21,8 +21,9 @@ sharedCanvas.width = RANK_WIDTH;
 sharedCanvas.height = RANK_HEIGHT;
 
 function updateRankViewPort(rankCanvas) {
-  console.log(rankCanvas.getViewportRect())
-  const rect = rankCanvas.getViewportRect();
+  // const rect = rankCanvas.getViewportRect();
+  const rect = Layout.getElementViewportRect(rankCanvas)
+
   openDataContext.postMessage({
     event: 'updateViewPort',
     box: {
@@ -50,15 +51,10 @@ let template = `
   <view id="container">
     <canvas id="rank" width="960" height="1410"></canvas>
     <text id="rankText" value="打开排行榜"></text>
-    <image src="https://cdn-sdk.longtugame.cn/notice/20000062-01/notice/bg_20220810192541.png" class="bg_img"></image>
   </view>
 `;
 
 let style = {
-  bg_img: {
-    width: 100,
-    height: 100,
-  },
   container: {
     width: GAME_WIDTH,
     height: GAME_HEIGHT,

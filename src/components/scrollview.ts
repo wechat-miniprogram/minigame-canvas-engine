@@ -1,13 +1,35 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
-import View from './view.js';
+import View from './view';
 import { getDpr, copyTouchArray } from '../common/util';
 import { Scroller } from 'scroller';
 import { iterateTree } from '../common/vd';
+import { IStyle } from './style';
 
 const dpr = getDpr();
 
+interface IScrollViewOptions {
+  style?: IStyle;
+  idName?: string;
+  className?: string;
+  scrollX?: boolean | undefined;
+  scrollY?: boolean | undefined;
+  dataset?: Record<string, string>;
+}
+
 export default class ScrollView extends View {
+  public scrollTop = 0;
+  public scrollLeft = 0;
+  public hasEventBind = false;
+  public currentEvent = null;
+  public type = 'ScrollView';
+  
+  private scrollYProp: boolean | undefined;
+  private innerScrollerOption: {
+    scrollingX: boolean;
+    scrollingY: boolean;
+  };
+
   constructor({
     style = {},
     idName = '',
@@ -15,7 +37,7 @@ export default class ScrollView extends View {
     scrollX,
     scrollY,
     dataset,
-  }) {
+  }: IScrollViewOptions) {
     super({
       style,
       idName,
@@ -23,15 +45,6 @@ export default class ScrollView extends View {
       className,
     });
 
-    this.type = 'ScrollView';
-
-    // 当前列表滚动的值
-    this.scrollTop = 0;
-    this.scrollLeft = 0;
-    this.hasEventBind = false;
-    this.currentEvent = null;
-
-    this.requestID = null;
 
     this.scrollYProp = scrollY;
 

@@ -3255,10 +3255,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   View: () => (/* reexport safe */ _view__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
 /* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
-/* harmony import */ var _image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(30);
-/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
+/* harmony import */ var _image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
+/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
 /* harmony import */ var _scrollview__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(24);
-/* harmony import */ var _bitmaptext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23);
+/* harmony import */ var _bitmaptext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(28);
 /* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(29);
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2);
 
@@ -3313,7 +3313,7 @@ var View = /** @class */ (function (_super) {
     }
     View.prototype.destroySelf = function () {
         this.isDestroyed = true;
-        this.children = null;
+        this.children = [];
         this.root = null;
     };
     // 有些节点仅仅作为容器，实际上不需要任何渲染逻辑，这里加个判断可以提高性能
@@ -3331,7 +3331,6 @@ var View = /** @class */ (function (_super) {
         var style = this.style || {};
         var box = this.layoutBox;
         var ctx = this.ctx;
-        ctx.save();
         var borderWidth = style.borderWidth || 0;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
@@ -3366,6 +3365,149 @@ var View = /** @class */ (function (_super) {
 
 /***/ }),
 /* 22 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var Image = /** @class */ (function (_super) {
+    __extends(Image, _super);
+    function Image(opts) {
+        var _this = this;
+        var _a = opts.style, style = _a === void 0 ? {} : _a, _b = opts.idName, idName = _b === void 0 ? '' : _b, _c = opts.className, className = _c === void 0 ? '' : _c, _d = opts.src, src = _d === void 0 ? '' : _d, dataset = opts.dataset;
+        _this = _super.call(this, {
+            idName: idName,
+            className: className,
+            dataset: dataset,
+            style: style,
+        }) || this;
+        _this.type = 'Image';
+        _this.imgsrc = src;
+        // Object.defineProperty(this, 'src', {
+        //   get() {
+        //     return this.imgsrc;
+        //   },
+        //   set(newValue) {
+        //     if (newValue !== this.imgsrc) {
+        //       this.imgsrc = newValue;
+        //       imageManager.loadImage(this.src, (img: HTMLImageElement) => {
+        //         if (!this.isDestroyed) {
+        //           this.img = img;
+        //           // 当图片加载完成，实例可能已经被销毁了
+        //           this.root.emit('repaint');
+        //         }
+        //       });
+        //     }
+        //   },
+        //   enumerable: true,
+        //   configurable: true,
+        // });
+        _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
+            var _a;
+            if (fromCache) {
+                _this.img = img;
+            }
+            else {
+                if (!_this.isDestroyed) {
+                    _this.img = img;
+                    // 当图片加载完成，实例可能已经被销毁了
+                    (_a = _this.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
+                }
+            }
+        });
+        return _this;
+    }
+    Object.defineProperty(Image.prototype, "src", {
+        get: function () {
+            return this.imgsrc;
+        },
+        set: function (newValue) {
+            var _this = this;
+            if (newValue !== this.imgsrc) {
+                this.imgsrc = newValue;
+                _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
+                    var _a;
+                    if (!_this.isDestroyed) {
+                        _this.img = img;
+                        // 当图片加载完成，实例可能已经被销毁了
+                        (_a = _this.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
+                    }
+                });
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Image.prototype.repaint = function () {
+        this.render();
+    };
+    // 子类填充实现
+    Image.prototype.destroySelf = function () {
+        this.isDestroyed = true;
+        this.img = null;
+        this.src = '';
+        this.root = null;
+    };
+    Image.prototype.render = function () {
+        var _a;
+        if (!this.img || !((_a = this.img) === null || _a === void 0 ? void 0 : _a.complete)) {
+            return;
+        }
+        var style = this.style || {};
+        var box = this.layoutBox;
+        var ctx = this.ctx;
+        ctx.save();
+        if (style.borderColor) {
+            ctx.strokeStyle = style.borderColor;
+        }
+        ctx.lineWidth = style.borderWidth || 0;
+        var drawX = box.absoluteX;
+        var drawY = box.absoluteY;
+        var _b = this.renderBorder(ctx), needClip = _b.needClip, needStroke = _b.needStroke;
+        if (needClip) {
+            ctx.clip();
+        }
+        if (style.backgroundColor) {
+            ctx.fillStyle = style.backgroundColor;
+            ctx.fillRect(drawX, drawY, box.width, box.height);
+        }
+        if (style.backgroundImage && this.backgroundImage) {
+            ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+        }
+        ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+        if (needStroke) {
+            ctx.stroke();
+        }
+        ctx.restore();
+    };
+    return Image;
+}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Image);
+
+
+/***/ }),
+/* 23 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3556,191 +3698,6 @@ var Text = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 23 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _common_pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-var bitMapPool = new _common_pool__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
-var BitMapText = /** @class */ (function (_super) {
-    __extends(BitMapText, _super);
-    function BitMapText(opts) {
-        var _this = this;
-        var _a = opts.style, style = _a === void 0 ? {} : _a, _b = opts.idName, idName = _b === void 0 ? '' : _b, _c = opts.className, className = _c === void 0 ? '' : _c, _d = opts.value, value = _d === void 0 ? '' : _d, _e = opts.font, font = _e === void 0 ? '' : _e, dataset = opts.dataset;
-        _this = _super.call(this, {
-            idName: idName,
-            className: className,
-            style: style,
-            dataset: dataset,
-        }) || this;
-        _this.type = 'BitMapText';
-        _this.ctx = null;
-        _this.valuesrc = value;
-        // Object.defineProperty(this, 'value', {
-        //   get() {
-        //     return this.valuesrc;
-        //   },
-        //   set(newValue) {
-        //     if (newValue !== this.valuesrc) {
-        //       this.valuesrc = newValue;
-        //       this.emit('repaint');
-        //     }
-        //   },
-        //   enumerable: true,
-        //   configurable: true,
-        // });
-        _this.font = bitMapPool.get(font);
-        if (!_this.font) {
-            console.error("Missing BitmapFont \"".concat(font, "\", please invoke API \"registBitMapFont\" before using \"BitMapText\""));
-        }
-        return _this;
-    }
-    Object.defineProperty(BitMapText.prototype, "value", {
-        get: function () {
-            return this.valuesrc;
-        },
-        set: function (newValue) {
-            if (newValue !== this.valuesrc) {
-                this.valuesrc = newValue;
-                this.emit('repaint');
-            }
-        },
-        enumerable: false,
-        configurable: true
-    });
-    BitMapText.prototype.repaint = function () {
-        this.render();
-    };
-    BitMapText.prototype.destroySelf = function () {
-        this.root = null;
-    };
-    BitMapText.prototype.render = function () {
-        var _this = this;
-        if (!this.font) {
-            return;
-        }
-        if (this.font.ready) {
-            this.renderText(this.ctx);
-        }
-        else {
-            this.font.event.on('text__load__done', function () {
-                if (!_this.isDestroyed) {
-                    _this.renderText(_this.ctx);
-                }
-            });
-        }
-    };
-    BitMapText.prototype.getTextBounds = function () {
-        var style = this.style;
-        var _a = style.letterSpacing, letterSpacing = _a === void 0 ? 0 : _a;
-        var width = 0;
-        for (var i = 0, len = this.value.length; i < len; i++) {
-            var char = this.value[i];
-            var cfg = this.font.chars[char];
-            if (cfg) {
-                width += cfg.w;
-                if (i < len - 1) {
-                    width += letterSpacing;
-                }
-            }
-        }
-        return { width: width, height: this.font.lineHeight };
-    };
-    BitMapText.prototype.renderText = function (ctx) {
-        var bounds = this.getTextBounds();
-        var defaultLineHeight = this.font.lineHeight;
-        ctx.save();
-        var _a = this.renderBorder(ctx), needClip = _a.needClip, needStroke = _a.needStroke;
-        if (needClip) {
-            ctx.clip();
-        }
-        var box = this.layoutBox;
-        var style = this.style;
-        var _b = style.width, width = _b === void 0 ? 0 : _b, // 没有设置采用计算出来的宽度
-        _c = style.height, // 没有设置采用计算出来的宽度
-        height = _c === void 0 ? 0 : _c, // 没有设置则采用计算出来的宽度
-        // lineHeight = defaultLineHeight, // 没有设置则采用计算出来的高度
-        textAlign = style.textAlign, // 文字左右对齐方式
-        verticalAlign = style.verticalAlign, _d = style.letterSpacing, letterSpacing = _d === void 0 ? 0 : _d;
-        // 没有设置则采用计算出来的高度
-        var lineHeight = (style.lineHeight || defaultLineHeight);
-        // 元素包围盒的左上角坐标
-        var x = box.absoluteX;
-        var y = box.absoluteY;
-        // @ts-ignore
-        var scaleY = lineHeight / defaultLineHeight;
-        var realWidth = scaleY * bounds.width;
-        if (style.backgroundColor) {
-            ctx.fillStyle = style.backgroundColor;
-            ctx.fillRect(x, y, box.width, box.height);
-        }
-        if (style.backgroundImage && this.backgroundImage) {
-            ctx.drawImage(this.backgroundImage, x, y, box.width, box.height);
-        }
-        // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
-        if (lineHeight < height) {
-            if (verticalAlign === 'middle') {
-                y += (height - lineHeight) / 2;
-            }
-            else if (verticalAlign === 'bottom') {
-                y = y + height - lineHeight;
-            }
-        }
-        if (width > realWidth) {
-            if (textAlign === 'center') {
-                x += (width - realWidth) / 2;
-            }
-            else if (textAlign === 'right') {
-                x += (width - realWidth);
-            }
-        }
-        // 记录上一个字符，方便处理 kerning
-        var prevCharCode = null;
-        for (var i = 0; i < this.value.length; i++) {
-            var char = this.value[i];
-            var cfg = this.font.chars[char];
-            if (prevCharCode && cfg.kerning[prevCharCode]) {
-                x += cfg.kerning[prevCharCode];
-            }
-            if (cfg) {
-                ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX * scaleY, y + cfg.offY * scaleY, cfg.w * scaleY, cfg.h * scaleY);
-                x += (cfg.xadvance * scaleY + letterSpacing);
-                prevCharCode = char;
-            }
-        }
-        if (needStroke) {
-            ctx.stroke();
-        }
-        ctx.restore();
-    };
-    return BitMapText;
-}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BitMapText);
-
-
-/***/ }),
 /* 24 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -3749,7 +3706,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(25);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
@@ -3786,13 +3743,11 @@ var ScrollView = /** @class */ (function (_super) {
             dataset: dataset,
             className: className,
         }) || this;
-        _this.type = 'ScrollView';
-        // 当前列表滚动的值
         _this.scrollTop = 0;
         _this.scrollLeft = 0;
         _this.hasEventBind = false;
         _this.currentEvent = null;
-        _this.requestID = null;
+        _this.type = 'ScrollView';
         _this.scrollYProp = scrollY;
         _this.innerScrollerOption = {
             scrollingX: !!scrollX,
@@ -4010,7 +3965,7 @@ var ScrollView = /** @class */ (function (_super) {
         this.scrollerObj.scrollTo(left, top, animate);
     };
     return ScrollView;
-}(_view_js__WEBPACK_IMPORTED_MODULE_0__["default"]));
+}(_view__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ScrollView);
 
 
@@ -5422,7 +5377,191 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 28 */,
+/* 28 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _common_pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var bitMapPool = new _common_pool__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
+var BitMapText = /** @class */ (function (_super) {
+    __extends(BitMapText, _super);
+    function BitMapText(opts) {
+        var _this = this;
+        var _a = opts.style, style = _a === void 0 ? {} : _a, _b = opts.idName, idName = _b === void 0 ? '' : _b, _c = opts.className, className = _c === void 0 ? '' : _c, _d = opts.value, value = _d === void 0 ? '' : _d, _e = opts.font, font = _e === void 0 ? '' : _e, dataset = opts.dataset;
+        _this = _super.call(this, {
+            idName: idName,
+            className: className,
+            style: style,
+            dataset: dataset,
+        }) || this;
+        _this.type = 'BitMapText';
+        _this.ctx = null;
+        _this.valuesrc = value;
+        // Object.defineProperty(this, 'value', {
+        //   get() {
+        //     return this.valuesrc;
+        //   },
+        //   set(newValue) {
+        //     if (newValue !== this.valuesrc) {
+        //       this.valuesrc = newValue;
+        //       this.emit('repaint');
+        //     }
+        //   },
+        //   enumerable: true,
+        //   configurable: true,
+        // });
+        _this.font = bitMapPool.get(font);
+        if (!_this.font) {
+            console.error("Missing BitmapFont \"".concat(font, "\", please invoke API \"registBitMapFont\" before using \"BitMapText\""));
+        }
+        return _this;
+    }
+    Object.defineProperty(BitMapText.prototype, "value", {
+        get: function () {
+            return this.valuesrc;
+        },
+        set: function (newValue) {
+            if (newValue !== this.valuesrc) {
+                this.valuesrc = newValue;
+                this.emit('repaint');
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    BitMapText.prototype.repaint = function () {
+        this.render();
+    };
+    BitMapText.prototype.destroySelf = function () {
+        this.root = null;
+    };
+    BitMapText.prototype.render = function () {
+        var _this = this;
+        if (!this.font) {
+            return;
+        }
+        if (this.font.ready) {
+            this.renderText(this.ctx);
+        }
+        else {
+            this.font.event.on('text__load__done', function () {
+                if (!_this.isDestroyed) {
+                    _this.renderText(_this.ctx);
+                }
+            });
+        }
+    };
+    BitMapText.prototype.getTextBounds = function () {
+        var style = this.style;
+        var _a = style.letterSpacing, letterSpacing = _a === void 0 ? 0 : _a;
+        var width = 0;
+        for (var i = 0, len = this.value.length; i < len; i++) {
+            var char = this.value[i];
+            var cfg = this.font.chars[char];
+            if (cfg) {
+                width += cfg.w;
+                if (i < len - 1) {
+                    width += letterSpacing;
+                }
+            }
+        }
+        return { width: width, height: this.font.lineHeight };
+    };
+    BitMapText.prototype.renderText = function (ctx) {
+        var bounds = this.getTextBounds();
+        var defaultLineHeight = this.font.lineHeight;
+        ctx.save();
+        var _a = this.renderBorder(ctx), needClip = _a.needClip, needStroke = _a.needStroke;
+        if (needClip) {
+            ctx.clip();
+        }
+        var box = this.layoutBox;
+        var style = this.style;
+        var _b = style.width, width = _b === void 0 ? 0 : _b, // 没有设置采用计算出来的宽度
+        _c = style.height, // 没有设置采用计算出来的宽度
+        height = _c === void 0 ? 0 : _c, // 没有设置则采用计算出来的宽度
+        // lineHeight = defaultLineHeight, // 没有设置则采用计算出来的高度
+        textAlign = style.textAlign, // 文字左右对齐方式
+        verticalAlign = style.verticalAlign, _d = style.letterSpacing, letterSpacing = _d === void 0 ? 0 : _d;
+        // 没有设置则采用计算出来的高度
+        var lineHeight = (style.lineHeight || defaultLineHeight);
+        // 元素包围盒的左上角坐标
+        var x = box.absoluteX;
+        var y = box.absoluteY;
+        // @ts-ignore
+        var scaleY = lineHeight / defaultLineHeight;
+        var realWidth = scaleY * bounds.width;
+        if (style.backgroundColor) {
+            ctx.fillStyle = style.backgroundColor;
+            ctx.fillRect(x, y, box.width, box.height);
+        }
+        if (style.backgroundImage && this.backgroundImage) {
+            ctx.drawImage(this.backgroundImage, x, y, box.width, box.height);
+        }
+        // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
+        if (lineHeight < height) {
+            if (verticalAlign === 'middle') {
+                y += (height - lineHeight) / 2;
+            }
+            else if (verticalAlign === 'bottom') {
+                y = y + height - lineHeight;
+            }
+        }
+        if (width > realWidth) {
+            if (textAlign === 'center') {
+                x += (width - realWidth) / 2;
+            }
+            else if (textAlign === 'right') {
+                x += (width - realWidth);
+            }
+        }
+        // 记录上一个字符，方便处理 kerning
+        var prevCharCode = null;
+        for (var i = 0; i < this.value.length; i++) {
+            var char = this.value[i];
+            var cfg = this.font.chars[char];
+            if (prevCharCode && cfg.kerning[prevCharCode]) {
+                x += cfg.kerning[prevCharCode];
+            }
+            if (cfg) {
+                ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX * scaleY, y + cfg.offY * scaleY, cfg.w * scaleY, cfg.h * scaleY);
+                x += (cfg.xadvance * scaleY + letterSpacing);
+                prevCharCode = char;
+            }
+        }
+        if (needStroke) {
+            ctx.stroke();
+        }
+        ctx.restore();
+    };
+    return BitMapText;
+}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BitMapText);
+
+
+/***/ }),
 /* 29 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -5528,149 +5667,6 @@ var Canvas = /** @class */ (function (_super) {
     return Canvas;
 }(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Canvas);
-
-
-/***/ }),
-/* 30 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-var Image = /** @class */ (function (_super) {
-    __extends(Image, _super);
-    function Image(opts) {
-        var _this = this;
-        var _a = opts.style, style = _a === void 0 ? {} : _a, _b = opts.idName, idName = _b === void 0 ? '' : _b, _c = opts.className, className = _c === void 0 ? '' : _c, _d = opts.src, src = _d === void 0 ? '' : _d, dataset = opts.dataset;
-        _this = _super.call(this, {
-            idName: idName,
-            className: className,
-            dataset: dataset,
-            style: style,
-        }) || this;
-        _this.type = 'Image';
-        _this.imgsrc = src;
-        // Object.defineProperty(this, 'src', {
-        //   get() {
-        //     return this.imgsrc;
-        //   },
-        //   set(newValue) {
-        //     if (newValue !== this.imgsrc) {
-        //       this.imgsrc = newValue;
-        //       imageManager.loadImage(this.src, (img: HTMLImageElement) => {
-        //         if (!this.isDestroyed) {
-        //           this.img = img;
-        //           // 当图片加载完成，实例可能已经被销毁了
-        //           this.root.emit('repaint');
-        //         }
-        //       });
-        //     }
-        //   },
-        //   enumerable: true,
-        //   configurable: true,
-        // });
-        _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
-            var _a;
-            if (fromCache) {
-                _this.img = img;
-            }
-            else {
-                if (!_this.isDestroyed) {
-                    _this.img = img;
-                    // 当图片加载完成，实例可能已经被销毁了
-                    (_a = _this.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
-                }
-            }
-        });
-        return _this;
-    }
-    Object.defineProperty(Image.prototype, "src", {
-        get: function () {
-            return this.imgsrc;
-        },
-        set: function (newValue) {
-            var _this = this;
-            if (newValue !== this.imgsrc) {
-                this.imgsrc = newValue;
-                _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
-                    var _a;
-                    if (!_this.isDestroyed) {
-                        _this.img = img;
-                        // 当图片加载完成，实例可能已经被销毁了
-                        (_a = _this.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
-                    }
-                });
-            }
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Image.prototype.repaint = function () {
-        this.render();
-    };
-    // 子类填充实现
-    Image.prototype.destroySelf = function () {
-        this.isDestroyed = true;
-        this.img = null;
-        this.src = '';
-        this.root = null;
-    };
-    Image.prototype.render = function () {
-        var _a;
-        if (!this.img || !((_a = this.img) === null || _a === void 0 ? void 0 : _a.complete)) {
-            return;
-        }
-        var style = this.style || {};
-        var box = this.layoutBox;
-        var ctx = this.ctx;
-        ctx.save();
-        if (style.borderColor) {
-            ctx.strokeStyle = style.borderColor;
-        }
-        ctx.lineWidth = style.borderWidth || 0;
-        var drawX = box.absoluteX;
-        var drawY = box.absoluteY;
-        var _b = this.renderBorder(ctx), needClip = _b.needClip, needStroke = _b.needStroke;
-        if (needClip) {
-            ctx.clip();
-        }
-        if (style.backgroundColor) {
-            ctx.fillStyle = style.backgroundColor;
-            ctx.fillRect(drawX, drawY, box.width, box.height);
-        }
-        if (style.backgroundImage && this.backgroundImage) {
-            ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
-        }
-        ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
-        if (needStroke) {
-            ctx.stroke();
-        }
-        ctx.restore();
-    };
-    return Image;
-}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Image);
 
 
 /***/ })
