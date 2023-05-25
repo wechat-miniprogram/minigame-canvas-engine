@@ -1,8 +1,21 @@
 /* eslint-disable no-param-reassign */
 // components
-import { View, Text, Image, ScrollView, BitMapText, Canvas } from '../components';
+import { View, Text, Image, ScrollView, BitMapText, Canvas, Element } from '../components/index';
+import { IStyle } from '../components/style';
 
-const constructorMap = {
+import { ILayout, ILayoutBox } from '../components/elements'
+
+interface Constructor {
+  new (...args: any[]): any;
+}
+
+interface TreeNode {
+  name: string;
+  attr: Record<string, string>;
+  children: TreeNode[];
+}
+
+const constructorMap: { [key: string]: Constructor } = {
   view: View,
   text: Text,
   image: Image,
@@ -11,25 +24,26 @@ const constructorMap = {
   canvas: Canvas,
 };
 
-export function registerComponent(name, Constructor) {
+export function registerComponent(name: string, Constructor: Constructor) {
   constructorMap[name] = Constructor;
 }
 
-function isPercent(data) {
+function isPercent(data: string | number) {
   return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
 }
 
-function convertPercent(data, parentData) {
-  if (typeof data === 'number') {
+function convertPercent(data: string | number, parentData: number) {
+  if (typeof data === 'number' || data === null) {
     return data;
   }
-  const matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
-  if (matchData) {
-    return parentData * matchData * 0.01;
+
+  const matchData = data.match(/(\d+(?:\.\d+)?)%/);
+  if (matchData && matchData[1]) {
+    return parentData * parseFloat(matchData[1]) * 0.01;
   }
 }
 
-export function create(node, style, parent) {
+export function create(node: TreeNode, style: Record<string, IStyle>, parent?: Record<string, any>) {
   const Constructor = constructorMap[node.name];
 
   if (!Constructor) {
@@ -40,11 +54,10 @@ export function create(node, style, parent) {
   const children = node.children || [];
 
   const attr = node.attr || {};
-  const dataset = {};
+  const dataset: Record<string, string> = {};
   const id = attr.id || '';
 
-  const args = Object.keys(attr)
-    .reduce((obj, key) => {
+  const args: Record<string, any> = Object.keys(attr).reduce((obj, key: string) => {
       const value = attr[key];
       const attribute = key;
 
@@ -60,9 +73,6 @@ export function create(node, style, parent) {
         return obj;
       }
 
-      // if (/\{\{.+\}\}/.test(value)) {
-
-      // }
       if (value === 'true') {
         obj[attribute] = true;
       } else if (value === 'false') {
@@ -80,11 +90,13 @@ export function create(node, style, parent) {
       obj.dataset = dataset;
 
       return obj;
-    }, {});
+    }, {} as Record<string, any>);
 
   // 用于后续元素查询
   args.idName = id;
+  // @ts-ignore
   this.eleCount += 1;
+  // @ts-ignore
   args.id = this.eleCount;
   args.className = attr.class || '';
 
@@ -113,10 +125,12 @@ export function create(node, style, parent) {
 
   // console.log(args);
   const element = new Constructor(args);
+  // @ts-ignore
   element.root = this;
   element.tagName = node.name;
 
-  children.forEach((childNode) => {
+  children.forEach((childNode: TreeNode) => {
+    // @ts-ignore
     const childElement = create.call(this, childNode, style, args);
 
     if (childElement) {
@@ -127,7 +141,7 @@ export function create(node, style, parent) {
   return element;
 }
 
-export function renderChildren(children, context, needRender = true) {
+export function renderChildren(children: Element[], context: CanvasRenderingContext2D, needRender = true) {
   children.forEach((child) => {
     child.shouldUpdate = false;
     child.isDirty = false;
@@ -141,12 +155,12 @@ export function renderChildren(children, context, needRender = true) {
 /**
  * 将布局树的布局信息加工赋值到渲染树
  */
-export function layoutChildren(element) {
-  element.children.forEach((child) => {
+export function layoutChildren(element: Element) {
+  element.children.forEach((child: Element) => {
     child.layoutBox = child.layoutBox || {};
 
-    ['left', 'top', 'width', 'height'].forEach((prop) => {
-      child.layoutBox[prop] = child.layout[prop];
+    ['left', 'top', 'width', 'height'].forEach((prop: string) => {
+      child.layoutBox[prop as keyof ILayoutBox] = child.layout?.[prop as keyof ILayout] as number;
     });
 
     if (child.parent) {
@@ -161,21 +175,23 @@ export function layoutChildren(element) {
     child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
 
 
-    layoutChildren.call(this, child);
+    layoutChildren(child);
   });
 }
 
+type Callback = (...args: any[]) => void;
+
 function none() { }
-export function iterateTree(element, callback = none) {
+export function iterateTree(element: Element, callback: Callback = none) {
   callback(element);
 
-  element.children.forEach((child) => {
+  element.children.forEach((child: Element) => {
     iterateTree(child, callback);
   });
 }
 
-export const repaintChildren = (children) => {
-  children.forEach((child) => {
+export const repaintChildren = (children: Element[]) => {
+  children.forEach((child: Element) => {
     child.repaint();
 
     if (child.type !== 'ScrollView') {
@@ -184,25 +200,37 @@ export const repaintChildren = (children) => {
   });
 };
 
-export const repaintTree = (tree) => {
+export const repaintTree = (tree: Element) => {
   tree.repaint();
 
-  tree.children.forEach((child) => {
+  tree.children.forEach((child: Element) => {
     child.repaint();
 
     repaintTree(child);
   });
 };
 
-export function clone(element, deep = true, parent) {
-  const Constructor = constructorMap[element.tagName];
-  this.eleCount += 1;
+interface ElementArgs {
+  style: object;
+  idName: string;
+  className: string;
+  id: number;
+  dataset: object;
+  src?: string;
+  value?: string;
+}
 
-  const args = {
+export function clone(root: Element, element: Element, deep = true, parent?: Element) {
+  const Constructor = constructorMap[element.tagName as string];
+  // @ts-ignore
+  root.eleCount += 1;
+
+  const args: ElementArgs = {
     style: Object.assign({}, element.style),
     idName: element.idName,
     className: element.className,
-    id: this.eleCount,
+    // @ts-ignore
+    id: root.eleCount,
     dataset: Object.assign({}, element.dataset),
   };
 
@@ -213,8 +241,8 @@ export function clone(element, deep = true, parent) {
   }
 
   const newElemenet = new Constructor(args);
-  newElemenet.root = this;
-  newElemenet.insert(this.renderContext, false);
+  newElemenet.root = root;
+  newElemenet.insert(root.renderContext, false);
   newElemenet.observeStyleAndEvent();
 
   if (parent) {
@@ -223,7 +251,7 @@ export function clone(element, deep = true, parent) {
 
   if (deep) {
     element.children.forEach((child) => {
-      clone.call(this, child, deep, newElemenet);
+      clone(root, child, deep, newElemenet);
     });
   }
 

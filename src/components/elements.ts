@@ -85,7 +85,7 @@ const toEventName = (event: string, id: number) => {
   return `element-${id}-${event}`;
 };
 
-interface ILayoutBox {
+export interface ILayoutBox {
   left: number;
   top: number;
   width: number;
@@ -95,6 +95,15 @@ interface ILayoutBox {
   originalAbsoluteX: number;
   originalAbsoluteY: number;
 }
+
+export interface ILayout {
+  width: number;
+  height: number;
+  top: number;
+  left: number;
+  right: number;
+  bottom: number;
+};
 
 type Callback = (...args: any[]) => void;
 
@@ -117,9 +126,13 @@ export default class Element {
   public layoutBox: ILayoutBox;
   public backgroundImage: any;
   public ctx: CanvasRenderingContext2D | null = null
+  public isDirty = false;
+  public shouldUpdate = false;
+  public type?: string;
+  public layout?: ILayout;
+  public tagName?: string;
 
   private originStyle: IStyle;
-  private isDirty = false;
 
   constructor({
     style = {},

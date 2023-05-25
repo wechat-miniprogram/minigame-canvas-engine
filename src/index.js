@@ -157,6 +157,7 @@ class Layout extends Element {
     debugInfo.start('init_xmlParse');
     // 将xml字符串解析成xml节点树
     const jsonObj = parser.parse(template, parseConfig, true);
+    console.log(jsonObj)
     debugInfo.end('init_xmlParse');
 
     const xmlTree = jsonObj.children[0];
@@ -202,7 +203,7 @@ class Layout extends Element {
 
     // 将布局树的布局信息加工赋值到渲染树
     debugInfo.start('layoutChildren', true);
-    layoutChildren.call(this, this);
+    layoutChildren(this);
     debugInfo.end('layoutChildren');
 
     this.viewportScale = this.viewport.width / this.renderport.width;
@@ -458,7 +459,7 @@ class Layout extends Element {
   }
 
   cloneNode(element, deep = true) {
-    return clone.call(this, element, deep);
+    return clone(this, element, deep);
   }
 
   Element = Element;

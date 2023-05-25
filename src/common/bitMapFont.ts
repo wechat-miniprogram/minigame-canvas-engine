@@ -79,7 +79,7 @@ export default class BitMapFont {
     for (let i = 4; i < 4 + charsCount; i++) {
       const charText: string = lines[i];
       const letter: string = String.fromCharCode(this.getConfigByKeyInOneLine(charText, 'id'));
-     
+
       const c: CharData = {
         x: this.getConfigByKeyInOneLine(charText, 'x'),
         y: this.getConfigByKeyInOneLine(charText, 'y'),
@@ -106,7 +106,7 @@ export default class BitMapFont {
         }
       }
     }
-    
+
     return chars;
   }
 
