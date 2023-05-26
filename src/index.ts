@@ -1,88 +1,146 @@
 import './env';
 import Element from './components/elements';
 import Pool from './common/pool';
-import Emitter from 'tiny-emitter';
+import TinyEmitter from 'tiny-emitter';
 import computeLayout from 'css-layout';
-import {
-  isClick,
-  STATE,
-  clearCanvas,
-} from './common/util';
+import { isClick, STATE, clearCanvas, isGameTouchEvent } from './common/util';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
-// import TWEEN from '@tweenjs/tween.js';
 import DebugInfo from './common/debugInfo';
 import Ticker from './common/ticker';
-import {
-  create,
-  renderChildren,
-  layoutChildren,
-  repaintChildren,
-  iterateTree,
-  clone,
-  registerComponent,
-} from './common/vd';
+import { create, renderChildren, layoutChildren, repaintChildren, iterateTree, clone, registerComponent } from './common/vd';
 import Rect from './common/rect';
-
 import imageManager from './common/imageManager';
-
 import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components';
+import { IStyle } from './components/style';
 
 // 全局事件管道
-export const EE = new Emitter();
+export const EE = new TinyEmitter();
 const imgPool = new Pool('imgPool');
 const bitMapPool = new Pool('bitMapPool');
 const debugInfo = new DebugInfo();
 
+interface IViewPort {
+  width: number;
+  height: number;
+}
+
+interface IViewPortBox {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+}
+
+interface EventHandlerData {
+  touchMsg: {
+    [key: string]: MouseEvent | GameTouch;
+  };
+  handlers: {
+    touchStart: (e: MouseEvent | GameTouchEvent) => void;
+    touchMove: (e: MouseEvent | GameTouchEvent) => void;
+    touchEnd: (e: MouseEvent | GameTouchEvent) => void;
+    touchCancel: (e: MouseEvent | GameTouchEvent) => void;
+  };
+}
+
+
 class Layout extends Element {
+  public version = '1.0.2';
+  public hasEventHandler = false;
+  public renderContext: CanvasRenderingContext2D | null = null;
+  public renderport: IViewPort = {
+    width: 0,
+    height: 0,
+  };
+  public viewport: IViewPortBox = {
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+  };
+  public viewportScale = 1;
+  public hasViewPortSet = false;
+  public realLayoutBox: {
+    realX: number;
+    realY: number;
+  } = {
+    realX: 0,
+    realY: 0,
+  };
+
+  public bitMapFonts: BitMapFont[] = [];
+  public eleCount = 0;
+  public state: STATE = STATE.UNINIT;
+  public isNeedRepaint = false;
+  public ticker: Ticker = new Ticker();
+  public tickerFunc = () => {
+    // TWEEN.update();
+    if (this.isDirty) {
+      this.reflow();
+    } else if (this.isNeedRepaint) {
+      this.repaint();
+    }
+  };
+
+  private eventHandlerData: EventHandlerData;
+  
   constructor({
     style,
-    name,
-  } = {}) {
+  }: {
+    style?: IStyle;
+    name?: string;
+  }) {
     super({
       style,
       id: 0,
-      name,
     });
+    // this.elementTree = null;
 
-    this.hasEventHandler = false;
-    this.elementTree = null;
-    this.renderContext = null;
+    // this.renderport = {};
+    // this.viewport = {};
+    // this.viewportScale = 1;
+    // this.hasViewPortSet = false;
+    // this.realLayoutBox = {
+    //   realX: 0,
+    //   realY: 0,
+    // };
 
-    this.renderport = {};
-    this.viewport = {};
-    this.viewportScale = 1;
-    this.hasViewPortSet = false;
-    this.realLayoutBox = {
-      realX: 0,
-      realY: 0,
+    // this.touchMsg = {};
+    // this.touchStart = this.eventHandler('touchstart').bind(this);
+    // this.touchMove = this.eventHandler('touchmove').bind(this);
+    // this.touchEnd = this.eventHandler('touchend').bind(this);
+    // this.touchCancel = this.eventHandler('touchcancel').bind(this);
+
+    this.eventHandlerData = {
+      touchMsg: {},
+      handlers: {
+        touchStart: this.eventHandler('touchstart'),
+        touchMove: this.eventHandler('touchmove'),
+        touchEnd: this.eventHandler('touchend'),
+        touchCancel: this.eventHandler('touchcancel'),
+      },
     };
 
-    this.touchMsg = {};
-    this.touchStart = this.eventHandler('touchstart').bind(this);
-    this.touchMove = this.eventHandler('touchmove').bind(this);
-    this.touchEnd = this.eventHandler('touchend').bind(this);
-    this.touchCancel = this.eventHandler('touchcancel').bind(this);
+    // this.version = '1.0.2';
+    // this.eleCount = 0;
 
-    this.version = '1.0.2';
-    this.eleCount = 0;
+    // this.state = STATE.UNINIT;
 
-    this.state = STATE.UNINIT;
-
-    this.bitMapFonts = [];
+    // this.bitMapFonts = [];
 
     /**
      * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
      * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
      * 而是执行一个置脏操作，ticker 每一次执行 update 会检查这个标记位，进而执行真正的重绘操作
      */
-    this.isNeedRepaint = false;
+    // this.isNeedRepaint = false;
 
     this.on('repaint', () => {
       this.isNeedRepaint = true;
     });
 
-    this.ticker = new Ticker();
+    // this.ticker = new Ticker();
 
     /**
      * 将 Tween 挂载到 Layout，对于 Tween 的使用完全遵循 Tween.js 的文档
@@ -92,14 +150,14 @@ class Layout extends Element {
      */
     // this.TWEEN = TWEEN;
 
-    this.tickerFunc = () => {
-      // TWEEN.update();
-      if (this.isDirty) {
-        this.reflow();
-      } else if (this.isNeedRepaint) {
-        this.repaint();
-      }
-    };
+    // this.tickerFunc = () => {
+    //   // TWEEN.update();
+    //   if (this.isDirty) {
+    //     this.reflow();
+    //   } else if (this.isNeedRepaint) {
+    //     this.repaint();
+    //   }
+    // };
 
     console.log(`[Layout] v${this.version}`);
   }
@@ -120,7 +178,7 @@ class Layout extends Element {
    * 其中，width为物理像素宽度，height为物理像素高度，x为距离屏幕左上角的物理像素x坐标，y为距离屏幕左上角的物理像素
    * y坐标
    */
-  updateViewPort(box) {
+  updateViewPort(box: IViewPortBox) {
     this.viewport.width = box.width || 0;
     this.viewport.height = box.height || 0;
     this.viewport.x = box.x || 0;
@@ -134,7 +192,7 @@ class Layout extends Element {
     this.hasViewPortSet = true;
   }
 
-  init(template, style, attrValueProcessor) {
+  init(template: string, style: Record<string, IStyle>, attrValueProcessor: Callback) {
     debugInfo.start('init');
     const parseConfig = {
       attributeNamePrefix: '',
@@ -151,6 +209,7 @@ class Layout extends Element {
     };
 
     if (attrValueProcessor && typeof attrValueProcessor === 'function') {
+      // @ts-ignore
       parseConfig.attrValueProcessor = attrValueProcessor;
     }
 
@@ -203,16 +262,17 @@ class Layout extends Element {
 
     // 将布局树的布局信息加工赋值到渲染树
     debugInfo.start('layoutChildren', true);
+    // @ts-ignore
     layoutChildren(this);
     debugInfo.end('layoutChildren');
 
     this.viewportScale = this.viewport.width / this.renderport.width;
 
-    clearCanvas(this.renderContext);
+    clearCanvas(this.renderContext as CanvasRenderingContext2D);
 
     // 遍历节点树，依次调用节点的渲染接口实现渲染
     debugInfo.start('renderChildren', true);
-    renderChildren(this.children, this.renderContext, false);
+    renderChildren(this.children, this.renderContext as CanvasRenderingContext2D, false);
     debugInfo.end('renderChildren');
 
     debugInfo.start('repaint', true);
@@ -241,7 +301,8 @@ class Layout extends Element {
    * 4. renderChildren：执行渲染
    * 5. bindEvents：执行事件绑定
    */
-  layout(context) {
+  // @ts-ignore
+  layout(context: CanvasRenderingContext2D) {
     this.renderContext = context;
 
     if (!this.hasViewPortSet) {
@@ -266,13 +327,13 @@ class Layout extends Element {
   }
 
   repaint() {
-    clearCanvas(this.renderContext);
+    clearCanvas(this.renderContext as CanvasRenderingContext2D);
 
     this.isNeedRepaint = false;
     repaintChildren(this.children);
   }
 
-  getElementViewportRect(element) {
+  getElementViewportRect(element: Element) {
     const { realLayoutBox, viewportScale } = this;
     const {
       absoluteX,
@@ -294,7 +355,7 @@ class Layout extends Element {
     );
   }
 
-  getChildByPos(tree, x, y, itemList) {
+  getChildByPos(tree: Layout | Element, x: number, y: number, itemList: (Layout | Element)[]) {
     tree.children.forEach((ele) => {
       const {
         absoluteX,
@@ -320,18 +381,26 @@ class Layout extends Element {
     });
   }
 
-  eventHandler(eventName) {
-    return function touchEventHandler(e) {
-      const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+  eventHandler = (eventName: string) => {
+    return (e: MouseEvent | GameTouchEvent) => {
+      let touch: MouseEvent | GameTouch;
+      
+      if (isGameTouchEvent(e)) {
+        touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+      } else {
+        touch = e;
+      }
+      // const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
       if (!touch || !touch.pageX || !touch.pageY) {
         return;
       }
 
       if (!touch.timeStamp) {
+        // @ts-ignore
         touch.timeStamp = e.timeStamp;
       }
 
-      const list = [];
+      const list: (Layout | Element)[] = [];
       if (touch) {
         this.getChildByPos(this, touch.pageX, touch.pageY, list);
       }
@@ -344,10 +413,10 @@ class Layout extends Element {
       item && item.emit(eventName, e);
 
       if (eventName === 'touchstart' || eventName === 'touchend') {
-        this.touchMsg[eventName] = touch;
+        this.eventHandlerData.touchMsg[eventName] = touch;
       }
 
-      if (eventName === 'touchend' && isClick(this.touchMsg)) {
+      if (eventName === 'touchend' && isClick(this.eventHandlerData.touchMsg)) {
         item && item.emit('click', e);
       }
     };
@@ -361,24 +430,24 @@ class Layout extends Element {
     this.hasEventHandler = true;
 
     if (typeof __env !== 'undefined') {
-      __env.onTouchStart(this.touchStart);
-      __env.onTouchMove(this.touchMove);
-      __env.onTouchEnd(this.touchEnd);
-      __env.onTouchCancel(this.touchCancel);
+      __env.onTouchStart(this.eventHandlerData.handlers.touchStart);
+      __env.onTouchMove(this.eventHandlerData.handlers.touchMove);
+      __env.onTouchEnd(this.eventHandlerData.handlers.touchEnd);
+      __env.onTouchCancel(this.eventHandlerData.handlers.touchCancel);
     } else {
-      document.onmousedown = this.touchStart;
-      document.onmousemove = this.touchMove;
-      document.onmouseup = this.touchEnd;
-      document.onmouseleave = this.touchEnd;
+      document.onmousedown = this.eventHandlerData.handlers.touchStart;
+      document.onmousemove = this.eventHandlerData.handlers.touchMove;
+      document.onmouseup = this.eventHandlerData.handlers.touchEnd;
+      document.onmouseleave = this.eventHandlerData.handlers.touchCancel;
     }
   }
 
   unBindEvents() {
     if (typeof __env !== 'undefined') {
-      __env.offTouchStart(this.touchStart);
-      __env.offTouchMove(this.touchMove);
-      __env.offTouchEnd(this.touchEnd);
-      __env.offTouchCancel(this.touchCancel);
+      __env.offTouchStart(this.eventHandlerData.handlers.touchStart);
+      __env.offTouchMove(this.eventHandlerData.handlers.touchMove);
+      __env.offTouchEnd(this.eventHandlerData.handlers.touchEnd);
+      __env.offTouchCancel(this.eventHandlerData.handlers.touchCancel);
     } else {
       document.onmousedown = null;
       document.onmousemove = null;
@@ -389,23 +458,23 @@ class Layout extends Element {
     this.hasEventHandler = false;
   }
 
-  emit(event, data) {
+  emit(event: string, data: any) {
     EE.emit(event, data);
   }
 
-  on(event, callback) {
+  on(event: string, callback: Callback) {
     EE.on(event, callback);
   }
 
-  once(event, callback) {
+  once(event: string, callback: Callback) {
     EE.once(event, callback);
   }
 
-  off(event, callback) {
+  off(event: string, callback: Callback) {
     EE.off(event, callback);
   }
 
-  destroyAll(tree) {
+  destroyAll(tree: Layout | Element) {
     const {
       children,
     } = tree;
@@ -417,16 +486,16 @@ class Layout extends Element {
     });
   }
 
-  clear(options = {}) {
+  clear(options: { removeTicker?: boolean } = {}) {
     const { removeTicker = true } = options;
 
     debugInfo.reset();
     this.destroyAll(this);
-    this.elementTree = null;
+    // this.elementTree = null;
     this.children = [];
     this.state = STATE.CLEAR;
     this.isDirty = false;
-    clearCanvas(this.renderContext);
+    clearCanvas(this.renderContext as CanvasRenderingContext2D);
     this.eleCount = 0;
     this.unBindEvents();
 
@@ -450,7 +519,7 @@ class Layout extends Element {
     return Promise.all(arr.map(src => imageManager.loadImagePromise(src)));
   }
 
-  registBitMapFont(name, src, config) {
+  registBitMapFont(name: string, src: string, config: string) {
     if (!bitMapPool.get(name)) {
       const font = new BitMapFont(name, src, config);
       this.bitMapFonts.push(font);
@@ -458,8 +527,8 @@ class Layout extends Element {
     }
   }
 
-  cloneNode(element, deep = true) {
-    return clone(this, element, deep);
+  cloneNode(element: Element, deep = true) {
+    return clone<Layout>(this, element, deep);
   }
 
   Element = Element;

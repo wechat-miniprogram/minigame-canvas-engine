@@ -129,7 +129,7 @@ export default class Element {
   public isDirty = false;
   public shouldUpdate = false;
   public type?: string;
-  public layout?: ILayout;
+  // public layout?: ILayout;
   public tagName?: string;
 
   private originStyle: IStyle;
@@ -371,6 +371,11 @@ export default class Element {
     } else {
       console.warn('[Layout] this element has been removed');
     }
+  }
+
+  // 子类填充实现
+  destroySelf() {
+
   }
 
   // 子类填充实现

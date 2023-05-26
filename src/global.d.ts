@@ -8,6 +8,16 @@ declare const swan: any;
 // Definitions by: Marcelo Haskell Camargo <https://github.com/haskellcamargo>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
+declare module "tiny-emitter" {
+  export default class TinyEmitter {
+    constructor();
+    on(event: string, callback: Function, ctx?: any): this;
+    once(event: string, callback: Function, ctx?: any): this;
+    emit(event: string, ...args: any[]): this;
+    off(event: string, callback?: Function): this;
+  }  
+}
+
 declare module "scroller" {
   namespace Scroller {
     interface Options {
@@ -70,4 +80,32 @@ declare module "scroller" {
     bindEvents(): void;
   }
 
+}
+
+declare module "css-layout" {
+  export default function computeLayout(tree: any): void;
+}
+
+declare type Callback = (...args: any[]) => void;
+
+interface GameTouch {
+  timeStamp: number;
+  identifier: number;
+  pageX: number;
+  pageY: number;
+  clientX: number;
+  clientY: number;
+  force?: number;
+}
+
+interface GameTouchEvent {
+  type: string;
+  timeStamp: number;
+  touches: GameTouch[];
+  changedTouches: GameTouch[];
+}
+
+interface TouchMsg {
+  touchstart?: MouseEvent | GameTouch;
+  touchend?: MouseEvent | GameTouch;
 }

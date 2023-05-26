@@ -314,6 +314,9 @@ var Element = /** @class */ (function () {
         }
     };
     // 子类填充实现
+    Element.prototype.destroySelf = function () {
+    };
+    // 子类填充实现
     Element.prototype.destroy = function () {
         this.unBindEvent();
         this.isDestroyed = true;
@@ -628,6 +631,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createImage: () => (/* binding */ createImage),
 /* harmony export */   getDpr: () => (/* binding */ getDpr),
 /* harmony export */   isClick: () => (/* binding */ isClick),
+/* harmony export */   isGameTouchEvent: () => (/* binding */ isGameTouchEvent),
 /* harmony export */   none: () => (/* binding */ none)
 /* harmony export */ });
 /* istanbul ignore next */
@@ -703,12 +707,14 @@ function getDpr() {
     }
     return _dpr;
 }
-var STATE = {
-    UNINIT: 'UNINIT',
-    INITED: 'INITED',
-    RENDERED: 'RENDERED',
-    CLEAR: 'CLEAR',
-};
+var STATE;
+(function (STATE) {
+    STATE["UNINIT"] = "UNINIT";
+    STATE["INITED"] = "INITED";
+    STATE["RENDERED"] = "RENDERED";
+    STATE["CLEAR"] = "CLEAR";
+})(STATE || (STATE = {}));
+;
 function clearCanvas(ctx) {
     ctx && ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
@@ -720,6 +726,9 @@ function copyTouchArray(touches) {
         clientX: touch.clientX,
         clientY: touch.clientY,
     }); });
+}
+function isGameTouchEvent(e) {
+    return 'touches' in e;
 }
 
 
@@ -3165,6 +3174,7 @@ function layoutChildren(element) {
         child.layoutBox = child.layoutBox || {};
         ['left', 'top', 'width', 'height'].forEach(function (prop) {
             var _a;
+            // @ts-ignore
             child.layoutBox[prop] = (_a = child.layout) === null || _a === void 0 ? void 0 : _a[prop];
         });
         if (child.parent) {
@@ -3330,7 +3340,9 @@ var View = /** @class */ (function (_super) {
     View.prototype.render = function () {
         var style = this.style || {};
         var box = this.layoutBox;
+        // const { ctx } = this;
         var ctx = this.ctx;
+        ctx.save();
         var borderWidth = style.borderWidth || 0;
         var drawX = box.absoluteX;
         var drawY = box.absoluteY;
@@ -5788,7 +5800,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-// import TWEEN from '@tweenjs/tween.js';
 
 
 
@@ -5803,57 +5814,35 @@ var debugInfo = new _common_debugInfo__WEBPACK_IMPORTED_MODULE_8__["default"]();
 var Layout = /** @class */ (function (_super) {
     __extends(Layout, _super);
     function Layout(_a) {
-        var _b = _a === void 0 ? {} : _a, style = _b.style, name = _b.name;
+        var style = _a.style;
         var _this = _super.call(this, {
             style: style,
             id: 0,
-            name: name,
         }) || this;
-        _this.Element = _components_elements__WEBPACK_IMPORTED_MODULE_1__["default"];
-        _this.View = _components__WEBPACK_IMPORTED_MODULE_13__.View;
-        _this.Text = _components__WEBPACK_IMPORTED_MODULE_13__.Text;
-        _this.Image = _components__WEBPACK_IMPORTED_MODULE_13__.Image;
-        _this.ScrollView = _components__WEBPACK_IMPORTED_MODULE_13__.ScrollView;
-        _this.BitMapText = _components__WEBPACK_IMPORTED_MODULE_13__.BitMapText;
-        _this.Canvas = _components__WEBPACK_IMPORTED_MODULE_13__.Canvas;
-        _this.registerComponent = _common_vd__WEBPACK_IMPORTED_MODULE_10__.registerComponent;
+        _this.version = '1.0.2';
         _this.hasEventHandler = false;
-        _this.elementTree = null;
         _this.renderContext = null;
-        _this.renderport = {};
-        _this.viewport = {};
+        _this.renderport = {
+            width: 0,
+            height: 0,
+        };
+        _this.viewport = {
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0,
+        };
         _this.viewportScale = 1;
         _this.hasViewPortSet = false;
         _this.realLayoutBox = {
             realX: 0,
             realY: 0,
         };
-        _this.touchMsg = {};
-        _this.touchStart = _this.eventHandler('touchstart').bind(_this);
-        _this.touchMove = _this.eventHandler('touchmove').bind(_this);
-        _this.touchEnd = _this.eventHandler('touchend').bind(_this);
-        _this.touchCancel = _this.eventHandler('touchcancel').bind(_this);
-        _this.version = '1.0.2';
+        _this.bitMapFonts = [];
         _this.eleCount = 0;
         _this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.UNINIT;
-        _this.bitMapFonts = [];
-        /**
-         * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
-         * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
-         * 而是执行一个置脏操作，ticker 每一次执行 update 会检查这个标记位，进而执行真正的重绘操作
-         */
         _this.isNeedRepaint = false;
-        _this.on('repaint', function () {
-            _this.isNeedRepaint = true;
-        });
         _this.ticker = new _common_ticker__WEBPACK_IMPORTED_MODULE_9__["default"]();
-        /**
-         * 将 Tween 挂载到 Layout，对于 Tween 的使用完全遵循 Tween.js 的文档
-         * https://github.com/tweenjs/tween.js/
-         * 只不过当 Tween 改动了节点会触发 repaint、reflow 的属性时，Layout 会执行相应的操作
-         * 业务侧不用感知到 repaint 和 reflow
-         */
-        // this.TWEEN = TWEEN;
         _this.tickerFunc = function () {
             // TWEEN.update();
             if (_this.isDirty) {
@@ -5863,6 +5852,100 @@ var Layout = /** @class */ (function (_super) {
                 _this.repaint();
             }
         };
+        _this.eventHandler = function (eventName) {
+            return function (e) {
+                var touch;
+                if ((0,_common_util__WEBPACK_IMPORTED_MODULE_5__.isGameTouchEvent)(e)) {
+                    touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+                }
+                else {
+                    touch = e;
+                }
+                // const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+                if (!touch || !touch.pageX || !touch.pageY) {
+                    return;
+                }
+                if (!touch.timeStamp) {
+                    // @ts-ignore
+                    touch.timeStamp = e.timeStamp;
+                }
+                var list = [];
+                if (touch) {
+                    _this.getChildByPos(_this, touch.pageX, touch.pageY, list);
+                }
+                if (!list.length) {
+                    list.push(_this);
+                }
+                var item = list[list.length - 1];
+                item && item.emit(eventName, e);
+                if (eventName === 'touchstart' || eventName === 'touchend') {
+                    _this.eventHandlerData.touchMsg[eventName] = touch;
+                }
+                if (eventName === 'touchend' && (0,_common_util__WEBPACK_IMPORTED_MODULE_5__.isClick)(_this.eventHandlerData.touchMsg)) {
+                    item && item.emit('click', e);
+                }
+            };
+        };
+        _this.Element = _components_elements__WEBPACK_IMPORTED_MODULE_1__["default"];
+        _this.View = _components__WEBPACK_IMPORTED_MODULE_13__.View;
+        _this.Text = _components__WEBPACK_IMPORTED_MODULE_13__.Text;
+        _this.Image = _components__WEBPACK_IMPORTED_MODULE_13__.Image;
+        _this.ScrollView = _components__WEBPACK_IMPORTED_MODULE_13__.ScrollView;
+        _this.BitMapText = _components__WEBPACK_IMPORTED_MODULE_13__.BitMapText;
+        _this.Canvas = _components__WEBPACK_IMPORTED_MODULE_13__.Canvas;
+        _this.registerComponent = _common_vd__WEBPACK_IMPORTED_MODULE_10__.registerComponent;
+        // this.elementTree = null;
+        // this.renderport = {};
+        // this.viewport = {};
+        // this.viewportScale = 1;
+        // this.hasViewPortSet = false;
+        // this.realLayoutBox = {
+        //   realX: 0,
+        //   realY: 0,
+        // };
+        // this.touchMsg = {};
+        // this.touchStart = this.eventHandler('touchstart').bind(this);
+        // this.touchMove = this.eventHandler('touchmove').bind(this);
+        // this.touchEnd = this.eventHandler('touchend').bind(this);
+        // this.touchCancel = this.eventHandler('touchcancel').bind(this);
+        _this.eventHandlerData = {
+            touchMsg: {},
+            handlers: {
+                touchStart: _this.eventHandler('touchstart'),
+                touchMove: _this.eventHandler('touchmove'),
+                touchEnd: _this.eventHandler('touchend'),
+                touchCancel: _this.eventHandler('touchcancel'),
+            },
+        };
+        // this.version = '1.0.2';
+        // this.eleCount = 0;
+        // this.state = STATE.UNINIT;
+        // this.bitMapFonts = [];
+        /**
+         * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
+         * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
+         * 而是执行一个置脏操作，ticker 每一次执行 update 会检查这个标记位，进而执行真正的重绘操作
+         */
+        // this.isNeedRepaint = false;
+        _this.on('repaint', function () {
+            _this.isNeedRepaint = true;
+        });
+        // this.ticker = new Ticker();
+        /**
+         * 将 Tween 挂载到 Layout，对于 Tween 的使用完全遵循 Tween.js 的文档
+         * https://github.com/tweenjs/tween.js/
+         * 只不过当 Tween 改动了节点会触发 repaint、reflow 的属性时，Layout 会执行相应的操作
+         * 业务侧不用感知到 repaint 和 reflow
+         */
+        // this.TWEEN = TWEEN;
+        // this.tickerFunc = () => {
+        //   // TWEEN.update();
+        //   if (this.isDirty) {
+        //     this.reflow();
+        //   } else if (this.isNeedRepaint) {
+        //     this.repaint();
+        //   }
+        // };
         console.log("[Layout] v".concat(_this.version));
         return _this;
     }
@@ -5910,6 +5993,7 @@ var Layout = /** @class */ (function (_super) {
             alwaysCreateTextNode: true,
         };
         if (attrValueProcessor && typeof attrValueProcessor === 'function') {
+            // @ts-ignore
             parseConfig.attrValueProcessor = attrValueProcessor;
         }
         debugInfo.start('init_xmlParse');
@@ -5952,6 +6036,7 @@ var Layout = /** @class */ (function (_super) {
         }
         // 将布局树的布局信息加工赋值到渲染树
         debugInfo.start('layoutChildren', true);
+        // @ts-ignore
         (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.layoutChildren)(this);
         debugInfo.end('layoutChildren');
         this.viewportScale = this.viewport.width / this.renderport.width;
@@ -5983,6 +6068,7 @@ var Layout = /** @class */ (function (_super) {
      * 4. renderChildren：执行渲染
      * 5. bindEvents：执行事件绑定
      */
+    // @ts-ignore
     Layout.prototype.layout = function (context) {
         this.renderContext = context;
         if (!this.hasViewPortSet) {
@@ -6033,56 +6119,30 @@ var Layout = /** @class */ (function (_super) {
             }
         });
     };
-    Layout.prototype.eventHandler = function (eventName) {
-        return function touchEventHandler(e) {
-            var touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
-            if (!touch || !touch.pageX || !touch.pageY) {
-                return;
-            }
-            if (!touch.timeStamp) {
-                touch.timeStamp = e.timeStamp;
-            }
-            var list = [];
-            if (touch) {
-                this.getChildByPos(this, touch.pageX, touch.pageY, list);
-            }
-            if (!list.length) {
-                list.push(this);
-            }
-            var item = list[list.length - 1];
-            item && item.emit(eventName, e);
-            if (eventName === 'touchstart' || eventName === 'touchend') {
-                this.touchMsg[eventName] = touch;
-            }
-            if (eventName === 'touchend' && (0,_common_util__WEBPACK_IMPORTED_MODULE_5__.isClick)(this.touchMsg)) {
-                item && item.emit('click', e);
-            }
-        };
-    };
     Layout.prototype.bindEvents = function () {
         if (this.hasEventHandler) {
             return;
         }
         this.hasEventHandler = true;
         if (typeof __env !== 'undefined') {
-            __env.onTouchStart(this.touchStart);
-            __env.onTouchMove(this.touchMove);
-            __env.onTouchEnd(this.touchEnd);
-            __env.onTouchCancel(this.touchCancel);
+            __env.onTouchStart(this.eventHandlerData.handlers.touchStart);
+            __env.onTouchMove(this.eventHandlerData.handlers.touchMove);
+            __env.onTouchEnd(this.eventHandlerData.handlers.touchEnd);
+            __env.onTouchCancel(this.eventHandlerData.handlers.touchCancel);
         }
         else {
-            document.onmousedown = this.touchStart;
-            document.onmousemove = this.touchMove;
-            document.onmouseup = this.touchEnd;
-            document.onmouseleave = this.touchEnd;
+            document.onmousedown = this.eventHandlerData.handlers.touchStart;
+            document.onmousemove = this.eventHandlerData.handlers.touchMove;
+            document.onmouseup = this.eventHandlerData.handlers.touchEnd;
+            document.onmouseleave = this.eventHandlerData.handlers.touchCancel;
         }
     };
     Layout.prototype.unBindEvents = function () {
         if (typeof __env !== 'undefined') {
-            __env.offTouchStart(this.touchStart);
-            __env.offTouchMove(this.touchMove);
-            __env.offTouchEnd(this.touchEnd);
-            __env.offTouchCancel(this.touchCancel);
+            __env.offTouchStart(this.eventHandlerData.handlers.touchStart);
+            __env.offTouchMove(this.eventHandlerData.handlers.touchMove);
+            __env.offTouchEnd(this.eventHandlerData.handlers.touchEnd);
+            __env.offTouchCancel(this.eventHandlerData.handlers.touchCancel);
         }
         else {
             document.onmousedown = null;
@@ -6118,7 +6178,7 @@ var Layout = /** @class */ (function (_super) {
         var _a = options.removeTicker, removeTicker = _a === void 0 ? true : _a;
         debugInfo.reset();
         this.destroyAll(this);
-        this.elementTree = null;
+        // this.elementTree = null;
         this.children = [];
         this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.CLEAR;
         this.isDirty = false;

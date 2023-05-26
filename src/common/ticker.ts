@@ -49,7 +49,7 @@ export default class Ticker {
     }
   }
 
-  remove(cb: Callback, isInner = false) {
+  remove(cb?: Callback, isInner = false) {
     if (cb === undefined) {
       this.cbs = [];
       this.innerCbs = [];

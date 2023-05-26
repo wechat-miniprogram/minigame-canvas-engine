@@ -103,11 +103,11 @@ export function getDpr() {
   return _dpr;
 }
 
-export const STATE = {
-  UNINIT: 'UNINIT',
-  INITED: 'INITED',
-  RENDERED: 'RENDERED',
-  CLEAR: 'CLEAR',
+export enum STATE {
+  UNINIT = 'UNINIT',
+  INITED = 'INITED',
+  RENDERED = 'RENDERED',
+  CLEAR = 'CLEAR',
 };
 
 export function clearCanvas(ctx: CanvasRenderingContext2D) {
@@ -122,4 +122,8 @@ export function copyTouchArray(touches: GameTouch[]) {
     clientX: touch.clientX,
     clientY: touch.clientY,
   }));
+}
+
+export function isGameTouchEvent(e: MouseEvent | GameTouchEvent): e is GameTouchEvent {
+  return 'touches' in e;
 }

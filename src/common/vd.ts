@@ -160,6 +160,7 @@ export function layoutChildren(element: Element) {
     child.layoutBox = child.layoutBox || {};
 
     ['left', 'top', 'width', 'height'].forEach((prop: string) => {
+      // @ts-ignore
       child.layoutBox[prop as keyof ILayoutBox] = child.layout?.[prop as keyof ILayout] as number;
     });
 
@@ -220,7 +221,7 @@ interface ElementArgs {
   value?: string;
 }
 
-export function clone(root: Element, element: Element, deep = true, parent?: Element) {
+export function clone<T extends Element>(root: T, element: Element, deep = true, parent?: Element) {
   const Constructor = constructorMap[element.tagName as string];
   // @ts-ignore
   root.eleCount += 1;
