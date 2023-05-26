@@ -1,10 +1,11 @@
 import Element from './elements';
 import { IStyle } from './style';
+
 interface IViewOptions {
   style?: IStyle;
   idName?: string;
   className?: string;
-  dataset?: Record<string, string>;
+  dataset?: Record<string, string>
 }
 
 export default class View extends Element {
@@ -47,7 +48,11 @@ export default class View extends Element {
   render() {
     const style = this.style || {};
     const box = this.layoutBox;
+    // const { ctx } = this;
+
     const ctx = this.ctx as CanvasRenderingContext2D;
+
+    ctx.save();
 
     const borderWidth = style.borderWidth || 0;
     const drawX = box.absoluteX;
@@ -90,4 +95,3 @@ export default class View extends Element {
     this.render();
   }
 }
-
