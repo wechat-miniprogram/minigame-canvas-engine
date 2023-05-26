@@ -1,10 +1,10 @@
 {
     "deviceOrientation": "portrait",
-    "iOSHighPerformance": false,
+    "iOSHighPerformance": true,
     "openDataContext": "sub",
     "plugins": {
       "Layout": {
-        "version": "dev-bf8a7559bb792c8f8405d720070eab4e",
+        "version": "latest",
         "provider": "wx7a727ff7d940bb3f",
         "contexts":[{"type":"openDataContext"}, {"type": "gameContext"}]
       }

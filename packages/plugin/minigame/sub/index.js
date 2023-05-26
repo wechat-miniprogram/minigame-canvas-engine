@@ -86,6 +86,8 @@ function init() {
                 userinfo = info;
                 loadFriendDataAndRender(key, info)
             });
+        } else if (data.event === 'close') {
+          Layout.clear();
         }
     });
 }

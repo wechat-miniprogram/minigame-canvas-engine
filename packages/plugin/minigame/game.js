@@ -1,5 +1,7 @@
 const Layout = requirePlugin('Layout').default;
 
+GameGlobal.Layout = Layout;
+
 // 设置游戏画布尺寸
 const info = wx.getSystemInfoSync();
 const GAME_WIDTH = info.windowWidth * info.pixelRatio;
@@ -96,7 +98,6 @@ const updateRank = () => {
 }
 
 testText.on('click', () => {
-  console.log(testText.value)
   if (testText.value === '打开排行榜') {
     testText.value = '关闭排行榜';
     // 更新开放数据域最终被绘制到屏幕的位置，方便开放数据域做事件处理

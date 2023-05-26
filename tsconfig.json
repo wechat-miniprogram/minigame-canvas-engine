@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+      "target": "es5",                             // 目标 ECMAScript 版本
+      "module": "ESNext",                        // 使用 CommonJS 模块
+      "allowJs": true,                             // 允许编译 JavaScript 文件（方便逐步迁移）
+      "checkJs": false,                            // 设置为 true 可检查并报告纯 JavaScript 文件中的错误
+      "declaration": false,                         // 生成 ".d.ts" 声明文件
+      "sourceMap": true,                           // 生成源映射以便调试
+      "outDir": "dist",                            // 指定输出目录
+      "rootDir": "src",                            // 指定项目根目录
+      "strict": true,                              // 启用所有严格类型检查选项
+      "esModuleInterop": true,                     // 启用 ES6 模块与 CommonJS 模块的交互
+      "moduleResolution": "node",
+      "forceConsistentCasingInFileNames": true     // 禁止对同一文件使用不同的大小写引用
+    },
+    "include": ["src/**/*", "src/global.d.ts"],    // 包含的 TypeScript 文件
+    "exclude": ["node_modules", "dist"]            // 排除的目录
+  }

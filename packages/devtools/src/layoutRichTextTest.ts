@@ -1,5 +1,5 @@
 import { template } from 'dot';
-import RichText from 'minigame-canvas-engine-richtext'
+import install from 'minigame-canvas-engine-richtext'
 
 function main() {
   let tpl = `
@@ -34,6 +34,7 @@ function main() {
 
   const Layout = window.Layout;
 
+  const RichText = install(Layout.Element);
   Layout.registerComponent('richtext', RichText);
 
   Layout.init(template(tpl)({}), style);
@@ -63,7 +64,7 @@ function main() {
   <p>前面是一个换行</p>
   <p>文字可以自定义<span style="color: red">颜色</span>
   <p>也可以自定义<span style="font-size: 25px">字体大小</span>
-  <p>文字可以支持<span style="font-style: italic;color: red">斜体</span></p>
+  <p>文字可以支持<span style="font-style: italic;color: red;">斜体</span></p>
   <br>
   <p style="font-weight: 300">样式可以<span style="color: blue">继承</span>，也可以<span style="font-weight: bold">自定义</span>，这段很长的文字会自动换行，富文本组件都会自动处理好</p>`
 }

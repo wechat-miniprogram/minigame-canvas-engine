@@ -37,7 +37,9 @@ class LayoutDevtools {
       window.Layout = Layout;
 
       // require('./layoutTest');
-      require('./layoutRichTextTest');
+      // require('./layoutRichTextTest');
+      require('./layoutTextTest');
+      // require('./layoutBitMapTextTest');
     }
 
     this.vueApp = vueApp;

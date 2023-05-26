@@ -39,7 +39,10 @@ function draw(data = []) {
   // });
 
   // 获取 ScrollView
-  // const list = Layout.getElementsByClassName('list')[0];
+  const list = Layout.getElementsByClassName('list')[0];
+  list.style.backgroundImage = 'url(https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM7mL9dDQ8VibStCkTOfNVluNXh3rqZnWAKF27npl0S04l2EFgRutKI7LNxfibiakibE3VA84HNAswmoyg/132)'
+
+  console.log(list)
 
   // // 对列表第一项进行深度拷贝
   // const listItem = Layout.getElementsByClassName('listItem');

@@ -1,1419 +1,740 @@
-module.exports =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */
+/***/ (() => {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EE", function() { return EE; });
-/* harmony import */ var _env_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _env_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_env_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_elements_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
-/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8);
-/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9);
-/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
-/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(10);
-/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(16);
-/* harmony import */ var _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(17);
-/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(18);
-/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(19);
-/* harmony import */ var _common_imageManager_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(5);
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(20);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-
- // import TWEEN from '@tweenjs/tween.js';
-
-
-
-
-
- // 全局事件管道
-
-var EE = new tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default.a();
-var imgPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
-var debugInfo = new _common_debugInfo_js__WEBPACK_IMPORTED_MODULE_8__["default"]();
-
-var Layout = /*#__PURE__*/function (_Element) {
-  _inherits(Layout, _Element);
-
-  var _super = _createSuper(Layout);
-
-  function Layout() {
-    var _this;
-
-    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        style = _ref.style,
-        name = _ref.name;
-
-    _classCallCheck(this, Layout);
-
-    _this = _super.call(this, {
-      style: style,
-      id: 0,
-      name: name
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "Element", _components_elements_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-    _defineProperty(_assertThisInitialized(_this), "View", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["View"]);
-
-    _defineProperty(_assertThisInitialized(_this), "Text", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["Text"]);
-
-    _defineProperty(_assertThisInitialized(_this), "Image", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["Image"]);
-
-    _defineProperty(_assertThisInitialized(_this), "ScrollView", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["ScrollView"]);
-
-    _defineProperty(_assertThisInitialized(_this), "BitMapText", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["BitMapText"]);
-
-    _defineProperty(_assertThisInitialized(_this), "Canvas", _components_index_js__WEBPACK_IMPORTED_MODULE_12__["Canvas"]);
-
-    _defineProperty(_assertThisInitialized(_this), "registerComponent", _common_vd__WEBPACK_IMPORTED_MODULE_10__["registerComponent"]);
-
-    _this.hasEventHandler = false;
-    _this.elementTree = null;
-    _this.renderContext = null;
-    _this.renderport = {};
-    _this.viewport = {};
-    _this.viewportScale = 1;
-    _this.hasViewPortSet = false;
-    _this.realLayoutBox = {
-      realX: 0,
-      realY: 0
-    };
-    _this.touchMsg = {};
-    _this.touchStart = _this.eventHandler('touchstart').bind(_assertThisInitialized(_this));
-    _this.touchMove = _this.eventHandler('touchmove').bind(_assertThisInitialized(_this));
-    _this.touchEnd = _this.eventHandler('touchend').bind(_assertThisInitialized(_this));
-    _this.touchCancel = _this.eventHandler('touchcancel').bind(_assertThisInitialized(_this));
-    _this.version = '1.0.0';
-    _this.eleCount = 0;
-    _this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].UNINIT;
-    _this.bitMapFonts = [];
-    /**
-     * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
-     * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
-     * 而是执行一个置脏操作，ticker 每一次执行 update 会检查这个标记位，进而执行真正的重绘操作
-     */
-
-    _this.isNeedRepaint = false;
-
-    _this.on('repaint', function () {
-      _this.isNeedRepaint = true;
-    });
-
-    _this.ticker = new _common_ticker__WEBPACK_IMPORTED_MODULE_9__["default"]();
-    /**
-     * 将 Tween 挂载到 Layout，对于 Tween 的使用完全遵循 Tween.js 的文档
-     * https://github.com/tweenjs/tween.js/
-     * 只不过当 Tween 改动了节点会触发 repaint、reflow 的属性时，Layout 会执行相应的操作
-     * 业务侧不用感知到 repaint 和 reflow
-     */
-    // this.TWEEN = TWEEN;
-
-    _this.tickerFunc = function () {
-      // TWEEN.update();
-      if (_this.isDirty) {
-        _this.reflow();
-      } else if (_this.isNeedRepaint) {
-        _this.repaint();
-      }
-    };
-
-    console.log("[Layout] v".concat(_this.version));
-    return _this;
-  } // 与老版本兼容
-
-
-  _createClass(Layout, [{
-    key: "debugInfo",
-    get: function get() {
-      var info = debugInfo.log();
-      info += "elementCount: ".concat(this.eleCount, "\n");
-      return info;
-    }
-    /**
-     * 更新被绘制canvas的窗口信息，本渲染引擎并不关心是否会和其他游戏引擎共同使用
-     * 而本身又需要支持事件处理，因此，如果被渲染内容是绘制到离屏canvas，需要将最终绘制在屏幕上
-     * 的绝对尺寸和位置信息更新到本渲染引擎。
-     * 其中，width为物理像素宽度，height为物理像素高度，x为距离屏幕左上角的物理像素x坐标，y为距离屏幕左上角的物理像素
-     * y坐标
-     */
-
-  }, {
-    key: "updateViewPort",
-    value: function updateViewPort(box) {
-      this.viewport.width = box.width || 0;
-      this.viewport.height = box.height || 0;
-      this.viewport.x = box.x || 0;
-      this.viewport.y = box.y || 0;
-      this.realLayoutBox = {
-        realX: this.viewport.x,
-        realY: this.viewport.y
-      };
-      this.hasViewPortSet = true;
-    }
-  }, {
-    key: "init",
-    value: function init(template, style, attrValueProcessor) {
-      debugInfo.start('init');
-      var parseConfig = {
-        attributeNamePrefix: '',
-        attrNodeName: 'attr',
-        // default is 'false'
-        textNodeName: '#text',
-        ignoreAttributes: false,
-        ignoreNameSpace: true,
-        allowBooleanAttributes: true,
-        parseNodeValue: false,
-        parseAttributeValue: false,
-        trimValues: true,
-        parseTrueNumberOnly: false,
-        alwaysCreateTextNode: true
-      };
-
-      if (attrValueProcessor && typeof attrValueProcessor === 'function') {
-        parseConfig.attrValueProcessor = attrValueProcessor;
-      }
-
-      debugInfo.start('init_xmlParse'); // 将xml字符串解析成xml节点树
-
-      var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6___default.a.parse(template, parseConfig, true);
-      debugInfo.end('init_xmlParse');
-      var xmlTree = jsonObj.children[0]; // XML树生成渲染树
-
-      debugInfo.start('init_xml2Layout');
-      var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_10__["create"].call(this, xmlTree, style);
-      debugInfo.end('init_xml2Layout');
-      this.add(layoutTree);
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].INITED;
-      this.ticker.add(this.tickerFunc, true);
-      this.ticker.start();
-      debugInfo.end('init');
-    }
-  }, {
-    key: "reflow",
-    value: function reflow() {
-      var isFirst = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-      if (!isFirst) {
-        debugInfo.reset();
-      }
-
-      debugInfo.start('layout_reflow');
-      /**
-       * 计算布局树
-       * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
-       * Layout本身并不作为布局计算，只是作为节点树的容器
-       */
-
-      debugInfo.start('computeLayout', true);
-      css_layout__WEBPACK_IMPORTED_MODULE_4___default()(this.children[0]);
-      debugInfo.end('computeLayout');
-      var rootEle = this.children[0];
-
-      if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
-        console.error('[Layout] Please set width and height property for root element');
-      } else {
-        this.renderport.width = rootEle.style.width;
-        this.renderport.height = rootEle.style.height;
-      } // 将布局树的布局信息加工赋值到渲染树
-
-
-      debugInfo.start('layoutChildren', true);
-      _common_vd__WEBPACK_IMPORTED_MODULE_10__["layoutChildren"].call(this, this);
-      debugInfo.end('layoutChildren');
-      this.viewportScale = this.viewport.width / this.renderport.width;
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext); // 遍历节点树，依次调用节点的渲染接口实现渲染
-
-      debugInfo.start('renderChildren', true);
-      Object(_common_vd__WEBPACK_IMPORTED_MODULE_10__["renderChildren"])(this.children, this.renderContext, false);
-      debugInfo.end('renderChildren');
-      debugInfo.start('repaint', true);
-      this.repaint();
-      debugInfo.end('repaint');
-      this.isDirty = false; // iterateTree(this.children[0], (ele) => {
-      //   console.log(ele.props);
-      // });
-
-      debugInfo.end('layout_reflow');
-    }
-    /**
-     * init阶段核心仅仅是根据xml和css创建了节点树
-     * 要实现真正的渲染，需要调用 layout 函数，之所以将 layout 单独抽象为一个函数，是因为 layout 应当是可以重复调用的
-     * 比如改变了一个元素的尺寸，实际上节点树是没变的，仅仅是需要重新计算布局，然后渲染
-     * 一个完整的 layout 分成下面的几步：
-     * 1. 执行画布清理，因为布局变化页面需要重绘，这里没有做很高级的剔除等操作，一律清除重画，实际上性能已经很好
-     * 2. 节点树都含有 style 属性，css-layout 能够根据这些信息计算出最终布局，详情可见 https://www.npmjs.com/package/css-layout
-     * 3. 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息，但这些信息并不是能够直接用的
-     *    比如 layout.top 是指在一个父容器内的 top，最终要实现渲染，实际上要递归加上复容器的 top
-     *    这样每次 repaint 的时候只需要直接使用计算好的值即可，不需要每次都递归计算
-     *    这一步称为 layoutChildren，目的在于将 css-layout 进一步处理为可以渲染直接用的布局信息
-     * 4. renderChildren：执行渲染
-     * 5. bindEvents：执行事件绑定
-     */
-
-  }, {
-    key: "layout",
-    value: function layout(context) {
-      this.renderContext = context;
-
-      if (!this.hasViewPortSet) {
-        console.error('Please invoke method `updateViewPort` before method `layout`');
-      }
-
-      debugInfo.start('layout');
-      this.reflow(true);
-      debugInfo.start('layout_other');
-      this.bindEvents();
-      debugInfo.start('observeStyleAndEvent', true);
-      Object(_common_vd__WEBPACK_IMPORTED_MODULE_10__["iterateTree"])(this.children[0], function (element) {
-        return element.observeStyleAndEvent();
-      });
-      debugInfo.end('layout_observeStyleAndEvent');
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].RENDERED;
-      debugInfo.end('layout');
-      debugInfo.end('layout_other');
-    }
-  }, {
-    key: "repaint",
-    value: function repaint() {
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
-      this.isNeedRepaint = false;
-      Object(_common_vd__WEBPACK_IMPORTED_MODULE_10__["repaintChildren"])(this.children);
-    }
-  }, {
-    key: "getChildByPos",
-    value: function getChildByPos(tree, x, y, itemList) {
-      var _this2 = this;
-
-      tree.children.forEach(function (ele) {
-        var _ele$layoutBox = ele.layoutBox,
-            absoluteX = _ele$layoutBox.absoluteX,
-            absoluteY = _ele$layoutBox.absoluteY,
-            width = _ele$layoutBox.width,
-            height = _ele$layoutBox.height;
-        var realX = absoluteX * _this2.viewportScale + _this2.realLayoutBox.realX;
-        var realY = absoluteY * _this2.viewportScale + _this2.realLayoutBox.realY;
-        var realWidth = width * _this2.viewportScale;
-        var realHeight = height * _this2.viewportScale;
-
-        if (realX <= x && x <= realX + realWidth && realY <= y && y <= realY + realHeight) {
-          /**
-           * 相关issue：https://github.com/wechat-miniprogram/minigame-canvas-engine/issues/17
-           * 这里只要满足条件的都要记录，否则可能出现 issue 里面提到的问题
-           */
-          itemList.push(ele);
-
-          if (ele.children.length) {
-            _this2.getChildByPos(ele, x, y, itemList);
-          }
-        }
-      });
-    }
-  }, {
-    key: "eventHandler",
-    value: function eventHandler(eventName) {
-      return function touchEventHandler(e) {
-        var touch = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0] || e;
-
-        if (!touch || !touch.pageX || !touch.pageY) {
-          return;
-        }
-
-        if (!touch.timeStamp) {
-          touch.timeStamp = e.timeStamp;
-        }
-
-        var list = [];
-
-        if (touch) {
-          this.getChildByPos(this, touch.pageX, touch.pageY, list);
-        }
-
-        if (!list.length) {
-          list.push(this);
-        }
-
-        var item = list[list.length - 1];
-        item && item.emit(eventName, e);
-
-        if (eventName === 'touchstart' || eventName === 'touchend') {
-          this.touchMsg[eventName] = touch;
-        }
-
-        if (eventName === 'touchend' && Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["isClick"])(this.touchMsg)) {
-          item && item.emit('click', e);
-        }
-      };
-    }
-  }, {
-    key: "bindEvents",
-    value: function bindEvents() {
-      if (this.hasEventHandler) {
-        return;
-      }
-
-      this.hasEventHandler = true;
-
-      if (typeof __env !== 'undefined') {
-        __env.onTouchStart(this.touchStart);
-
-        __env.onTouchMove(this.touchMove);
-
-        __env.onTouchEnd(this.touchEnd);
-
-        __env.onTouchCancel(this.touchCancel);
-      } else {
-        document.onmousedown = this.touchStart;
-        document.onmousemove = this.touchMove;
-        document.onmouseup = this.touchEnd;
-        document.onmouseleave = this.touchEnd;
-      }
-    }
-  }, {
-    key: "unBindEvents",
-    value: function unBindEvents() {
-      if (typeof __env !== 'undefined') {
-        __env.offTouchStart(this.touchStart);
-
-        __env.offTouchMove(this.touchMove);
-
-        __env.offTouchEnd(this.touchEnd);
-
-        __env.offTouchCancel(this.touchCancel);
-      } else {
-        document.onmousedown = null;
-        document.onmousemove = null;
-        document.onmouseup = null;
-        document.onmouseleave = null;
-      }
-
-      this.hasEventHandler = false;
-    }
-  }, {
-    key: "emit",
-    value: function emit(event, data) {
-      EE.emit(event, data);
-    }
-  }, {
-    key: "on",
-    value: function on(event, callback) {
-      EE.on(event, callback);
-    }
-  }, {
-    key: "once",
-    value: function once(event, callback) {
-      EE.once(event, callback);
-    }
-  }, {
-    key: "off",
-    value: function off(event, callback) {
-      EE.off(event, callback);
-    }
-  }, {
-    key: "destroyAll",
-    value: function destroyAll(tree) {
-      var _this3 = this;
-
-      var children = tree.children;
-      children.forEach(function (child) {
-        child.destroy();
-
-        _this3.destroyAll(child);
-
-        child.destroySelf && child.destroySelf();
-      });
-    }
-  }, {
-    key: "clear",
-    value: function clear() {
-      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var _options$removeTicker = options.removeTicker,
-          removeTicker = _options$removeTicker === void 0 ? true : _options$removeTicker;
-      debugInfo.reset();
-      this.destroyAll(this);
-      this.elementTree = null;
-      this.children = [];
-      this.state = _common_util_js__WEBPACK_IMPORTED_MODULE_5__["STATE"].CLEAR;
-      this.isDirty = false;
-      Object(_common_util_js__WEBPACK_IMPORTED_MODULE_5__["clearCanvas"])(this.renderContext);
-      this.eleCount = 0;
-      this.unBindEvents();
-
-      if (removeTicker) {
-        this.ticker.remove();
-        this.ticker.stop();
-      }
-    }
-  }, {
-    key: "clearPool",
-    value: function clearPool() {
-      imgPool.clear();
-    }
-  }, {
-    key: "clearAll",
-    value: function clearAll() {
-      this.clear();
-      this.clearPool();
-    }
-  }, {
-    key: "loadImgs",
-    value: function loadImgs() {
-      var arr = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      return Promise.all(arr.map(function (src) {
-        return _common_imageManager_js__WEBPACK_IMPORTED_MODULE_11__["default"].loadImagePromise(src);
-      }));
-    }
-  }, {
-    key: "registBitMapFont",
-    value: function registBitMapFont(name, src, config) {
-      var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__["default"](name, src, config);
-      this.bitMapFonts.push(font);
-    }
-  }, {
-    key: "cloneNode",
-    value: function cloneNode(element) {
-      var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      return _common_vd__WEBPACK_IMPORTED_MODULE_10__["clone"].call(this, element, deep);
-    }
-  }]);
-
-  return Layout;
-}(_components_elements_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-/* harmony default export */ __webpack_exports__["default"] = (new Layout({
-  style: {
-    width: 0,
-    height: 0
-  },
-  name: 'layout'
-}));
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
 
 if (typeof GameGlobal !== 'undefined') {
-  GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
+    GameGlobal.__env = GameGlobal.wx || GameGlobal.tt || GameGlobal.swan;
 }
+
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsById", function() { return _getElementsById; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementsByClassName", function() { return _getElementsByClassName; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Element; });
-/* harmony import */ var _style_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   getElementById: () => (/* binding */ getElementById),
+/* harmony export */   getElementsByClassName: () => (/* binding */ getElementsByClassName),
+/* harmony export */   getElementsById: () => (/* binding */ getElementsById)
+/* harmony export */ });
+/* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* harmony import */ var _common_rect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
+var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 /* eslint-disable no-param-reassign */
 
 
 
-
-function _getElementsById(tree) {
-  var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-  var id = arguments.length > 2 ? arguments[2] : undefined;
-  Object.keys(tree.children).forEach(function (key) {
-    var child = tree.children[key];
-
-    if (child.idName === id) {
-      list.push(child);
-    }
-
-    if (Object.keys(child.children).length) {
-      _getElementsById(child, list, id);
-    }
-  });
-  return list;
+function getElementsById(tree, list, id) {
+    if (list === void 0) { list = []; }
+    tree.children.forEach(function (child) {
+        if (child.idName === id) {
+            list.push(child);
+        }
+        if (child.children.length) {
+            getElementsById(child, list, id);
+        }
+    });
+    return list;
 }
-
-
-
-function _getElementsByClassName(tree) {
-  var list = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-  var className = arguments.length > 2 ? arguments[2] : undefined;
-  Object.keys(tree.children).forEach(function (key) {
-    var child = tree.children[key];
-
-    if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
-      list.push(child);
-    }
-
-    if (Object.keys(child.children).length) {
-      _getElementsByClassName(child, list, className);
-    }
-  });
-  return list;
+function getElementById(tree, id) {
+    var list = getElementsById(tree, [], id);
+    return (list === null || list === void 0 ? void 0 : list[0]) || null;
 }
-
-
-
-var Emitter = __webpack_require__(8); // 全局事件管道
-
-
+function getElementsByClassName(tree, list, className) {
+    if (list === void 0) { list = []; }
+    tree.children.forEach(function (child) {
+        if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
+            list.push(child);
+        }
+        if (child.children.length) {
+            getElementsByClassName(child, list, className);
+        }
+    });
+    return list;
+}
+var Emitter = __webpack_require__(8);
+// 全局事件管道
 var EE = new Emitter();
 var uuid = 0;
-
 function hexToRgb(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+        ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16),
+        }
+        : null;
 }
-
 function getRgba(hex, opacity) {
-  var rgbObj = hexToRgb(hex);
-
-  if (opacity === undefined) {
-    opacity = 1;
-  }
-
-  return "rgba(".concat(rgbObj.r, ", ").concat(rgbObj.g, ", ").concat(rgbObj.b, ", ").concat(opacity, ")");
+    var rgbObj = hexToRgb(hex);
+    if (opacity === undefined) {
+        opacity = 1;
+    }
+    if (!rgbObj) {
+        return null;
+    }
+    return "rgba(".concat(rgbObj.r, ", ").concat(rgbObj.g, ", ").concat(rgbObj.b, ", ").concat(opacity, ")");
 }
-
-var toEventName = function toEventName(event, id) {
-  var elementEvent = ['click', 'touchstart', 'touchmove', 'touchend', 'touchcancel'];
-
-  if (elementEvent.indexOf(event) !== -1) {
+var toEventName = function (event, id) {
+    var elementEvent = [
+        'click',
+        'touchstart',
+        'touchmove',
+        'touchend',
+        'touchcancel',
+    ];
+    if (elementEvent.indexOf(event) !== -1) {
+        return "element-".concat(id, "-").concat(event);
+    }
     return "element-".concat(id, "-").concat(event);
-  }
-
-  return "element-".concat(id, "-").concat(event);
 };
-
+;
 var isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
-
-var Element = /*#__PURE__*/function () {
-  function Element(_ref) {
-    var _this = this;
-
-    var _ref$style = _ref.style,
-        style = _ref$style === void 0 ? {} : _ref$style,
-        _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? '' : _ref$idName,
-        _ref$className = _ref.className,
-        className = _ref$className === void 0 ? '' : _ref$className,
-        _ref$id = _ref.id,
-        id = _ref$id === void 0 ? uuid += 1 : _ref$id,
-        _ref$dataset = _ref.dataset,
-        dataset = _ref$dataset === void 0 ? {} : _ref$dataset;
-
-    _classCallCheck(this, Element);
-
-    this.children = [];
-    this.parent = null;
-    this.parentId = 0;
-    this.id = id;
-    this.idName = idName;
-    this.className = className; // this.style = style;
-
-    this.EE = EE;
-    this.root = null;
-    this.isDestroyed = false;
-    this.layoutBox = {};
-    this.dataset = dataset;
-
-    if (style.opacity !== undefined && style.color && style.color.indexOf('#') > -1) {
-      style.color = getRgba(style.color, style.opacity);
+var Element = /** @class */ (function () {
+    function Element(_a) {
+        var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, _e = _a.id, id = _e === void 0 ? uuid += 1 : _e, _f = _a.dataset, dataset = _f === void 0 ? {} : _f;
+        this.children = [];
+        this.parent = null;
+        this.parentId = 0;
+        this.isDestroyed = false;
+        this.ctx = null;
+        this.isDirty = false;
+        this.shouldUpdate = false;
+        this.id = id;
+        this.idName = idName;
+        this.className = className;
+        // this.style = style;
+        this.EE = EE;
+        this.root = null;
+        this.layoutBox = {
+            left: 0,
+            top: 0,
+            width: 0,
+            height: 0,
+            absoluteX: 0,
+            absoluteY: 0,
+            originalAbsoluteX: 0,
+            originalAbsoluteY: 0,
+        };
+        this.dataset = dataset;
+        if (style.opacity !== undefined
+            && style.color
+            && style.color.indexOf('#') > -1) {
+            // 颜色解析失败，降级为 hex
+            style.color = getRgba(style.color, style.opacity) || style.color;
+        }
+        if (style.opacity !== undefined
+            && style.backgroundColor
+            && style.backgroundColor.indexOf('#') > -1) {
+            // 颜色解析失败，降级为 hex
+            style.backgroundColor = getRgba(style.backgroundColor, style.opacity) || style.backgroundColor;
+        }
+        if (typeof style.backgroundImage === 'string') {
+            this.backgroundImageSetHandler(style.backgroundImage);
+        }
+        this.originStyle = style;
+        this.style = style;
+        this.rect = null;
+        this.classNameList = null;
     }
-
-    if (style.opacity !== undefined && style.backgroundColor && style.backgroundColor.indexOf('#') > -1) {
-      style.backgroundColor = getRgba(style.backgroundColor, style.opacity);
-    }
-
-    if (typeof style.backgroundImage === 'string') {
-      var list = style.backgroundImage.match(isValidUrlPropReg);
-
-      if (list) {
-        var url = list[1].replace(/('|")/g, '');
-        _common_imageManager__WEBPACK_IMPORTED_MODULE_2__["default"].loadImage(url, function (img) {
-          if (!_this.isDestroyed) {
-            _this.backgroundImage = img; // 当图片加载完成，实例可能已经被销毁了
-
-            _this.root && _this.root.emit('repaint');
-          }
-        });
-      } else {
-        console.error("[Layout]: ".concat(style.backgroundImage, " is not a valid backgroundImage"));
-      }
-    }
-
-    this.originStyle = style;
-    this.style = style;
-    this.rect = null;
-    this.viewportRect = null;
-    this.classNameList = null;
-  }
-  /**
-   * 监听属性的变化判断是否需要执行 reflow、repaint 操作
-   * 经过测试，Object.defineProperty 是一个比较慢的方法， 特别是属性比较多的时候
-   * 因此会先判断是否支持 Proxy，iMac (Retina 5K, 27-inch, 2017)测试结果
-   * 总共 312 个节点，observeStyleAndEvent总耗时为：
-   * Proxy: 3ms
-   * Object.defineProperty: 20ms
-   */
-
-
-  _createClass(Element, [{
-    key: "observeStyleAndEvent",
-    value: function observeStyleAndEvent() {
-      var _this2 = this;
-
-      if (typeof Proxy === 'function') {
-        var ele = this;
-        this.style = new Proxy(this.originStyle, {
-          get: function get(target, prop, receiver) {
-            return Reflect.get(target, prop, receiver);
-          },
-          set: function set(target, prop, val, receiver) {
-            if (_style_js__WEBPACK_IMPORTED_MODULE_0__["reflowAffectedStyles"].indexOf(prop)) {
-              ele.isDirty = true;
-              var parent = ele.parent;
-
-              while (parent) {
-                parent.isDirty = true;
-                parent = parent.parent;
-              }
-            } else if (_style_js__WEBPACK_IMPORTED_MODULE_0__["repaintAffectedStyles"].indexOf(prop)) {
-              ele.root.emit('repaint');
+    Element.prototype.backgroundImageSetHandler = function (backgroundImage) {
+        var _this = this;
+        if (typeof backgroundImage === 'string') {
+            var list = backgroundImage.match(isValidUrlPropReg);
+            if (list) {
+                var url = list[1].replace(/('|")/g, '');
+                _common_imageManager__WEBPACK_IMPORTED_MODULE_2__["default"].loadImage(url, function (img) {
+                    if (!_this.isDestroyed) {
+                        _this.backgroundImage = img;
+                        // 当图片加载完成，实例可能已经被销毁了
+                        _this.root && _this.root.emit('repaint');
+                    }
+                });
             }
-
-            return Reflect.set(target, prop, val, receiver);
-          }
-        });
-      } else {
-        var innerStyle = Object.assign({}, this.style);
-        _style_js__WEBPACK_IMPORTED_MODULE_0__["allStyles"].forEach(function (key) {
-          Object.defineProperty(_this2.style, key, {
-            configurable: true,
-            enumerable: true,
-            get: function get() {
-              return innerStyle[key];
-            },
-            set: function set(value) {
-              innerStyle[key] = value;
-
-              if (_style_js__WEBPACK_IMPORTED_MODULE_0__["reflowAffectedStyles"].indexOf(key)) {
-                _this2.isDirty = true;
-                var parent = _this2.parent;
-
-                while (parent) {
-                  parent.isDirty = true;
-                  parent = parent.parent;
-                }
-              } else if (_style_js__WEBPACK_IMPORTED_MODULE_0__["repaintAffectedStyles"].indexOf(key)) {
-                _this2.root.emit('repaint');
-              }
+            else {
+                console.error("[Layout]: ".concat(backgroundImage, " is not a valid backgroundImage"));
             }
-          });
+        }
+    };
+    /**
+     * 监听属性的变化判断是否需要执行 reflow、repaint 操作
+     * 经过测试，Object.defineProperty 是一个比较慢的方法， 特别是属性比较多的时候
+     * 因此会先判断是否支持 Proxy，iMac (Retina 5K, 27-inch, 2017)测试结果
+     * 总共 312 个节点，observeStyleAndEvent总耗时为：
+     * Proxy: 3ms
+     * Object.defineProperty: 20ms
+     */
+    Element.prototype.observeStyleAndEvent = function () {
+        var _this = this;
+        if (typeof Proxy === 'function') {
+            var ele_1 = this;
+            this.style = new Proxy(this.originStyle, {
+                get: function (target, prop, receiver) {
+                    return Reflect.get(target, prop, receiver);
+                },
+                set: function (target, prop, val, receiver) {
+                    var _a;
+                    if (typeof prop === 'string') {
+                        if (_style__WEBPACK_IMPORTED_MODULE_0__.reflowAffectedStyles.indexOf(prop) > -1) {
+                            ele_1.isDirty = true;
+                            var parent_1 = ele_1.parent;
+                            while (parent_1) {
+                                parent_1.isDirty = true;
+                                parent_1 = parent_1.parent;
+                            }
+                        }
+                        else if (_style__WEBPACK_IMPORTED_MODULE_0__.repaintAffectedStyles.indexOf(prop) > -1) {
+                            (_a = ele_1.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
+                        }
+                        else if (prop === 'backgroundImage') {
+                            ele_1.backgroundImageSetHandler(val);
+                        }
+                    }
+                    return Reflect.set(target, prop, val, receiver);
+                },
+            });
+        }
+        else {
+            var innerStyle_1 = Object.assign({}, this.style);
+            _style__WEBPACK_IMPORTED_MODULE_0__.allStyles.forEach(function (key) {
+                Object.defineProperty(_this.style, key, {
+                    configurable: true,
+                    enumerable: true,
+                    get: function () { return innerStyle_1[key]; },
+                    set: function (value) {
+                        var _a;
+                        innerStyle_1[key] = value;
+                        if (_style__WEBPACK_IMPORTED_MODULE_0__.reflowAffectedStyles.indexOf(key) > -1) {
+                            _this.isDirty = true;
+                            var parent_2 = _this.parent;
+                            while (parent_2) {
+                                parent_2.isDirty = true;
+                                parent_2 = parent_2.parent;
+                            }
+                        }
+                        else if (_style__WEBPACK_IMPORTED_MODULE_0__.repaintAffectedStyles.indexOf(key) > -1) {
+                            (_a = _this.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
+                        }
+                        else if (key === 'backgroundImage') {
+                            _this.backgroundImageSetHandler(value);
+                        }
+                    },
+                });
+            });
+        }
+        // 事件冒泡逻辑
+        ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
+            _this.on(eventName, function (e, touchMsg) {
+                _this.parent && _this.parent.emit(eventName, e, touchMsg);
+            });
         });
-      } // 事件冒泡逻辑
-
-
-      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach(function (eventName) {
-        _this2.on(eventName, function (e, touchMsg) {
-          _this2.parent && _this2.parent.emit(eventName, e, touchMsg);
-        });
-      });
-      this.classNameList = this.className.split(/\s+/);
-    } // 子类填充实现
-
-  }, {
-    key: "repaint",
-    value: function repaint() {} // 子类填充实现
-
-  }, {
-    key: "render",
-    value: function render() {}
+        this.classNameList = this.className.split(/\s+/);
+    };
+    // 子类填充实现
+    Element.prototype.repaint = function () { };
+    // 子类填充实现
+    Element.prototype.render = function () { };
     /**
      * 参照 Web 规范：https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
      */
-
-  }, {
-    key: "getBoundingClientRect",
-    value: function getBoundingClientRect() {
-      if (!this.rect) {
-        this.rect = new _common_rect__WEBPACK_IMPORTED_MODULE_1__["default"](this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
-      }
-
-      this.rect.set(this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
-      return this.rect;
-    }
-  }, {
-    key: "getViewportRect",
-    value: function getViewportRect() {
-      var realLayoutBox = this.root.realLayoutBox;
-      var viewportScale = this.root.viewportScale;
-      var _this$layoutBox = this.layoutBox,
-          absoluteX = _this$layoutBox.absoluteX,
-          absoluteY = _this$layoutBox.absoluteY,
-          width = _this$layoutBox.width,
-          height = _this$layoutBox.height;
-      var realX = absoluteX * viewportScale + realLayoutBox.realX;
-      var realY = absoluteY * viewportScale + realLayoutBox.realY;
-      var realWidth = width * viewportScale;
-      var realHeight = height * viewportScale;
-
-      if (!this.viewportRect) {
-        this.viewportRect = new _common_rect__WEBPACK_IMPORTED_MODULE_1__["default"](realX, realY, realWidth, realHeight);
-      }
-
-      this.viewportRect.set(realX, realY, realWidth, realHeight);
-      return this.viewportRect;
-    }
-  }, {
-    key: "getElementsById",
-    value: function getElementsById(id) {
-      return _getElementsById(this, [], id);
-    }
-  }, {
-    key: "getElementsByClassName",
-    value: function getElementsByClassName(className) {
-      return _getElementsByClassName(this, [], className);
-    }
-  }, {
-    key: "insert",
-    value: function insert(ctx, needRender) {
-      this.ctx = ctx;
-
-      if (needRender) {
-        this.render();
-      }
-    }
-  }, {
-    key: "unBindEvent",
-    value: function unBindEvent() {
-      var _this3 = this;
-
-      ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click', 'repaint'].forEach(function (eventName) {
-        _this3.off(eventName);
-      });
-    }
-  }, {
-    key: "setDirty",
-    value: function setDirty() {
-      this.isDirty = true;
-      var parent = this.parent;
-
-      while (parent) {
-        parent.isDirty = true;
-        parent = parent.parent;
-      }
-    }
-  }, {
-    key: "remove",
-    value: function remove() {
-      var parent = this.parent;
-      var index = parent.children.indexOf(this);
-
-      if (index !== -1) {
-        parent.children.splice(index, 1);
+    Element.prototype.getBoundingClientRect = function () {
+        if (!this.rect) {
+            this.rect = new _common_rect__WEBPACK_IMPORTED_MODULE_1__["default"](this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
+        }
+        this.rect.set(this.layoutBox.absoluteX, this.layoutBox.absoluteY, this.layoutBox.width, this.layoutBox.height);
+        return this.rect;
+    };
+    Element.prototype.getElementById = function (id) {
+        return getElementById(this, id);
+    };
+    Element.prototype.getElementsById = function (id) {
+        return getElementsById(this, [], id);
+    };
+    Element.prototype.getElementsByClassName = function (className) {
+        return getElementsByClassName(this, [], className);
+    };
+    Element.prototype.insert = function (ctx, needRender) {
+        this.ctx = ctx;
+        if (needRender) {
+            this.render();
+        }
+    };
+    Element.prototype.unBindEvent = function () {
+        var _this = this;
+        [
+            'touchstart',
+            'touchmove',
+            'touchcancel',
+            'touchend',
+            'click',
+            'repaint',
+        ].forEach(function (eventName) {
+            _this.off(eventName);
+        });
+    };
+    Element.prototype.setDirty = function () {
+        this.isDirty = true;
+        var parent = this.parent;
+        while (parent) {
+            parent.isDirty = true;
+            parent = parent.parent;
+        }
+    };
+    Element.prototype.remove = function () {
+        var parent = this.parent;
+        if (!parent) {
+            return;
+        }
+        var index = parent.children.indexOf(this);
+        if (index !== -1) {
+            parent.children.splice(index, 1);
+            this.unBindEvent();
+            this.setDirty();
+            this.parent = null;
+            this.ctx = null;
+        }
+        else {
+            console.warn('[Layout] this element has been removed');
+        }
+    };
+    // 子类填充实现
+    Element.prototype.destroySelf = function () {
+    };
+    // 子类填充实现
+    Element.prototype.destroy = function () {
         this.unBindEvent();
-        this.setDirty();
+        this.isDestroyed = true;
+        this.EE = null;
         this.parent = null;
         this.ctx = null;
-      } else {
-        console.warn('[Layout] this element has been removed');
-      }
-    } // 子类填充实现
-
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      this.unBindEvent();
-      this.isDestroyed = true;
-      this.EE = null;
-      this.parent = null;
-      this.ctx = null; // element 在画布中的位置和尺寸信息
-
-      this.layoutBox = null;
-      this.style = null;
-      this.className = '';
-      this.classNameList = null;
-    }
-  }, {
-    key: "add",
-    value: function add(element) {
-      element.parent = this;
-      element.parentId = this.id;
-      this.children.push(element);
-    }
-  }, {
-    key: "appendChild",
-    value: function appendChild(element) {
-      this.add(element);
-      this.setDirty();
-    }
-  }, {
-    key: "removeChild",
-    value: function removeChild(element) {
-      var index = this.children.indexOf(element);
-
-      if (index !== -1) {
-        element.remove();
+        // element 在画布中的位置和尺寸信息
+        // this.layoutBox = null;
+        // this.style = null;
+        this.className = '';
+        this.classNameList = null;
+    };
+    Element.prototype.add = function (element) {
+        element.parent = this;
+        element.parentId = this.id;
+        this.children.push(element);
+    };
+    Element.prototype.appendChild = function (element) {
+        this.add(element);
         this.setDirty();
-      } else {
-        console.warn('[Layout] the element to be removed is not a child of this element');
-      }
-    }
-  }, {
-    key: "emit",
-    value: function emit(event) {
-      for (var _len = arguments.length, theArgs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        theArgs[_key - 1] = arguments[_key];
-      }
-
-      EE.emit.apply(EE, [toEventName(event, this.id)].concat(theArgs));
-    }
-  }, {
-    key: "on",
-    value: function on(event, callback) {
-      EE.on(toEventName(event, this.id), callback);
-    }
-  }, {
-    key: "once",
-    value: function once(event, callback) {
-      EE.once(toEventName(event, this.id), callback);
-    }
-  }, {
-    key: "off",
-    value: function off(event, callback) {
-      EE.off(toEventName(event, this.id), callback);
-    }
-  }, {
-    key: "renderBorder",
-    value: function renderBorder(ctx) {
-      var style = this.style || {};
-      var radius = style.borderRadius || 0;
-      var _style$borderWidth = style.borderWidth,
-          borderWidth = _style$borderWidth === void 0 ? 0 : _style$borderWidth;
-      var borderTopLeftRadius = style.borderTopLeftRadius || radius;
-      var borderTopRightRadius = style.borderTopRightRadius || radius;
-      var borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
-      var borderBottomRightRadius = style.borderBottomRightRadius || radius;
-      var box = this.layoutBox;
-      var borderColor = style.borderColor;
-      var x = box.absoluteX;
-      var y = box.absoluteY;
-      var width = box.width,
-          height = box.height;
-      var hasRadius = radius || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius; // borderWidth 和 radius 都没有，不需要执行后续逻辑，提升性能
-
-      if (!borderWidth && !hasRadius) {
-        return {
-          needClip: false,
-          needStroke: false
-        };
-      } // 左上角的点
-
-
-      ctx.beginPath();
-      ctx.lineWidth = borderWidth;
-      ctx.strokeStyle = borderColor;
-      ctx.moveTo(x + borderTopLeftRadius, y);
-      ctx.lineTo(x + width - borderTopRightRadius, y); // 右上角的圆角
-
-      ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius); // 右下角的点
-
-      ctx.lineTo(x + width, y + height - borderBottomRightRadius); // 右下角的圆角
-
-      ctx.arcTo(x + width, y + height, x + width - borderBottomRightRadius, y + height, borderBottomRightRadius); // 左下角的点
-
-      ctx.lineTo(x + borderBottomLeftRadius, y + height); // 左下角的圆角
-
-      ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius); // 左上角的点
-
-      ctx.lineTo(x, y + borderTopLeftRadius); // 左上角的圆角
-
-      ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
-      return {
-        needClip: !!hasRadius,
-        needStroke: !!borderWidth
-      };
-    }
-  }]);
-
-  return Element;
-}();
-
+    };
+    Element.prototype.removeChild = function (element) {
+        var index = this.children.indexOf(element);
+        if (index !== -1) {
+            element.remove();
+            this.setDirty();
+        }
+        else {
+            console.warn('[Layout] the element to be removed is not a child of this element');
+        }
+    };
+    Element.prototype.emit = function (event) {
+        var theArgs = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            theArgs[_i - 1] = arguments[_i];
+        }
+        EE.emit.apply(EE, __spreadArray([toEventName(event, this.id)], theArgs, false));
+    };
+    Element.prototype.on = function (event, callback) {
+        EE.on(toEventName(event, this.id), callback);
+    };
+    Element.prototype.once = function (event, callback) {
+        EE.once(toEventName(event, this.id), callback);
+    };
+    Element.prototype.off = function (event, callback) {
+        EE.off(toEventName(event, this.id), callback);
+    };
+    Element.prototype.renderBorder = function (ctx) {
+        var style = this.style || {};
+        var radius = style.borderRadius || 0;
+        var _a = style.borderWidth, borderWidth = _a === void 0 ? 0 : _a;
+        var borderTopLeftRadius = style.borderTopLeftRadius || radius;
+        var borderTopRightRadius = style.borderTopRightRadius || radius;
+        var borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
+        var borderBottomRightRadius = style.borderBottomRightRadius || radius;
+        var box = this.layoutBox;
+        var _b = style.borderColor, borderColor = _b === void 0 ? '' : _b;
+        var x = box.absoluteX;
+        var y = box.absoluteY;
+        var width = box.width, height = box.height;
+        var hasRadius = radius
+            || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius;
+        // borderWidth 和 radius 都没有，不需要执行后续逻辑，提升性能
+        if (!borderWidth && !hasRadius) {
+            return { needClip: false, needStroke: false };
+        }
+        // 左上角的点
+        ctx.beginPath();
+        ctx.lineWidth = borderWidth;
+        ctx.strokeStyle = borderColor;
+        ctx.moveTo(x + borderTopLeftRadius, y);
+        ctx.lineTo(x + width - borderTopRightRadius, y);
+        // 右上角的圆角
+        ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius);
+        // 右下角的点
+        ctx.lineTo(x + width, y + height - borderBottomRightRadius);
+        // 右下角的圆角
+        ctx.arcTo(x + width, y + height, x + width - borderBottomRightRadius, y + height, borderBottomRightRadius);
+        // 左下角的点
+        ctx.lineTo(x + borderBottomLeftRadius, y + height);
+        // 左下角的圆角
+        ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius);
+        // 左上角的点
+        ctx.lineTo(x, y + borderTopLeftRadius);
+        // 左上角的圆角
+        ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
+        return { needClip: !!hasRadius, needStroke: !!borderWidth };
+    };
+    return Element;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Element);
 
 
 /***/ }),
 /* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintAffectedStyles", function() { return repaintAffectedStyles; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reflowAffectedStyles", function() { return reflowAffectedStyles; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "allStyles", function() { return allStyles; });
-var reflowAffectedStyles = ['width', 'height', 'minWidth', 'minHeight', 'maxWidth', 'maxHeight', 'left', 'right', 'top', 'bottom', 'margin', 'marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'borderWidth', 'borderLeftWidth', 'borderRightWidth', 'borderTopWidth', 'borderBottomWidth', 'flexDirection', 'justifyContent', 'alignItems', 'alignSelf', 'flex', 'flexWrap', 'position'];
-var repaintAffectedStyles = ['fontSize', 'lineHeight', 'textAlign', 'verticalAlign', 'color', 'backgroundColor', 'textOverflow', 'letterSpacing', 'backgroundColor', 'borderRadius', 'borderColor'];
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   allStyles: () => (/* binding */ allStyles),
+/* harmony export */   reflowAffectedStyles: () => (/* binding */ reflowAffectedStyles),
+/* harmony export */   repaintAffectedStyles: () => (/* binding */ repaintAffectedStyles)
+/* harmony export */ });
+var reflowAffectedStyles = [
+    'width', 'height',
+    'minWidth', 'minHeight',
+    'maxWidth', 'maxHeight',
+    'left', 'right', 'top', 'bottom',
+    'margin', 'marginLeft', 'marginRight', 'marginTop', 'marginBottom',
+    'padding', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom',
+    'borderWidth', 'borderLeftWidth', 'borderRightWidth', 'borderTopWidth', 'borderBottomWidth',
+    'flexDirection',
+    'flexShrink',
+    'flexGrow',
+    'justifyContent',
+    'alignItems', 'alignSelf',
+    'flex',
+    'flexWrap',
+    'position',
+    'fontWeight',
+];
+var repaintAffectedStyles = [
+    'fontSize',
+    'lineHeight',
+    'textAlign',
+    'verticalAlign',
+    'color',
+    'backgroundColor',
+    'textOverflow',
+    'letterSpacing',
+    'borderRadius',
+    'borderColor',
+];
 var allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
+
 
 
 /***/ }),
 /* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Rect; });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var Rect = /*#__PURE__*/function () {
-  function Rect() {
-    var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-    var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-
-    _classCallCheck(this, Rect);
-
-    _defineProperty(this, "width", 0);
-
-    _defineProperty(this, "height", 0);
-
-    _defineProperty(this, "left", 0);
-
-    _defineProperty(this, "right", 0);
-
-    _defineProperty(this, "top", 0);
-
-    _defineProperty(this, "bottom", 0);
-
-    this.set(left, top, width, height);
-  }
-
-  _createClass(Rect, [{
-    key: "set",
-    value: function set() {
-      var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-      var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-      this.left = left;
-      this.top = top;
-      this.width = width;
-      this.height = height;
-      this.right = this.left + this.width;
-      this.bottom = this.top + this.height;
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var Rect = /** @class */ (function () {
+    function Rect(left, top, width, height) {
+        if (left === void 0) { left = 0; }
+        if (top === void 0) { top = 0; }
+        if (width === void 0) { width = 0; }
+        if (height === void 0) { height = 0; }
+        this.width = 0;
+        this.height = 0;
+        this.left = 0;
+        this.right = 0;
+        this.top = 0;
+        this.bottom = 0;
+        this.set(left, top, width, height);
     }
+    Rect.prototype.set = function (left, top, width, height) {
+        if (left === void 0) { left = 0; }
+        if (top === void 0) { top = 0; }
+        if (width === void 0) { width = 0; }
+        if (height === void 0) { height = 0; }
+        this.left = left;
+        this.top = top;
+        this.width = width;
+        this.height = height;
+        this.right = this.left + this.width;
+        this.bottom = this.top + this.height;
+    };
     /**
      * 判断两个矩形是否相交
      * 原理可见: https://zhuanlan.zhihu.com/p/29704064
      */
-
-  }, {
-    key: "intersects",
-    value: function intersects(rect) {
-      return !(this.right < rect.left || rect.right < this.left || this.bottom < rect.top || rect.bottom < this.top);
-    }
-  }]);
-
-  return Rect;
-}();
-
+    Rect.prototype.intersects = function (rect) {
+        return !(this.right < rect.left || rect.right < this.left || this.bottom < rect.top || rect.bottom < this.top);
+    };
+    return Rect;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Rect);
 
 
 /***/ }),
 /* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 /* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 
-
-var imgPool = new _pool__WEBPACK_IMPORTED_MODULE_0__["default"]('imgPool');
-
-var ImageManager = /*#__PURE__*/function () {
-  function ImageManager() {
-    _classCallCheck(this, ImageManager);
-  }
-
-  _createClass(ImageManager, [{
-    key: "getRes",
-    value: function getRes(src) {
-      return imgPool.get(src);
+var ImageManager = /** @class */ (function () {
+    function ImageManager() {
+        this.imgPool = new _pool__WEBPACK_IMPORTED_MODULE_0__["default"]('imgPool');
     }
-  }, {
-    key: "loadImagePromise",
-    value: function loadImagePromise(src) {
-      var _this = this;
-
-      return new Promise(function (resolve, reject) {
-        _this.loadImage(src, resolve, reject);
-      });
-    }
-  }, {
-    key: "loadImage",
-    value: function loadImage(src) {
-      var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _util__WEBPACK_IMPORTED_MODULE_1__["none"];
-      var fail = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _util__WEBPACK_IMPORTED_MODULE_1__["none"];
-      var img = null;
-      var cache = this.getRes(src);
-
-      if (!src) {
+    ImageManager.prototype.getRes = function (src) {
+        return this.imgPool.get(src);
+    };
+    ImageManager.prototype.loadImagePromise = function (src) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.loadImage(src, resolve, reject);
+        });
+    };
+    ImageManager.prototype.loadImage = function (src, success, fail) {
+        if (success === void 0) { success = _util__WEBPACK_IMPORTED_MODULE_1__.none; }
+        if (fail === void 0) { fail = _util__WEBPACK_IMPORTED_MODULE_1__.none; }
+        if (!src) {
+            return null;
+        }
+        var img;
+        var cache = this.getRes(src);
+        // 图片已经被加载过，直接返回图片并且执行回调
+        if (cache && cache.loadDone) {
+            img = cache.img;
+            success(img, true);
+        }
+        else if (cache && !cache.loadDone) {
+            // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
+            img = cache.img;
+            cache.onloadcbks.push(success);
+            cache.onerrorcbks.push(fail);
+        }
+        else {
+            // 创建图片，将回调函数推入回调函数栈
+            img = (0,_util__WEBPACK_IMPORTED_MODULE_1__.createImage)();
+            var newCache_1 = {
+                img: img,
+                loadDone: false,
+                onloadcbks: [success],
+                onerrorcbks: [fail],
+            };
+            this.imgPool.set(src, newCache_1);
+            img.onload = function () {
+                newCache_1.loadDone = true;
+                newCache_1.onloadcbks.forEach(function (fn) { return fn(img, false); });
+                newCache_1.onloadcbks = [];
+                newCache_1.onerrorcbks = [];
+            };
+            img.onerror = function () {
+                newCache_1.onerrorcbks.forEach(function (fn) { return fn(img, false); });
+                newCache_1.onerrorcbks = [];
+                newCache_1.onloadcbks = [];
+            };
+            img.src = src;
+        }
         return img;
-      } // 图片已经被加载过，直接返回图片并且执行回调
+    };
+    return ImageManager;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new ImageManager());
 
-
-      if (cache && cache.loadDone) {
-        img = cache;
-        callback(img, true);
-      } else if (cache && !cache.loadDone) {
-        // 图片正在加载过程中，返回图片并且等待图片加载完成执行回调
-        img = cache;
-        cache.onloadcbks.push(callback);
-        cache.onerrorcbks.push(fail);
-      } else {
-        // 创建图片，将回调函数推入回调函数栈
-        img = Object(_util__WEBPACK_IMPORTED_MODULE_1__["createImage"])();
-        img.onloadcbks = [callback];
-        img.onerrorcbks = [fail];
-        imgPool.set(src, img);
-
-        img.onload = function () {
-          img.loadDone = true;
-          img.onloadcbks.forEach(function (fn) {
-            return fn(img, false);
-          });
-          img.onloadcbks = [];
-          img.onerrorcbks = [];
-        };
-
-        img.onerror = function () {
-          img.onerrorcbks.forEach(function (fn) {
-            return fn(img, false);
-          });
-          img.onerrorcbks = [];
-          img.onloadcbks = [];
-        };
-
-        img.src = src;
-      }
-
-      return img;
-    }
-  }]);
-
-  return ImageManager;
-}();
-
-/* harmony default export */ __webpack_exports__["default"] = (new ImageManager());
 
 /***/ }),
 /* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Pool; });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 var pools = [];
-
-var Pool = /*#__PURE__*/function () {
-  function Pool() {
-    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'pool';
-
-    _classCallCheck(this, Pool);
-
-    var curr = pools.find(function (item) {
-      return item.name === name;
-    });
-
-    if (curr) {
-      return curr;
+var Pool = /** @class */ (function () {
+    function Pool(name) {
+        if (name === void 0) { name = 'pool'; }
+        this.name = 'pool';
+        this.pool = {};
+        var curr = pools.find(function (item) { return item.name === name; });
+        if (curr) {
+            return curr;
+        }
+        this.name = name;
+        this.pool = {};
+        pools.push(this);
     }
-
-    this.name = name;
-    this.pool = {};
-    pools.push(this);
-  }
-
-  _createClass(Pool, [{
-    key: "get",
-    value: function get(key) {
-      return this.pool[key];
-    }
-  }, {
-    key: "set",
-    value: function set(key, value) {
-      this.pool[key] = value;
-    }
-  }, {
-    key: "clear",
-    value: function clear() {
-      this.pool = {};
-    }
-  }, {
-    key: "getList",
-    value: function getList() {
-      return Object.values(this.pool);
-    }
-  }]);
-
-  return Pool;
-}();
-
+    Pool.prototype.get = function (key) {
+        return this.pool[key];
+    };
+    Pool.prototype.set = function (key, value) {
+        this.pool[key] = value;
+    };
+    Pool.prototype.clear = function () {
+        this.pool = {};
+    };
+    Pool.prototype.getList = function () {
+        return Object.values(this.pool);
+    };
+    return Pool;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Pool);
 
 
 /***/ }),
 /* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "none", function() { return none; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isClick", function() { return isClick; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCanvas", function() { return createCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createImage", function() { return createImage; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDpr", function() { return getDpr; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "STATE", function() { return STATE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearCanvas", function() { return clearCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "copyTouchArray", function() { return copyTouchArray; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   STATE: () => (/* binding */ STATE),
+/* harmony export */   clearCanvas: () => (/* binding */ clearCanvas),
+/* harmony export */   copyTouchArray: () => (/* binding */ copyTouchArray),
+/* harmony export */   createCanvas: () => (/* binding */ createCanvas),
+/* harmony export */   createImage: () => (/* binding */ createImage),
+/* harmony export */   getDpr: () => (/* binding */ getDpr),
+/* harmony export */   isClick: () => (/* binding */ isClick),
+/* harmony export */   isGameTouchEvent: () => (/* binding */ isGameTouchEvent),
+/* harmony export */   none: () => (/* binding */ none)
+/* harmony export */ });
 /* istanbul ignore next */
-function none() {}
+function none() { }
 /**
  * 根据触摸时长和触摸位置变化来判断是否属于点击事件
  */
-
 function isClick(touchMsg) {
-  var start = touchMsg.touchstart;
-  var end = touchMsg.touchend;
-
-  if (!start || !end || !start.timeStamp || !end.timeStamp || start.pageX === undefined || start.pageY === undefined || end.pageX === undefined || end.pageY === undefined) {
-    return false;
-  }
-
-  var startPosX = start.pageX;
-  var startPosY = start.pageY;
-  var endPosX = end.pageX;
-  var endPosY = end.pageY;
-  var touchTimes = end.timeStamp - start.timeStamp;
-  return !!(Math.abs(endPosY - startPosY) < 30 && Math.abs(endPosX - startPosX) < 30 && touchTimes < 300);
+    var start = touchMsg.touchstart;
+    var end = touchMsg.touchend;
+    if (!start
+        || !end
+        || !start.timeStamp
+        || !end.timeStamp
+        || start.pageX === undefined
+        || start.pageY === undefined
+        || end.pageX === undefined
+        || end.pageY === undefined) {
+        return false;
+    }
+    var startPosX = start.pageX;
+    var startPosY = start.pageY;
+    var endPosX = end.pageX;
+    var endPosY = end.pageY;
+    var touchTimes = end.timeStamp - start.timeStamp;
+    return !!(Math.abs(endPosY - startPosY) < 30
+        && Math.abs(endPosX - startPosX) < 30
+        && touchTimes < 300);
 }
 function createCanvas() {
-  /* istanbul ignore if*/
-  if (typeof __env !== 'undefined') {
-    return __env.createCanvas();
-  }
-
-  return document.createElement('canvas');
+    /* istanbul ignore if*/
+    // @ts-ignore
+    if (typeof __env !== 'undefined') {
+        // @ts-ignore
+        return __env.createCanvas();
+    }
+    return document.createElement('canvas');
 }
 function createImage() {
-  /* istanbul ignore if*/
-  if (typeof __env !== 'undefined') {
-    return __env.createImage();
-  }
-
-  return document.createElement('img');
-}
-
-var _dpr; // only Baidu platform need to recieve system info from main context
-
-
-if (typeof swan !== 'undefined') {
-  __env.onMessage(function (res) {
-    if (res && res.type === 'engine') {
-      if (res.event === 'systemInfo') {
-        _dpr = res.systemInfo.devicePixelRatio;
-      }
+    /* istanbul ignore if*/
+    // @ts-ignore
+    if (typeof __env !== 'undefined') {
+        // @ts-ignore
+        return __env.createImage();
     }
-  });
+    return document.createElement('img');
 }
-
+var _dpr;
+// only Baidu platform need to recieve system info from main context
+if (typeof swan !== 'undefined') {
+    __env.onMessage(function (res) {
+        if (res && res.type === 'engine') {
+            if (res.event === 'systemInfo') {
+                _dpr = res.systemInfo.devicePixelRatio;
+            }
+        }
+    });
+}
 function getDpr() {
-  // return 3;
-  if (typeof _dpr !== 'undefined') {
+    // return 3;
+    if (typeof _dpr !== 'undefined') {
+        return _dpr;
+    }
+    if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
+        _dpr = __env.getSystemInfoSync().devicePixelRatio;
+    }
+    else if (window.devicePixelRatio) {
+        _dpr = window.devicePixelRatio;
+    }
+    else {
+        console.warn('[Layout] failed to access device pixel ratio, fallback to 1');
+        _dpr = 1;
+    }
     return _dpr;
-  }
-
-  if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
-    _dpr = __env.getSystemInfoSync().devicePixelRatio;
-  } else if (window.devicePixelRatio) {
-    _dpr = window.devicePixelRatio;
-  } else {
-    console.warn('[Layout] failed to access device pixel ratio, fallback to 1');
-    _dpr = 1;
-  }
-
-  return _dpr;
 }
-var STATE = {
-  UNINIT: 'UNINIT',
-  INITED: 'INITED',
-  RENDERED: 'RENDERED',
-  CLEAR: 'CLEAR'
-};
+var STATE;
+(function (STATE) {
+    STATE["UNINIT"] = "UNINIT";
+    STATE["INITED"] = "INITED";
+    STATE["RENDERED"] = "RENDERED";
+    STATE["CLEAR"] = "CLEAR";
+})(STATE || (STATE = {}));
+;
 function clearCanvas(ctx) {
-  ctx && ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx && ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 function copyTouchArray(touches) {
-  return touches.map(function (touch) {
-    return {
-      identifier: touch.identifier,
-      pageX: touch.pageX,
-      pageY: touch.pageY,
-      clientX: touch.clientX,
-      clientY: touch.clientY
-    };
-  });
+    return touches.map(function (touch) { return ({
+        identifier: touch.identifier,
+        pageX: touch.pageX,
+        pageY: touch.pageY,
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+    }); });
 }
+function isGameTouchEvent(e) {
+    return 'touches' in e;
+}
+
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports) {
+/***/ ((module) => {
 
 function E () {
   // Keep this empty so it's easier to inherit from
@@ -1486,7 +807,7 @@ module.exports.TinyEmitter = E;
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// UMD (Universal Module Definition)
 // See https://github.com/umdjs/umd for reference
@@ -1497,9 +818,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   if (true) {
     // AMD. Register as an anonymous module.
     !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   } else {}
 }(this, function() {
   /**
@@ -2642,13 +1963,7 @@ var computeLayout = (function() {
       node.lastLayout.parentMaxWidth === parentMaxWidth &&
       node.lastLayout.direction === direction;
 
-      // console.log(node.className)
-
     if (skipLayout) {
-      // if (node.className === "rankList") {
-      //   console.log('skipLayout', node);
-      //   debugger;        
-      // }
       node.layout.width = node.lastLayout.width;
       node.layout.height = node.lastLayout.height;
       node.layout.top = node.lastLayout.top;
@@ -2662,13 +1977,6 @@ var computeLayout = (function() {
       node.lastLayout.requestedHeight = node.layout.height;
       node.lastLayout.parentMaxWidth = parentMaxWidth;
       node.lastLayout.direction = direction;
-
-      // if (node.className === "rankList") {
-      //   console.log('lastLayout', node);
-      //   debugger;        
-      // }
-
-      // console.log(node.className)
 
       // Reset child layouts
       node.children.forEach(function(child) {
@@ -2714,754 +2022,670 @@ if (true) {
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-
 var nodeToJson = __webpack_require__(11);
-
 var xmlToNodeobj = __webpack_require__(13);
-
 var x2xmlnode = __webpack_require__(13);
-
-var buildOptions = __webpack_require__(12).buildOptions;
-
+var buildOptions = (__webpack_require__(12).buildOptions);
 var validator = __webpack_require__(15);
-
 exports.parse = function (xmlData, options, validationOption) {
-  if (validationOption) {
-    if (validationOption === true) validationOption = {};
-    var result = validator.validate(xmlData, validationOption);
-
-    if (result !== true) {
-      throw Error(result.err.msg);
+    if (validationOption) {
+        if (validationOption === true)
+            validationOption = {};
+        var result = validator.validate(xmlData, validationOption);
+        if (result !== true) {
+            throw Error(result.err.msg);
+        }
     }
-  }
-
-  options = buildOptions(options, x2xmlnode.defaultOptions, x2xmlnode.props);
-  return nodeToJson.convertToJson(xmlToNodeobj.getTraversalObj(xmlData, options), options);
+    options = buildOptions(options, x2xmlnode.defaultOptions, x2xmlnode.props);
+    return nodeToJson.convertToJson(xmlToNodeobj.getTraversalObj(xmlData, options), options);
 };
+
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-
 var util = __webpack_require__(12);
-
-var convertToJson = function convertToJson(node, options) {
-  var jObj = {
-    name: node.tagname
-  }; //when no child node or attr is present
-
-  if ((!node.child || util.isEmptyObject(node.child)) && (!node.attrsMap || util.isEmptyObject(node.attrsMap))) {
-    return util.isExist(node.val) && !!node.val ? node.val : jObj;
-  } else {
-    //otherwise create a textnode if node has some text
-    if (util.isExist(node.val)) {
-      if (!(typeof node.val === 'string' && (node.val === '' || node.val === options.cdataPositionChar))) {
-        if (options.arrayMode === "strict") {
-          jObj[options.textNodeName] = [node.val];
-        } else {
-          jObj[options.textNodeName] = node.val;
-        }
-      }
+var convertToJson = function (node, options) {
+    var jObj = {
+        name: node.tagname
+    };
+    //when no child node or attr is present
+    if ((!node.child || util.isEmptyObject(node.child)) && (!node.attrsMap || util.isEmptyObject(node.attrsMap))) {
+        return util.isExist(node.val) && !!node.val ? node.val : jObj;
     }
-  }
-
-  util.merge(jObj, node.attrsMap, options.arrayMode);
-  jObj.children = [];
-  node.children.forEach(function (child) {
-    jObj.children.push(convertToJson(child, options));
-  }); // const keys = Object.keys(node.child);
-  // for (let index = 0; index < keys.length; index++) {
-  //   var tagname = keys[index];
-  //   if (node.child[tagname] && node.child[tagname].length > 1) {
-  //     jObj[tagname] = [];
-  //     for (var tag in node.child[tagname]) {
-  //       jObj[tagname].push(convertToJson(node.child[tagname][tag], options));
-  //     }
-  //   } else {
-  //     if(options.arrayMode === true){
-  //       const result = convertToJson(node.child[tagname][0], options)
-  //       if(typeof result === 'object')
-  //         jObj[tagname] = [ result ];
-  //       else
-  //         jObj[tagname] = result;
-  //     }else if(options.arrayMode === "strict"){
-  //       jObj[tagname] = [convertToJson(node.child[tagname][0], options) ];
-  //     }else{
-  //       jObj[tagname] = convertToJson(node.child[tagname][0], options);
-  //     }
-  //   }
-  // }
-  //add value
-
-  return jObj;
+    else {
+        //otherwise create a textnode if node has some text
+        if (util.isExist(node.val)) {
+            if (!(typeof node.val === 'string' && (node.val === '' || node.val === options.cdataPositionChar))) {
+                if (options.arrayMode === "strict") {
+                    jObj[options.textNodeName] = [node.val];
+                }
+                else {
+                    jObj[options.textNodeName] = node.val;
+                }
+            }
+        }
+    }
+    util.merge(jObj, node.attrsMap, options.arrayMode);
+    jObj.children = [];
+    node.children.forEach(function (child) {
+        jObj.children.push(convertToJson(child, options));
+    });
+    // const keys = Object.keys(node.child);
+    // for (let index = 0; index < keys.length; index++) {
+    //   var tagname = keys[index];
+    //   if (node.child[tagname] && node.child[tagname].length > 1) {
+    //     jObj[tagname] = [];
+    //     for (var tag in node.child[tagname]) {
+    //       jObj[tagname].push(convertToJson(node.child[tagname][tag], options));
+    //     }
+    //   } else {
+    //     if(options.arrayMode === true){
+    //       const result = convertToJson(node.child[tagname][0], options)
+    //       if(typeof result === 'object')
+    //         jObj[tagname] = [ result ];
+    //       else
+    //         jObj[tagname] = result;
+    //     }else if(options.arrayMode === "strict"){
+    //       jObj[tagname] = [convertToJson(node.child[tagname][0], options) ];
+    //     }else{
+    //       jObj[tagname] = convertToJson(node.child[tagname][0], options);
+    //     }
+    //   }
+    // }
+    //add value
+    return jObj;
 };
-
 exports.convertToJson = convertToJson;
+
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
-
-var getAllMatches = function getAllMatches(string, regex) {
-  var matches = [];
-  var match = regex.exec(string);
-
-  while (match) {
-    var allmatches = [];
-    var len = match.length;
-
-    for (var index = 0; index < len; index++) {
-      allmatches.push(match[index]);
+var getAllMatches = function (string, regex) {
+    var matches = [];
+    var match = regex.exec(string);
+    while (match) {
+        var allmatches = [];
+        var len = match.length;
+        for (var index = 0; index < len; index++) {
+            allmatches.push(match[index]);
+        }
+        matches.push(allmatches);
+        match = regex.exec(string);
     }
-
-    matches.push(allmatches);
-    match = regex.exec(string);
-  }
-
-  return matches;
+    return matches;
 };
-
-var doesMatch = function doesMatch(string, regex) {
-  var match = regex.exec(string);
-  return !(match === null || typeof match === 'undefined');
+var doesMatch = function (string, regex) {
+    var match = regex.exec(string);
+    return !(match === null || typeof match === 'undefined');
 };
-
-var doesNotMatch = function doesNotMatch(string, regex) {
-  return !doesMatch(string, regex);
+var doesNotMatch = function (string, regex) {
+    return !doesMatch(string, regex);
 };
-
 exports.isExist = function (v) {
-  return typeof v !== 'undefined';
+    return typeof v !== 'undefined';
 };
-
 exports.isEmptyObject = function (obj) {
-  return Object.keys(obj).length === 0;
+    return Object.keys(obj).length === 0;
 };
 /**
  * Copy all the properties of a into b.
  * @param {*} target
  * @param {*} a
  */
-
-
 exports.merge = function (target, a, arrayMode) {
-  if (a) {
-    var keys = Object.keys(a); // will return an array of own properties
-
-    var len = keys.length; //don't make it inline
-
-    for (var i = 0; i < len; i++) {
-      if (arrayMode === 'strict') {
-        target[keys[i]] = [a[keys[i]]];
-      } else {
-        target[keys[i]] = a[keys[i]];
-      }
+    if (a) {
+        var keys = Object.keys(a); // will return an array of own properties
+        var len = keys.length; //don't make it inline
+        for (var i = 0; i < len; i++) {
+            if (arrayMode === 'strict') {
+                target[keys[i]] = [a[keys[i]]];
+            }
+            else {
+                target[keys[i]] = a[keys[i]];
+            }
+        }
     }
-  }
 };
 /* exports.merge =function (b,a){
   return Object.assign(b,a);
 } */
-
-
 exports.getValue = function (v) {
-  if (exports.isExist(v)) {
-    return v;
-  } else {
-    return '';
-  }
-}; // const fakeCall = function(a) {return a;};
-// const fakeCallNoReturn = function() {};
-
-
-exports.buildOptions = function (options, defaultOptions, props) {
-  var newOptions = {};
-
-  if (!options) {
-    return defaultOptions; //if there are not options
-  }
-
-  for (var i = 0; i < props.length; i++) {
-    if (options[props[i]] !== undefined) {
-      newOptions[props[i]] = options[props[i]];
-    } else {
-      newOptions[props[i]] = defaultOptions[props[i]];
+    if (exports.isExist(v)) {
+        return v;
     }
-  }
-
-  return newOptions;
+    else {
+        return '';
+    }
 };
-
+// const fakeCall = function(a) {return a;};
+// const fakeCallNoReturn = function() {};
+exports.buildOptions = function (options, defaultOptions, props) {
+    var newOptions = {};
+    if (!options) {
+        return defaultOptions; //if there are not options
+    }
+    for (var i = 0; i < props.length; i++) {
+        if (options[props[i]] !== undefined) {
+            newOptions[props[i]] = options[props[i]];
+        }
+        else {
+            newOptions[props[i]] = defaultOptions[props[i]];
+        }
+    }
+    return newOptions;
+};
 exports.doesMatch = doesMatch;
 exports.doesNotMatch = doesNotMatch;
 exports.getAllMatches = getAllMatches;
 
+
 /***/ }),
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-
 var util = __webpack_require__(12);
-
-var buildOptions = __webpack_require__(12).buildOptions;
-
+var buildOptions = (__webpack_require__(12).buildOptions);
 var xmlNode = __webpack_require__(14);
-
-var TagType = {
-  OPENING: 1,
-  CLOSING: 2,
-  SELF: 3,
-  CDATA: 4
-};
-var regx = '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)'; //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
+var TagType = { OPENING: 1, CLOSING: 2, SELF: 3, CDATA: 4 };
+var regx = '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
+//const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
 //polyfill
-
 if (!Number.parseInt && window.parseInt) {
-  Number.parseInt = window.parseInt;
+    Number.parseInt = window.parseInt;
 }
-
 if (!Number.parseFloat && window.parseFloat) {
-  Number.parseFloat = window.parseFloat;
+    Number.parseFloat = window.parseFloat;
 }
-
 var defaultOptions = {
-  attributeNamePrefix: '@_',
-  attrNodeName: false,
-  textNodeName: '#text',
-  ignoreAttributes: true,
-  ignoreNameSpace: false,
-  allowBooleanAttributes: false,
-  //a tag can have attributes without any value
-  //ignoreRootElement : false,
-  parseNodeValue: true,
-  parseAttributeValue: false,
-  arrayMode: false,
-  trimValues: true,
-  //Trim string values of tag and attributes
-  cdataTagName: false,
-  cdataPositionChar: '\\c',
-  localeRange: '',
-  tagValueProcessor: function tagValueProcessor(a) {
-    return a;
-  },
-  attrValueProcessor: function attrValueProcessor(a) {
-    return a;
-  },
-  stopNodes: [] //decodeStrict: false,
-
+    attributeNamePrefix: '@_',
+    attrNodeName: false,
+    textNodeName: '#text',
+    ignoreAttributes: true,
+    ignoreNameSpace: false,
+    allowBooleanAttributes: false,
+    //ignoreRootElement : false,
+    parseNodeValue: true,
+    parseAttributeValue: false,
+    arrayMode: false,
+    trimValues: true,
+    cdataTagName: false,
+    cdataPositionChar: '\\c',
+    localeRange: '',
+    tagValueProcessor: function (a) {
+        return a;
+    },
+    attrValueProcessor: function (a) {
+        return a;
+    },
+    stopNodes: []
+    //decodeStrict: false,
 };
 exports.defaultOptions = defaultOptions;
-var props = ['attributeNamePrefix', 'attrNodeName', 'textNodeName', 'ignoreAttributes', 'ignoreNameSpace', 'allowBooleanAttributes', 'parseNodeValue', 'parseAttributeValue', 'arrayMode', 'trimValues', 'cdataTagName', 'cdataPositionChar', 'localeRange', 'tagValueProcessor', 'attrValueProcessor', 'parseTrueNumberOnly', 'stopNodes'];
+var props = [
+    'attributeNamePrefix',
+    'attrNodeName',
+    'textNodeName',
+    'ignoreAttributes',
+    'ignoreNameSpace',
+    'allowBooleanAttributes',
+    'parseNodeValue',
+    'parseAttributeValue',
+    'arrayMode',
+    'trimValues',
+    'cdataTagName',
+    'cdataPositionChar',
+    'localeRange',
+    'tagValueProcessor',
+    'attrValueProcessor',
+    'parseTrueNumberOnly',
+    'stopNodes'
+];
 exports.props = props;
-
-var getTraversalObj = function getTraversalObj(xmlData, options) {
-  options = buildOptions(options, defaultOptions, props); //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
-
-  xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, ''); //Remove  comments
-
-  var xmlObj = new xmlNode('!xml');
-  var currentNode = xmlObj;
-  regx = regx.replace(/\[\\w/g, '[' + options.localeRange + '\\w');
-  var tagsRegx = new RegExp(regx, 'g');
-  var tag = tagsRegx.exec(xmlData);
-  var nextTag = tagsRegx.exec(xmlData);
-
-  while (tag) {
-    var tagType = checkForTagType(tag);
-
-    if (tagType === TagType.CLOSING) {
-      //add parsed data to parent node
-      if (currentNode.parent && tag[14]) {
-        currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag, options, currentNode.parent.tagname);
-      }
-
-      if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
-        currentNode.child = [];
-
-        if (currentNode.attrsMap == undefined) {
-          currentNode.attrsMap = {};
+var getTraversalObj = function (xmlData, options) {
+    options = buildOptions(options, defaultOptions, props);
+    //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
+    xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, ''); //Remove  comments
+    var xmlObj = new xmlNode('!xml');
+    var currentNode = xmlObj;
+    regx = regx.replace(/\[\\w/g, '[' + options.localeRange + '\\w');
+    var tagsRegx = new RegExp(regx, 'g');
+    var tag = tagsRegx.exec(xmlData);
+    var nextTag = tagsRegx.exec(xmlData);
+    while (tag) {
+        var tagType = checkForTagType(tag);
+        if (tagType === TagType.CLOSING) {
+            //add parsed data to parent node
+            if (currentNode.parent && tag[14]) {
+                currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag, options, currentNode.parent.tagname);
+            }
+            if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
+                currentNode.child = [];
+                if (currentNode.attrsMap == undefined) {
+                    currentNode.attrsMap = {};
+                }
+                currentNode.val = xmlData.substr(currentNode.startIndex + 1, tag.index - currentNode.startIndex - 1);
+            }
+            currentNode = currentNode.parent;
         }
-
-        currentNode.val = xmlData.substr(currentNode.startIndex + 1, tag.index - currentNode.startIndex - 1);
-      }
-
-      currentNode = currentNode.parent;
-    } else if (tagType === TagType.CDATA) {
-      if (options.cdataTagName) {
-        //add cdata node
-        var childNode = new xmlNode(options.cdataTagName, currentNode, tag[3]);
-        childNode.attrsMap = buildAttributesMap(tag[8], options);
-        currentNode.addChild(childNode); //for backtracking
-
-        currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar; //add rest value to parent node
-
-        if (tag[14]) {
-          currentNode.val += processTagValue(tag, options);
+        else if (tagType === TagType.CDATA) {
+            if (options.cdataTagName) {
+                //add cdata node
+                var childNode = new xmlNode(options.cdataTagName, currentNode, tag[3]);
+                childNode.attrsMap = buildAttributesMap(tag[8], options);
+                currentNode.addChild(childNode);
+                //for backtracking
+                currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
+                //add rest value to parent node
+                if (tag[14]) {
+                    currentNode.val += processTagValue(tag, options);
+                }
+            }
+            else {
+                currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag, options);
+            }
         }
-      } else {
-        currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag, options);
-      }
-    } else if (tagType === TagType.SELF) {
-      if (currentNode && tag[14]) {
-        currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag, options);
-      }
-
-      var _childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '');
-
-      if (tag[8] && tag[8].length > 0) {
-        tag[8] = tag[8].substr(0, tag[8].length - 1);
-      }
-
-      _childNode.attrsMap = buildAttributesMap(tag[8], options);
-      currentNode.addChild(_childNode);
-    } else {
-      //TagType.OPENING
-      var _childNode2 = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, processTagValue(tag, options));
-
-      if (options.stopNodes.length && options.stopNodes.includes(_childNode2.tagname)) {
-        _childNode2.startIndex = tag.index + tag[1].length;
-      }
-
-      _childNode2.attrsMap = buildAttributesMap(tag[8], options);
-      currentNode.addChild(_childNode2);
-      currentNode = _childNode2;
+        else if (tagType === TagType.SELF) {
+            if (currentNode && tag[14]) {
+                currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag, options);
+            }
+            var childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '');
+            if (tag[8] && tag[8].length > 0) {
+                tag[8] = tag[8].substr(0, tag[8].length - 1);
+            }
+            childNode.attrsMap = buildAttributesMap(tag[8], options);
+            currentNode.addChild(childNode);
+        }
+        else {
+            //TagType.OPENING
+            var childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, processTagValue(tag, options));
+            if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
+                childNode.startIndex = tag.index + tag[1].length;
+            }
+            childNode.attrsMap = buildAttributesMap(tag[8], options);
+            currentNode.addChild(childNode);
+            currentNode = childNode;
+        }
+        tag = nextTag;
+        nextTag = tagsRegx.exec(xmlData);
     }
-
-    tag = nextTag;
-    nextTag = tagsRegx.exec(xmlData);
-  }
-
-  return xmlObj;
+    return xmlObj;
 };
-
 function processTagValue(parsedTags, options, parentTagName) {
-  var tagName = parsedTags[7] || parentTagName;
-  var val = parsedTags[14];
-
-  if (val) {
-    if (options.trimValues) {
-      val = val.trim();
-    }
-
-    val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
-  }
-
-  return val;
-}
-
-function checkForTagType(match) {
-  if (match[4] === ']]>') {
-    return TagType.CDATA;
-  } else if (match[10] === '/') {
-    return TagType.CLOSING;
-  } else if (typeof match[8] !== 'undefined' && match[8].substr(match[8].length - 1) === '/') {
-    return TagType.SELF;
-  } else {
-    return TagType.OPENING;
-  }
-}
-
-function resolveNameSpace(tagname, options) {
-  if (options.ignoreNameSpace) {
-    var tags = tagname.split(':');
-    var prefix = tagname.charAt(0) === '/' ? '/' : '';
-
-    if (tags[0] === 'xmlns') {
-      return '';
-    }
-
-    if (tags.length === 2) {
-      tagname = prefix + tags[1];
-    }
-  }
-
-  return tagname;
-}
-
-function parseValue(val, shouldParse, parseTrueNumberOnly) {
-  if (shouldParse && typeof val === 'string') {
-    var parsed;
-
-    if (val.trim() === '' || isNaN(val)) {
-      parsed = val === 'true' ? true : val === 'false' ? false : val;
-    } else {
-      if (val.indexOf('0x') !== -1) {
-        //support hexa decimal
-        parsed = Number.parseInt(val, 16);
-      } else if (val.indexOf('.') !== -1) {
-        parsed = Number.parseFloat(val);
-      } else {
-        parsed = Number.parseInt(val, 10);
-      }
-
-      if (parseTrueNumberOnly) {
-        parsed = String(parsed) === val ? parsed : val;
-      }
-    }
-
-    return parsed;
-  } else {
-    if (util.isExist(val)) {
-      return val;
-    } else {
-      return '';
-    }
-  }
-} //TODO: change regex to capture NS
-//const attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
-
-
-var attrsRegx = new RegExp('([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?', 'g');
-
-function buildAttributesMap(attrStr, options) {
-  if (!options.ignoreAttributes && typeof attrStr === 'string') {
-    attrStr = attrStr.replace(/\r?\n/g, ' '); //attrStr = attrStr || attrStr.trim();
-
-    var matches = util.getAllMatches(attrStr, attrsRegx);
-    var len = matches.length; //don't make it inline
-
-    var attrs = {};
-
-    for (var i = 0; i < len; i++) {
-      var attrName = resolveNameSpace(matches[i][1], options);
-
-      if (attrName.length) {
-        if (matches[i][4] !== undefined) {
-          if (options.trimValues) {
-            matches[i][4] = matches[i][4].trim();
-          }
-
-          matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
-          attrs[options.attributeNamePrefix + attrName] = parseValue(matches[i][4], options.parseAttributeValue, options.parseTrueNumberOnly);
-        } else if (options.allowBooleanAttributes) {
-          attrs[options.attributeNamePrefix + attrName] = true;
+    var tagName = parsedTags[7] || parentTagName;
+    var val = parsedTags[14];
+    if (val) {
+        if (options.trimValues) {
+            val = val.trim();
         }
-      }
+        val = options.tagValueProcessor(val, tagName);
+        val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
     }
-
-    if (!Object.keys(attrs).length) {
-      return;
-    }
-
-    if (options.attrNodeName) {
-      var attrCollection = {};
-      attrCollection[options.attrNodeName] = attrs;
-      return attrCollection;
-    }
-
-    return attrs;
-  }
+    return val;
 }
-
+function checkForTagType(match) {
+    if (match[4] === ']]>') {
+        return TagType.CDATA;
+    }
+    else if (match[10] === '/') {
+        return TagType.CLOSING;
+    }
+    else if (typeof match[8] !== 'undefined' && match[8].substr(match[8].length - 1) === '/') {
+        return TagType.SELF;
+    }
+    else {
+        return TagType.OPENING;
+    }
+}
+function resolveNameSpace(tagname, options) {
+    if (options.ignoreNameSpace) {
+        var tags = tagname.split(':');
+        var prefix = tagname.charAt(0) === '/' ? '/' : '';
+        if (tags[0] === 'xmlns') {
+            return '';
+        }
+        if (tags.length === 2) {
+            tagname = prefix + tags[1];
+        }
+    }
+    return tagname;
+}
+function parseValue(val, shouldParse, parseTrueNumberOnly) {
+    if (shouldParse && typeof val === 'string') {
+        var parsed = void 0;
+        if (val.trim() === '' || isNaN(val)) {
+            parsed = val === 'true' ? true : val === 'false' ? false : val;
+        }
+        else {
+            if (val.indexOf('0x') !== -1) {
+                //support hexa decimal
+                parsed = Number.parseInt(val, 16);
+            }
+            else if (val.indexOf('.') !== -1) {
+                parsed = Number.parseFloat(val);
+            }
+            else {
+                parsed = Number.parseInt(val, 10);
+            }
+            if (parseTrueNumberOnly) {
+                parsed = String(parsed) === val ? parsed : val;
+            }
+        }
+        return parsed;
+    }
+    else {
+        if (util.isExist(val)) {
+            return val;
+        }
+        else {
+            return '';
+        }
+    }
+}
+//TODO: change regex to capture NS
+//const attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
+var attrsRegx = new RegExp('([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?', 'g');
+function buildAttributesMap(attrStr, options) {
+    if (!options.ignoreAttributes && typeof attrStr === 'string') {
+        attrStr = attrStr.replace(/\r?\n/g, ' ');
+        //attrStr = attrStr || attrStr.trim();
+        var matches = util.getAllMatches(attrStr, attrsRegx);
+        var len = matches.length; //don't make it inline
+        var attrs = {};
+        for (var i = 0; i < len; i++) {
+            var attrName = resolveNameSpace(matches[i][1], options);
+            if (attrName.length) {
+                if (matches[i][4] !== undefined) {
+                    if (options.trimValues) {
+                        matches[i][4] = matches[i][4].trim();
+                    }
+                    matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
+                    attrs[options.attributeNamePrefix + attrName] = parseValue(matches[i][4], options.parseAttributeValue, options.parseTrueNumberOnly);
+                }
+                else if (options.allowBooleanAttributes) {
+                    attrs[options.attributeNamePrefix + attrName] = true;
+                }
+            }
+        }
+        if (!Object.keys(attrs).length) {
+            return;
+        }
+        if (options.attrNodeName) {
+            var attrCollection = {};
+            attrCollection[options.attrNodeName] = attrs;
+            return attrCollection;
+        }
+        return attrs;
+    }
+}
 exports.getTraversalObj = getTraversalObj;
+
 
 /***/ }),
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((module) => {
 
 "use strict";
 
-
 module.exports = function (tagname, parent, val) {
-  this.tagname = tagname;
-  this.parent = parent;
-  this.child = {}; //child tags
-
-  this.attrsMap = {}; //attributes map
-
-  this.children = [];
-  this.val = val; //text only
-
-  this.addChild = function (child) {
-    this.children.push(child);
-
-    if (Array.isArray(this.child[child.tagname])) {
-      //already presents
-      this.child[child.tagname].push(child);
-    } else {
-      this.child[child.tagname] = [child];
-    }
-  };
+    this.tagname = tagname;
+    this.parent = parent;
+    this.child = {}; //child tags
+    this.attrsMap = {}; //attributes map
+    this.children = [];
+    this.val = val; //text only
+    this.addChild = function (child) {
+        this.children.push(child);
+        if (Array.isArray(this.child[child.tagname])) {
+            //already presents
+            this.child[child.tagname].push(child);
+        }
+        else {
+            this.child[child.tagname] = [child];
+        }
+    };
 };
+
 
 /***/ }),
 /* 15 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-
 var util = __webpack_require__(12);
-
 var defaultOptions = {
-  allowBooleanAttributes: false,
-  //A tag can have attributes without any value
-  localeRange: 'a-zA-Z'
+    allowBooleanAttributes: false,
+    localeRange: 'a-zA-Z',
 };
-var props = ['allowBooleanAttributes', 'localeRange']; //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
-
+var props = ['allowBooleanAttributes', 'localeRange'];
+//const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function (xmlData, options) {
-  options = util.buildOptions(options, defaultOptions, props); //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
-  //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
-  //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
-
-  var tags = [];
-  var tagFound = false;
-
-  if (xmlData[0] === "\uFEFF") {
-    // check for byte order mark (BOM)
-    xmlData = xmlData.substr(1);
-  }
-
-  var regxAttrName = new RegExp('^[_w][\\w\\-.:]*$'.replace('_w', '_' + options.localeRange));
-  var regxTagName = new RegExp('^([w]|_)[\\w.\\-_:]*'.replace('([w', '([' + options.localeRange));
-
-  for (var i = 0; i < xmlData.length; i++) {
-    if (xmlData[i] === '<') {
-      //starting of tag
-      //read until you reach to '>' avoiding any '>' in attribute value
-      i++;
-
-      if (xmlData[i] === '?') {
-        i = readPI(xmlData, ++i);
-
-        if (i.err) {
-          return i;
-        }
-      } else if (xmlData[i] === '!') {
-        i = readCommentAndCDATA(xmlData, i);
-        continue;
-      } else {
-        var closingTag = false;
-
-        if (xmlData[i] === '/') {
-          //closing tag
-          closingTag = true;
-          i++;
-        } //read tagname
-
-
-        var tagName = '';
-
-        for (; i < xmlData.length && xmlData[i] !== '>' && xmlData[i] !== ' ' && xmlData[i] !== '\t' && xmlData[i] !== '\n' && xmlData[i] !== '\r'; i++) {
-          tagName += xmlData[i];
-        }
-
-        tagName = tagName.trim(); //console.log(tagName);
-
-        if (tagName[tagName.length - 1] === '/') {
-          //self closing tag without attributes
-          tagName = tagName.substring(0, tagName.length - 1);
-          continue;
-        }
-
-        if (!validateTagName(tagName, regxTagName)) {
-          return {
-            err: {
-              code: 'InvalidTag',
-              msg: 'Tag ' + tagName + ' is an invalid name.'
-            }
-          };
-        }
-
-        var result = readAttributeStr(xmlData, i);
-
-        if (result === false) {
-          return {
-            err: {
-              code: 'InvalidAttr',
-              msg: 'Attributes for "' + tagName + '" have open quote.'
-            }
-          };
-        }
-
-        var attrStr = result.value;
-        i = result.index;
-
-        if (attrStr[attrStr.length - 1] === '/') {
-          //self closing tag
-          attrStr = attrStr.substring(0, attrStr.length - 1);
-          var isValid = validateAttributeString(attrStr, options, regxAttrName);
-
-          if (isValid === true) {
-            tagFound = true; //continue; //text may presents after self closing tag
-          } else {
-            return isValid;
-          }
-        } else if (closingTag) {
-          if (!result.tagClosed) {
-            return {
-              err: {
-                code: 'InvalidTag',
-                msg: 'closing tag "' + tagName + "\" don't have proper closing."
-              }
-            };
-          } else if (attrStr.trim().length > 0) {
-            return {
-              err: {
-                code: 'InvalidTag',
-                msg: 'closing tag "' + tagName + "\" can't have attributes or invalid starting."
-              }
-            };
-          } else {
-            var otg = tags.pop();
-
-            if (tagName !== otg) {
-              return {
-                err: {
-                  code: 'InvalidTag',
-                  msg: 'closing tag ' + otg + ' is expected inplace of ' + tagName + '.'
-                }
-              };
-            }
-          }
-        } else {
-          var _isValid = validateAttributeString(attrStr, options, regxAttrName);
-
-          if (_isValid !== true) {
-            return _isValid;
-          }
-
-          tags.push(tagName);
-          tagFound = true;
-        } //skip tag text value
-        //It may include comments and CDATA value
-
-
-        for (i++; i < xmlData.length; i++) {
-          if (xmlData[i] === '<') {
-            if (xmlData[i + 1] === '!') {
-              //comment or CADATA
-              i++;
-              i = readCommentAndCDATA(xmlData, i);
-              continue;
-            } else {
-              break;
-            }
-          }
-        } //end of reading tag text value
-
-
-        if (xmlData[i] === '<') {
-          i--;
-        }
-      }
-    } else {
-      if (xmlData[i] === ' ' || xmlData[i] === '\t' || xmlData[i] === '\n' || xmlData[i] === '\r') {
-        continue;
-      }
-
-      return {
-        err: {
-          code: 'InvalidChar',
-          msg: 'char ' + xmlData[i] + ' is not expected .'
-        }
-      };
+    options = util.buildOptions(options, defaultOptions, props);
+    //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
+    //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
+    //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
+    var tags = [];
+    var tagFound = false;
+    if (xmlData[0] === '\ufeff') {
+        // check for byte order mark (BOM)
+        xmlData = xmlData.substr(1);
     }
-  }
-
-  if (!tagFound) {
-    return {
-      err: {
-        code: 'InvalidXml',
-        msg: 'Start tag expected.'
-      }
-    };
-  } else if (tags.length > 0) {
-    return {
-      err: {
-        code: 'InvalidXml',
-        msg: 'Invalid ' + JSON.stringify(tags, null, 4).replace(/\r?\n/g, '') + ' found.'
-      }
-    };
-  }
-
-  return true;
+    var regxAttrName = new RegExp('^[_w][\\w\\-.:]*$'.replace('_w', '_' + options.localeRange));
+    var regxTagName = new RegExp('^([w]|_)[\\w.\\-_:]*'.replace('([w', '([' + options.localeRange));
+    for (var i = 0; i < xmlData.length; i++) {
+        if (xmlData[i] === '<') {
+            //starting of tag
+            //read until you reach to '>' avoiding any '>' in attribute value
+            i++;
+            if (xmlData[i] === '?') {
+                i = readPI(xmlData, ++i);
+                if (i.err) {
+                    return i;
+                }
+            }
+            else if (xmlData[i] === '!') {
+                i = readCommentAndCDATA(xmlData, i);
+                continue;
+            }
+            else {
+                var closingTag = false;
+                if (xmlData[i] === '/') {
+                    //closing tag
+                    closingTag = true;
+                    i++;
+                }
+                //read tagname
+                var tagName = '';
+                for (; i < xmlData.length &&
+                    xmlData[i] !== '>' &&
+                    xmlData[i] !== ' ' &&
+                    xmlData[i] !== '\t' &&
+                    xmlData[i] !== '\n' &&
+                    xmlData[i] !== '\r'; i++) {
+                    tagName += xmlData[i];
+                }
+                tagName = tagName.trim();
+                //console.log(tagName);
+                if (tagName[tagName.length - 1] === '/') {
+                    //self closing tag without attributes
+                    tagName = tagName.substring(0, tagName.length - 1);
+                    continue;
+                }
+                if (!validateTagName(tagName, regxTagName)) {
+                    return { err: { code: 'InvalidTag', msg: 'Tag ' + tagName + ' is an invalid name.' } };
+                }
+                var result = readAttributeStr(xmlData, i);
+                if (result === false) {
+                    return { err: { code: 'InvalidAttr', msg: 'Attributes for "' + tagName + '" have open quote.' } };
+                }
+                var attrStr = result.value;
+                i = result.index;
+                if (attrStr[attrStr.length - 1] === '/') {
+                    //self closing tag
+                    attrStr = attrStr.substring(0, attrStr.length - 1);
+                    var isValid = validateAttributeString(attrStr, options, regxAttrName);
+                    if (isValid === true) {
+                        tagFound = true;
+                        //continue; //text may presents after self closing tag
+                    }
+                    else {
+                        return isValid;
+                    }
+                }
+                else if (closingTag) {
+                    if (!result.tagClosed) {
+                        return {
+                            err: { code: 'InvalidTag', msg: 'closing tag "' + tagName + "\" don't have proper closing." },
+                        };
+                    }
+                    else if (attrStr.trim().length > 0) {
+                        return {
+                            err: { code: 'InvalidTag', msg: 'closing tag "' + tagName + "\" can't have attributes or invalid starting." },
+                        };
+                    }
+                    else {
+                        var otg = tags.pop();
+                        if (tagName !== otg) {
+                            return {
+                                err: { code: 'InvalidTag', msg: 'closing tag ' + otg + ' is expected inplace of ' + tagName + '.' },
+                            };
+                        }
+                    }
+                }
+                else {
+                    var isValid = validateAttributeString(attrStr, options, regxAttrName);
+                    if (isValid !== true) {
+                        return isValid;
+                    }
+                    tags.push(tagName);
+                    tagFound = true;
+                }
+                //skip tag text value
+                //It may include comments and CDATA value
+                for (i++; i < xmlData.length; i++) {
+                    if (xmlData[i] === '<') {
+                        if (xmlData[i + 1] === '!') {
+                            //comment or CADATA
+                            i++;
+                            i = readCommentAndCDATA(xmlData, i);
+                            continue;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                } //end of reading tag text value
+                if (xmlData[i] === '<') {
+                    i--;
+                }
+            }
+        }
+        else {
+            if (xmlData[i] === ' ' || xmlData[i] === '\t' || xmlData[i] === '\n' || xmlData[i] === '\r') {
+                continue;
+            }
+            return { err: { code: 'InvalidChar', msg: 'char ' + xmlData[i] + ' is not expected .' } };
+        }
+    }
+    if (!tagFound) {
+        return { err: { code: 'InvalidXml', msg: 'Start tag expected.' } };
+    }
+    else if (tags.length > 0) {
+        return {
+            err: { code: 'InvalidXml', msg: 'Invalid ' + JSON.stringify(tags, null, 4).replace(/\r?\n/g, '') + ' found.' },
+        };
+    }
+    return true;
 };
 /**
  * Read Processing insstructions and skip
  * @param {*} xmlData
  * @param {*} i
  */
-
-
 function readPI(xmlData, i) {
-  var start = i;
-
-  for (; i < xmlData.length; i++) {
-    if (xmlData[i] == '?' || xmlData[i] == ' ') {
-      //tagname
-      var tagname = xmlData.substr(start, i - start);
-
-      if (i > 5 && tagname === 'xml') {
-        return {
-          err: {
-            code: 'InvalidXml',
-            msg: 'XML declaration allowed only at the start of the document.'
-          }
-        };
-      } else if (xmlData[i] == '?' && xmlData[i + 1] == '>') {
-        //check if valid attribut string
-        i++;
-        break;
-      } else {
-        continue;
-      }
-    }
-  }
-
-  return i;
-}
-
-function readCommentAndCDATA(xmlData, i) {
-  if (xmlData.length > i + 5 && xmlData[i + 1] === '-' && xmlData[i + 2] === '-') {
-    //comment
-    for (i += 3; i < xmlData.length; i++) {
-      if (xmlData[i] === '-' && xmlData[i + 1] === '-' && xmlData[i + 2] === '>') {
-        i += 2;
-        break;
-      }
-    }
-  } else if (xmlData.length > i + 8 && xmlData[i + 1] === 'D' && xmlData[i + 2] === 'O' && xmlData[i + 3] === 'C' && xmlData[i + 4] === 'T' && xmlData[i + 5] === 'Y' && xmlData[i + 6] === 'P' && xmlData[i + 7] === 'E') {
-    var angleBracketsCount = 1;
-
-    for (i += 8; i < xmlData.length; i++) {
-      if (xmlData[i] === '<') {
-        angleBracketsCount++;
-      } else if (xmlData[i] === '>') {
-        angleBracketsCount--;
-
-        if (angleBracketsCount === 0) {
-          break;
+    var start = i;
+    for (; i < xmlData.length; i++) {
+        if (xmlData[i] == '?' || xmlData[i] == ' ') {
+            //tagname
+            var tagname = xmlData.substr(start, i - start);
+            if (i > 5 && tagname === 'xml') {
+                return { err: { code: 'InvalidXml', msg: 'XML declaration allowed only at the start of the document.' } };
+            }
+            else if (xmlData[i] == '?' && xmlData[i + 1] == '>') {
+                //check if valid attribut string
+                i++;
+                break;
+            }
+            else {
+                continue;
+            }
         }
-      }
     }
-  } else if (xmlData.length > i + 9 && xmlData[i + 1] === '[' && xmlData[i + 2] === 'C' && xmlData[i + 3] === 'D' && xmlData[i + 4] === 'A' && xmlData[i + 5] === 'T' && xmlData[i + 6] === 'A' && xmlData[i + 7] === '[') {
-    for (i += 8; i < xmlData.length; i++) {
-      if (xmlData[i] === ']' && xmlData[i + 1] === ']' && xmlData[i + 2] === '>') {
-        i += 2;
-        break;
-      }
-    }
-  }
-
-  return i;
+    return i;
 }
-
+function readCommentAndCDATA(xmlData, i) {
+    if (xmlData.length > i + 5 && xmlData[i + 1] === '-' && xmlData[i + 2] === '-') {
+        //comment
+        for (i += 3; i < xmlData.length; i++) {
+            if (xmlData[i] === '-' && xmlData[i + 1] === '-' && xmlData[i + 2] === '>') {
+                i += 2;
+                break;
+            }
+        }
+    }
+    else if (xmlData.length > i + 8 &&
+        xmlData[i + 1] === 'D' &&
+        xmlData[i + 2] === 'O' &&
+        xmlData[i + 3] === 'C' &&
+        xmlData[i + 4] === 'T' &&
+        xmlData[i + 5] === 'Y' &&
+        xmlData[i + 6] === 'P' &&
+        xmlData[i + 7] === 'E') {
+        var angleBracketsCount = 1;
+        for (i += 8; i < xmlData.length; i++) {
+            if (xmlData[i] === '<') {
+                angleBracketsCount++;
+            }
+            else if (xmlData[i] === '>') {
+                angleBracketsCount--;
+                if (angleBracketsCount === 0) {
+                    break;
+                }
+            }
+        }
+    }
+    else if (xmlData.length > i + 9 &&
+        xmlData[i + 1] === '[' &&
+        xmlData[i + 2] === 'C' &&
+        xmlData[i + 3] === 'D' &&
+        xmlData[i + 4] === 'A' &&
+        xmlData[i + 5] === 'T' &&
+        xmlData[i + 6] === 'A' &&
+        xmlData[i + 7] === '[') {
+        for (i += 8; i < xmlData.length; i++) {
+            if (xmlData[i] === ']' && xmlData[i + 1] === ']' && xmlData[i + 2] === '>') {
+                i += 2;
+                break;
+            }
+        }
+    }
+    return i;
+}
 var doubleQuote = '"';
 var singleQuote = "'";
 /**
@@ -3469,740 +2693,584 @@ var singleQuote = "'";
  * @param {string} xmlData
  * @param {number} i
  */
-
 function readAttributeStr(xmlData, i) {
-  var attrStr = '';
-  var startChar = '';
-  var tagClosed = false;
-
-  for (; i < xmlData.length; i++) {
-    if (xmlData[i] === doubleQuote || xmlData[i] === singleQuote) {
-      if (startChar === '') {
-        startChar = xmlData[i];
-      } else if (startChar !== xmlData[i]) {
-        //if vaue is enclosed with double quote then single quotes are allowed inside the value and vice versa
-        continue;
-      } else {
-        startChar = '';
-      }
-    } else if (xmlData[i] === '>') {
-      if (startChar === '') {
-        tagClosed = true;
-        break;
-      }
+    var attrStr = '';
+    var startChar = '';
+    var tagClosed = false;
+    for (; i < xmlData.length; i++) {
+        if (xmlData[i] === doubleQuote || xmlData[i] === singleQuote) {
+            if (startChar === '') {
+                startChar = xmlData[i];
+            }
+            else if (startChar !== xmlData[i]) {
+                //if vaue is enclosed with double quote then single quotes are allowed inside the value and vice versa
+                continue;
+            }
+            else {
+                startChar = '';
+            }
+        }
+        else if (xmlData[i] === '>') {
+            if (startChar === '') {
+                tagClosed = true;
+                break;
+            }
+        }
+        attrStr += xmlData[i];
     }
-
-    attrStr += xmlData[i];
-  }
-
-  if (startChar !== '') {
-    return false;
-  }
-
-  return {
-    value: attrStr,
-    index: i,
-    tagClosed: tagClosed
-  };
+    if (startChar !== '') {
+        return false;
+    }
+    return { value: attrStr, index: i, tagClosed: tagClosed };
 }
 /**
  * Select all the attributes whether valid or invalid.
  */
-
-
-var validAttrStrRegxp = new RegExp('(\\s*)([^\\s=]+)(\\s*=)?(\\s*([\'"])(([\\s\\S])*?)\\5)?', 'g'); //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
-
+var validAttrStrRegxp = new RegExp('(\\s*)([^\\s=]+)(\\s*=)?(\\s*([\'"])(([\\s\\S])*?)\\5)?', 'g');
+//attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 function validateAttributeString(attrStr, options, regxAttrName) {
-  //console.log("start:"+attrStr+":end");
-  //if(attrStr.trim().length === 0) return true; //empty string
-  var matches = util.getAllMatches(attrStr, validAttrStrRegxp);
-  var attrNames = {};
-
-  for (var i = 0; i < matches.length; i++) {
-    //console.log(matches[i]);
-    if (matches[i][1].length === 0) {
-      //nospace before attribute name: a="sd"b="saf"
-      return {
-        err: {
-          code: 'InvalidAttr',
-          msg: 'attribute ' + matches[i][2] + ' has no space in starting.'
+    //console.log("start:"+attrStr+":end");
+    //if(attrStr.trim().length === 0) return true; //empty string
+    var matches = util.getAllMatches(attrStr, validAttrStrRegxp);
+    var attrNames = {};
+    for (var i = 0; i < matches.length; i++) {
+        //console.log(matches[i]);
+        if (matches[i][1].length === 0) {
+            //nospace before attribute name: a="sd"b="saf"
+            return { err: { code: 'InvalidAttr', msg: 'attribute ' + matches[i][2] + ' has no space in starting.' } };
         }
-      };
-    } else if (matches[i][3] === undefined && !options.allowBooleanAttributes) {
-      //independent attribute: ab
-      return {
-        err: {
-          code: 'InvalidAttr',
-          msg: 'boolean attribute ' + matches[i][2] + ' is not allowed.'
+        else if (matches[i][3] === undefined && !options.allowBooleanAttributes) {
+            //independent attribute: ab
+            return { err: { code: 'InvalidAttr', msg: 'boolean attribute ' + matches[i][2] + ' is not allowed.' } };
         }
-      };
+        /* else if(matches[i][6] === undefined){//attribute without value: ab=
+                        return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
+                    } */
+        var attrName = matches[i][2];
+        if (!validateAttrName(attrName, regxAttrName)) {
+            return { err: { code: 'InvalidAttr', msg: 'attribute ' + attrName + ' is an invalid name.' } };
+        }
+        /*if (!attrNames.hasOwnProperty(attrName)) {*/
+        if (!Object.prototype.hasOwnProperty.call(attrNames, attrName)) {
+            //check for duplicate attribute.
+            attrNames[attrName] = 1;
+        }
+        else {
+            return { err: { code: 'InvalidAttr', msg: 'attribute ' + attrName + ' is repeated.' } };
+        }
     }
-    /* else if(matches[i][6] === undefined){//attribute without value: ab=
-                    return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
-                } */
-
-
-    var attrName = matches[i][2];
-
-    if (!validateAttrName(attrName, regxAttrName)) {
-      return {
-        err: {
-          code: 'InvalidAttr',
-          msg: 'attribute ' + attrName + ' is an invalid name.'
-        }
-      };
-    }
-    /*if (!attrNames.hasOwnProperty(attrName)) {*/
-
-
-    if (!Object.prototype.hasOwnProperty.call(attrNames, attrName)) {
-      //check for duplicate attribute.
-      attrNames[attrName] = 1;
-    } else {
-      return {
-        err: {
-          code: 'InvalidAttr',
-          msg: 'attribute ' + attrName + ' is repeated.'
-        }
-      };
-    }
-  }
-
-  return true;
-} // const validAttrRegxp = /^[_a-zA-Z][\w\-.:]*$/;
-
-
-function validateAttrName(attrName, regxAttrName) {
-  // const validAttrRegxp = new RegExp(regxAttrName);
-  return util.doesMatch(attrName, regxAttrName);
-} //const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
-//  startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
-
-
-function validateTagName(tagname, regxTagName) {
-  /*if(util.doesMatch(tagname,startsWithXML)) return false;
-    else*/
-  return !util.doesNotMatch(tagname, regxTagName);
+    return true;
 }
+// const validAttrRegxp = /^[_a-zA-Z][\w\-.:]*$/;
+function validateAttrName(attrName, regxAttrName) {
+    // const validAttrRegxp = new RegExp(regxAttrName);
+    return util.doesMatch(attrName, regxAttrName);
+}
+//const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
+//  startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
+function validateTagName(tagname, regxTagName) {
+    /*if(util.doesMatch(tagname,startsWithXML)) return false;
+      else*/
+    return !util.doesNotMatch(tagname, regxTagName);
+}
+
 
 /***/ }),
 /* 16 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapFont; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 /* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
-/* harmony import */ var _pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-
-
-var bitMapPool = new _pool__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
 
 var Emitter = __webpack_require__(8);
 /**
  * http://www.angelcode.com/products/bmfont/doc/file_format.html
  */
-
-
-var BitMapFont = /*#__PURE__*/function () {
-  function BitMapFont(name, src, config) {
-    var _this = this;
-
-    _classCallCheck(this, BitMapFont);
-
-    var cache = bitMapPool.get(name);
-
-    if (cache) {
-      return cache;
+var BitMapFont = /** @class */ (function () {
+    // pool的实现放到类里面实现并不优雅，先去掉了
+    function BitMapFont(name, src, config) {
+        var _this = this;
+        this.ready = false;
+        this.config = config;
+        this.chars = this.parseConfig(config);
+        this.event = new Emitter();
+        this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_0__["default"].loadImage(src, function (texture, fromCache) {
+            if (fromCache) {
+                _this.texture = texture;
+            }
+            _this.ready = true;
+            _this.event.emit('text__load__done');
+        });
     }
-
-    this.config = config;
-    this.chars = this.parseConfig(config);
-    this.ready = false;
-    this.event = new Emitter();
-    this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_0__["default"].loadImage(src, function (texture, fromCache) {
-      if (fromCache) {
-        _this.texture = texture;
-      }
-
-      _this.ready = true;
-
-      _this.event.emit('text__load__done');
-    });
-    bitMapPool.set(name, this);
-  }
-
-  _createClass(BitMapFont, [{
-    key: "parseConfig",
-    value: function parseConfig(fntText) {
-      fntText = fntText.split('\r\n').join('\n');
-      var lines = fntText.split('\n');
-      var linesParsed = lines.map(function (line) {
-        return line.trim().split(' ');
-      });
-      var charsLine = this.getConfigByLineName(linesParsed, 'chars');
-      var charsCount = this.getConfigByKeyInOneLine(charsLine.line, 'count');
-      var commonLine = this.getConfigByLineName(linesParsed, 'common');
-      this.lineHeight = this.getConfigByKeyInOneLine(commonLine.line, 'lineHeight');
-      var infoLine = this.getConfigByLineName(linesParsed, 'info');
-      this.fontSize = this.getConfigByKeyInOneLine(infoLine.line, 'size'); // 接卸 kernings
-
-      var kerningsLine = this.getConfigByLineName(linesParsed, 'kernings');
-      var kerningsCount = 0;
-      var kerningsStart = -1;
-
-      if (kerningsLine.line) {
-        kerningsCount = this.getConfigByKeyInOneLine(kerningsLine.line, 'count');
-        kerningsStart = kerningsLine.index + 1;
-      }
-
-      var chars = {};
-
-      for (var i = 4; i < 4 + charsCount; i++) {
-        var charText = lines[i];
-        var letter = String.fromCharCode(this.getConfigByKeyInOneLine(charText, 'id'));
-        var c = {};
-        chars[letter] = c;
-        c.x = this.getConfigByKeyInOneLine(charText, 'x');
-        c.y = this.getConfigByKeyInOneLine(charText, 'y');
-        c.w = this.getConfigByKeyInOneLine(charText, 'width');
-        c.h = this.getConfigByKeyInOneLine(charText, 'height');
-        c.offX = this.getConfigByKeyInOneLine(charText, 'xoffset');
-        c.offY = this.getConfigByKeyInOneLine(charText, 'yoffset');
-        c.xadvance = this.getConfigByKeyInOneLine(charText, 'xadvance');
-        c.kerning = {};
-      } // parse kernings
-
-
-      if (kerningsCount) {
-        for (var _i = kerningsStart; _i <= kerningsStart + kerningsCount; _i++) {
-          var line = linesParsed[_i];
-          var first = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'first'));
-          var second = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'second'));
-          var amount = this.getConfigByKeyInOneLine(line, 'amount');
-
-          if (chars[second]) {
-            chars[second].kerning[first] = amount;
-          }
+    BitMapFont.prototype.parseConfig = function (fntText) {
+        fntText = fntText.split('\r\n').join('\n');
+        var lines = fntText.split('\n');
+        var linesParsed = lines.map(function (line) { return line.trim().split(' '); });
+        var charsLine = this.getConfigByLineName(linesParsed, 'chars');
+        var charsCount = this.getConfigByKeyInOneLine(charsLine.line, 'count');
+        var commonLine = this.getConfigByLineName(linesParsed, 'common');
+        this.lineHeight = this.getConfigByKeyInOneLine(commonLine.line, 'lineHeight');
+        var infoLine = this.getConfigByLineName(linesParsed, 'info');
+        this.fontSize = this.getConfigByKeyInOneLine(infoLine.line, 'size');
+        // 接卸 kernings
+        var kerningsLine = this.getConfigByLineName(linesParsed, 'kernings');
+        var kerningsCount = 0;
+        var kerningsStart = -1;
+        if (kerningsLine.line) {
+            kerningsCount = this.getConfigByKeyInOneLine(kerningsLine.line, 'count');
+            kerningsStart = kerningsLine.index + 1;
         }
-      }
-
-      return chars;
-    }
-  }, {
-    key: "getConfigByLineName",
-    value: function getConfigByLineName(linesParsed) {
-      var lineName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-      var index = -1;
-      var line = null;
-      var len = linesParsed.length;
-
-      for (var i = 0; i < len; i++) {
-        var item = linesParsed[i];
-
-        if (item[0] === lineName) {
-          index = i;
-          line = item;
+        var chars = {};
+        for (var i = 4; i < 4 + charsCount; i++) {
+            var charText = lines[i];
+            var letter = String.fromCharCode(this.getConfigByKeyInOneLine(charText, 'id'));
+            var c = {
+                x: this.getConfigByKeyInOneLine(charText, 'x'),
+                y: this.getConfigByKeyInOneLine(charText, 'y'),
+                w: this.getConfigByKeyInOneLine(charText, 'width'),
+                h: this.getConfigByKeyInOneLine(charText, 'height'),
+                offX: this.getConfigByKeyInOneLine(charText, 'xoffset'),
+                offY: this.getConfigByKeyInOneLine(charText, 'yoffset'),
+                xadvance: this.getConfigByKeyInOneLine(charText, 'xadvance'),
+                kerning: {}
+            };
+            chars[letter] = c;
         }
-      }
-
-      return {
-        line: line,
-        index: index
-      };
-    }
-  }, {
-    key: "getConfigByKeyInOneLine",
-    value: function getConfigByKeyInOneLine(configText, key) {
-      var itemConfigTextList = Array.isArray(configText) ? configText : configText.split(' ');
-
-      for (var i = 0, length = itemConfigTextList.length; i < length; i++) {
-        var itemConfigText = itemConfigTextList[i];
-
-        if (key === itemConfigText.substring(0, key.length)) {
-          var value = itemConfigText.substring(key.length + 1);
-          return parseInt(value);
+        // parse kernings
+        if (kerningsCount) {
+            for (var i = kerningsStart; i <= kerningsStart + kerningsCount; i++) {
+                var line = linesParsed[i];
+                var first = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'first'));
+                var second = String.fromCharCode(this.getConfigByKeyInOneLine(line, 'second'));
+                var amount = this.getConfigByKeyInOneLine(line, 'amount');
+                if (chars[second]) {
+                    chars[second].kerning[first] = amount;
+                }
+            }
         }
-      }
-
-      return 0;
-    }
-  }]);
-
-  return BitMapFont;
-}();
-
+        return chars;
+    };
+    BitMapFont.prototype.getConfigByLineName = function (linesParsed, lineName) {
+        if (lineName === void 0) { lineName = ''; }
+        var index = -1;
+        var line = [];
+        var len = linesParsed.length;
+        for (var i = 0; i < len; i++) {
+            var item = linesParsed[i];
+            if (item[0] === lineName) {
+                index = i;
+                line = item;
+            }
+        }
+        return {
+            line: line,
+            index: index,
+        };
+    };
+    BitMapFont.prototype.getConfigByKeyInOneLine = function (configText, key) {
+        var itemConfigTextList = Array.isArray(configText) ? configText : configText.split(' ');
+        for (var i = 0, length_1 = itemConfigTextList.length; i < length_1; i++) {
+            var itemConfigText = itemConfigTextList[i];
+            if (key === itemConfigText.substring(0, key.length)) {
+                var value = itemConfigText.substring(key.length + 1);
+                return parseInt(value);
+            }
+        }
+        return 0;
+    };
+    return BitMapFont;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BitMapFont);
 
 
 /***/ }),
 /* 17 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DebugInfo; });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-var DebugInfo = /*#__PURE__*/function () {
-  function DebugInfo() {
-    _classCallCheck(this, DebugInfo);
-
-    this.reset();
-  }
-
-  _createClass(DebugInfo, [{
-    key: "start",
-    value: function start(name) {
-      var isInner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-      if (this.totalStart === 0) {
-        this.totalStart = Date.now();
-      }
-
-      this.info[name] = {
-        start: Date.now(),
-        isInner: isInner
-      };
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var DebugInfo = /** @class */ (function () {
+    function DebugInfo() {
+        this.info = {};
+        this.totalStart = 0;
+        this.totalCost = 0;
+        this.reset();
     }
-  }, {
-    key: "end",
-    value: function end(name) {
-      if (this.info[name]) {
-        this.info[name].end = Date.now();
-        this.info[name].cost = this.info[name].end - this.info[name].start;
-        this.totalCost = this.info[name].end - this.totalStart;
-      }
-    }
-  }, {
-    key: "reset",
-    value: function reset() {
-      this.info = {};
-      this.totalStart = 0;
-      this.totalCost = 0;
-    }
-  }, {
-    key: "log",
-    value: function log() {
-      var _this = this;
-
-      var needInner = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-      console.log(this.info);
-      var logInfo = 'Layout debug info: \n';
-      logInfo += Object.keys(this.info).reduce(function (sum, curr) {
-        if (_this.info[curr].isInner && !needInner) {
-          return sum;
-        } // eslint-disable-next-line no-param-reassign
-
-
-        sum += "".concat(curr, ": ").concat(_this.info[curr].cost, "\n");
-        return sum;
-      }, ''); // eslint-disable-next-line no-unused-vars
-
-      logInfo += "totalCost: ".concat(this.totalCost, "\n");
-      return logInfo;
-    }
-  }]);
-
-  return DebugInfo;
-}();
-
+    DebugInfo.prototype.start = function (name, isInner) {
+        if (isInner === void 0) { isInner = false; }
+        if (this.totalStart === 0) {
+            this.totalStart = Date.now();
+        }
+        this.info[name] = {
+            start: Date.now(),
+            isInner: isInner,
+        };
+    };
+    DebugInfo.prototype.end = function (name) {
+        if (this.info[name]) {
+            this.info[name].end = Date.now();
+            this.info[name].cost = this.info[name].end - this.info[name].start;
+            this.totalCost = this.info[name].end - this.totalStart;
+        }
+    };
+    DebugInfo.prototype.reset = function () {
+        this.info = {};
+        this.totalStart = 0;
+        this.totalCost = 0;
+    };
+    DebugInfo.prototype.log = function (needInner) {
+        var _this = this;
+        if (needInner === void 0) { needInner = false; }
+        var logInfo = 'Layout debug info: \n';
+        logInfo += Object.keys(this.info).reduce(function (sum, curr) {
+            if (_this.info[curr].isInner && !needInner) {
+                return sum;
+            }
+            sum += "".concat(curr, ": ").concat(_this.info[curr].cost, "\n");
+            return sum;
+        }, '');
+        logInfo += "totalCost: ".concat(this.totalCost, "\n");
+        return logInfo;
+    };
+    return DebugInfo;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DebugInfo);
 
 
 /***/ }),
 /* 18 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ticker; });
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-var Ticker = /*#__PURE__*/function () {
-  function Ticker() {
-    var _this = this;
-
-    _classCallCheck(this, Ticker);
-
-    this.count = 0;
-    this.started = false;
-    this.animationId = null;
-    this.cbs = [];
-    this.nextCbs = [];
-    this.innerCbs = [];
-
-    this.update = function () {
-      // 优先执行业务的ticker回调，因为有可能会触发reflow
-      _this.cbs.forEach(function (cb) {
-        cb();
-      });
-
-      _this.innerCbs.forEach(function (cb) {
-        cb();
-      });
-
-      if (_this.nextCbs.length) {
-        _this.nextCbs.forEach(function (cb) {
-          return cb();
-        });
-
-        _this.nextCbs = [];
-      }
-
-      _this.count += 1;
-      _this.animationId = requestAnimationFrame(_this.update);
-    };
-  }
-
-  _createClass(Ticker, [{
-    key: "cancelIfNeed",
-    value: function cancelIfNeed() {
-      if (this.animationId !== null) {
-        cancelAnimationFrame(this.animationId);
-        this.animationId = null;
-      }
-    }
-  }, {
-    key: "add",
-    value: function add(cb) {
-      var isInner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-      if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
-        isInner ? this.innerCbs.push(cb) : this.cbs.push(cb);
-      }
-    }
-  }, {
-    key: "next",
-    value: function next(cb) {
-      if (typeof cb === 'function') {
-        this.nextCbs.push(cb);
-      }
-    }
-  }, {
-    key: "remove",
-    value: function remove(cb) {
-      var isInner = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-      if (cb === undefined) {
-        this.cbs = [];
-        this.innerCbs = [];
-        this.nextCbs = [];
-      }
-
-      if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
-        var list = isInner ? this.innerCbs : this.cbs;
-        list.splice(this.cbs.indexOf(cb), 1);
-      }
-
-      if (!this.cbs.length && !this.innerCbs.length) {
-        this.cancelIfNeed();
-      }
-    }
-  }, {
-    key: "start",
-    value: function start() {
-      if (!this.started) {
-        this.started = true;
-
-        if (this.animationId === null && (this.cbs.length || this.innerCbs.length)) {
-          this.animationId = requestAnimationFrame(this.update);
-        }
-      }
-    }
-  }, {
-    key: "stop",
-    value: function stop() {
-      if (this.started) {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var Ticker = /** @class */ (function () {
+    function Ticker() {
+        var _this = this;
+        this.count = 0;
         this.started = false;
-        this.cancelIfNeed();
-      }
+        this.animationId = null;
+        this.cbs = [];
+        this.nextCbs = [];
+        this.innerCbs = [];
+        this.update = function () {
+            // 优先执行业务的ticker回调，因为有可能会触发reflow
+            _this.cbs.forEach(function (cb) {
+                cb();
+            });
+            _this.innerCbs.forEach(function (cb) {
+                cb();
+            });
+            if (_this.nextCbs.length) {
+                _this.nextCbs.forEach(function (cb) { return cb(); });
+                _this.nextCbs = [];
+            }
+            _this.count += 1;
+            _this.animationId = requestAnimationFrame(_this.update);
+        };
     }
-  }]);
-
-  return Ticker;
-}();
-
+    Ticker.prototype.cancelIfNeed = function () {
+        if (this.animationId !== null) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
+    };
+    Ticker.prototype.add = function (cb, isInner) {
+        if (isInner === void 0) { isInner = false; }
+        if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
+            isInner ? this.innerCbs.push(cb) : this.cbs.push(cb);
+        }
+    };
+    Ticker.prototype.next = function (cb) {
+        if (typeof cb === 'function') {
+            this.nextCbs.push(cb);
+        }
+    };
+    Ticker.prototype.remove = function (cb, isInner) {
+        if (isInner === void 0) { isInner = false; }
+        if (cb === undefined) {
+            this.cbs = [];
+            this.innerCbs = [];
+            this.nextCbs = [];
+        }
+        if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
+            var list = isInner ? this.innerCbs : this.cbs;
+            list.splice(this.cbs.indexOf(cb), 1);
+        }
+        if (!this.cbs.length && !this.innerCbs.length) {
+            this.cancelIfNeed();
+        }
+    };
+    Ticker.prototype.start = function () {
+        if (!this.started) {
+            this.started = true;
+            if (this.animationId === null && (this.cbs.length || this.innerCbs.length)) {
+                this.animationId = requestAnimationFrame(this.update);
+            }
+        }
+    };
+    Ticker.prototype.stop = function () {
+        if (this.started) {
+            this.started = false;
+            this.cancelIfNeed();
+        }
+    };
+    return Ticker;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Ticker);
 
 
 /***/ }),
 /* 19 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerComponent", function() { return registerComponent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderChildren", function() { return renderChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "layoutChildren", function() { return layoutChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "iterateTree", function() { return iterateTree; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintChildren", function() { return repaintChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repaintTree", function() { return repaintTree; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clone", function() { return clone; });
-/* harmony import */ var _components_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clone: () => (/* binding */ clone),
+/* harmony export */   create: () => (/* binding */ create),
+/* harmony export */   iterateTree: () => (/* binding */ iterateTree),
+/* harmony export */   layoutChildren: () => (/* binding */ layoutChildren),
+/* harmony export */   registerComponent: () => (/* binding */ registerComponent),
+/* harmony export */   renderChildren: () => (/* binding */ renderChildren),
+/* harmony export */   repaintChildren: () => (/* binding */ repaintChildren),
+/* harmony export */   repaintTree: () => (/* binding */ repaintTree)
+/* harmony export */ });
+/* harmony import */ var _components_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
 /* eslint-disable no-param-reassign */
 // components
 
 var constructorMap = {
-  view: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["View"],
-  text: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Text"],
-  image: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"],
-  scrollview: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["ScrollView"],
-  bitmaptext: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["BitMapText"],
-  canvas: _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Canvas"]
+    view: _components_index__WEBPACK_IMPORTED_MODULE_0__.View,
+    text: _components_index__WEBPACK_IMPORTED_MODULE_0__.Text,
+    image: _components_index__WEBPACK_IMPORTED_MODULE_0__.Image,
+    scrollview: _components_index__WEBPACK_IMPORTED_MODULE_0__.ScrollView,
+    bitmaptext: _components_index__WEBPACK_IMPORTED_MODULE_0__.BitMapText,
+    canvas: _components_index__WEBPACK_IMPORTED_MODULE_0__.Canvas,
 };
 function registerComponent(name, Constructor) {
-  constructorMap[name] = Constructor;
+    constructorMap[name] = Constructor;
 }
-
 function isPercent(data) {
-  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
+    return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
 }
-
 function convertPercent(data, parentData) {
-  if (typeof data === 'number') {
-    return data;
-  }
-
-  var matchData = data.match(/(\d+(?:\.\d+)?)%/)[1];
-
-  if (matchData) {
-    return parentData * matchData * 0.01;
-  }
+    if (typeof data === 'number' || data === null) {
+        return data;
+    }
+    var matchData = data.match(/(\d+(?:\.\d+)?)%/);
+    if (matchData && matchData[1]) {
+        return parentData * parseFloat(matchData[1]) * 0.01;
+    }
 }
-
 function create(node, style, parent) {
-  var _this = this;
-
-  var Constructor = constructorMap[node.name];
-
-  if (!Constructor) {
-    console.error("[Layout] \u4E0D\u652F\u6301\u7EC4\u4EF6 ".concat(node.name));
-    return null;
-  }
-
-  var children = node.children || [];
-  var attr = node.attr || {};
-  var dataset = {};
-  var id = attr.id || '';
-  var args = Object.keys(attr).reduce(function (obj, key) {
-    var value = attr[key];
-    var attribute = key;
-
-    if (key === 'id') {
-      obj.style = Object.assign(obj.style || {}, style[id] || {});
-      return obj;
+    var _this = this;
+    var Constructor = constructorMap[node.name];
+    if (!Constructor) {
+        console.error("[Layout] \u4E0D\u652F\u6301\u7EC4\u4EF6 ".concat(node.name));
+        return null;
     }
-
-    if (key === 'class') {
-      obj.style = value.split(/\s+/).reduce(function (res, oneClass) {
-        return Object.assign(res, style[oneClass]);
-      }, obj.style || {});
-      return obj;
-    } // if (/\{\{.+\}\}/.test(value)) {
-    // }
-
-
-    if (value === 'true') {
-      obj[attribute] = true;
-    } else if (value === 'false') {
-      obj[attribute] = false;
-    } else {
-      obj[attribute] = value;
+    var children = node.children || [];
+    var attr = node.attr || {};
+    var dataset = {};
+    var id = attr.id || '';
+    var args = Object.keys(attr).reduce(function (obj, key) {
+        var value = attr[key];
+        var attribute = key;
+        if (key === 'id') {
+            obj.style = Object.assign(obj.style || {}, style[id] || {});
+            return obj;
+        }
+        if (key === 'class') {
+            obj.style = value.split(/\s+/).reduce(function (res, oneClass) { return Object.assign(res, style[oneClass]); }, obj.style || {});
+            return obj;
+        }
+        if (value === 'true') {
+            obj[attribute] = true;
+        }
+        else if (value === 'false') {
+            obj[attribute] = false;
+        }
+        else {
+            obj[attribute] = value;
+        }
+        if (attribute.startsWith('data-')) {
+            var dataKey = attribute.substring(5);
+            dataset[dataKey] = value;
+        }
+        obj.dataset = dataset;
+        return obj;
+    }, {});
+    // 用于后续元素查询
+    args.idName = id;
+    // @ts-ignore
+    this.eleCount += 1;
+    // @ts-ignore
+    args.id = this.eleCount;
+    args.className = attr.class || '';
+    var thisStyle = args.style;
+    if (thisStyle) {
+        var parentStyle = void 0;
+        if (parent) {
+            parentStyle = parent.style;
+        }
+        else if (typeof sharedCanvas !== 'undefined') {
+            parentStyle = sharedCanvas;
+        }
+        else if (typeof __env !== 'undefined') {
+            parentStyle = __env.getSharedCanvas();
+        }
+        else {
+            parentStyle = {
+                width: 300,
+                height: 150,
+            };
+        }
+        if (isPercent(thisStyle.width)) {
+            thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
+        }
+        if (isPercent(thisStyle.height)) {
+            thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
+        }
     }
-
-    if (attribute.startsWith('data-')) {
-      var dataKey = attribute.substring(5);
-      dataset[dataKey] = value;
-    }
-
-    obj.dataset = dataset;
-    return obj;
-  }, {}); // 用于后续元素查询
-
-  args.idName = id;
-  this.eleCount += 1;
-  args.id = this.eleCount;
-  args.className = attr["class"] || '';
-  var thisStyle = args.style;
-
-  if (thisStyle) {
-    var parentStyle;
-
-    if (parent) {
-      parentStyle = parent.style;
-    } else if (typeof sharedCanvas !== 'undefined') {
-      parentStyle = sharedCanvas;
-    } else if (typeof __env !== 'undefined') {
-      parentStyle = __env.getSharedCanvas();
-    } else {
-      parentStyle = {
-        width: 300,
-        height: 150
-      };
-    }
-
-    if (isPercent(thisStyle.width)) {
-      thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;
-    }
-
-    if (isPercent(thisStyle.height)) {
-      thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
-    }
-  } // console.log(args);
-
-
-  var element = new Constructor(args);
-  element.root = this;
-  element.tagName = node.name;
-  children.forEach(function (childNode) {
-    var childElement = create.call(_this, childNode, style, args);
-
-    if (childElement) {
-      element.add(childElement);
-    }
-  });
-  return element;
+    // console.log(args);
+    var element = new Constructor(args);
+    // @ts-ignore
+    element.root = this;
+    element.tagName = node.name;
+    children.forEach(function (childNode) {
+        // @ts-ignore
+        var childElement = create.call(_this, childNode, style, args);
+        if (childElement) {
+            element.add(childElement);
+        }
+    });
+    return element;
 }
-function renderChildren(children, context) {
-  var needRender = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  children.forEach(function (child) {
-    child.shouldUpdate = false;
-    child.isDirty = false;
-    child.insert(context, needRender); // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-
-    return renderChildren(child.children, context, child.type === 'ScrollView' ? false : needRender);
-  });
+function renderChildren(children, context, needRender) {
+    if (needRender === void 0) { needRender = true; }
+    children.forEach(function (child) {
+        child.shouldUpdate = false;
+        child.isDirty = false;
+        child.insert(context, needRender);
+        // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
+        return renderChildren(child.children, context, child.type === 'ScrollView' ? false : needRender);
+    });
 }
 /**
  * 将布局树的布局信息加工赋值到渲染树
  */
-
 function layoutChildren(element) {
-  var _this2 = this;
-
-  element.children.forEach(function (child) {
-    child.layoutBox = child.layoutBox || {};
-    ['left', 'top', 'width', 'height'].forEach(function (prop) {
-      child.layoutBox[prop] = child.layout[prop];
-    });
-
-    if (child.parent) {
-      child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
-      child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
-    } else {
-      child.layoutBox.absoluteX = child.layoutBox.left;
-      child.layoutBox.absoluteY = child.layoutBox.top;
-    }
-
-    child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
-    child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
-    layoutChildren.call(_this2, child);
-  });
-}
-
-function none() {}
-
-function iterateTree(element) {
-  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : none;
-  callback(element);
-  element.children.forEach(function (child) {
-    iterateTree(child, callback);
-  });
-}
-var repaintChildren = function repaintChildren(children) {
-  children.forEach(function (child) {
-    child.repaint();
-
-    if (child.type !== 'ScrollView') {
-      repaintChildren(child.children);
-    }
-  });
-};
-var repaintTree = function repaintTree(tree) {
-  tree.repaint();
-  tree.children.forEach(function (child) {
-    child.repaint();
-    repaintTree(child);
-  });
-};
-function clone(element) {
-  var _this3 = this;
-
-  var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  var parent = arguments.length > 2 ? arguments[2] : undefined;
-  var Constructor = constructorMap[element.tagName];
-  this.eleCount += 1;
-  var args = {
-    style: Object.assign({}, element.style),
-    idName: element.idName,
-    className: element.className,
-    id: this.eleCount,
-    dataset: Object.assign({}, element.dataset)
-  };
-
-  if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Image"]) {
-    args.src = element.src;
-  } else if (element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["Text"] || element instanceof _components_index_js__WEBPACK_IMPORTED_MODULE_0__["BitMapText"]) {
-    args.value = element.value;
-  }
-
-  var newElemenet = new Constructor(args);
-  newElemenet.root = this;
-  newElemenet.insert(this.renderContext, false);
-  newElemenet.observeStyleAndEvent();
-
-  if (parent) {
-    parent.add(newElemenet);
-  }
-
-  if (deep) {
     element.children.forEach(function (child) {
-      clone.call(_this3, child, deep, newElemenet);
+        child.layoutBox = child.layoutBox || {};
+        ['left', 'top', 'width', 'height'].forEach(function (prop) {
+            var _a;
+            // @ts-ignore
+            child.layoutBox[prop] = (_a = child.layout) === null || _a === void 0 ? void 0 : _a[prop];
+        });
+        if (child.parent) {
+            child.layoutBox.absoluteX = (child.parent.layoutBox.absoluteX || 0) + child.layoutBox.left;
+            child.layoutBox.absoluteY = (child.parent.layoutBox.absoluteY || 0) + child.layoutBox.top;
+        }
+        else {
+            child.layoutBox.absoluteX = child.layoutBox.left;
+            child.layoutBox.absoluteY = child.layoutBox.top;
+        }
+        child.layoutBox.originalAbsoluteY = child.layoutBox.absoluteY;
+        child.layoutBox.originalAbsoluteX = child.layoutBox.absoluteX;
+        layoutChildren(child);
     });
-  }
-
-  return newElemenet;
 }
+function none() { }
+function iterateTree(element, callback) {
+    if (callback === void 0) { callback = none; }
+    callback(element);
+    element.children.forEach(function (child) {
+        iterateTree(child, callback);
+    });
+}
+var repaintChildren = function (children) {
+    children.forEach(function (child) {
+        child.repaint();
+        if (child.type !== 'ScrollView') {
+            repaintChildren(child.children);
+        }
+    });
+};
+var repaintTree = function (tree) {
+    tree.repaint();
+    tree.children.forEach(function (child) {
+        child.repaint();
+        repaintTree(child);
+    });
+};
+function clone(root, element, deep, parent) {
+    if (deep === void 0) { deep = true; }
+    var Constructor = constructorMap[element.tagName];
+    // @ts-ignore
+    root.eleCount += 1;
+    var args = {
+        style: Object.assign({}, element.style),
+        idName: element.idName,
+        className: element.className,
+        // @ts-ignore
+        id: root.eleCount,
+        dataset: Object.assign({}, element.dataset),
+    };
+    if (element instanceof _components_index__WEBPACK_IMPORTED_MODULE_0__.Image) {
+        args.src = element.src;
+    }
+    else if (element instanceof _components_index__WEBPACK_IMPORTED_MODULE_0__.Text || element instanceof _components_index__WEBPACK_IMPORTED_MODULE_0__.BitMapText) {
+        args.value = element.value;
+    }
+    var newElemenet = new Constructor(args);
+    newElemenet.root = root;
+    // @ts-ignore
+    newElemenet.insert(root.renderContext, false);
+    newElemenet.observeStyleAndEvent();
+    if (parent) {
+        parent.add(newElemenet);
+    }
+    if (deep) {
+        element.children.forEach(function (child) {
+            clone(root, child, deep, newElemenet);
+        });
+    }
+    return newElemenet;
+}
+
 
 /***/ }),
 /* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "View", function() { return _view_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
-
-/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return _image_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
-
-/* harmony import */ var _text_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Text", function() { return _text_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
-
-/* harmony import */ var _scrollview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(24);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollView", function() { return _scrollview_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
-
-/* harmony import */ var _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(28);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BitMapText", function() { return _bitmaptext_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
-
-/* harmony import */ var _canvas_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(29);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Canvas", function() { return _canvas_js__WEBPACK_IMPORTED_MODULE_5__["default"]; });
-
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Element", function() { return _elements_js__WEBPACK_IMPORTED_MODULE_6__["default"]; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BitMapText: () => (/* reexport safe */ _bitmaptext__WEBPACK_IMPORTED_MODULE_4__["default"]),
+/* harmony export */   Canvas: () => (/* reexport safe */ _canvas__WEBPACK_IMPORTED_MODULE_5__["default"]),
+/* harmony export */   Element: () => (/* reexport safe */ _elements__WEBPACK_IMPORTED_MODULE_6__["default"]),
+/* harmony export */   Image: () => (/* reexport safe */ _image__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   ScrollView: () => (/* reexport safe */ _scrollview__WEBPACK_IMPORTED_MODULE_3__["default"]),
+/* harmony export */   Text: () => (/* reexport safe */ _text__WEBPACK_IMPORTED_MODULE_2__["default"]),
+/* harmony export */   View: () => (/* reexport safe */ _view__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+/* harmony import */ var _image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
+/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23);
+/* harmony import */ var _scrollview__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(24);
+/* harmony import */ var _bitmaptext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(28);
+/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(29);
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2);
 
 
 
@@ -4215,853 +3283,703 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 /* 21 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return View; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-var View = /*#__PURE__*/function (_Element) {
-  _inherits(View, _Element);
-
-  var _super = _createSuper(View);
-
-  function View(_ref) {
-    var _this;
-
-    var _ref$style = _ref.style,
-        style = _ref$style === void 0 ? {} : _ref$style,
-        _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? '' : _ref$idName,
-        _ref$className = _ref.className,
-        className = _ref$className === void 0 ? '' : _ref$className,
-        dataset = _ref.dataset;
-
-    _classCallCheck(this, View);
-
-    _this = _super.call(this, {
-      idName: idName,
-      className: className,
-      style: style,
-      dataset: dataset
-    });
-    _this.type = 'View';
-    _this.ctx = null;
-    return _this;
-  }
-
-  _createClass(View, [{
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.isDestroyed = true;
-      this.children = null;
-      this.root = null;
-    } // 有些节点仅仅作为容器，实际上不需要任何渲染逻辑，这里加个判断可以提高性能
-
-  }, {
-    key: "checkNeedRender",
-    value: function checkNeedRender() {
-      var style = this.style || {};
-      var borderColor = style.borderColor;
-      return !!(style.backgroundColor || style.borderWidth && borderColor || style.borderTopWidth && (borderColor || style.borderTopColor) || style.borderBottomWidth && (borderColor || style.borderBottomColor) || style.borderLeftWidth && (borderColor || style.borderLeftColor) || style.borderRightWidth && (borderColor || style.borderRightColor));
+var View = /** @class */ (function (_super) {
+    __extends(View, _super);
+    function View(_a) {
+        var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, dataset = _a.dataset;
+        var _this = _super.call(this, {
+            idName: idName,
+            className: className,
+            style: style,
+            dataset: dataset,
+        }) || this;
+        _this.type = 'View';
+        _this.ctx = null;
+        return _this;
     }
-  }, {
-    key: "render",
-    value: function render() {
-      var style = this.style || {};
-      var box = this.layoutBox;
-      var ctx = this.ctx;
-      ctx.save();
-      var borderWidth = style.borderWidth || 0;
-      var drawX = box.absoluteX;
-      var drawY = box.absoluteY;
-      var borderLeftWidth = style.borderLeftWidth || borderWidth;
-      var borderRightWidth = style.borderRightWidth || borderWidth;
-      var borderTopWidth = style.borderTopWidth || borderWidth;
-      var borderBottomWidth = style.borderBottomWidth || borderWidth; // this.renderBorder(ctx);
-
-      var _this$renderBorder = this.renderBorder(ctx),
-          needClip = _this$renderBorder.needClip,
-          needStroke = _this$renderBorder.needStroke;
-
-      if (needClip) {
-        ctx.clip();
-      }
-
-      if (style.backgroundColor) {
-        ctx.fillStyle = style.backgroundColor;
-        ctx.fillRect(drawX + borderLeftWidth, drawY + borderRightWidth, box.width - (borderLeftWidth + borderRightWidth), box.height - (borderTopWidth + borderBottomWidth));
-      }
-
-      if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
-      }
-
-      if (needStroke) {
-        ctx.stroke();
-      }
-
-      ctx.restore();
-    }
-  }, {
-    key: "repaint",
-    value: function repaint() {
-      this.render();
-    }
-  }]);
-
-  return View;
-}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
+    View.prototype.destroySelf = function () {
+        this.isDestroyed = true;
+        this.children = [];
+        this.root = null;
+    };
+    // 有些节点仅仅作为容器，实际上不需要任何渲染逻辑，这里加个判断可以提高性能
+    View.prototype.checkNeedRender = function () {
+        var style = this.style || {};
+        var borderColor = style.borderColor;
+        return !!(style.backgroundColor
+            || (style.borderWidth && borderColor)
+            || (style.borderTopWidth && (borderColor || style.borderTopColor))
+            || (style.borderBottomWidth && (borderColor || style.borderBottomColor))
+            || (style.borderLeftWidth && (borderColor || style.borderLeftColor))
+            || (style.borderRightWidth && (borderColor || style.borderRightColor)));
+    };
+    View.prototype.render = function () {
+        var style = this.style || {};
+        var box = this.layoutBox;
+        // const { ctx } = this;
+        var ctx = this.ctx;
+        ctx.save();
+        var borderWidth = style.borderWidth || 0;
+        var drawX = box.absoluteX;
+        var drawY = box.absoluteY;
+        var borderLeftWidth = style.borderLeftWidth || borderWidth;
+        var borderRightWidth = style.borderRightWidth || borderWidth;
+        var borderTopWidth = style.borderTopWidth || borderWidth;
+        var borderBottomWidth = style.borderBottomWidth || borderWidth;
+        // this.renderBorder(ctx);
+        var _a = this.renderBorder(ctx), needClip = _a.needClip, needStroke = _a.needStroke;
+        if (needClip) {
+            ctx.clip();
+        }
+        if (style.backgroundColor) {
+            ctx.fillStyle = style.backgroundColor;
+            ctx.fillRect(drawX + borderLeftWidth, drawY + borderRightWidth, box.width - (borderLeftWidth + borderRightWidth), box.height - (borderTopWidth + borderBottomWidth));
+        }
+        if (style.backgroundImage && this.backgroundImage) {
+            ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+        }
+        if (needStroke) {
+            ctx.stroke();
+        }
+        ctx.restore();
+    };
+    View.prototype.repaint = function () {
+        this.render();
+    };
+    return View;
+}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (View);
 
 
 /***/ }),
 /* 22 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Image; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 
 
-
-
-var Image = /*#__PURE__*/function (_Element) {
-  _inherits(Image, _Element);
-
-  var _super = _createSuper(Image);
-
-  function Image(opts) {
-    var _this;
-
-    _classCallCheck(this, Image);
-
-    var _opts$style = opts.style,
-        style = _opts$style === void 0 ? {} : _opts$style,
-        _opts$idName = opts.idName,
-        idName = _opts$idName === void 0 ? '' : _opts$idName,
-        _opts$className = opts.className,
-        className = _opts$className === void 0 ? '' : _opts$className,
-        _opts$src = opts.src,
-        src = _opts$src === void 0 ? '' : _opts$src,
-        dataset = opts.dataset;
-    _this = _super.call(this, {
-      idName: idName,
-      className: className,
-      dataset: dataset,
-      style: style
-    });
-    _this.imgsrc = src;
-    Object.defineProperty(_assertThisInitialized(_this), 'src', {
-      get: function get() {
-        return this.imgsrc;
-      },
-      set: function set(newValue) {
-        var _this2 = this;
-
-        if (newValue !== this.imgsrc) {
-          this.imgsrc = newValue;
-          _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
-            if (!_this2.isDestroyed) {
-              _this2.img = img; // 当图片加载完成，实例可能已经被销毁了
-
-              _this2.root.emit('repaint');
+var Image = /** @class */ (function (_super) {
+    __extends(Image, _super);
+    function Image(opts) {
+        var _this = this;
+        var _a = opts.style, style = _a === void 0 ? {} : _a, _b = opts.idName, idName = _b === void 0 ? '' : _b, _c = opts.className, className = _c === void 0 ? '' : _c, _d = opts.src, src = _d === void 0 ? '' : _d, dataset = opts.dataset;
+        _this = _super.call(this, {
+            idName: idName,
+            className: className,
+            dataset: dataset,
+            style: style,
+        }) || this;
+        _this.type = 'Image';
+        _this.imgsrc = src;
+        // Object.defineProperty(this, 'src', {
+        //   get() {
+        //     return this.imgsrc;
+        //   },
+        //   set(newValue) {
+        //     if (newValue !== this.imgsrc) {
+        //       this.imgsrc = newValue;
+        //       imageManager.loadImage(this.src, (img: HTMLImageElement) => {
+        //         if (!this.isDestroyed) {
+        //           this.img = img;
+        //           // 当图片加载完成，实例可能已经被销毁了
+        //           this.root.emit('repaint');
+        //         }
+        //       });
+        //     }
+        //   },
+        //   enumerable: true,
+        //   configurable: true,
+        // });
+        _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
+            var _a;
+            if (fromCache) {
+                _this.img = img;
             }
-          });
-        }
-      },
-      enumerable: true,
-      configurable: true
-    });
-    _this.type = 'Image';
-    _this.img = _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(_this.src, function (img, fromCache) {
-      if (fromCache) {
-        _this.img = img;
-      } else {
-        if (!_this.isDestroyed) {
-          _this.img = img; // 当图片加载完成，实例可能已经被销毁了
-
-          _this.root.emit('repaint');
-        }
-      }
-    });
-    return _this;
-  }
-
-  _createClass(Image, [{
-    key: "repaint",
-    value: function repaint() {
-      this.render();
-    } // 子类填充实现
-
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.isDestroyed = true;
-      this.img = null;
-      delete this.src;
-      this.root = null;
+            else {
+                if (!_this.isDestroyed) {
+                    _this.img = img;
+                    // 当图片加载完成，实例可能已经被销毁了
+                    (_a = _this.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
+                }
+            }
+        });
+        return _this;
     }
-  }, {
-    key: "render",
-    value: function render() {
-      if (!this.img || !this.img.loadDone) {
-        return;
-      }
-
-      var style = this.style || {};
-      var box = this.layoutBox;
-      var ctx = this.ctx;
-      ctx.save();
-
-      if (style.borderColor) {
-        ctx.strokeStyle = style.borderColor;
-      }
-
-      ctx.lineWidth = style.borderWidth || 0;
-      var drawX = box.absoluteX;
-      var drawY = box.absoluteY;
-
-      var _this$renderBorder = this.renderBorder(ctx),
-          needClip = _this$renderBorder.needClip,
-          needStroke = _this$renderBorder.needStroke;
-
-      if (needClip) {
-        ctx.clip();
-      }
-
-      if (style.backgroundColor) {
-        ctx.fillStyle = style.backgroundColor;
-        ctx.fillRect(drawX, drawY, box.width, box.height);
-      }
-
-      if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
-      }
-
-      ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
-
-      if (needStroke) {
-        ctx.stroke();
-      }
-
-      ctx.restore();
-    }
-  }]);
-
-  return Image;
-}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
+    Object.defineProperty(Image.prototype, "src", {
+        get: function () {
+            return this.imgsrc;
+        },
+        set: function (newValue) {
+            var _this = this;
+            if (newValue !== this.imgsrc) {
+                this.imgsrc = newValue;
+                _common_imageManager__WEBPACK_IMPORTED_MODULE_1__["default"].loadImage(this.src, function (img) {
+                    var _a;
+                    if (!_this.isDestroyed) {
+                        _this.img = img;
+                        // 当图片加载完成，实例可能已经被销毁了
+                        (_a = _this.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
+                    }
+                });
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Image.prototype.repaint = function () {
+        this.render();
+    };
+    // 子类填充实现
+    Image.prototype.destroySelf = function () {
+        this.isDestroyed = true;
+        this.img = null;
+        this.src = '';
+        this.root = null;
+    };
+    Image.prototype.render = function () {
+        var _a;
+        if (!this.img || !((_a = this.img) === null || _a === void 0 ? void 0 : _a.complete)) {
+            return;
+        }
+        var style = this.style || {};
+        var box = this.layoutBox;
+        var ctx = this.ctx;
+        ctx.save();
+        if (style.borderColor) {
+            ctx.strokeStyle = style.borderColor;
+        }
+        ctx.lineWidth = style.borderWidth || 0;
+        var drawX = box.absoluteX;
+        var drawY = box.absoluteY;
+        var _b = this.renderBorder(ctx), needClip = _b.needClip, needStroke = _b.needStroke;
+        if (needClip) {
+            ctx.clip();
+        }
+        if (style.backgroundColor) {
+            ctx.fillStyle = style.backgroundColor;
+            ctx.fillRect(drawX, drawY, box.width, box.height);
+        }
+        if (style.backgroundImage && this.backgroundImage) {
+            ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+        }
+        ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+        if (needStroke) {
+            ctx.stroke();
+        }
+        ctx.restore();
+    };
+    return Image;
+}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Image);
 
 
 /***/ }),
 /* 23 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Text; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 
 
 var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
 var context = null;
-
-var getContext = function getContext() {
-  if (context) {
+var getContext = function () {
+    if (context) {
+        return context;
+    }
+    var canvas = (0,_common_util__WEBPACK_IMPORTED_MODULE_1__.createCanvas)();
+    canvas.width = 1;
+    canvas.height = 1;
+    context = canvas.getContext('2d');
     return context;
-  }
-
-  var canvas = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["createCanvas"])();
-  canvas.width = 1;
-  canvas.height = 1;
-  context = canvas.getContext('2d');
-  return context;
 };
-
 function getTextWidth(style, value) {
-  var context = getContext();
-  context.font = "".concat(style.fontWeight || 'normal', " ").concat(style.fontSize || 12, "px ").concat(style.fontFamily || DEFAULT_FONT_FAMILY);
-  return context.measureText(value).width || 0;
+    var context = getContext();
+    context.font = "".concat(style.fontWeight || 'normal', " ").concat(style.fontSize || 12, "px ").concat(style.fontFamily || DEFAULT_FONT_FAMILY);
+    return context.measureText(value).width || 0;
 }
-
 function getTextWidthWithoutSetFont(value) {
-  return getContext().measureText(value).width || 0;
+    return getContext().measureText(value).width || 0;
 }
-
 function parseText(style, value) {
-  value = String(value);
-  var maxWidth = style.width;
-  var wordWidth = getTextWidth(style, value); // 对文字溢出的处理，默认用...
-
-  var textOverflow = style.textOverflow || 'ellipsis'; // 文字最大长度不超限制
-
-  if (wordWidth <= maxWidth) {
-    return value;
-  } // 对于用点点点处理的情况，先将最大宽度减去...的宽度
-
-
-  if (textOverflow === 'ellipsis') {
-    maxWidth -= getTextWidthWithoutSetFont('...');
-  }
-
-  var length = value.length - 1;
-  var str = value.substring(0, length);
-
-  while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
-    length -= 1;
-    str = value.substring(0, length);
-  }
-
-  return length && textOverflow === 'ellipsis' ? "".concat(str, "...") : str;
+    value = String(value);
+    var maxWidth = style.width;
+    var wordWidth = getTextWidth(style, value);
+    // 对文字溢出的处理，默认用...
+    var textOverflow = style.textOverflow || 'ellipsis';
+    // 文字最大长度不超限制
+    if (wordWidth <= maxWidth) {
+        return value;
+    }
+    // 对于用点点点处理的情况，先将最大宽度减去...的宽度
+    if (textOverflow === 'ellipsis') {
+        maxWidth -= getTextWidthWithoutSetFont('...');
+    }
+    var length = value.length - 1;
+    var str = value.substring(0, length);
+    while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
+        length -= 1;
+        str = value.substring(0, length);
+    }
+    return (length && textOverflow === 'ellipsis'
+        ? "".concat(str, "...")
+        : str);
 }
-
-var Text = /*#__PURE__*/function (_Element) {
-  _inherits(Text, _Element);
-
-  var _super = _createSuper(Text);
-
-  function Text(_ref) {
-    var _this;
-
-    var _ref$style = _ref.style,
-        style = _ref$style === void 0 ? {} : _ref$style,
-        _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? '' : _ref$idName,
-        _ref$className = _ref.className,
-        className = _ref$className === void 0 ? '' : _ref$className,
-        _ref$value = _ref.value,
-        value = _ref$value === void 0 ? '' : _ref$value,
-        dataset = _ref.dataset;
-
-    _classCallCheck(this, Text);
-
-    // 没有设置宽度的时候通过canvas计算出文字宽度
-    if (style.width === undefined) {
-      style.width = getTextWidth(style, value);
-    } else if (style.textOverflow === 'ellipsis') {
-      value = parseText(style, value);
-    }
-
-    _this = _super.call(this, {
-      idName: idName,
-      className: className,
-      style: style,
-      dataset: dataset
-    });
-    _this.type = 'Text';
-    _this.ctx = null;
-    _this.valuesrc = value;
-    Object.defineProperty(_assertThisInitialized(_this), 'value', {
-      get: function get() {
-        return this.valuesrc;
-      },
-      set: function set(newValue) {
-        if (newValue !== this.valuesrc) {
-          this.valuesrc = newValue;
-          this.root.emit('repaint');
+var Text = /** @class */ (function (_super) {
+    __extends(Text, _super);
+    function Text(_a) {
+        var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, _e = _a.value, value = _e === void 0 ? '' : _e, dataset = _a.dataset;
+        var _this = this;
+        var originStyleWidth = style.width;
+        // 没有设置宽度的时候通过canvas计算出文字宽度
+        if (originStyleWidth === undefined) {
+            style.width = getTextWidth(style, value);
         }
-      },
-      enumerable: true,
-      configurable: true
+        else if (style.textOverflow === 'ellipsis') {
+            value = parseText(style, value);
+        }
+        _this = _super.call(this, {
+            idName: idName,
+            className: className,
+            style: style,
+            dataset: dataset,
+        }) || this;
+        _this.valuesrc = '';
+        _this.textBaseline = 'top';
+        _this.font = '';
+        _this.textAlign = 'left';
+        _this.fillStyle = '#000000';
+        _this.type = 'Text';
+        _this.ctx = null;
+        _this.valuesrc = value;
+        _this.originStyleWidth = originStyleWidth;
+        return _this;
+    }
+    Object.defineProperty(Text.prototype, "value", {
+        get: function () {
+            return this.valuesrc;
+        },
+        set: function (newValue) {
+            if (newValue !== this.valuesrc) {
+                if (this.originStyleWidth === undefined) {
+                    this.style.width = getTextWidth(this.style, newValue);
+                }
+                else if (this.style.textOverflow === 'ellipsis') {
+                    newValue = parseText(this.style, newValue);
+                }
+                this.valuesrc = newValue;
+                this.isDirty = true;
+                var parent_1 = this.parent;
+                while (parent_1) {
+                    parent_1.isDirty = true;
+                    parent_1 = parent_1.parent;
+                }
+            }
+        },
+        enumerable: false,
+        configurable: true
     });
-    return _this;
-  }
-
-  _createClass(Text, [{
-    key: "toCanvasData",
-    value: function toCanvasData() {
-      var style = this.style || {};
-      this.fontSize = style.fontSize || 12;
-      this.textBaseline = 'top';
-      this.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize || 12, "px ").concat(DEFAULT_FONT_FAMILY);
-      this.textAlign = style.textAlign || 'left';
-      this.fillStyle = style.color || '#000';
-    }
-  }, {
-    key: "repaint",
-    value: function repaint() {
-      this.render();
-    }
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.root = null;
-    }
-  }, {
-    key: "insert",
-    value: function insert(ctx, needRender) {
-      this.ctx = ctx;
-      this.toCanvasData();
-
-      if (needRender) {
+    Text.prototype.toCanvasData = function () {
+        var style = this.style || {};
+        this.fontSize = style.fontSize || 12;
+        this.textBaseline = 'top';
+        this.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize || 12, "px ").concat(DEFAULT_FONT_FAMILY);
+        this.textAlign = style.textAlign || 'left';
+        this.fillStyle = style.color || '#000';
+    };
+    Text.prototype.repaint = function () {
         this.render();
-      }
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var ctx = this.ctx; // this.toCanvasData();
-
-      ctx.save();
-      var box = this.layoutBox;
-      var style = this.style;
-      ctx.textBaseline = this.textBaseline;
-      ctx.font = this.font;
-      ctx.textAlign = this.textAlign;
-      var drawX = box.absoluteX;
-      var drawY = box.absoluteY;
-
-      var _this$renderBorder = this.renderBorder(ctx),
-          needClip = _this$renderBorder.needClip,
-          needStroke = _this$renderBorder.needStroke;
-
-      if (needClip) {
-        ctx.clip();
-      }
-
-      if (style.backgroundColor) {
-        ctx.fillStyle = style.backgroundColor;
-        ctx.fillRect(drawX, drawY, box.width, box.height);
-      }
-
-      if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
-      }
-
-      if (needStroke) {
-        ctx.stroke();
-      }
-
-      ctx.fillStyle = this.fillStyle;
-
-      if (this.textAlign === 'center') {
-        drawX += box.width / 2;
-      } else if (this.textAlign === 'right') {
-        drawX += box.width;
-      }
-
-      if (style.lineHeight) {
-        ctx.textBaseline = 'middle';
-        drawY += style.lineHeight / 2;
-      }
-
-      ctx.fillText(this.value, drawX, drawY);
-      ctx.restore();
-    }
-  }]);
-
-  return Text;
-}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
+    };
+    Text.prototype.destroySelf = function () {
+        this.root = null;
+    };
+    Text.prototype.insert = function (ctx, needRender) {
+        this.ctx = ctx;
+        this.toCanvasData();
+        if (needRender) {
+            this.render();
+        }
+    };
+    Text.prototype.render = function () {
+        var ctx = this.ctx;
+        // this.toCanvasData();
+        ctx.save();
+        var box = this.layoutBox;
+        var style = this.style;
+        ctx.textBaseline = this.textBaseline;
+        ctx.font = this.font;
+        ctx.textAlign = this.textAlign;
+        var drawX = box.absoluteX;
+        var drawY = box.absoluteY;
+        var _a = this.renderBorder(ctx), needClip = _a.needClip, needStroke = _a.needStroke;
+        if (needClip) {
+            ctx.clip();
+        }
+        if (style.backgroundColor) {
+            ctx.fillStyle = style.backgroundColor;
+            ctx.fillRect(drawX, drawY, box.width, box.height);
+        }
+        if (style.backgroundImage && this.backgroundImage) {
+            ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+        }
+        if (needStroke) {
+            ctx.stroke();
+        }
+        ctx.fillStyle = this.fillStyle;
+        if (this.textAlign === 'center') {
+            drawX += box.width / 2;
+        }
+        else if (this.textAlign === 'right') {
+            drawX += box.width;
+        }
+        if (style.lineHeight) {
+            ctx.textBaseline = 'middle';
+            drawY += style.lineHeight / 2;
+        }
+        ctx.fillText(this.value, drawX, drawY);
+        ctx.restore();
+    };
+    return Text;
+}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Text);
 
 
 /***/ }),
 /* 24 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollView; });
-/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
-/* harmony import */ var _common_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(25);
 /* harmony import */ var scroller__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(scroller__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _common_vd_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /* eslint-disable no-underscore-dangle */
-
 /* eslint-disable no-param-reassign */
 
 
 
 
-var dpr = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["getDpr"])();
-
-var ScrollView = /*#__PURE__*/function (_View) {
-  _inherits(ScrollView, _View);
-
-  var _super = _createSuper(ScrollView);
-
-  function ScrollView(_ref) {
-    var _this;
-
-    var _ref$style = _ref.style,
-        style = _ref$style === void 0 ? {} : _ref$style,
-        _ref$idName = _ref.idName,
-        idName = _ref$idName === void 0 ? '' : _ref$idName,
-        _ref$className = _ref.className,
-        className = _ref$className === void 0 ? '' : _ref$className,
-        scrollX = _ref.scrollX,
-        scrollY = _ref.scrollY,
-        dataset = _ref.dataset;
-
-    _classCallCheck(this, ScrollView);
-
-    _this = _super.call(this, {
-      style: style,
-      idName: idName,
-      dataset: dataset,
-      className: className
+var dpr = (0,_common_util__WEBPACK_IMPORTED_MODULE_1__.getDpr)();
+;
+var ScrollView = /** @class */ (function (_super) {
+    __extends(ScrollView, _super);
+    function ScrollView(_a) {
+        var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, scrollX = _a.scrollX, scrollY = _a.scrollY, dataset = _a.dataset;
+        var _this = _super.call(this, {
+            style: style,
+            idName: idName,
+            dataset: dataset,
+            className: className,
+        }) || this;
+        _this.scrollTop = 0;
+        _this.scrollLeft = 0;
+        _this.hasEventBind = false;
+        _this.currentEvent = null;
+        _this.type = 'ScrollView';
+        _this.scrollYProp = scrollY;
+        _this.innerScrollerOption = {
+            scrollingX: !!scrollX,
+            scrollingY: !!scrollY,
+        };
+        return _this;
+    }
+    Object.defineProperty(ScrollView.prototype, "scrollHeight", {
+        /**
+         * 获取滚动列表内所有元素的高度和
+         * 这里不能简单将所有子元素的高度累加，因为每个元素之间可能是有空隙的
+         */
+        get: function () {
+            // scrollview为空的情况
+            if (!this.children.length) {
+                return 0;
+            }
+            var last = this.children[this.children.length - 1];
+            return last.layoutBox.top + last.layoutBox.height;
+        },
+        enumerable: false,
+        configurable: true
     });
-    _this.type = 'ScrollView'; // 当前列表滚动的值
-
-    _this.scrollTop = 0;
-    _this.scrollLeft = 0;
-    _this.hasEventBind = false;
-    _this.currentEvent = null;
-    _this.requestID = null;
-    _this.scrollYProp = scrollY;
-    _this.innerScrollerOption = {
-      scrollingX: !!scrollX,
-      scrollingY: !!scrollY
+    Object.defineProperty(ScrollView.prototype, "scrollWidth", {
+        get: function () {
+            // scrollview为空的情况
+            if (!this.children.length) {
+                return 0;
+            }
+            var last = this.children[this.children.length - 1];
+            return last.layoutBox.left + last.layoutBox.width;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ScrollView.prototype, "scrollX", {
+        get: function () {
+            return this.innerScrollerOption.scrollingX;
+        },
+        set: function (value) {
+            this.scrollerOption = {
+                scrollingX: value,
+            };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ScrollView.prototype, "scrollY", {
+        get: function () {
+            return this.innerScrollerOption.scrollingY;
+        },
+        set: function (value) {
+            this.scrollerOption = {
+                scrollingY: value,
+            };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ScrollView.prototype, "scrollerOption", {
+        get: function () {
+            return this.innerScrollerOption;
+        },
+        set: function (value) {
+            Object.assign(this.innerScrollerOption, value);
+            if (this.scrollerObj) {
+                Object.assign(this.scrollerObj.options, this.scrollerOption);
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    ScrollView.prototype.repaint = function () {
+        this.scrollRender();
     };
-    return _this;
-  }
-  /**
-   * 获取滚动列表内所有元素的高度和
-   * 这里不能简单将所有子元素的高度累加，因为每个元素之间可能是有空隙的
-   */
-
-
-  _createClass(ScrollView, [{
-    key: "scrollHeight",
-    get: function get() {
-      // scrollview为空的情况
-      if (!this.children.length) {
-        return 0;
-      }
-
-      var last = this.children[this.children.length - 1];
-      return last.layoutBox.top + last.layoutBox.height;
-    }
-  }, {
-    key: "scrollWidth",
-    get: function get() {
-      // scrollview为空的情况
-      if (!this.children.length) {
-        return 0;
-      }
-
-      var last = this.children[this.children.length - 1];
-      return last.layoutBox.left + last.layoutBox.width;
-    }
-  }, {
-    key: "scrollX",
-    get: function get() {
-      return this.innerScrollerOption.scrollingX;
-    },
-    set: function set(value) {
-      this.scrollerOption = {
-        scrollingX: value
-      };
-    }
-  }, {
-    key: "scrollY",
-    get: function get() {
-      return this.innerScrollerOption.scrollingY;
-    },
-    set: function set(value) {
-      this.scrollerOption = {
-        scrollingY: value
-      };
-    }
-  }, {
-    key: "scrollerOption",
-    get: function get() {
-      return this.innerScrollerOption;
-    },
-    set: function set(value) {
-      if (value === void 0) {
-        value = {};
-      }
-
-      Object.assign(this.innerScrollerOption, value);
-
-      if (this.scrollerObj) {
-        Object.assign(this.scrollerObj.options, this.scrollerOption);
-      }
-    }
-  }, {
-    key: "repaint",
-    value: function repaint() {
-      this.scrollRender(this.scrollLeft, this.scrollTop);
-    }
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.touch = null;
-      this.isDestroyed = true;
-      this.ctx = null;
-      this.children = null;
-      this.root.off('touchend');
-      this.root = null;
-    }
-  }, {
-    key: "renderTreeWithTop",
-    value: function renderTreeWithTop(tree, top, left) {
-      var _this2 = this;
-
-      tree.render();
-      tree.children.forEach(function (child) {
-        _this2.renderTreeWithTop(child, top, left);
-      });
-    }
-  }, {
-    key: "clear",
-    value: function clear() {
-      var box = this.layoutBox;
-      this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
-    }
-  }, {
-    key: "scrollRender",
-    value: function scrollRender() {
-      var _this3 = this;
-
-      var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var box = this.layoutBox;
-      this.scrollTop = top;
-      this.scrollLeft = left;
-      var startX = box.absoluteX,
-          startY = box.absoluteY,
-          width = box.width,
-          height = box.height; // 根据滚动值获取裁剪区域
-
-      var endX = startX + width;
-      var endY = startY + height; // 清理滚动画布和主屏画布
-      // this.clear();
-      // ScrollView 作为容器本身的渲染
-
-      this.render();
-      /**
-       * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的
-       * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
-       */
-
-      this.ctx.save();
-      this.ctx.beginPath();
-      this.ctx.rect(startX, startY, width, height);
-      this.ctx.clip();
-      this.children.forEach(function (child) {
-        var _child$layoutBox = child.layoutBox,
-            width = _child$layoutBox.width,
-            height = _child$layoutBox.height,
-            absoluteX = _child$layoutBox.absoluteX,
-            absoluteY = _child$layoutBox.absoluteY; // 判断处于可视窗口内的子节点，递归渲染该子节点
-
-        if (absoluteY + height >= startY && absoluteY <= endY && absoluteX + width >= startX && absoluteX <= endX) {
-          _this3.renderTreeWithTop(child, _this3.scrollTop, _this3.scrollLeft);
-        }
-      });
-      this.ctx.restore();
-    }
-  }, {
-    key: "scrollHandler",
-    value: function scrollHandler(left, top) {
-      var _this4 = this;
-
-      // 可能被销毁了或者节点树还没准备好
-      if (!this.isDestroyed && !this.isFirstScroll) {
-        Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(this, function (ele) {
-          if (ele !== _this4) {
-            ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
-            ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
-          }
-        }); // this.scrollRender(left, top);
-
-        this.root.emit('repaint');
-
-        if (this.currentEvent) {
-          this.emit('scroll', this.currentEvent);
-        }
-      }
-
-      if (this.isFirstScroll) {
-        this.isFirstScroll = false;
-      }
-    }
-  }, {
-    key: "insert",
-    value: function insert(context) {
-      var _this5 = this;
-
-      this.ctx = context;
-      /**
-       * 这里有个非常特殊的兼容逻辑，在低版本没有重构 ScrollView之前，并没有提供单独的 ScrollX 和 ScrollY 属性
-       * 而是判断 scrollHeiht 大于容器高度的时候自动实现了纵向滚动（且没有横向滚动能力）
-       * 因此这里做一个兼容逻辑，如果 scrollHeight > this.layoutBox.height 自动开启纵向滚动
-       */
-
-      if (this.scrollHeight > this.layoutBox.height && typeof this.scrollYProp === 'undefined') {
-        this.scrollY = true;
-      }
-
-      if (this.hasEventBind) {
-        // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域
-        if (this.layoutBox.width !== this.scrollerObj.__clientWidth || this.layoutBox.height !== this.scrollerObj.__clientHeight || this.scrollWidth !== this.scrollerObj.__contentWidth || this.scrollHeight !== this.scrollerObj.__contentHeight) {
-          this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
-        } // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
-
-
-        Object(_common_vd_js__WEBPACK_IMPORTED_MODULE_3__["iterateTree"])(this, function (ele) {
-          if (ele !== _this5) {
-            ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - _this5.scrollTop;
-            ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - _this5.scrollLeft;
-          }
+    ScrollView.prototype.destroySelf = function () {
+        // this.touch = null;
+        this.isDestroyed = true;
+        this.ctx = null;
+        this.children = [];
+        this.root.off('touchend');
+        this.root = null;
+    };
+    ScrollView.prototype.renderTreeWithTop = function (tree) {
+        var _this = this;
+        tree.render();
+        tree.children.forEach(function (child) {
+            _this.renderTreeWithTop(child);
         });
-        return;
-      }
-
-      this.hasEventBind = true;
-      this.isFirstScroll = true;
-      this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__["Scroller"](this.scrollHandler.bind(this), this.scrollerOption);
-      this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
-      this.on('touchstart', function (e) {
-        if (!e.touches) {
-          e.touches = [e];
-        }
-
-        var touches = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["copyTouchArray"])(e.touches);
-        touches.forEach(function (touch) {
-          if (dpr !== 1) {
-            touch.pageX *= dpr;
-            touch.pageY *= dpr;
-          }
+    };
+    ScrollView.prototype.clear = function () {
+        var box = this.layoutBox;
+        this.ctx.clearRect(box.absoluteX, box.absoluteY, box.width, box.height);
+    };
+    ScrollView.prototype.scrollRender = function () {
+        var _this = this;
+        var box = this.layoutBox;
+        var startX = box.absoluteX, startY = box.absoluteY, width = box.width, height = box.height;
+        var ctx = this.ctx;
+        // 根据滚动值获取裁剪区域
+        var endX = startX + width;
+        var endY = startY + height;
+        // ScrollView 作为容器本身的渲染
+        this.render();
+        /**
+         * 开始裁剪，只有仔 ScrollView layoutBox 区域内的元素才是可见的
+         * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
+         */
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(startX, startY, width, height);
+        ctx.clip();
+        this.children.forEach(function (child) {
+            var _a = child.layoutBox, width = _a.width, height = _a.height, absoluteX = _a.absoluteX, absoluteY = _a.absoluteY;
+            // 判断处于可视窗口内的子节点，递归渲染该子节点
+            if (absoluteY + height >= startY && absoluteY <= endY
+                && absoluteX + width >= startX && absoluteX <= endX) {
+                _this.renderTreeWithTop(child);
+            }
         });
-
-        _this5.scrollerObj.doTouchStart(touches, e.timeStamp);
-
-        _this5.currentEvent = e;
-      });
-      this.on('touchmove', function (e) {
-        if (!e.touches) {
-          e.touches = [e];
+        ctx.restore();
+    };
+    ScrollView.prototype.scrollHandler = function (left, top) {
+        var _this = this;
+        // 可能被销毁了或者节点树还没准备好
+        if (!this.isDestroyed && !this.isFirstScroll) {
+            (0,_common_vd__WEBPACK_IMPORTED_MODULE_3__.iterateTree)(this, function (ele) {
+                if (ele !== _this) {
+                    ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
+                    ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
+                }
+            });
+            // 这里要把滚动状态保存起来，因为在reflow的时候需要做重置，渲染并不依赖这两个信息
+            this.scrollTop = top;
+            this.scrollLeft = left;
+            this.root.emit('repaint');
+            if (this.currentEvent) {
+                this.emit('scroll', this.currentEvent);
+            }
         }
-
-        var touches = Object(_common_util_js__WEBPACK_IMPORTED_MODULE_1__["copyTouchArray"])(e.touches);
-        touches.forEach(function (touch) {
-          if (dpr !== 1) {
-            touch.pageX *= dpr;
-            touch.pageY *= dpr;
-          }
+        if (this.isFirstScroll) {
+            this.isFirstScroll = false;
+        }
+    };
+    ScrollView.prototype.insert = function (context) {
+        var _this = this;
+        this.ctx = context;
+        /**
+         * 这里有个非常特殊的兼容逻辑，在低版本没有重构 ScrollView之前，并没有提供单独的 ScrollX 和 ScrollY 属性
+         * 而是判断 scrollHeiht 大于容器高度的时候自动实现了纵向滚动（且没有横向滚动能力）
+         * 因此这里做一个兼容逻辑，如果 scrollHeight > this.layoutBox.height 自动开启纵向滚动
+         */
+        if (this.scrollHeight > this.layoutBox.height && typeof this.scrollYProp === 'undefined') {
+            this.scrollY = true;
+        }
+        if (this.hasEventBind) {
+            // reflow 高度可能会变化，因此需要执行 setDimensions 刷新可滚动区域
+            if (this.layoutBox.width !== this.scrollerObj.__clientWidth
+                || this.layoutBox.height !== this.scrollerObj.__clientHeight
+                || this.scrollWidth !== this.scrollerObj.__contentWidth
+                || this.scrollHeight !== this.scrollerObj.__contentHeight) {
+                this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+            }
+            // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
+            (0,_common_vd__WEBPACK_IMPORTED_MODULE_3__.iterateTree)(this, function (ele) {
+                if (ele !== _this) {
+                    ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - _this.scrollTop;
+                    ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - _this.scrollLeft;
+                }
+            });
+            return;
+        }
+        this.hasEventBind = true;
+        this.isFirstScroll = true;
+        this.scrollerObj = new scroller__WEBPACK_IMPORTED_MODULE_2__.Scroller(this.scrollHandler.bind(this), this.scrollerOption);
+        this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+        this.on('touchstart', function (e) {
+            if (!e.touches) {
+                e.touches = [e];
+            }
+            var touches = (0,_common_util__WEBPACK_IMPORTED_MODULE_1__.copyTouchArray)(e.touches);
+            touches.forEach(function (touch) {
+                if (dpr !== 1) {
+                    touch.pageX *= dpr;
+                    touch.pageY *= dpr;
+                }
+            });
+            _this.scrollerObj.doTouchStart(touches, e.timeStamp);
+            _this.currentEvent = e;
         });
-
-        _this5.scrollerObj.doTouchMove(touches, e.timeStamp);
-
-        _this5.currentEvent = e;
-      }); // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
-
-      this.root.on('touchend', function (e) {
-        _this5.scrollerObj.doTouchEnd(e.timeStamp);
-
-        _this5.currentEvent = e;
-      });
-    }
-  }, {
-    key: "scrollTo",
-    value: function scrollTo() {
-      var left = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var animate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-      this.scrollerObj.scrollTo(left, top, animate);
-    }
-  }]);
-
-  return ScrollView;
-}(_view_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
+        this.on('touchmove', function (e) {
+            if (!e.touches) {
+                e.touches = [e];
+            }
+            var touches = (0,_common_util__WEBPACK_IMPORTED_MODULE_1__.copyTouchArray)(e.touches);
+            touches.forEach(function (touch) {
+                if (dpr !== 1) {
+                    touch.pageX *= dpr;
+                    touch.pageY *= dpr;
+                }
+            });
+            _this.scrollerObj.doTouchMove(touches, e.timeStamp);
+            _this.currentEvent = e;
+        });
+        // 这里不应该是监听scrollview的touchend事件而是屏幕的touchend事件
+        this.root.on('touchend', function (e) {
+            _this.scrollerObj.doTouchEnd(e.timeStamp);
+            _this.currentEvent = e;
+        });
+    };
+    ScrollView.prototype.scrollTo = function (left, top, animate) {
+        if (left === void 0) { left = 0; }
+        if (top === void 0) { top = 0; }
+        if (animate === void 0) { animate = true; }
+        this.scrollerObj.scrollTo(left, top, animate);
+    };
+    return ScrollView;
+}(_view__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ScrollView);
 
 
 /***/ }),
@@ -5072,9 +3990,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     if (true) {
         // AMD
         !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports, __webpack_require__(26), __webpack_require__(27)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else {}
 }(this, function (exports, animate, Scroller) {
     exports.animate = animate;
@@ -5084,7 +4002,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 /* 26 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
  * Scroller
@@ -5114,9 +4032,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     if (true) {
         // AMD. Register as an anonymous module.
         !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else {}
 }(this, function (exports) {
     var global = typeof window === 'undefined' ? this : window
@@ -5338,9 +4256,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     if (true) {
         // AMD
         !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(26)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
     } else {}
 }(this, function (animate) {
     var NOOP = function () {};
@@ -6473,388 +5391,839 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 /* 28 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BitMapText; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _common_pool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _common_pool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 
 
-
-var bitMapPool = new _common_pool_js__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
-
-var BitMapText = /*#__PURE__*/function (_Element) {
-  _inherits(BitMapText, _Element);
-
-  var _super = _createSuper(BitMapText);
-
-  function BitMapText(opts) {
-    var _this;
-
-    _classCallCheck(this, BitMapText);
-
-    var _opts$style = opts.style,
-        style = _opts$style === void 0 ? {} : _opts$style,
-        _opts$idName = opts.idName,
-        idName = _opts$idName === void 0 ? '' : _opts$idName,
-        _opts$className = opts.className,
-        className = _opts$className === void 0 ? '' : _opts$className,
-        _opts$value = opts.value,
-        value = _opts$value === void 0 ? '' : _opts$value,
-        _opts$font = opts.font,
-        font = _opts$font === void 0 ? '' : _opts$font,
-        dataset = opts.dataset;
-    _this = _super.call(this, {
-      idName: idName,
-      className: className,
-      style: style,
-      dataset: dataset
+var bitMapPool = new _common_pool__WEBPACK_IMPORTED_MODULE_1__["default"]('bitMapPool');
+var BitMapText = /** @class */ (function (_super) {
+    __extends(BitMapText, _super);
+    function BitMapText(opts) {
+        var _this = this;
+        var _a = opts.style, style = _a === void 0 ? {} : _a, _b = opts.idName, idName = _b === void 0 ? '' : _b, _c = opts.className, className = _c === void 0 ? '' : _c, _d = opts.value, value = _d === void 0 ? '' : _d, _e = opts.font, font = _e === void 0 ? '' : _e, dataset = opts.dataset;
+        _this = _super.call(this, {
+            idName: idName,
+            className: className,
+            style: style,
+            dataset: dataset,
+        }) || this;
+        _this.type = 'BitMapText';
+        _this.ctx = null;
+        _this.valuesrc = value;
+        // Object.defineProperty(this, 'value', {
+        //   get() {
+        //     return this.valuesrc;
+        //   },
+        //   set(newValue) {
+        //     if (newValue !== this.valuesrc) {
+        //       this.valuesrc = newValue;
+        //       this.emit('repaint');
+        //     }
+        //   },
+        //   enumerable: true,
+        //   configurable: true,
+        // });
+        _this.font = bitMapPool.get(font);
+        if (!_this.font) {
+            console.error("Missing BitmapFont \"".concat(font, "\", please invoke API \"registBitMapFont\" before using \"BitMapText\""));
+        }
+        return _this;
+    }
+    Object.defineProperty(BitMapText.prototype, "value", {
+        get: function () {
+            return this.valuesrc;
+        },
+        set: function (newValue) {
+            if (newValue !== this.valuesrc) {
+                this.valuesrc = newValue;
+                this.emit('repaint');
+            }
+        },
+        enumerable: false,
+        configurable: true
     });
-    _this.type = 'BitMapText';
-    _this.ctx = null;
-    _this.valuesrc = value;
-    Object.defineProperty(_assertThisInitialized(_this), 'value', {
-      get: function get() {
-        return this.valuesrc;
-      },
-      set: function set(newValue) {
-        if (newValue !== this.valuesrc) {
-          this.valuesrc = newValue;
-          this.emit('repaint');
+    BitMapText.prototype.repaint = function () {
+        this.render();
+    };
+    BitMapText.prototype.destroySelf = function () {
+        this.root = null;
+    };
+    BitMapText.prototype.render = function () {
+        var _this = this;
+        if (!this.font) {
+            return;
         }
-      },
-      enumerable: true,
-      configurable: true
-    });
-    _this.font = bitMapPool.get(font);
-
-    if (!_this.font) {
-      console.error("Missing BitmapFont \"".concat(font, "\", please invoke API \"registBitMapFont\" before using \"BitMapText\""));
-    }
-
-    return _this;
-  }
-
-  _createClass(BitMapText, [{
-    key: "repaint",
-    value: function repaint() {
-      this.render();
-    }
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.root = null;
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      if (!this.font) {
-        return;
-      }
-
-      if (this.font.ready) {
-        this.renderText(this.ctx);
-      } else {
-        this.font.event.on('text__load__done', function () {
-          if (!_this2.isDestroyed) {
-            _this2.renderText(_this2.ctx);
-          }
-        });
-      }
-    }
-  }, {
-    key: "getTextBounds",
-    value: function getTextBounds() {
-      var style = this.style;
-      var _style$letterSpacing = style.letterSpacing,
-          letterSpacing = _style$letterSpacing === void 0 ? 0 : _style$letterSpacing;
-      var width = 0;
-
-      for (var i = 0, len = this.value.length; i < len; i++) {
-        var _char = this.value[i];
-        var cfg = this.font.chars[_char];
-
-        if (cfg) {
-          width += cfg.w;
-
-          if (i < len - 1) {
-            width += letterSpacing;
-          }
+        if (this.font.ready) {
+            this.renderText(this.ctx);
         }
-      }
-
-      return {
-        width: width,
-        height: this.font.lineHeight
-      };
-    }
-  }, {
-    key: "renderText",
-    value: function renderText(ctx) {
-      var bounds = this.getTextBounds();
-      var defaultLineHeight = this.font.lineHeight;
-      ctx.save();
-
-      var _this$renderBorder = this.renderBorder(ctx),
-          needClip = _this$renderBorder.needClip,
-          needStroke = _this$renderBorder.needStroke;
-
-      if (needClip) {
-        ctx.clip();
-      }
-
-      var box = this.layoutBox;
-      var style = this.style;
-      var width = style.width,
-          height = style.height,
-          _style$lineHeight = style.lineHeight,
-          lineHeight = _style$lineHeight === void 0 ? defaultLineHeight : _style$lineHeight,
-          textAlign = style.textAlign,
-          verticalAlign = style.verticalAlign,
-          _style$letterSpacing2 = style.letterSpacing,
-          letterSpacing = _style$letterSpacing2 === void 0 ? 0 : _style$letterSpacing2; // 元素包围盒的左上角坐标
-
-      var x = box.absoluteX;
-      var y = box.absoluteY;
-      var scaleY = lineHeight / defaultLineHeight;
-      var realWidth = scaleY * bounds.width;
-
-      if (style.backgroundColor) {
-        ctx.fillStyle = style.backgroundColor;
-        ctx.fillRect(x, y, box.width, box.height);
-      }
-
-      if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, x, y, box.width, box.height);
-      } // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
-
-
-      if (lineHeight < height) {
-        if (verticalAlign === 'middle') {
-          y += (height - lineHeight) / 2;
-        } else if (verticalAlign === 'bottom') {
-          y = y + height - lineHeight;
+        else {
+            this.font.event.on('text__load__done', function () {
+                if (!_this.isDestroyed) {
+                    _this.renderText(_this.ctx);
+                }
+            });
         }
-      }
-
-      if (width > realWidth) {
-        if (textAlign === 'center') {
-          x += (width - realWidth) / 2;
-        } else if (textAlign === 'right') {
-          x += width - realWidth;
+    };
+    BitMapText.prototype.getTextBounds = function () {
+        var style = this.style;
+        var _a = style.letterSpacing, letterSpacing = _a === void 0 ? 0 : _a;
+        var width = 0;
+        for (var i = 0, len = this.value.length; i < len; i++) {
+            var char = this.value[i];
+            var cfg = this.font.chars[char];
+            if (cfg) {
+                width += cfg.w;
+                if (i < len - 1) {
+                    width += letterSpacing;
+                }
+            }
         }
-      } // 记录上一个字符，方便处理 kerning
-
-
-      var prevCharCode = null;
-
-      for (var i = 0; i < this.value.length; i++) {
-        var _char2 = this.value[i];
-        var cfg = this.font.chars[_char2];
-
-        if (prevCharCode && cfg.kerning[prevCharCode]) {
-          x += cfg.kerning[prevCharCode];
+        return { width: width, height: this.font.lineHeight };
+    };
+    BitMapText.prototype.renderText = function (ctx) {
+        var bounds = this.getTextBounds();
+        var defaultLineHeight = this.font.lineHeight;
+        ctx.save();
+        var _a = this.renderBorder(ctx), needClip = _a.needClip, needStroke = _a.needStroke;
+        if (needClip) {
+            ctx.clip();
         }
-
-        if (cfg) {
-          ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX * scaleY, y + cfg.offY * scaleY, cfg.w * scaleY, cfg.h * scaleY);
-          x += cfg.xadvance * scaleY + letterSpacing;
-          prevCharCode = _char2;
+        var box = this.layoutBox;
+        var style = this.style;
+        var _b = style.width, width = _b === void 0 ? 0 : _b, // 没有设置采用计算出来的宽度
+        _c = style.height, // 没有设置采用计算出来的宽度
+        height = _c === void 0 ? 0 : _c, // 没有设置则采用计算出来的宽度
+        // lineHeight = defaultLineHeight, // 没有设置则采用计算出来的高度
+        textAlign = style.textAlign, // 文字左右对齐方式
+        verticalAlign = style.verticalAlign, _d = style.letterSpacing, letterSpacing = _d === void 0 ? 0 : _d;
+        // 没有设置则采用计算出来的高度
+        var lineHeight = (style.lineHeight || defaultLineHeight);
+        // 元素包围盒的左上角坐标
+        var x = box.absoluteX;
+        var y = box.absoluteY;
+        // @ts-ignore
+        var scaleY = lineHeight / defaultLineHeight;
+        var realWidth = scaleY * bounds.width;
+        if (style.backgroundColor) {
+            ctx.fillStyle = style.backgroundColor;
+            ctx.fillRect(x, y, box.width, box.height);
         }
-      }
-
-      if (needStroke) {
-        ctx.stroke();
-      }
-
-      ctx.restore();
-    }
-  }]);
-
-  return BitMapText;
-}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
+        if (style.backgroundImage && this.backgroundImage) {
+            ctx.drawImage(this.backgroundImage, x, y, box.width, box.height);
+        }
+        // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
+        if (lineHeight < height) {
+            if (verticalAlign === 'middle') {
+                y += (height - lineHeight) / 2;
+            }
+            else if (verticalAlign === 'bottom') {
+                y = y + height - lineHeight;
+            }
+        }
+        if (width > realWidth) {
+            if (textAlign === 'center') {
+                x += (width - realWidth) / 2;
+            }
+            else if (textAlign === 'right') {
+                x += (width - realWidth);
+            }
+        }
+        // 记录上一个字符，方便处理 kerning
+        var prevCharCode = null;
+        for (var i = 0; i < this.value.length; i++) {
+            var char = this.value[i];
+            var cfg = this.font.chars[char];
+            if (prevCharCode && cfg.kerning[prevCharCode]) {
+                x += cfg.kerning[prevCharCode];
+            }
+            if (cfg) {
+                ctx.drawImage(this.font.texture, cfg.x, cfg.y, cfg.w, cfg.h, x + cfg.offX * scaleY, y + cfg.offY * scaleY, cfg.w * scaleY, cfg.h * scaleY);
+                x += (cfg.xadvance * scaleY + letterSpacing);
+                prevCharCode = char;
+            }
+        }
+        if (needStroke) {
+            ctx.stroke();
+        }
+        ctx.restore();
+    };
+    return BitMapText;
+}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BitMapText);
 
 
 /***/ }),
 /* 29 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Canvas; });
-/* harmony import */ var _elements_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 
 
-
-
-var Canvas = /*#__PURE__*/function (_Element) {
-  _inherits(Canvas, _Element);
-
-  var _super = _createSuper(Canvas);
-
-  function Canvas(opts) {
-    var _this;
-
-    _classCallCheck(this, Canvas);
-
-    var _opts$style = opts.style,
-        style = _opts$style === void 0 ? {} : _opts$style,
-        _opts$idName = opts.idName,
-        idName = _opts$idName === void 0 ? '' : _opts$idName,
-        _opts$className = opts.className,
-        className = _opts$className === void 0 ? '' : _opts$className,
-        dataset = opts.dataset,
-        _opts$width = opts.width,
-        width = _opts$width === void 0 ? 100 : _opts$width,
-        _opts$height = opts.height,
-        height = _opts$height === void 0 ? 100 : _opts$height,
-        _opts$autoCreateCanva = opts.autoCreateCanvas,
-        autoCreateCanvas = _opts$autoCreateCanva === void 0 ? false : _opts$autoCreateCanva;
-    _this = _super.call(this, {
-      idName: idName,
-      className: className,
-      dataset: dataset,
-      style: style
+var Canvas = /** @class */ (function (_super) {
+    __extends(Canvas, _super);
+    function Canvas(opts) {
+        var _this = this;
+        var _a = opts.style, style = _a === void 0 ? {} : _a, _b = opts.idName, idName = _b === void 0 ? '' : _b, _c = opts.className, className = _c === void 0 ? '' : _c, dataset = opts.dataset, _d = opts.width, width = _d === void 0 ? 100 : _d, _e = opts.height, height = _e === void 0 ? 100 : _e, _f = opts.autoCreateCanvas, autoCreateCanvas = _f === void 0 ? false : _f;
+        _this = _super.call(this, {
+            idName: idName,
+            className: className,
+            dataset: dataset,
+            style: style,
+        }) || this;
+        _this.canvasInstance = null;
+        /**
+         * 微信小游戏场景下，sharedCanvas 实例不方便自动创建，提供 setter 手动设置
+         */
+        if (autoCreateCanvas) {
+            _this.canvasInstance = (0,_common_util__WEBPACK_IMPORTED_MODULE_1__.createCanvas)();
+            _this.canvasInstance.width = Number(width);
+            _this.canvasInstance.height = Number(height);
+        }
+        return _this;
+    }
+    Object.defineProperty(Canvas.prototype, "canvas", {
+        get: function () {
+            return this.canvasInstance;
+        },
+        set: function (cvs) {
+            this.canvasInstance = cvs;
+        },
+        enumerable: false,
+        configurable: true
     });
-    _this.canvasInstance = null;
-    /**
-     * 微信小游戏场景下，sharedCanvas 实例不方便自动创建，提供 setter 手动设置
-     */
-
-    if (autoCreateCanvas) {
-      _this.canvasInstance = Object(_common_util__WEBPACK_IMPORTED_MODULE_1__["createCanvas"])();
-      _this.canvasInstance.width = Number(width);
-      _this.canvasInstance.height = Number(height);
-    }
-
-    return _this;
-  }
-
-  _createClass(Canvas, [{
-    key: "canvas",
-    get: function get() {
-      return this.canvasInstance;
-    },
-    set: function set(cvs) {
-      this.canvasInstance = cvs;
-    }
-  }, {
-    key: "update",
-    value: function update() {
-      this.root.emit('repaint');
-    }
-  }, {
-    key: "repaint",
-    value: function repaint() {
-      this.render();
-    } // 子类填充实现
-
-  }, {
-    key: "destroySelf",
-    value: function destroySelf() {
-      this.isDestroyed = true;
-      this.root = null;
-      this.canvasInstance = null;
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      if (!this.canvasInstance) {
-        return;
-      }
-
-      var style = this.style || {};
-      var box = this.layoutBox;
-      var ctx = this.ctx;
-      ctx.save();
-
-      if (style.borderColor) {
-        ctx.strokeStyle = style.borderColor;
-      }
-
-      ctx.lineWidth = style.borderWidth || 0;
-      var drawX = box.absoluteX;
-      var drawY = box.absoluteY;
-
-      var _this$renderBorder = this.renderBorder(ctx),
-          needClip = _this$renderBorder.needClip,
-          needStroke = _this$renderBorder.needStroke;
-
-      if (needClip) {
-        ctx.clip();
-      }
-
-      if (style.backgroundColor) {
-        ctx.fillStyle = style.backgroundColor;
-        ctx.fillRect(drawX, drawY, box.width, box.height);
-      }
-
-      if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
-      }
-
-      ctx.drawImage(this.canvasInstance, drawX, drawY, box.width, box.height);
-
-      if (needStroke) {
-        ctx.stroke();
-      }
-
-      ctx.restore();
-    }
-  }]);
-
-  return Canvas;
-}(_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
+    Canvas.prototype.update = function () {
+        this.root.emit('repaint');
+    };
+    Canvas.prototype.repaint = function () {
+        this.render();
+    };
+    // 子类填充实现
+    Canvas.prototype.destroySelf = function () {
+        this.isDestroyed = true;
+        this.root = null;
+        this.canvasInstance = null;
+    };
+    Canvas.prototype.render = function () {
+        if (!this.canvasInstance) {
+            return;
+        }
+        var style = this.style || {};
+        var box = this.layoutBox;
+        var ctx = this.ctx;
+        ctx.save();
+        if (style.borderColor) {
+            ctx.strokeStyle = style.borderColor;
+        }
+        ctx.lineWidth = style.borderWidth || 0;
+        var drawX = box.absoluteX;
+        var drawY = box.absoluteY;
+        var _a = this.renderBorder(ctx), needClip = _a.needClip, needStroke = _a.needStroke;
+        if (needClip) {
+            ctx.clip();
+        }
+        if (style.backgroundColor) {
+            ctx.fillStyle = style.backgroundColor;
+            ctx.fillRect(drawX, drawY, box.width, box.height);
+        }
+        if (style.backgroundImage && this.backgroundImage) {
+            ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+        }
+        ctx.drawImage(this.canvasInstance, drawX, drawY, box.width, box.height);
+        if (needStroke) {
+            ctx.stroke();
+        }
+        ctx.restore();
+    };
+    return Canvas;
+}(_elements__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Canvas);
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   EE: () => (/* binding */ EE),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_env__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_elements__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
+/* harmony import */ var _common_pool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
+/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8);
+/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
+/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(10);
+/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(16);
+/* harmony import */ var _common_debugInfo__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(17);
+/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(18);
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(19);
+/* harmony import */ var _common_rect__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(4);
+/* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(5);
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(20);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 全局事件管道
+var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default())();
+var imgPool = new _common_pool__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
+var bitMapPool = new _common_pool__WEBPACK_IMPORTED_MODULE_2__["default"]('bitMapPool');
+var debugInfo = new _common_debugInfo__WEBPACK_IMPORTED_MODULE_8__["default"]();
+var Layout = /** @class */ (function (_super) {
+    __extends(Layout, _super);
+    function Layout(_a) {
+        var style = _a.style;
+        var _this = _super.call(this, {
+            style: style,
+            id: 0,
+        }) || this;
+        _this.version = '1.0.2';
+        _this.hasEventHandler = false;
+        _this.renderContext = null;
+        _this.renderport = {
+            width: 0,
+            height: 0,
+        };
+        _this.viewport = {
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0,
+        };
+        _this.viewportScale = 1;
+        _this.hasViewPortSet = false;
+        _this.realLayoutBox = {
+            realX: 0,
+            realY: 0,
+        };
+        _this.bitMapFonts = [];
+        _this.eleCount = 0;
+        _this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.UNINIT;
+        _this.isNeedRepaint = false;
+        _this.ticker = new _common_ticker__WEBPACK_IMPORTED_MODULE_9__["default"]();
+        _this.tickerFunc = function () {
+            // TWEEN.update();
+            if (_this.isDirty) {
+                _this.reflow();
+            }
+            else if (_this.isNeedRepaint) {
+                _this.repaint();
+            }
+        };
+        _this.eventHandler = function (eventName) {
+            return function (e) {
+                var touch;
+                if ((0,_common_util__WEBPACK_IMPORTED_MODULE_5__.isGameTouchEvent)(e)) {
+                    touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+                }
+                else {
+                    touch = e;
+                }
+                // const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]) || e;
+                if (!touch || !touch.pageX || !touch.pageY) {
+                    return;
+                }
+                if (!touch.timeStamp) {
+                    // @ts-ignore
+                    touch.timeStamp = e.timeStamp;
+                }
+                var list = [];
+                if (touch) {
+                    _this.getChildByPos(_this, touch.pageX, touch.pageY, list);
+                }
+                if (!list.length) {
+                    list.push(_this);
+                }
+                var item = list[list.length - 1];
+                item && item.emit(eventName, e);
+                if (eventName === 'touchstart' || eventName === 'touchend') {
+                    _this.eventHandlerData.touchMsg[eventName] = touch;
+                }
+                if (eventName === 'touchend' && (0,_common_util__WEBPACK_IMPORTED_MODULE_5__.isClick)(_this.eventHandlerData.touchMsg)) {
+                    item && item.emit('click', e);
+                }
+            };
+        };
+        _this.Element = _components_elements__WEBPACK_IMPORTED_MODULE_1__["default"];
+        _this.View = _components__WEBPACK_IMPORTED_MODULE_13__.View;
+        _this.Text = _components__WEBPACK_IMPORTED_MODULE_13__.Text;
+        _this.Image = _components__WEBPACK_IMPORTED_MODULE_13__.Image;
+        _this.ScrollView = _components__WEBPACK_IMPORTED_MODULE_13__.ScrollView;
+        _this.BitMapText = _components__WEBPACK_IMPORTED_MODULE_13__.BitMapText;
+        _this.Canvas = _components__WEBPACK_IMPORTED_MODULE_13__.Canvas;
+        _this.registerComponent = _common_vd__WEBPACK_IMPORTED_MODULE_10__.registerComponent;
+        // this.elementTree = null;
+        // this.renderport = {};
+        // this.viewport = {};
+        // this.viewportScale = 1;
+        // this.hasViewPortSet = false;
+        // this.realLayoutBox = {
+        //   realX: 0,
+        //   realY: 0,
+        // };
+        // this.touchMsg = {};
+        // this.touchStart = this.eventHandler('touchstart').bind(this);
+        // this.touchMove = this.eventHandler('touchmove').bind(this);
+        // this.touchEnd = this.eventHandler('touchend').bind(this);
+        // this.touchCancel = this.eventHandler('touchcancel').bind(this);
+        _this.eventHandlerData = {
+            touchMsg: {},
+            handlers: {
+                touchStart: _this.eventHandler('touchstart'),
+                touchMove: _this.eventHandler('touchmove'),
+                touchEnd: _this.eventHandler('touchend'),
+                touchCancel: _this.eventHandler('touchcancel'),
+            },
+        };
+        // this.version = '1.0.2';
+        // this.eleCount = 0;
+        // this.state = STATE.UNINIT;
+        // this.bitMapFonts = [];
+        /**
+         * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
+         * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
+         * 而是执行一个置脏操作，ticker 每一次执行 update 会检查这个标记位，进而执行真正的重绘操作
+         */
+        // this.isNeedRepaint = false;
+        _this.on('repaint', function () {
+            _this.isNeedRepaint = true;
+        });
+        // this.ticker = new Ticker();
+        /**
+         * 将 Tween 挂载到 Layout，对于 Tween 的使用完全遵循 Tween.js 的文档
+         * https://github.com/tweenjs/tween.js/
+         * 只不过当 Tween 改动了节点会触发 repaint、reflow 的属性时，Layout 会执行相应的操作
+         * 业务侧不用感知到 repaint 和 reflow
+         */
+        // this.TWEEN = TWEEN;
+        // this.tickerFunc = () => {
+        //   // TWEEN.update();
+        //   if (this.isDirty) {
+        //     this.reflow();
+        //   } else if (this.isNeedRepaint) {
+        //     this.repaint();
+        //   }
+        // };
+        console.log("[Layout] v".concat(_this.version));
+        return _this;
+    }
+    Object.defineProperty(Layout.prototype, "debugInfo", {
+        // 与老版本兼容
+        get: function () {
+            var info = debugInfo.log();
+            info += "elementCount: ".concat(this.eleCount, "\n");
+            return info;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * 更新被绘制canvas的窗口信息，本渲染引擎并不关心是否会和其他游戏引擎共同使用
+     * 而本身又需要支持事件处理，因此，如果被渲染内容是绘制到离屏canvas，需要将最终绘制在屏幕上
+     * 的绝对尺寸和位置信息更新到本渲染引擎。
+     * 其中，width为物理像素宽度，height为物理像素高度，x为距离屏幕左上角的物理像素x坐标，y为距离屏幕左上角的物理像素
+     * y坐标
+     */
+    Layout.prototype.updateViewPort = function (box) {
+        this.viewport.width = box.width || 0;
+        this.viewport.height = box.height || 0;
+        this.viewport.x = box.x || 0;
+        this.viewport.y = box.y || 0;
+        this.realLayoutBox = {
+            realX: this.viewport.x,
+            realY: this.viewport.y,
+        };
+        this.hasViewPortSet = true;
+    };
+    Layout.prototype.init = function (template, style, attrValueProcessor) {
+        debugInfo.start('init');
+        var parseConfig = {
+            attributeNamePrefix: '',
+            attrNodeName: 'attr',
+            textNodeName: '#text',
+            ignoreAttributes: false,
+            ignoreNameSpace: true,
+            allowBooleanAttributes: true,
+            parseNodeValue: false,
+            parseAttributeValue: false,
+            trimValues: true,
+            parseTrueNumberOnly: false,
+            alwaysCreateTextNode: true,
+        };
+        if (attrValueProcessor && typeof attrValueProcessor === 'function') {
+            // @ts-ignore
+            parseConfig.attrValueProcessor = attrValueProcessor;
+        }
+        debugInfo.start('init_xmlParse');
+        // 将xml字符串解析成xml节点树
+        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__.parse(template, parseConfig, true);
+        // console.log(jsonObj)
+        debugInfo.end('init_xmlParse');
+        var xmlTree = jsonObj.children[0];
+        // XML树生成渲染树
+        debugInfo.start('init_xml2Layout');
+        var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_10__.create.call(this, xmlTree, style);
+        debugInfo.end('init_xml2Layout');
+        this.add(layoutTree);
+        this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.INITED;
+        this.ticker.add(this.tickerFunc, true);
+        this.ticker.start();
+        debugInfo.end('init');
+    };
+    Layout.prototype.reflow = function (isFirst) {
+        if (isFirst === void 0) { isFirst = false; }
+        if (!isFirst) {
+            debugInfo.reset();
+        }
+        debugInfo.start('layout_reflow');
+        /**
+         * 计算布局树
+         * 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息
+         * Layout本身并不作为布局计算，只是作为节点树的容器
+         */
+        debugInfo.start('computeLayout', true);
+        css_layout__WEBPACK_IMPORTED_MODULE_4___default()(this.children[0]);
+        debugInfo.end('computeLayout');
+        var rootEle = this.children[0];
+        if (rootEle.style.width === undefined || rootEle.style.height === undefined) {
+            console.error('[Layout] Please set width and height property for root element');
+        }
+        else {
+            this.renderport.width = rootEle.style.width;
+            this.renderport.height = rootEle.style.height;
+        }
+        // 将布局树的布局信息加工赋值到渲染树
+        debugInfo.start('layoutChildren', true);
+        // @ts-ignore
+        (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.layoutChildren)(this);
+        debugInfo.end('layoutChildren');
+        this.viewportScale = this.viewport.width / this.renderport.width;
+        (0,_common_util__WEBPACK_IMPORTED_MODULE_5__.clearCanvas)(this.renderContext);
+        // 遍历节点树，依次调用节点的渲染接口实现渲染
+        debugInfo.start('renderChildren', true);
+        (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.renderChildren)(this.children, this.renderContext, false);
+        debugInfo.end('renderChildren');
+        debugInfo.start('repaint', true);
+        this.repaint();
+        debugInfo.end('repaint');
+        this.isDirty = false;
+        // iterateTree(this.children[0], (ele) => {
+        //   console.log(ele.props);
+        // });
+        debugInfo.end('layout_reflow');
+    };
+    /**
+     * init阶段核心仅仅是根据xml和css创建了节点树
+     * 要实现真正的渲染，需要调用 layout 函数，之所以将 layout 单独抽象为一个函数，是因为 layout 应当是可以重复调用的
+     * 比如改变了一个元素的尺寸，实际上节点树是没变的，仅仅是需要重新计算布局，然后渲染
+     * 一个完整的 layout 分成下面的几步：
+     * 1. 执行画布清理，因为布局变化页面需要重绘，这里没有做很高级的剔除等操作，一律清除重画，实际上性能已经很好
+     * 2. 节点树都含有 style 属性，css-layout 能够根据这些信息计算出最终布局，详情可见 https://www.npmjs.com/package/css-layout
+     * 3. 经过 Layout 计算，节点树带上了 layout、lastLayout、shouldUpdate 布局信息，但这些信息并不是能够直接用的
+     *    比如 layout.top 是指在一个父容器内的 top，最终要实现渲染，实际上要递归加上复容器的 top
+     *    这样每次 repaint 的时候只需要直接使用计算好的值即可，不需要每次都递归计算
+     *    这一步称为 layoutChildren，目的在于将 css-layout 进一步处理为可以渲染直接用的布局信息
+     * 4. renderChildren：执行渲染
+     * 5. bindEvents：执行事件绑定
+     */
+    // @ts-ignore
+    Layout.prototype.layout = function (context) {
+        this.renderContext = context;
+        if (!this.hasViewPortSet) {
+            console.error('Please invoke method `updateViewPort` before method `layout`');
+        }
+        debugInfo.start('layout');
+        this.reflow(true);
+        debugInfo.start('layout_other');
+        this.bindEvents();
+        debugInfo.start('observeStyleAndEvent', true);
+        (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.iterateTree)(this.children[0], function (element) { return element.observeStyleAndEvent(); });
+        debugInfo.end('layout_observeStyleAndEvent');
+        this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.RENDERED;
+        debugInfo.end('layout');
+        debugInfo.end('layout_other');
+    };
+    Layout.prototype.repaint = function () {
+        (0,_common_util__WEBPACK_IMPORTED_MODULE_5__.clearCanvas)(this.renderContext);
+        this.isNeedRepaint = false;
+        (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.repaintChildren)(this.children);
+    };
+    Layout.prototype.getElementViewportRect = function (element) {
+        var _a = this, realLayoutBox = _a.realLayoutBox, viewportScale = _a.viewportScale;
+        var _b = element.layoutBox, absoluteX = _b.absoluteX, absoluteY = _b.absoluteY, width = _b.width, height = _b.height;
+        var realX = absoluteX * viewportScale + realLayoutBox.realX;
+        var realY = absoluteY * viewportScale + realLayoutBox.realY;
+        var realWidth = width * viewportScale;
+        var realHeight = height * viewportScale;
+        return new _common_rect__WEBPACK_IMPORTED_MODULE_11__["default"](realX, realY, realWidth, realHeight);
+    };
+    Layout.prototype.getChildByPos = function (tree, x, y, itemList) {
+        var _this = this;
+        tree.children.forEach(function (ele) {
+            var _a = ele.layoutBox, absoluteX = _a.absoluteX, absoluteY = _a.absoluteY, width = _a.width, height = _a.height;
+            var realX = absoluteX * _this.viewportScale + _this.realLayoutBox.realX;
+            var realY = absoluteY * _this.viewportScale + _this.realLayoutBox.realY;
+            var realWidth = width * _this.viewportScale;
+            var realHeight = height * _this.viewportScale;
+            if ((realX <= x && x <= realX + realWidth) && (realY <= y && y <= realY + realHeight)) {
+                /**
+                 * 相关issue：https://github.com/wechat-miniprogram/minigame-canvas-engine/issues/17
+                 * 这里只要满足条件的都要记录，否则可能出现 issue 里面提到的问题
+                 */
+                itemList.push(ele);
+                if (ele.children.length) {
+                    _this.getChildByPos(ele, x, y, itemList);
+                }
+            }
+        });
+    };
+    Layout.prototype.bindEvents = function () {
+        if (this.hasEventHandler) {
+            return;
+        }
+        this.hasEventHandler = true;
+        if (typeof __env !== 'undefined') {
+            __env.onTouchStart(this.eventHandlerData.handlers.touchStart);
+            __env.onTouchMove(this.eventHandlerData.handlers.touchMove);
+            __env.onTouchEnd(this.eventHandlerData.handlers.touchEnd);
+            __env.onTouchCancel(this.eventHandlerData.handlers.touchCancel);
+        }
+        else {
+            document.onmousedown = this.eventHandlerData.handlers.touchStart;
+            document.onmousemove = this.eventHandlerData.handlers.touchMove;
+            document.onmouseup = this.eventHandlerData.handlers.touchEnd;
+            document.onmouseleave = this.eventHandlerData.handlers.touchCancel;
+        }
+    };
+    Layout.prototype.unBindEvents = function () {
+        if (typeof __env !== 'undefined') {
+            __env.offTouchStart(this.eventHandlerData.handlers.touchStart);
+            __env.offTouchMove(this.eventHandlerData.handlers.touchMove);
+            __env.offTouchEnd(this.eventHandlerData.handlers.touchEnd);
+            __env.offTouchCancel(this.eventHandlerData.handlers.touchCancel);
+        }
+        else {
+            document.onmousedown = null;
+            document.onmousemove = null;
+            document.onmouseup = null;
+            document.onmouseleave = null;
+        }
+        this.hasEventHandler = false;
+    };
+    Layout.prototype.emit = function (event, data) {
+        EE.emit(event, data);
+    };
+    Layout.prototype.on = function (event, callback) {
+        EE.on(event, callback);
+    };
+    Layout.prototype.once = function (event, callback) {
+        EE.once(event, callback);
+    };
+    Layout.prototype.off = function (event, callback) {
+        EE.off(event, callback);
+    };
+    Layout.prototype.destroyAll = function (tree) {
+        var _this = this;
+        var children = tree.children;
+        children.forEach(function (child) {
+            child.destroy();
+            _this.destroyAll(child);
+            child.destroySelf && child.destroySelf();
+        });
+    };
+    Layout.prototype.clear = function (options) {
+        if (options === void 0) { options = {}; }
+        var _a = options.removeTicker, removeTicker = _a === void 0 ? true : _a;
+        debugInfo.reset();
+        this.destroyAll(this);
+        // this.elementTree = null;
+        this.children = [];
+        this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.CLEAR;
+        this.isDirty = false;
+        (0,_common_util__WEBPACK_IMPORTED_MODULE_5__.clearCanvas)(this.renderContext);
+        this.eleCount = 0;
+        this.unBindEvents();
+        if (removeTicker) {
+            this.ticker.remove();
+            this.ticker.stop();
+        }
+    };
+    Layout.prototype.clearPool = function () {
+        imgPool.clear();
+    };
+    Layout.prototype.clearAll = function () {
+        this.clear();
+        this.clearPool();
+    };
+    Layout.prototype.loadImgs = function (arr) {
+        if (arr === void 0) { arr = []; }
+        return Promise.all(arr.map(function (src) { return _common_imageManager__WEBPACK_IMPORTED_MODULE_12__["default"].loadImagePromise(src); }));
+    };
+    Layout.prototype.registBitMapFont = function (name, src, config) {
+        if (!bitMapPool.get(name)) {
+            var font = new _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__["default"](name, src, config);
+            this.bitMapFonts.push(font);
+            bitMapPool.set(name, font);
+        }
+    };
+    Layout.prototype.cloneNode = function (element, deep) {
+        if (deep === void 0) { deep = true; }
+        return (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.clone)(this, element, deep);
+    };
+    return Layout;
+}(_components_elements__WEBPACK_IMPORTED_MODULE_1__["default"]));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new Layout({
+    style: {
+        width: 0,
+        height: 0,
+    },
+    name: 'layout',
+}));
+
+})();
+
+module.exports = __webpack_exports__;
+/******/ })()
+;

@@ -1,6 +1,7 @@
-// import Layout from './engine';
-const Layout = requirePlugin('Layout').default;
+import Layout from './engine';
+// const Layout = requirePlugin('Layout').default;
 
+GameGlobal.Layout = Layout;
 // 设置游戏画布尺寸
 const info = wx.getSystemInfoSync();
 const GAME_WIDTH = info.windowWidth * info.pixelRatio;
@@ -21,8 +22,9 @@ sharedCanvas.width = RANK_WIDTH;
 sharedCanvas.height = RANK_HEIGHT;
 
 function updateRankViewPort(rankCanvas) {
-  console.log(rankCanvas.getViewportRect())
-  const rect = rankCanvas.getViewportRect();
+  // const rect = rankCanvas.getViewportRect();
+  const rect = Layout.getElementViewportRect(rankCanvas)
+
   openDataContext.postMessage({
     event: 'updateViewPort',
     box: {
