@@ -1,12 +1,13 @@
 import Element from './elements';
 import { createCanvas } from '../common/util';
 import { IStyle } from './style';
+import { IDataset } from '../types';
 
 interface ICanvasOptions {
   style?: IStyle
   idName?: string;
   className?: string;
-  dataset?: Record<string, string>;
+  dataset?: IDataset;
   width?: number;
   height?: number;
   autoCreateCanvas?: boolean;

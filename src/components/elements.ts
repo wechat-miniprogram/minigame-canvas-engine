@@ -2,6 +2,8 @@
 import { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle } from './style';
 import Rect from '../common/rect';
 import imageManager from '../common/imageManager';
+import TinyEmitter from 'tiny-emitter';
+import { IDataset } from '../types/index'
 
 export function getElementsById(tree: Element, list: Element[] = [], id: string) {
   tree.children.forEach((child: Element) => {
@@ -37,10 +39,20 @@ export function getElementsByClassName(tree: Element, list: Element[] = [], clas
   return list;
 }
 
-const Emitter = require('tiny-emitter');
+/**
+ * 将当前节点置脏，Layout 的 ticker 会根据这个标记位执行 reflow
+ */
+function setDirty(ele: Element) {
+  ele.isDirty = true;
+  let { parent } = ele;
+  while (parent) {
+    parent.isDirty = true;
+    parent = parent.parent;
+  }
+}
 
 // 全局事件管道
-const EE = new Emitter();
+const EE = new TinyEmitter();
 
 let uuid = 0;
 
@@ -110,26 +122,85 @@ type Callback = (...args: any[]) => void;
 const isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
 
 export default class Element {
+  /**
+   * 子节点列表
+   */
   public children: Element[] = [];
+  /**
+   * 当前节点的父节点
+   */
   public parent: Element | null = null;
-  public parentId = 0;
+
+  // 似乎没什么用，先注释
+  // public parentId = 0;
+  /**
+   * 当前节点的id，一般是由 Layout 统一分配的自增 id
+   */
   public id: number;
+
+  /**
+   * 在 xml 模板里面声明的 id 属性，一般用于节点查询
+   */
   public idName: string;
+
+  /**
+   * 在 xml 模板里面声明的 class 属性，一般用于模板插件
+   */
   public className: string;
-  public root: Element | null;
-  public EE: any;
+
+  /**
+   * 当前节点所在节点树的根节点，指向 Layout
+   */
+  public root: Element | null = null;
+  // public EE: any;
+
+  /**
+   * 用于标识当前节点是否已经执行销毁逻辑，销毁之后原先的功能都会异常，一般业务侧不用关心这个
+   */
   public isDestroyed = false;
-  public dataset: Record<string, string>;
+
+  /**
+   * 类似 Web 端实现，给节点挂一些能够读写的属性集合
+   * 在 xml 可以这样声明属性：<view class="xxx" data-foo="bar">
+   * 在 js 侧可以这么读写属性：
+   * console.log(element.dataset.foo); // 控制台输出 "bar";
+   * element.dataset.foo = "bar2";
+   */
+  public dataset: IDataset;
+  
+  /**
+   * 节点的样式列表，在 Layout.init 会传入样式集合，会自动挑选出跟节点有关的样式统一 merge 到 style 对象上
+   */
   public style: IStyle;
-  public rect: Rect | null;
+
+  /**
+   * 执行 getBoundingClientRect 的结果缓存，如果业务高频调用，可以减少 GC
+   */
+  private rect: Rect | null;
   public classNameList: string[] | null;
   public layoutBox: ILayoutBox;
   public backgroundImage: any;
   public ctx: CanvasRenderingContext2D | null = null
+
+  /**
+   * 置脏标记位，目前当修改会影响布局属性的时候，会自动置脏
+   */
   public isDirty = false;
-  public shouldUpdate = false;
+
+  /**
+   * css-layout 节点属性，业务侧无需关心
+   */
+  protected shouldUpdate = false;
+
+  /**
+   * 当前节点的名称，比如" Image
+   */
   public type?: string;
   // public layout?: ILayout;
+
+  /**
+   * 当前节点在 xml 的标签名称，比如 image、view
+   */
   public tagName?: string;
 
   private originStyle: IStyle;
@@ -145,14 +216,11 @@ export default class Element {
     idName?: string;
     className?: string;
     id?: number;
-    dataset?: Record<string, string>;
+    dataset?: IDataset;
   }) {
     this.id = id;
     this.idName = idName;
     this.className = className;
-    // this.style = style;
-    this.EE = EE;
-    this.root = null;
     this.layoutBox = {
       left: 0,
       top: 0,
@@ -230,12 +298,7 @@ export default class Element {
         set(target, prop, val, receiver) {
           if (typeof prop === 'string') {
             if (reflowAffectedStyles.indexOf(prop) > -1) {
-              ele.isDirty = true;
-              let { parent } = ele;
-              while (parent) {
-                parent.isDirty = true;
-                parent = parent.parent;
-              }
+              setDirty(ele);
             } else if (repaintAffectedStyles.indexOf(prop) > -1) {
               ele.root?.emit('repaint');
             } else if (prop === 'backgroundImage') {
@@ -254,18 +317,15 @@ export default class Element {
           enumerable: true,
           get: () => innerStyle[key as keyof IStyle],
           set: (value) => {
-            innerStyle[key as keyof IStyle] = value;
-            if (reflowAffectedStyles.indexOf(key) > -1) {
-              this.isDirty = true;
-              let { parent } = this;
-              while (parent) {
-                parent.isDirty = true;
-                parent = parent.parent;
-              }
-            } else if (repaintAffectedStyles.indexOf(key) > -1) {
-              this.root?.emit('repaint');
-            } else if (key === 'backgroundImage') {
-              this.backgroundImageSetHandler(value);
+            if (value !== innerStyle[key as keyof IStyle]) {
+              innerStyle[key as keyof IStyle] = value;
+              if (reflowAffectedStyles.indexOf(key) > -1) {
+              setDirty(this);
+              } else if (repaintAffectedStyles.indexOf(key) > -1) {
+                this.root?.emit('repaint');
+              } else if (key === 'backgroundImage') {
+                this.backgroundImageSetHandler(value);
+              }                
             }
           },
         });
@@ -282,16 +342,20 @@ export default class Element {
     this.classNameList = this.className.split(/\s+/);
   }
 
-  // 子类填充实现
+  /**
+   * 节点重绘接口，子类填充实现
+   */
   repaint() { }
 
-  // 子类填充实现
+  /**
+   * 节点渲染接口子类填充实现
+   */
   render() { }
 
   /**
    * 参照 Web 规范：https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
    */
-  getBoundingClientRect() {
+  getBoundingClientRect(): Rect {
     if (!this.rect) {
       this.rect = new Rect(
         this.layoutBox.absoluteX,
@@ -311,19 +375,36 @@ export default class Element {
     return this.rect;
   }
 
+  /**
+   * 查询当前节点树下，idName 为给定参数的的节点
+   * 节点的 id 唯一性 Layout 并不保证，但这里只返回符合条件的第一个节点 
+   */
   getElementById(id: string): Element | null {
     return getElementById(this, id);
   }
 
+  /**
+   * 查询当前节点树下，idName 为给定参数的的节点
+   * 节点的 id 唯一性 Layout 并不保证，这里返回符合条件的节点集合
+   */
   getElementsById(id: string): (Element | null)[] {
     return getElementsById(this, [], id);
   }
 
+  /**
+   * 查询当前节点树下，className 包含给定参数的的节点集合
+   */
   getElementsByClassName(className: string): (Element | null)[] {
     return getElementsByClassName(this, [], className);
   }
 
+  /**
+   * 布局计算完成，准备执行渲染之前执行的操作，不同的子类有不同的行为
+   * 比如 ScrollView 在渲染之前还需要初始化滚动相关的能力
+   *  
+   */
   insert(ctx: CanvasRenderingContext2D, needRender: boolean) {
+    this.shouldUpdate = false;
     this.ctx = ctx;
 
     if (needRender) {
@@ -331,6 +412,9 @@ export default class Element {
     }
   }
 
+  /**
+   * 节点解除事件绑定
+   */
   unBindEvent() {
     [
       'touchstart',
@@ -344,15 +428,9 @@ export default class Element {
     });
   }
 
-  setDirty() {
-    this.isDirty = true;
-    let { parent } = this;
-    while (parent) {
-      parent.isDirty = true;
-      parent = parent.parent;
-    }
-  }
-
+  /**
+   * 将节点从当前节点树中删除
+   */
   remove() {
     const { parent } = this;
 
@@ -365,7 +443,7 @@ export default class Element {
     if (index !== -1) {
       parent.children.splice(index, 1);
       this.unBindEvent();
-      this.setDirty();
+      setDirty(this);
       this.parent = null;
       this.ctx = null;
     } else {
@@ -383,7 +461,7 @@ export default class Element {
     this.unBindEvent();
 
     this.isDestroyed = true;
-    this.EE = null;
+    // this.EE = null;
     this.parent = null;
     this.ctx = null;
 
@@ -396,22 +474,28 @@ export default class Element {
 
   add(element: Element) {
     element.parent = this;
-    element.parentId = this.id;
+    // element.parentId = this.id;
 
     this.children.push(element);
   }
 
+  /**
+   * 将一个节点添加作为当前节点的子节点
+   */
   appendChild(element: Element) {
     this.add(element);
 
-    this.setDirty();
+    setDirty(this);
   }
 
+  /**
+   * 移除给定的子节点，只有一级节点能够移除 
+   */
   removeChild(element: Element) {
     const index = this.children.indexOf(element);
     if (index !== -1) {
       element.remove();
-      this.setDirty();
+      setDirty(this);
     } else {
       console.warn('[Layout] the element to be removed is not a child of this element');
     }
@@ -433,6 +517,9 @@ export default class Element {
     EE.off(toEventName(event, this.id), callback);
   }
 
+  /**
+   * 渲染 border 相关能力抽象，子类可按需调用
+   */
   renderBorder(ctx: CanvasRenderingContext2D) {
     const style = this.style || {};
     const radius = style.borderRadius || 0;

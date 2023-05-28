@@ -2,6 +2,7 @@ import Element from './elements';
 import Pool from '../common/pool';
 import { IStyle } from './style';
 import BitMapFont from '../common/bitMapFont';
+import { IDataset } from '../types';
 
 const bitMapPool = new Pool<BitMapFont>('bitMapPool');
 
@@ -11,7 +12,7 @@ interface IBitMapTextOptions {
   className?: string;
   value?: string;
   font?: string;
-  dataset?: Record<string, string>;
+  dataset?: IDataset;
 }
 
 export default class BitMapText extends Element {

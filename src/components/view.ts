@@ -1,3 +1,4 @@
+import { IDataset } from '../types';
 import Element from './elements';
 import { IStyle } from './style';
 
@@ -5,7 +6,7 @@ interface IViewOptions {
   style?: IStyle;
   idName?: string;
   className?: string;
-  dataset?: Record<string, string>
+  dataset?: IDataset;
 }
 
 export default class View extends Element {

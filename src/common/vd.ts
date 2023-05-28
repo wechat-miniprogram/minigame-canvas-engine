@@ -143,7 +143,7 @@ export function create(node: TreeNode, style: Record<string, IStyle>, parent?: R
 
 export function renderChildren(children: Element[], context: CanvasRenderingContext2D, needRender = true) {
   children.forEach((child) => {
-    child.shouldUpdate = false;
+    // child.shouldUpdate = false;
     child.isDirty = false;
     child.insert(context, needRender);
 

@@ -1,13 +1,14 @@
 import Element from './elements';
 import imageManager from '../common/imageManager';
 import { IStyle } from './style';
+import { IDataset } from '../types';
 
 interface IImageOptions {
   style?: IStyle;
   idName?: string
   className?: string;
   src?: string;
-  dataset?: Record<string, string>
+  dataset?: IDataset;
 }
 
 export default class Image extends Element {

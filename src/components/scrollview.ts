@@ -6,6 +6,7 @@ import { Scroller } from 'scroller';
 import { iterateTree } from '../common/vd';
 import { IStyle } from './style';
 import Element from './elements';
+import { IDataset } from '../types';
 
 const dpr = getDpr();
 
@@ -15,7 +16,7 @@ interface IScrollViewOptions {
   className?: string;
   scrollX?: boolean | undefined;
   scrollY?: boolean | undefined;
-  dataset?: Record<string, string>;
+  dataset?: IDataset;
 }
 
 interface IInnerScrollerOption {
@@ -206,6 +207,7 @@ export default class ScrollView extends View {
   }
 
   insert(context: CanvasRenderingContext2D) {
+    this.shouldUpdate = false;
     this.ctx = context;
 
     /**

@@ -1,6 +1,7 @@
 import Element from './elements';
 import { createCanvas } from '../common/util';
 import { IStyle } from './style';
+import { IDataset } from '../types';
 
 const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
 let context: CanvasRenderingContext2D | null = null;
@@ -68,7 +69,7 @@ interface ITextProps {
   idName?: string;
   className?: string;
   value?: string;
-  dataset?: Record<string, string>;
+  dataset?: IDataset;
 }
 
 export default class Text extends Element {
@@ -151,6 +152,7 @@ export default class Text extends Element {
 
   insert(ctx: CanvasRenderingContext2D, needRender: boolean) {
     this.ctx = ctx;
+    this.shouldUpdate = false;
 
     this.toCanvasData();
 

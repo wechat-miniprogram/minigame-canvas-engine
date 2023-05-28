@@ -38,8 +38,8 @@ class LayoutDevtools {
 
       (window as any).Layout = Layout;
 
-      require('./layoutTest');
-      // require('./layoutRichTextTest');
+      // require('./layoutTest');
+      require('./layoutRichTextTest');
       // require('./layoutTextTest');
       // require('./layoutBitMapTextTest');
     }

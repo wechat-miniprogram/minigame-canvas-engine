@@ -74,6 +74,8 @@ declare class Rect {
     intersects(rect: Rect): boolean;
 }
 
+type IDataset = Record<string, any>;
+
 interface ILayoutBox {
     left: number;
     top: number;
@@ -86,18 +88,50 @@ interface ILayoutBox {
 }
 type Callback$2 = (...args: any[]) => void;
 declare class Element {
+    /**
+     * 子节点列表
+     */
     children: Element[];
+    /**
+     * 当前节点的父节点
+     */
     parent: Element | null;
-    parentId: number;
+    /**
+     * 当前节点的id，一般是由 Layout 统一分配的自增 id
+     */
     id: number;
+    /**
+     * 在 xml 模板里面声明的 id 属性，一般用于节点查询
+     */
     idName: string;
+    /**
+     * 在 xml 模板里面声明的 class 属性，一般用于模板插件
+     */
     className: string;
+    /**
+     * 当前节点所在节点树的根节点，指向 Layout
+     */
     root: Element | null;
-    EE: any;
+    /**
+     * 用于标识当前节点是否已经执行销毁逻辑，销毁之后原先的功能都会异常，一般业务侧不用关心这个
+     */
     isDestroyed: boolean;
-    dataset: Record<string, string>;
+    /**
+     * 类似 Web 端实现，给节点挂一些能够读写的属性集合
+     * 在 xml 可以这样声明属性：<view class="xxx" data-foo="bar">
+     * 在 js 侧可以这么读写属性：
+     * console.log(element.dataset.foo); // 控制台输出 "bar";
+     * element.dataset.foo = "bar2";
+     */
+    dataset: IDataset;
+    /**
+     * 节点的样式列表，在 Layout.init 会传入样式集合，会自动挑选出跟节点有关的样式统一 merge 到 style 对象上
+     */
     style: IStyle;
-    rect: Rect | null;
+    /**
+     * 执行 getBoundingClientRect 的结果缓存，如果业务高频调用，可以减少 GC
+     */
+    private rect;
     classNameList: string[] | null;
     layoutBox: ILayoutBox;
     backgroundImage: any;
@@ -124,28 +158,64 @@ declare class Element {
      * Object.defineProperty: 20ms
      */
     observeStyleAndEvent(): void;
+    /**
+     * 节点重绘接口，子类填充实现
+     */
     repaint(): void;
+    /**
+     * 节点渲染接口子类填充实现
+     */
     render(): void;
     /**
      * 参照 Web 规范：https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
      */
     getBoundingClientRect(): Rect;
+    /**
+     * 查询当前节点树下，idName 为给定参数的的节点
+     * 节点的 id 唯一性 Layout 并不保证，但这里只返回符合条件的第一个节点
+     */
     getElementById(id: string): Element | null;
+    /**
+     * 查询当前节点树下，idName 为给定参数的的节点
+     * 节点的 id 唯一性 Layout 并不保证，这里返回符合条件的节点集合
+     */
     getElementsById(id: string): (Element | null)[];
+    /**
+     * 查询当前节点树下，className 包含给定参数的的节点集合
+     */
     getElementsByClassName(className: string): (Element | null)[];
+    /**
+     * 布局计算完成，准备执行渲染之前执行的操作，不同的子类有不同的行为
+     * 比如 ScrollView 在渲染之前还需要初始化滚动相关的能力
+     *
+     */
     insert(ctx: CanvasRenderingContext2D, needRender: boolean): void;
+    /**
+     * 节点解除事件绑定
+     */
     unBindEvent(): void;
-    setDirty(): void;
+    /**
+     * 将节点从当前节点树中删除
+     */
     remove(): void;
     destroySelf(): void;
     destroy(): void;
     add(element: Element): void;
+    /**
+     * 将一个节点添加作为当前节点的子节点
+     */
     appendChild(element: Element): void;
+    /**
+     * 移除给定的子节点，只有一级节点能够移除
+     */
     removeChild(element: Element): void;
     emit(event: string, ...theArgs: any[]): void;
     on(event: string, callback: Callback$2): void;
     once(event: string, callback: Callback$2): void;
     off(event: string, callback?: Callback$2): void;
+    /**
+     * 渲染 border 相关能力抽象，子类可按需调用
+     */
     renderBorder(ctx: CanvasRenderingContext2D): {
         needClip: boolean;
         needStroke: boolean;
