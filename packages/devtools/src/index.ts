@@ -1,6 +1,7 @@
 
 import { createApp } from 'vue';
 import PrimeVue from 'primevue/config';
+// @ts-ignore
 import Test from './ui.vue';
 
 // PrimeVue style
@@ -17,8 +18,9 @@ import hljsVuePlugin from "@highlightjs/vue-plugin";
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('xml', xml);
 
+
 class LayoutDevtools {
-  public Layout: any;
+  // public Layout: any;
   private vueApp: any;
 
   constructor() {
@@ -28,28 +30,28 @@ class LayoutDevtools {
 
     const vueApp = createApp(Test).use(PrimeVue).use(hljsVuePlugin).mount('#app');
 
+    // 本地调试用
     if (process.env.NODE_ENV !== 'production') {
-      //@ts-ignore
-      const Layout = require('minigame-canvas-engine').default;
+      const Layout: typeof import('minigame-canvas-engine').default = require('minigame-canvas-engine').default;
       //@ts-ignore
       vueApp.initLayout(Layout);
 
-      window.Layout = Layout;
+      (window as any).Layout = Layout;
 
-      // require('./layoutTest');
+      require('./layoutTest');
       // require('./layoutRichTextTest');
-      require('./layoutTextTest');
+      // require('./layoutTextTest');
       // require('./layoutBitMapTextTest');
     }
 
     this.vueApp = vueApp;
   }
 
-  init(Layout: any) {
+  init(Layout) {
     this.vueApp.initLayout(Layout);
   }
 }
 
-window.layoutDevtools = new LayoutDevtools();
+(window as any).layoutDevtools = new LayoutDevtools();
 
-export default window.layoutDevtools;
+export default (window as any).layoutDevtools;

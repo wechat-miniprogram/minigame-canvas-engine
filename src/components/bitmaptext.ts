@@ -19,7 +19,7 @@ export default class BitMapText extends Element {
   public type = 'BitMapText';
   private valuesrc: string;
   public font: BitMapFont;
-  
+
   constructor(opts: IBitMapTextOptions) {
     const {
       style = {},
@@ -36,7 +36,7 @@ export default class BitMapText extends Element {
       dataset,
     });
 
-    this.ctx  = null;
+    this.ctx = null;
     this.valuesrc = value;
 
     // Object.defineProperty(this, 'value', {
@@ -119,7 +119,7 @@ export default class BitMapText extends Element {
 
   renderText(ctx: CanvasRenderingContext2D) {
     const bounds = this.getTextBounds();
-    const defaultLineHeight = this.font.lineHeight;
+    const defaultLineHeight = this.font.lineHeight as number;
 
     ctx.save();
 
@@ -139,7 +139,7 @@ export default class BitMapText extends Element {
       textAlign, // 文字左右对齐方式
       verticalAlign,
       letterSpacing = 0,
-    } =  style;
+    } = style;
     // 没有设置则采用计算出来的高度
     const lineHeight = (style.lineHeight || defaultLineHeight) as number
 
@@ -147,8 +147,7 @@ export default class BitMapText extends Element {
     let x = box.absoluteX;
     let y = box.absoluteY;
 
-    // @ts-ignore
-    const scaleY    = lineHeight / defaultLineHeight;
+    const scaleY = lineHeight / defaultLineHeight;
     const realWidth = scaleY * bounds.width;
 
     if (style.backgroundColor) {

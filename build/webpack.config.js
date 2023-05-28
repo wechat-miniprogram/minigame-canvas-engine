@@ -3,10 +3,10 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   entry: {
-    'demos/noengine/sub/engine': './src/index',
-    'demos/noengine/engine': './src/index',
-    './index': './src/index',
-    'packages/plugin/plugin/engine': './src/index',
+    [path.join('..', 'demos', 'noengine', 'sub', 'engine')]: path.join('..', 'src', 'index'),
+    [path.join('..', 'demos', 'noengine', 'engine')]: path.join('..', 'src', 'index'),
+    [path.join('..', 'dist', 'index')]: path.join('..', 'src', 'index'),
+    [path.join('..', 'packages', 'plugin', 'plugin', 'engine')]: path.join('..', 'src', 'index'),
   },
   output: {
     path: path.resolve(__dirname, ''),
@@ -30,6 +30,6 @@ module.exports = {
       openAnalyzer: false,
     }),
   ],
-  mode: 'none',
-  // mode: 'production',
+  mode: 'development',
+  devtool: 'inline-source-map',
 };

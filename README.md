@@ -24,7 +24,5 @@
 详见[CHANGELOG](./CHANGELOG.md)
 
 ## web端调试
-<!-- 为了方便UI调试，可以在线编辑预览效果: [Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html)。 -->
-
 为了方便调试，可以基于 codepen [模板](https://codepen.io/pen?template=VwEeLKw) 构建demo，旧版本[Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html)已不再维护。
 

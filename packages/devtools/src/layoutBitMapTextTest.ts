@@ -25,6 +25,7 @@ function main() {
     }
   }
 
+  // @ts-ignore
   const Layout = window.Layout;
 
   Layout.registBitMapFont(

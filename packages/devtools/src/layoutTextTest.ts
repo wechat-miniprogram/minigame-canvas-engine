@@ -74,6 +74,7 @@ function main() {
     }
   }
 
+  // @ts-ignore
   const Layout = window.Layout;
 
   Layout.init(template(tpl)({}), style);

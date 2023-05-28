@@ -57,9 +57,7 @@ export function isClick(touchMsg: TouchMsg) {
 
 export function createCanvas() {
   /* istanbul ignore if*/
-  // @ts-ignore
   if (typeof __env !== 'undefined') {
-    // @ts-ignore
     return __env.createCanvas();
   }
   return document.createElement('canvas');
@@ -67,9 +65,7 @@ export function createCanvas() {
 
 export function createImage() {
   /* istanbul ignore if*/
-  // @ts-ignore
   if (typeof __env !== 'undefined') {
-    // @ts-ignore
     return __env.createImage();
   }
   return document.createElement('img');

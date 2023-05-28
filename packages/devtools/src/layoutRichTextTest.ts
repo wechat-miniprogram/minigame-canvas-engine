@@ -32,7 +32,8 @@ function main() {
     }
   }
 
-  const Layout = window.Layout;
+  // @ts-ignore
+  const Layout = (window as any).Layout;
 
   const RichText = install(Layout.Element);
   Layout.registerComponent('richtext', RichText);

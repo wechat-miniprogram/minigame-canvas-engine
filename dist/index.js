@@ -663,18 +663,14 @@ function isClick(touchMsg) {
 }
 function createCanvas() {
     /* istanbul ignore if*/
-    // @ts-ignore
     if (typeof __env !== 'undefined') {
-        // @ts-ignore
         return __env.createCanvas();
     }
     return document.createElement('canvas');
 }
 function createImage() {
     /* istanbul ignore if*/
-    // @ts-ignore
     if (typeof __env !== 'undefined') {
-        // @ts-ignore
         return __env.createImage();
     }
     return document.createElement('img');
@@ -5523,7 +5519,6 @@ var BitMapText = /** @class */ (function (_super) {
         // 元素包围盒的左上角坐标
         var x = box.absoluteX;
         var y = box.absoluteY;
-        // @ts-ignore
         var scaleY = lineHeight / defaultLineHeight;
         var realWidth = scaleY * bounds.width;
         if (style.backgroundColor) {
@@ -5894,20 +5889,6 @@ var Layout = /** @class */ (function (_super) {
         _this.BitMapText = _components__WEBPACK_IMPORTED_MODULE_13__.BitMapText;
         _this.Canvas = _components__WEBPACK_IMPORTED_MODULE_13__.Canvas;
         _this.registerComponent = _common_vd__WEBPACK_IMPORTED_MODULE_10__.registerComponent;
-        // this.elementTree = null;
-        // this.renderport = {};
-        // this.viewport = {};
-        // this.viewportScale = 1;
-        // this.hasViewPortSet = false;
-        // this.realLayoutBox = {
-        //   realX: 0,
-        //   realY: 0,
-        // };
-        // this.touchMsg = {};
-        // this.touchStart = this.eventHandler('touchstart').bind(this);
-        // this.touchMove = this.eventHandler('touchmove').bind(this);
-        // this.touchEnd = this.eventHandler('touchend').bind(this);
-        // this.touchCancel = this.eventHandler('touchcancel').bind(this);
         _this.eventHandlerData = {
             touchMsg: {},
             handlers: {
@@ -5917,10 +5898,6 @@ var Layout = /** @class */ (function (_super) {
                 touchCancel: _this.eventHandler('touchcancel'),
             },
         };
-        // this.version = '1.0.2';
-        // this.eleCount = 0;
-        // this.state = STATE.UNINIT;
-        // this.bitMapFonts = [];
         /**
          * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
          * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
@@ -5938,14 +5915,6 @@ var Layout = /** @class */ (function (_super) {
          * 业务侧不用感知到 repaint 和 reflow
          */
         // this.TWEEN = TWEEN;
-        // this.tickerFunc = () => {
-        //   // TWEEN.update();
-        //   if (this.isDirty) {
-        //     this.reflow();
-        //   } else if (this.isNeedRepaint) {
-        //     this.repaint();
-        //   }
-        // };
         console.log("[Layout] v".concat(_this.version));
         return _this;
     }
@@ -6036,7 +6005,6 @@ var Layout = /** @class */ (function (_super) {
         }
         // 将布局树的布局信息加工赋值到渲染树
         debugInfo.start('layoutChildren', true);
-        // @ts-ignore
         (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.layoutChildren)(this);
         debugInfo.end('layoutChildren');
         this.viewportScale = this.viewport.width / this.renderport.width;

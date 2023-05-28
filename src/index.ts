@@ -44,7 +44,6 @@ interface EventHandlerData {
   };
 }
 
-
 class Layout extends Element {
   public version = '1.0.2';
   public hasEventHandler = false;
@@ -95,22 +94,6 @@ class Layout extends Element {
       style,
       id: 0,
     });
-    // this.elementTree = null;
-
-    // this.renderport = {};
-    // this.viewport = {};
-    // this.viewportScale = 1;
-    // this.hasViewPortSet = false;
-    // this.realLayoutBox = {
-    //   realX: 0,
-    //   realY: 0,
-    // };
-
-    // this.touchMsg = {};
-    // this.touchStart = this.eventHandler('touchstart').bind(this);
-    // this.touchMove = this.eventHandler('touchmove').bind(this);
-    // this.touchEnd = this.eventHandler('touchend').bind(this);
-    // this.touchCancel = this.eventHandler('touchcancel').bind(this);
 
     this.eventHandlerData = {
       touchMsg: {},
@@ -121,13 +104,6 @@ class Layout extends Element {
         touchCancel: this.eventHandler('touchcancel'),
       },
     };
-
-    // this.version = '1.0.2';
-    // this.eleCount = 0;
-
-    // this.state = STATE.UNINIT;
-
-    // this.bitMapFonts = [];
 
     /**
      * 对于不会影响布局的改动，比如图片只是改个地址、加个背景色之类的改动，会触发 Layout 的 repaint 操作
@@ -149,16 +125,6 @@ class Layout extends Element {
      * 业务侧不用感知到 repaint 和 reflow
      */
     // this.TWEEN = TWEEN;
-
-    // this.tickerFunc = () => {
-    //   // TWEEN.update();
-    //   if (this.isDirty) {
-    //     this.reflow();
-    //   } else if (this.isNeedRepaint) {
-    //     this.repaint();
-    //   }
-    // };
-
     console.log(`[Layout] v${this.version}`);
   }
 
@@ -262,7 +228,6 @@ class Layout extends Element {
 
     // 将布局树的布局信息加工赋值到渲染树
     debugInfo.start('layoutChildren', true);
-    // @ts-ignore
     layoutChildren(this);
     debugInfo.end('layoutChildren');
 

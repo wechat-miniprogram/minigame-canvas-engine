@@ -7,5 +7,12 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node"
-  }
+  },
+  "include": [
+    "src/**/*",
+  ], // 包含的 TypeScript 文件
+  "exclude": [
+    "node_modules",
+    "dist"
+  ] // 排除的目录
 }
