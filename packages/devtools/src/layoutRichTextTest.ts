@@ -1,5 +1,7 @@
 import { template } from 'dot';
-import install from 'minigame-canvas-engine-richtext'
+import RichText from 'minigame-canvas-engine-richtext';
+
+RichText.install(Layout);
 
 function main() {
   let tpl = `
@@ -34,9 +36,6 @@ function main() {
 
   // @ts-ignore
   const Layout = (window as any).Layout;
-
-  const RichText = install(Layout.Element);
-  Layout.registerComponent('richtext', RichText);
 
   Layout.init(template(tpl)({}), style);
 

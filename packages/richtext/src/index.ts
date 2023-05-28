@@ -75,8 +75,9 @@ type RichTextOptions = {
   dataset: Record<string, any>;
 };
 
-export default function install(Element: Layout["Element"]) {
-  return class RichText extends Element {
+
+function install(layout: Layout) {
+  class RichText extends layout.Element {
     private innerText = '';
     private jsonData: JsonNode | null = null;
     private dcs: IDC[] = [];
@@ -141,7 +142,7 @@ export default function install(Element: Layout["Element"]) {
 
     buildDrawCallFromJsonData(jsonData: JsonNode) {
       const { width = 0, fontSize = 12, } = this.style;
-      let lineHeight = this.style.lineHeight as number || 16; 
+      let lineHeight = this.style.lineHeight as number || 16;
 
       // 针对整个节点树进行解析，算出最后需要独立调用 canvas API 绘制的列表
       let dcs: IDC[] = [];
@@ -319,7 +320,6 @@ export default function install(Element: Layout["Element"]) {
 
     render() {
       const ctx = this.ctx as CanvasRenderingContext2D;
-      // this.toCanvasData();
       ctx.save();
 
       const box = this.layoutBox;
@@ -376,4 +376,12 @@ export default function install(Element: Layout["Element"]) {
       ctx.restore();
     }
   }
+
+  layout.registerComponent('richtext', RichText);
+
+  return RichText;
+}
+
+export default {
+  install
 }

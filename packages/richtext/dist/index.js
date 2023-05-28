@@ -480,7 +480,7 @@ var __webpack_exports__ = {};
 (() => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ install),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   getCharWidth: () => (/* binding */ getCharWidth)
 /* harmony export */ });
 /* harmony import */ var _htmlparser_html2json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
@@ -519,8 +519,8 @@ function iterateTree(element, callback) {
         });
     }
 }
-function install(Element) {
-    return class RichText extends Element {
+function install(layout) {
+    class RichText extends layout.Element {
         constructor(opts) {
             const { style = {}, idName = '', className = '', dataset, } = opts;
             super({
@@ -714,7 +714,6 @@ function install(Element) {
         }
         render() {
             const ctx = this.ctx;
-            // this.toCanvasData();
             ctx.save();
             const box = this.layoutBox;
             const { style } = this;
@@ -758,8 +757,13 @@ function install(Element) {
             }
             ctx.restore();
         }
-    };
+    }
+    layout.registerComponent('richtext', RichText);
+    return RichText;
 }
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+    install
+});
 
 })();
 
