@@ -12,5 +12,8 @@
     "richtext"
   ],
   "author": "yuanzm",
-  "license": "MIT "
+  "license": "MIT ",
+  "dependencies": {
+    "minigame-canvas-engine": "file:../.."
+  }
 }

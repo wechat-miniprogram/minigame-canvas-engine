@@ -40,21 +40,6 @@ export default class BitMapText extends Element {
     this.ctx = null;
     this.valuesrc = value;
 
-    // Object.defineProperty(this, 'value', {
-    //   get() {
-    //     return this.valuesrc;
-    //   },
-    //   set(newValue) {
-    //     if (newValue !== this.valuesrc) {
-    //       this.valuesrc = newValue;
-
-    //       this.emit('repaint');
-    //     }
-    //   },
-    //   enumerable: true,
-    //   configurable: true,
-    // });
-
     this.font = bitMapPool.get(font);
     if (!this.font) {
       console.error(`Missing BitmapFont "${font}", please invoke API "registBitMapFont" before using "BitMapText"`);

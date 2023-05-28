@@ -1,5 +1,7 @@
 const path = require('path');
 
+console.log(path.join('.', 'src', 'index.ts'))
+
 module.exports = {
   entry: {
     './dist/index': './src/index',
@@ -16,18 +18,11 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|js)$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            "presets": [
-              "@babel/preset-env",
-              "@babel/preset-typescript"
-            ],
-          }
-        },
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
     ],
   },
   mode: 'none',
+  // devtool: 'inline-source-map',
 };

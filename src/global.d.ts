@@ -87,25 +87,3 @@ declare module "css-layout" {
 }
 
 declare type Callback = (...args: any[]) => void;
-
-interface GameTouch {
-  timeStamp: number;
-  identifier: number;
-  pageX: number;
-  pageY: number;
-  clientX: number;
-  clientY: number;
-  force?: number;
-}
-
-interface GameTouchEvent {
-  type: string;
-  timeStamp: number;
-  touches: GameTouch[];
-  changedTouches: GameTouch[];
-}
-
-interface TouchMsg {
-  touchstart?: MouseEvent | GameTouch;
-  touchend?: MouseEvent | GameTouch;
-}

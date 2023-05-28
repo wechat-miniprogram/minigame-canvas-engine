@@ -1,22 +1,6 @@
 /* istanbul ignore next */
 export function none() { }
-
-export interface GameTouch {
-  timeStamp: number;
-  identifier: number;
-  pageX: number;
-  pageY: number;
-  clientX: number;
-  clientY: number;
-  force?: number;
-}
-
-export interface GameTouchEvent {
-  type: string;
-  timeStamp: number;
-  touches: GameTouch[];
-  changedTouches: GameTouch[];
-}
+import { GameTouch, GameTouchEvent } from "../types";
 
 interface TouchMsg {
   touchstart?: MouseEvent | GameTouch;

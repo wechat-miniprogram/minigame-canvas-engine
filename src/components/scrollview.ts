@@ -52,7 +52,6 @@ export default class ScrollView extends View {
       className,
     });
 
-
     this.scrollYProp = scrollY;
 
     this.innerScrollerOption = {

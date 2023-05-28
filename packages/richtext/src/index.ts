@@ -1,6 +1,5 @@
 
-// import Element from '../../../src/components/elements';
-const parser = require('./htmlparser/html2json');
+import parser from './htmlparser/html2json';
 const DEFAULT_FONT_FAMILY = 'sans-serif';
 
 function createCanvas() {
@@ -12,14 +11,39 @@ function createCanvas() {
   return document.createElement('canvas');
 }
 
-let ctx;
+let ctx: CanvasRenderingContext2D;
+
+interface JsonNode {
+  index: string;
+  node: string;
+  parent?: JsonNode;
+  tag?: string;
+  tagType?: string;
+  nodes?: JsonNode[];
+  styleStr?: string;
+  styleObj?: Record<string, any>;
+  text?: string;
+}
+
+interface IDC {
+  filleStyle: string | null;
+  fontStyle: string | null;
+  fontWeight: string | null;
+  fontSize: number | null;
+  textAlign: string | null;
+  text: string;
+  x: number;
+  y: number;
+}
+
+type Callback = (...args: any[]) => void;
 
 /**
  * @description 获取字符宽度
  * @param char
  * @param fontSize
  */
-export const getCharWidth = (char, fontSize) => {
+export const getCharWidth = (char: string, fontSize: number) => {
   if (!ctx) {
     const canvas = createCanvas();
     ctx = canvas.getContext('2d');
@@ -31,7 +55,7 @@ export const getCharWidth = (char, fontSize) => {
 };
 
 
-function iterateTree(element, callback) {
+function iterateTree(element: JsonNode, callback: Callback) {
   if (callback) {
     callback(element);
   }
@@ -44,107 +68,122 @@ function iterateTree(element, callback) {
   }
 }
 
+type RichTextOptions = {
+  style?: object;
+  idName?: string;
+  className?: string;
+  dataset: Record<string, any>;
+};
 
-export default function install(Element) {
-  return  class RichText extends Element {
-    constructor(opts) {
+export default function install(Element: Layout["Element"]) {
+  return class RichText extends Element {
+    private innerText = '';
+    private jsonData: JsonNode | null = null;
+    private dcs: IDC[] = [];
+    public fontSize?: number;
+    public textBaseline: CanvasTextBaseline = 'top';
+    public font = '';
+    public textAlign: CanvasTextAlign = 'left';
+    public fillStyle = '#000000';
+
+    constructor(opts: RichTextOptions) {
       const {
         style = {},
         idName = '',
         className = '',
         dataset,
       } = opts;
-  
+
       super({
         idName,
         className,
         dataset,
         style,
       });
-  
-      this.innerText = '';
-      this.jsonData = null;
     }
-  
+
     set text(value) {
       if (value === this.innerText) {
         return;
       }
       this.innerText = value;
-  
-      const jsonData = parser.html2json(this.innerText);
-      this.jsonData = jsonData;
-  
-      this.root.emit('repaint');
-  
-      this.buildDrawCallFromJsonData(jsonData);
+
+      const jsonData = parser.html2json(this.innerText) as unknown;
+      console.log(jsonData)
+      this.jsonData = jsonData as JsonNode;
+
+      // this.root!.emit('repaint');
+
+      this.buildDrawCallFromJsonData(this.jsonData);
     }
-  
+
     get text() {
       return this.innerText;
     }
-  
-    setStyleForDc(currDc, styleObj) {
+
+    setStyleForDc(currDc: IDC, styleObj: Record<string, any>) {
       if (styleObj['font-weight']) {
         currDc.fontWeight = styleObj['font-weight'];
       }
-  
+
       if (styleObj['font-style']) {
         currDc.fontStyle = styleObj['font-style'];
       }
-  
+
       if (styleObj.color) {
         currDc.filleStyle = styleObj.color;
       }
-  
+
       if (styleObj['font-size']) {
         currDc.fontSize = styleObj['font-size'].replace('px', '');
       }
     }
-  
-    buildDrawCallFromJsonData(jsonData) {
-      const { width, lineHeight = 16, fontSize = 12, } = this.style;
-  
+
+    buildDrawCallFromJsonData(jsonData: JsonNode) {
+      const { width = 0, fontSize = 12, } = this.style;
+      let lineHeight = this.style.lineHeight as number || 16; 
+
       // 针对整个节点树进行解析，算出最后需要独立调用 canvas API 绘制的列表
-      let dcs = [];
+      let dcs: IDC[] = [];
       // 换行标记
       let lines = -1;
       // 当前行宽度标记
       let lineWidth = 0;
-  
-      let currDc;
-  
+
+      let currDc: IDC;
+
       function createDc() {
-        let dc = {
+        let dc: IDC = {
           filleStyle: null,
           fontStyle: null,
+          fontWeight: null,
           fontSize: null,
           textAlign: null,
           text: '',
           x: 0,
           y: 0,
         };
-  
+
         dcs.push(dc);
-  
+
         currDc = dc;
         currDc.x = lineWidth;
-        currDc.y = lineHeight * lines;
-  
+        currDc.y = (lineHeight as number) * lines;
+
         return dc;
       }
-  
-      iterateTree(jsonData, (node) => {
+
+      iterateTree(jsonData, (node: JsonNode) => {
         // tagType： block、inline
         const { tagType, tag, styleStr } = node;
         // block类型新起一行
         if (tagType === 'block') {
           lines += 1;
           lineWidth = 0;
-  
+
           createDc();
         }
-  
+
         // 加粗
         if (tag === 'strong') {
           // 当前dc并不是加粗文本且并不为空，需要创建新的 dc
@@ -152,36 +191,38 @@ export default function install(Element) {
             createDc();
             currDc.fontWeight = 'bold';
           }
-  
+
           // 本身刚刚新起一行，不再需要创建新的，直接用即可
           if (currDc.text === '') {
             currDc.fontWeight = 'bold';
           }
-  
+
           if (!node.styleObj) {
             node.styleObj = {}
           }
-  
+
           node.styleObj['font-weight'] = 'bold';
         }
-  
-        let styleObj = {};
+
+        let styleObj: Record<string, any> = {};
         /**
          * 当前标签有样式的情况
          * 1. 处理样式，目前支持颜色、加粗、字体大小
          * 2. 目前暴力处理，不管当前dc什么状态，只要是有 style 就创建新的dc
          */
         if (styleStr) {
-          styleObj = styleStr.split(';').filter(item => !!item).reduce((res, curr) => {
-            const temp = curr.split(':');
-            res[temp[0]] = temp[1].trim();
-  
+          styleStr.split(';').filter(item => !!item).reduce((res, curr) => {
+            const temp: string[] = curr.split(':');
+            if (temp.length) {
+              res[temp[0]] = temp[1].trim();
+            }
+
             return res;
-          }, {});
-  
+          }, styleObj);
+
           if (styleObj) {
             createDc();
-  
+
             // 继承父节点的样式
             let parent = node.parent;
             while (parent) {
@@ -190,9 +231,9 @@ export default function install(Element) {
               }
               parent = parent.parent;
             }
-  
+
             this.setStyleForDc(currDc, styleObj);
-  
+
             node.styleObj = styleObj;
           }
         } else {
@@ -204,16 +245,16 @@ export default function install(Element) {
             }
             parent = parent.parent;
           }
-  
-          const nodeIndex = node.parent?.nodes.indexOf(node);
+
+          const nodeIndex = node.parent?.nodes!.indexOf(node) as number;
           // 前一个节点同样存在样式，新建dc
-          if (nodeIndex > 0 && (node.parent?.nodes[nodeIndex - 1].styleStr || node.parent?.nodes[nodeIndex - 1].tag === 'strong')) {
+          if (nodeIndex > 0 && (node.parent?.nodes![nodeIndex - 1].styleStr || node.parent?.nodes![nodeIndex - 1].tag === 'strong')) {
             createDc();
           }
-  
+
           this.setStyleForDc(currDc, styleObj);
         }
-  
+
         const localFontSize = styleObj['font-size'] ? Number(styleObj['font-size'].replace('px', '')) : fontSize;
         // 文本类型
         if (node.text) {
@@ -223,12 +264,12 @@ export default function install(Element) {
           for (let i = 0; i < node.text.length; i++) {
             const char = node.text[i];
             const charWidth = getCharWidth(char, currDc && currDc.fontSize || fontSize);
-  
+
             // 触发了换行逻辑
             if (lineWidth + charWidth > width) {
               lines += 1;
               lineWidth = 0;
-  
+
               let lastDc = currDc;
               createDc();
               // 因为字符太长触发的换行样式继承到下一个dc
@@ -237,83 +278,83 @@ export default function install(Element) {
               currDc.y = lineHeight * lines;
               currDc.x = 0;
             }
-  
+
             lineWidth += charWidth;
             currDc.text += char;
           }
         }
       });
-  
+
       this.dcs = dcs;
       this.style.height = lines * lineHeight;
     }
-  
+
     repaint() {
       this.render();
     }
-  
+
     destroySelf() {
       this.root = null;
     }
-  
-    insert(ctx, needRender) {
+
+    insert(ctx: CanvasRenderingContext2D, needRender: boolean) {
       this.ctx = ctx;
-  
+
       this.toCanvasData();
-  
+
       if (needRender) {
         this.render();
       }
     }
-  
+
     toCanvasData() {
       const style = this.style || {};
-  
+
       this.fontSize = style.fontSize || 12;
       this.textBaseline = 'top';
       this.font = `${style.fontWeight || ''} ${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY}`;
       this.textAlign = style.textAlign || 'left';
       this.fillStyle = style.color || '#000';
     }
-  
+
     render() {
-      const { ctx } = this;
+      const ctx = this.ctx as CanvasRenderingContext2D;
       // this.toCanvasData();
       ctx.save();
-  
+
       const box = this.layoutBox;
       const { style } = this;
-  
+
       ctx.textBaseline = this.textBaseline;
       ctx.font = this.font;
       ctx.textAlign = this.textAlign;
-  
+
       let drawX = box.absoluteX;
       let drawY = box.absoluteY;
-  
+
       const { needClip, needStroke } = this.renderBorder(ctx);
-  
+
       if (needClip) {
         ctx.clip();
       }
-  
+
       if (style.backgroundColor) {
         ctx.fillStyle = style.backgroundColor;
         ctx.fillRect(drawX, drawY, box.width, box.height);
       }
-  
+
       if (style.backgroundImage && this.backgroundImage) {
         ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
       }
-  
+
       if (needStroke) {
         ctx.stroke();
       }
-  
+
       if (this.dcs && this.dcs.length) {
         const { width, lineHeight = 12, fontSize = 12 } = this.style;
-  
-  
+
+
         this.dcs.forEach((dc) => {
           if (dc.text) {
             if (dc.fontWeight || dc.fontSize || dc.filleStyle || dc.fontStyle) {
@@ -321,7 +362,7 @@ export default function install(Element) {
               if (dc.filleStyle) {
                 ctx.fillStyle = dc.filleStyle;
               }
-  
+
               ctx.font = `${dc.fontStyle || ''} ${dc.fontWeight || ''} ${dc.fontSize || fontSize}px ${DEFAULT_FONT_FAMILY}`;
               ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
               ctx.restore();
@@ -331,7 +372,7 @@ export default function install(Element) {
           }
         });
       }
-  
+
       ctx.restore();
     }
   }

@@ -13,6 +13,7 @@ import Rect from './common/rect';
 import imageManager from './common/imageManager';
 import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components';
 import { IStyle } from './components/style';
+import { GameTouch, GameTouchEvent } from './types/index'
 
 // 全局事件管道
 export const EE = new TinyEmitter();
