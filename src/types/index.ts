@@ -1,5 +1,7 @@
 export type IDataset = Record<string, any>;
 
+export type Callback = (...args: any[]) => void;
+
 export interface GameTouch {
   timeStamp: number;
   identifier: number;

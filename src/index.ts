@@ -13,7 +13,7 @@ import Rect from './common/rect';
 import imageManager from './common/imageManager';
 import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components';
 import { IStyle } from './components/style';
-import { GameTouch, GameTouchEvent } from './types/index';
+import { GameTouch, GameTouchEvent, Callback } from './types/index';
 
 // 全局事件管道
 export const EE = new TinyEmitter();
@@ -277,7 +277,7 @@ class Layout extends Element {
     this.renderContext = context;
 
     if (!this.hasViewPortSet) {
-      console.error('Please invoke method `updateViewPort` before method `layout`');
+      console.error('[Layout] Please invoke method `updateViewPort` before method `layout`');
     }
 
     debugInfo.start('layout');
@@ -297,6 +297,9 @@ class Layout extends Element {
     debugInfo.end('layout_other');
   }
 
+  /**
+   * 执行节点数的重绘制，一般业务侧无需调用该方法
+   */
   repaint() {
     clearCanvas(this.renderContext as CanvasRenderingContext2D);
 
@@ -304,6 +307,9 @@ class Layout extends Element {
     repaintChildren(this.children);
   }
 
+  /**
+   * 返回一个节点在屏幕中的位置和尺寸信息，前提是正确调用updateViewPort。
+   */
   getElementViewportRect(element: Element) {
     const { realLayoutBox, viewportScale } = this;
     const {
@@ -393,6 +399,9 @@ class Layout extends Element {
     };
   }
 
+  /**
+   * 执行全局的事件绑定逻辑 
+   */
   bindEvents() {
     if (this.hasEventHandler) {
       return;
@@ -413,6 +422,9 @@ class Layout extends Element {
     }
   }
 
+  /**
+   * 全局事件解绑 
+   */
   unBindEvents() {
     if (typeof __env !== 'undefined') {
       __env.offTouchStart(this.eventHandlerData.handlers.touchStart);
@@ -457,6 +469,9 @@ class Layout extends Element {
     });
   }
 
+  /**
+   * 清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行init和layout方法渲染界面。
+   */
   clear(options: { removeTicker?: boolean } = {}) {
     const { removeTicker = true } = options;
 
@@ -480,16 +495,26 @@ class Layout extends Element {
     imgPool.clear();
   }
 
+  /**
+   * 比起 Layout.clear 更彻底的清理，会清空图片对象池，减少内存占用。
+   */
   clearAll() {
     this.clear();
 
     this.clearPool();
   }
 
-  loadImgs(arr = []) {
+  /**
+   * 对于图片资源，如果不提前加载，渲染过程中可能出现挨个出现图片效果，影响体验
+   * 通过Layout.loadImgs可以预加载图片资源，在调用Layout.layout的时候渲染性能更好，体验更佳。
+   */
+  loadImgs(arr: string[] = []) {
     return Promise.all(arr.map(src => imageManager.loadImagePromise(src)));
   }
 
+  /**
+   * 注册 bitmaptext 可用的字体。 
+   */
   registBitMapFont(name: string, src: string, config: string) {
     if (!bitMapPool.get(name)) {
       const font = new BitMapFont(name, src, config);
@@ -498,6 +523,10 @@ class Layout extends Element {
     }
   }
 
+  /**
+   * 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中
+   * 该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。
+   */
   cloneNode(element: Element, deep = true) {
     return clone<Layout>(this, element, deep);
   }
@@ -516,7 +545,9 @@ class Layout extends Element {
   registerComponent = registerComponent;
 
   private static installedPlugins: IPlugin<Layout>[] = [];
-  // use 方法，使用数组代替 Set
+  /**
+   * 安装给定的插件 
+   */
   use(plugin: IPlugin<Layout>, ...options: any[]) {
     if (Layout.installedPlugins.includes(plugin)) {
       console.warn('[Layout] 该插件已安装.');
@@ -529,8 +560,10 @@ class Layout extends Element {
     console.log(`[Layout] 插件 ${plugin.name || ''} 已安装`)
   }
 
-  // unuse 方法，使用数组代替 Set
-  unuse(plugin: IPlugin<Layout>, ...options: any[]) {
+  /**
+   * 卸载给定插件 
+   */
+  unUse(plugin: IPlugin<Layout>, ...options: any[]) {
     const pluginIndex = Layout.installedPlugins.indexOf(plugin);
 
     if (pluginIndex === -1) {

@@ -85,5 +85,3 @@ declare module "scroller" {
 declare module "css-layout" {
   export default function computeLayout(tree: any): void;
 }
-
-declare type Callback = (...args: any[]) => void;
