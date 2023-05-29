@@ -3,7 +3,6 @@ import parser from './htmlparser/html2json';
 const DEFAULT_FONT_FAMILY = 'sans-serif';
 
 function createCanvas() {
-  /* istanbul ignore if*/
   if (typeof __env !== 'undefined') {
     return __env.createCanvas();
   }
@@ -110,10 +109,7 @@ function install(layout: Layout) {
       this.innerText = value;
 
       const jsonData = parser.html2json(this.innerText) as unknown;
-      console.log(jsonData)
       this.jsonData = jsonData as JsonNode;
-
-      // this.root!.emit('repaint');
 
       this.buildDrawCallFromJsonData(this.jsonData);
     }
@@ -352,8 +348,7 @@ function install(layout: Layout) {
       }
 
       if (this.dcs && this.dcs.length) {
-        const { width, lineHeight = 12, fontSize = 12 } = this.style;
-
+        const { fontSize = 12 } = this.style;
 
         this.dcs.forEach((dc) => {
           if (dc.text) {
@@ -383,5 +378,6 @@ function install(layout: Layout) {
 }
 
 export default {
-  install
+  install,
+  name: 'RichText'
 }

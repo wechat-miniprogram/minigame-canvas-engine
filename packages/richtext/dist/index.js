@@ -488,7 +488,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const DEFAULT_FONT_FAMILY = 'sans-serif';
 function createCanvas() {
-    /* istanbul ignore if*/
     if (typeof __env !== 'undefined') {
         return __env.createCanvas();
     }
@@ -543,9 +542,7 @@ function install(layout) {
             }
             this.innerText = value;
             const jsonData = _htmlparser_html2json__WEBPACK_IMPORTED_MODULE_0___default().html2json(this.innerText);
-            console.log(jsonData);
             this.jsonData = jsonData;
-            // this.root!.emit('repaint');
             this.buildDrawCallFromJsonData(this.jsonData);
         }
         get text() {
@@ -737,7 +734,7 @@ function install(layout) {
                 ctx.stroke();
             }
             if (this.dcs && this.dcs.length) {
-                const { width, lineHeight = 12, fontSize = 12 } = this.style;
+                const { fontSize = 12 } = this.style;
                 this.dcs.forEach((dc) => {
                     if (dc.text) {
                         if (dc.fontWeight || dc.fontSize || dc.filleStyle || dc.fontStyle) {
@@ -762,7 +759,8 @@ function install(layout) {
     return RichText;
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-    install
+    install,
+    name: 'RichText'
 });
 
 })();

@@ -1,8 +1,6 @@
 import { template } from 'dot';
 import RichText from 'minigame-canvas-engine-richtext';
 
-RichText.install(Layout);
-
 function main() {
   let tpl = `
     <view class="container" id="main">
@@ -37,6 +35,7 @@ function main() {
   // @ts-ignore
   const Layout = (window as any).Layout;
 
+  Layout.use(RichText);
   Layout.init(template(tpl)({}), style);
 
   let canvas = document.createElement('canvas');

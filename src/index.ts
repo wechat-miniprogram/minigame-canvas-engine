@@ -13,7 +13,7 @@ import Rect from './common/rect';
 import imageManager from './common/imageManager';
 import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components';
 import { IStyle } from './components/style';
-import { GameTouch, GameTouchEvent } from './types/index'
+import { GameTouch, GameTouchEvent } from './types/index';
 
 // 全局事件管道
 export const EE = new TinyEmitter();
@@ -45,6 +45,12 @@ interface EventHandlerData {
   };
 }
 
+interface IPlugin<T> {
+  name: string;
+  install: (app: T, ...options: any[]) => void;
+  uninstall?: (app: T, ...options: any[]) => void;
+}
+
 class Layout extends Element {
   public version = '1.0.2';
   public hasEventHandler = false;
@@ -65,9 +71,9 @@ class Layout extends Element {
     realX: number;
     realY: number;
   } = {
-    realX: 0,
-    realY: 0,
-  };
+      realX: 0,
+      realY: 0,
+    };
 
   public bitMapFonts: BitMapFont[] = [];
   public eleCount = 0;
@@ -75,7 +81,6 @@ class Layout extends Element {
   public isNeedRepaint = false;
   public ticker: Ticker = new Ticker();
   public tickerFunc = () => {
-    // TWEEN.update();
     if (this.isDirty) {
       this.reflow();
     } else if (this.isNeedRepaint) {
@@ -84,7 +89,7 @@ class Layout extends Element {
   };
 
   private eventHandlerData: EventHandlerData;
-  
+
   constructor({
     style,
   }: {
@@ -350,7 +355,7 @@ class Layout extends Element {
   eventHandler = (eventName: string) => {
     return (e: MouseEvent | GameTouchEvent) => {
       let touch: MouseEvent | GameTouch;
-      
+
       if (isGameTouchEvent(e)) {
         touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
       } else {
@@ -497,6 +502,9 @@ class Layout extends Element {
     return clone<Layout>(this, element, deep);
   }
 
+  /**
+   * 将组件挂到Layout
+   */
   Element = Element;
   View = View;
   Text = Text;
@@ -506,6 +514,37 @@ class Layout extends Element {
   Canvas = Canvas;
 
   registerComponent = registerComponent;
+
+  private static installedPlugins: IPlugin<Layout>[] = [];
+  // use 方法，使用数组代替 Set
+  use(plugin: IPlugin<Layout>, ...options: any[]) {
+    if (Layout.installedPlugins.includes(plugin)) {
+      console.warn('[Layout] 该插件已安装.');
+      return;
+    }
+
+    plugin.install(this, ...options);
+    Layout.installedPlugins.push(plugin);
+
+    console.log(`[Layout] 插件 ${plugin.name || ''} 已安装`)
+  }
+
+  // unuse 方法，使用数组代替 Set
+  unuse(plugin: IPlugin<Layout>, ...options: any[]) {
+    const pluginIndex = Layout.installedPlugins.indexOf(plugin);
+
+    if (pluginIndex === -1) {
+      console.warn('This plugin is not installed.');
+      return;
+    }
+
+    if (plugin.uninstall) {
+      plugin.uninstall(this, ...options);
+    }
+
+    console.log(`[Layout] 插件 ${plugin.name || ''} 已卸载`)
+    Layout.installedPlugins.splice(pluginIndex, 1);
+  }
 }
 
 export default new Layout({
