@@ -4,6 +4,7 @@
   "description": "1. 安装Node 2. 安装tnpm: 3. 安装webpack: npm install --save-dev webpack",
   "main": "dist/index.js",
   "scripts": {
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix packages/richtext\" \"npm run dev --prefix packages/devtools\"",
     "dev": "webpack --config ./build/webpack.config.js --watch",
     "build": "webpack --config ./build/webpack.build.config.js && npm run build-types",
     "build-types": "rollup -c ./build/rollup.config.mjs",
@@ -22,6 +23,7 @@
     "@babel/preset-env": "^7.21.5",
     "@babel/preset-typescript": "^7.21.5",
     "babel-loader": "^9.1.2",
+    "concurrently": "^8.0.1",
     "coveralls": "^3.0.7",
     "cz-conventional-changelog": "^3.0.2",
     "eslint": "^8.30.0",
