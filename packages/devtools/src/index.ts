@@ -39,9 +39,10 @@ class LayoutDevtools {
       (window as any).Layout = Layout;
 
       // require('./layoutTest');
-      require('./layoutRichTextTest');
+      // require('./layoutRichTextTest');
       // require('./layoutTextTest');
       // require('./layoutBitMapTextTest');
+      require('./layoutDynamicTextTest')
     }
 
     this.vueApp = vueApp;

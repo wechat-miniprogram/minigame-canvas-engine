@@ -75,6 +75,22 @@ declare class Rect {
 }
 
 type IDataset = Record<string, any>;
+type Callback$2 = (...args: any[]) => void;
+interface GameTouch {
+    timeStamp: number;
+    identifier: number;
+    pageX: number;
+    pageY: number;
+    clientX: number;
+    clientY: number;
+    force?: number;
+}
+interface GameTouchEvent {
+    type: string;
+    timeStamp: number;
+    touches: GameTouch[];
+    changedTouches: GameTouch[];
+}
 
 interface ILayoutBox {
     left: number;
@@ -86,7 +102,7 @@ interface ILayoutBox {
     originalAbsoluteX: number;
     originalAbsoluteY: number;
 }
-type Callback$2 = (...args: any[]) => void;
+type Callback$1 = (...args: any[]) => void;
 declare class Element {
     /**
      * 子节点列表
@@ -136,9 +152,21 @@ declare class Element {
     layoutBox: ILayoutBox;
     backgroundImage: any;
     ctx: CanvasRenderingContext2D | null;
+    /**
+     * 置脏标记位，目前当修改会影响布局属性的时候，会自动置脏
+     */
     isDirty: boolean;
-    shouldUpdate: boolean;
+    /**
+     * css-layout 节点属性，业务侧无需关心
+     */
+    protected shouldUpdate: boolean;
+    /**
+     * 当前节点的名称，比如" Image
+     */
     type?: string;
+    /**
+     * 当前节点在 xml 的标签名称，比如 image、view
+     */
     tagName?: string;
     private originStyle;
     constructor({ style, idName, className, id, dataset, }: {
@@ -146,7 +174,7 @@ declare class Element {
         idName?: string;
         className?: string;
         id?: number;
-        dataset?: Record<string, string>;
+        dataset?: IDataset;
     });
     backgroundImageSetHandler(backgroundImage: string): void;
     /**
@@ -210,9 +238,9 @@ declare class Element {
      */
     removeChild(element: Element): void;
     emit(event: string, ...theArgs: any[]): void;
-    on(event: string, callback: Callback$2): void;
-    once(event: string, callback: Callback$2): void;
-    off(event: string, callback?: Callback$2): void;
+    on(event: string, callback: Callback$1): void;
+    once(event: string, callback: Callback$1): void;
+    off(event: string, callback?: Callback$1): void;
     /**
      * 渲染 border 相关能力抽象，子类可按需调用
      */
@@ -265,7 +293,7 @@ declare class BitMapFont {
     getConfigByKeyInOneLine(configText: string[] | string, key: string): number;
 }
 
-type Callback$1 = (...args: any[]) => void;
+type Callback = (...args: any[]) => void;
 declare class Ticker {
     private count;
     private started;
@@ -275,9 +303,9 @@ declare class Ticker {
     private innerCbs;
     private update;
     cancelIfNeed(): void;
-    add(cb: Callback$1, isInner?: boolean): void;
-    next(cb: Callback$1): void;
-    remove(cb?: Callback$1, isInner?: boolean): void;
+    add(cb: Callback, isInner?: boolean): void;
+    next(cb: Callback): void;
+    remove(cb?: Callback, isInner?: boolean): void;
     start(): void;
     stop(): void;
 }
@@ -286,7 +314,7 @@ interface IViewOptions {
     style?: IStyle;
     idName?: string;
     className?: string;
-    dataset?: Record<string, string>;
+    dataset?: IDataset;
 }
 declare class View extends Element {
     constructor({ style, idName, className, dataset, }: IViewOptions);
@@ -301,7 +329,7 @@ interface IImageOptions {
     idName?: string;
     className?: string;
     src?: string;
-    dataset?: Record<string, string>;
+    dataset?: IDataset;
 }
 declare class Image extends Element {
     private imgsrc;
@@ -320,7 +348,7 @@ interface ITextProps {
     idName?: string;
     className?: string;
     value?: string;
-    dataset?: Record<string, string>;
+    dataset?: IDataset;
 }
 declare class Text extends Element {
     private valuesrc;
@@ -346,7 +374,7 @@ interface IScrollViewOptions {
     className?: string;
     scrollX?: boolean | undefined;
     scrollY?: boolean | undefined;
-    dataset?: Record<string, string>;
+    dataset?: IDataset;
 }
 interface IInnerScrollerOption {
     scrollingX?: boolean;
@@ -391,7 +419,7 @@ interface IBitMapTextOptions {
     className?: string;
     value?: string;
     font?: string;
-    dataset?: Record<string, string>;
+    dataset?: IDataset;
 }
 declare class BitMapText extends Element {
     ctx: CanvasRenderingContext2D | null;
@@ -415,7 +443,7 @@ interface ICanvasOptions {
     style?: IStyle;
     idName?: string;
     className?: string;
-    dataset?: Record<string, string>;
+    dataset?: IDataset;
     width?: number;
     height?: number;
     autoCreateCanvas?: boolean;
@@ -446,6 +474,11 @@ interface IViewPortBox {
     height: number;
     x: number;
     y: number;
+}
+interface IPlugin<T> {
+    name: string;
+    install: (app: T, ...options: any[]) => void;
+    uninstall?: (app: T, ...options: any[]) => void;
 }
 declare class Layout extends Element {
     version: string;
@@ -479,7 +512,7 @@ declare class Layout extends Element {
      * y坐标
      */
     updateViewPort(box: IViewPortBox): void;
-    init(template: string, style: Record<string, IStyle>, attrValueProcessor: Callback): void;
+    init(template: string, style: Record<string, IStyle>, attrValueProcessor: Callback$2): void;
     reflow(isFirst?: boolean): void;
     /**
      * init阶段核心仅仅是根据xml和css创建了节点树
@@ -496,25 +529,57 @@ declare class Layout extends Element {
      * 5. bindEvents：执行事件绑定
      */
     layout(context: CanvasRenderingContext2D): void;
+    /**
+     * 执行节点数的重绘制，一般业务侧无需调用该方法
+     */
     repaint(): void;
+    /**
+     * 返回一个节点在屏幕中的位置和尺寸信息，前提是正确调用updateViewPort。
+     */
     getElementViewportRect(element: Element): Rect;
     getChildByPos(tree: Layout | Element, x: number, y: number, itemList: (Layout | Element)[]): void;
     eventHandler: (eventName: string) => (e: MouseEvent | GameTouchEvent) => void;
+    /**
+     * 执行全局的事件绑定逻辑
+     */
     bindEvents(): void;
+    /**
+     * 全局事件解绑
+     */
     unBindEvents(): void;
     emit(event: string, data: any): void;
-    on(event: string, callback: Callback): void;
-    once(event: string, callback: Callback): void;
-    off(event: string, callback: Callback): void;
+    on(event: string, callback: Callback$2): void;
+    once(event: string, callback: Callback$2): void;
+    off(event: string, callback: Callback$2): void;
     destroyAll(tree: Layout | Element): void;
+    /**
+     * 清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行init和layout方法渲染界面。
+     */
     clear(options?: {
         removeTicker?: boolean;
     }): void;
     clearPool(): void;
+    /**
+     * 比起 Layout.clear 更彻底的清理，会清空图片对象池，减少内存占用。
+     */
     clearAll(): void;
-    loadImgs(arr?: never[]): Promise<(HTMLImageElement | null)[]>;
+    /**
+     * 对于图片资源，如果不提前加载，渲染过程中可能出现挨个出现图片效果，影响体验
+     * 通过Layout.loadImgs可以预加载图片资源，在调用Layout.layout的时候渲染性能更好，体验更佳。
+     */
+    loadImgs(arr?: string[]): Promise<(HTMLImageElement | null)[]>;
+    /**
+     * 注册 bitmaptext 可用的字体。
+     */
     registBitMapFont(name: string, src: string, config: string): void;
+    /**
+     * 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中
+     * 该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。
+     */
     cloneNode(element: Element, deep?: boolean): any;
+    /**
+     * 将组件挂到Layout
+     */
     Element: typeof Element;
     View: typeof View;
     Text: typeof Text;
@@ -523,6 +588,15 @@ declare class Layout extends Element {
     BitMapText: typeof BitMapText;
     Canvas: typeof Canvas;
     registerComponent: typeof registerComponent;
+    private static installedPlugins;
+    /**
+     * 安装给定的插件
+     */
+    use(plugin: IPlugin<Layout>, ...options: any[]): void;
+    /**
+     * 卸载给定插件
+     */
+    unUse(plugin: IPlugin<Layout>, ...options: any[]): void;
 }
 declare const _default: Layout;
 
