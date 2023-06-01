@@ -1,7 +1,7 @@
 import Element from './elements';
 import { createCanvas } from '../common/util';
 import { IStyle } from './style';
-import { IDataset } from '../types';
+import { IElementOptions } from './types';
 
 const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
 let context: CanvasRenderingContext2D | null = null;
@@ -64,12 +64,8 @@ function parseText(style: IStyle, value: string): string {
     : str);
 }
 
-interface ITextProps {
-  style?: IStyle;
-  idName?: string;
-  className?: string;
+interface ITextProps extends IElementOptions {
   value?: string;
-  dataset?: IDataset;
 }
 
 export default class Text extends Element {

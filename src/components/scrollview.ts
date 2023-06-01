@@ -4,19 +4,14 @@ import View from './view';
 import { getDpr, copyTouchArray } from '../common/util';
 import { Scroller } from 'scroller';
 import { iterateTree } from '../common/vd';
-import { IStyle } from './style';
 import Element from './elements';
-import { IDataset } from '../types';
+import { IElementOptions } from './types';
 
 const dpr = getDpr();
 
-interface IScrollViewOptions {
-  style?: IStyle;
-  idName?: string;
-  className?: string;
+interface IScrollViewOptions extends IElementOptions {
   scrollX?: boolean | undefined;
   scrollY?: boolean | undefined;
-  dataset?: IDataset;
 }
 
 interface IInnerScrollerOption {

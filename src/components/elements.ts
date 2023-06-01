@@ -4,6 +4,8 @@ import Rect from '../common/rect';
 import imageManager from '../common/imageManager';
 import TinyEmitter from 'tiny-emitter';
 import { IDataset } from '../types/index'
+import { IElementOptions } from './types';
+import { Callback } from '../types/index';
 
 export function getElementsById(tree: Element, list: Element[] = [], id: string) {
   tree.children.forEach((child: Element) => {
@@ -117,8 +119,6 @@ export interface ILayout {
   bottom: number;
 };
 
-type Callback = (...args: any[]) => void;
-
 const isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
 
 export default class Element {
@@ -211,13 +211,7 @@ export default class Element {
     className = '',
     id = uuid += 1,
     dataset = {},
-  }: {
-    style?: IStyle;
-    idName?: string;
-    className?: string;
-    id?: number;
-    dataset?: IDataset;
-  }) {
+  }: IElementOptions) {
     this.id = id;
     this.idName = idName;
     this.className = className;

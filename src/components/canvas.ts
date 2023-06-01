@@ -1,13 +1,8 @@
 import Element from './elements';
 import { createCanvas } from '../common/util';
-import { IStyle } from './style';
-import { IDataset } from '../types';
+import { IElementOptions } from './types';
 
-interface ICanvasOptions {
-  style?: IStyle
-  idName?: string;
-  className?: string;
-  dataset?: IDataset;
+interface ICanvasOptions extends IElementOptions {
   width?: number;
   height?: number;
   autoCreateCanvas?: boolean;

@@ -2,8 +2,9 @@
 // components
 import { View, Text, Image, ScrollView, BitMapText, Canvas, Element } from '../components/index';
 import { IStyle } from '../components/style';
+import { ILayout, ILayoutBox } from '../components/elements';
+import { Callback } from '../types';
 
-import { ILayout, ILayoutBox } from '../components/elements'
 
 interface Constructor {
   new (...args: any[]): any;
@@ -179,8 +180,6 @@ export function layoutChildren(element: Element) {
     layoutChildren(child);
   });
 }
-
-type Callback = (...args: any[]) => void;
 
 function none() { }
 export function iterateTree(element: Element, callback: Callback = none) {

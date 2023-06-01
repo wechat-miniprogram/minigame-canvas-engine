@@ -1,5 +1,4 @@
-
-type Callback = (...args: any[]) => void;
+import { Callback } from "../types";
 
 export default class Ticker {
   private count: number = 0;

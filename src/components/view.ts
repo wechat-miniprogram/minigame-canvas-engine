@@ -1,13 +1,5 @@
-import { IDataset } from '../types';
 import Element from './elements';
-import { IStyle } from './style';
-
-interface IViewOptions {
-  style?: IStyle;
-  idName?: string;
-  className?: string;
-  dataset?: IDataset;
-}
+import { IElementOptions } from './types';
 
 export default class View extends Element {
   constructor({
@@ -15,7 +7,7 @@ export default class View extends Element {
     idName = '',
     className = '',
     dataset,
-  }: IViewOptions) {
+  }: IElementOptions) {
     super({
       idName,
       className,

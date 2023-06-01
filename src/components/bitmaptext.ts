@@ -3,16 +3,13 @@ import Pool from '../common/pool';
 import { IStyle } from './style';
 import BitMapFont from '../common/bitMapFont';
 import { IDataset } from '../types';
+import { IElementOptions } from './types';
 
 const bitMapPool = new Pool<BitMapFont>('bitMapPool');
 
-interface IBitMapTextOptions {
-  style?: IStyle;
-  idName?: string;
-  className?: string;
+interface IBitMapTextOptions extends IElementOptions {
   value?: string;
   font?: string;
-  dataset?: IDataset;
 }
 
 export default class BitMapText extends Element {
