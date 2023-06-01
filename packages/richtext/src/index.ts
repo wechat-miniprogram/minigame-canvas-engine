@@ -29,7 +29,7 @@ interface IDC {
   fontStyle: string | null;
   fontWeight: string | null;
   fontSize: number | null;
-  textAlign: string | null;
+  textAlign: CanvasTextAlign | null;
   text: string;
   x: number;
   y: number;
@@ -134,6 +134,10 @@ function install(layout: Layout) {
       if (styleObj['font-size']) {
         currDc.fontSize = styleObj['font-size'].replace('px', '');
       }
+
+      if (styleObj['text-align']) {
+        currDc.textAlign = styleObj['text-align'];
+      }
     }
 
     buildDrawCallFromJsonData(jsonData: JsonNode) {
@@ -149,7 +153,7 @@ function install(layout: Layout) {
 
       let currDc: IDC;
 
-      function createDc() {
+      function createDc(): IDC {
         let dc: IDC = {
           filleStyle: null,
           fontStyle: null,
@@ -252,6 +256,22 @@ function install(layout: Layout) {
           this.setStyleForDc(currDc, styleObj);
         }
 
+        // 只有block类型的能处理text-align
+        if (currDc && tagType === 'block' && currDc.textAlign) {
+          switch (currDc.textAlign) {
+            case 'left':
+              currDc.x = 0;
+              break;
+            case 'right':
+              currDc.x = width;
+              break;
+            case 'center':
+              currDc.x = width / 2;
+              break;
+            default:
+              currDc.x = 0;
+          }
+        }
         const localFontSize = styleObj['font-size'] ? Number(styleObj['font-size'].replace('px', '')) : fontSize;
         // 文本类型
         if (node.text) {
@@ -273,7 +293,10 @@ function install(layout: Layout) {
               Object.assign(currDc, lastDc);
               currDc.text = '';
               currDc.y = lineHeight * lines;
-              currDc.x = 0;
+              
+              if (currDc.textAlign === 'left' || !currDc.textAlign) {
+                currDc.x = 0;
+              }
             }
 
             lineWidth += charWidth;
@@ -352,10 +375,15 @@ function install(layout: Layout) {
 
         this.dcs.forEach((dc) => {
           if (dc.text) {
-            if (dc.fontWeight || dc.fontSize || dc.filleStyle || dc.fontStyle) {
+            
+            if (dc.fontWeight || dc.fontSize || dc.filleStyle || dc.fontStyle || dc.textAlign) {
               ctx.save();
               if (dc.filleStyle) {
                 ctx.fillStyle = dc.filleStyle;
+              }
+              
+              if (dc.textAlign) {
+                ctx.textAlign = dc.textAlign;
               }
 
               ctx.font = `${dc.fontStyle || ''} ${dc.fontWeight || ''} ${dc.fontSize || fontSize}px ${DEFAULT_FONT_FAMILY}`;
