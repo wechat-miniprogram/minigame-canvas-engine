@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack serve --config webpack.config.js --mode development",
+    "dev": "webpack serve --config webpack.config.js",
     "build": "webpack --config webpack.build.js"
   },
   "keywords": [

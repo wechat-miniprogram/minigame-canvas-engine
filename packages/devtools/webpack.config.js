@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { VueLoaderPlugin } = require('vue-loader')
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
   entry: './src/index.ts',
@@ -38,7 +38,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin(),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
   ],
   devServer: {
     static: {
@@ -46,5 +46,5 @@ module.exports = {
     },
     port: 9000,
   },
-  devtool: 'eval-cheap-source-map',
+  mode: 'development',
 };

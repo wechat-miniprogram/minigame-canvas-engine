@@ -34,6 +34,7 @@ interface IViewPortBox {
 }
 
 interface EventHandlerData {
+  hasEventBind: boolean;
   touchMsg: {
     [key: string]: MouseEvent | GameTouch;
   };
@@ -52,8 +53,14 @@ interface IPlugin<T> {
 }
 
 class Layout extends Element {
+  /**
+   * 当前 Layout 版本，一般跟小游戏插件版本对齐
+   */
   public version = '1.0.2';
-  public hasEventHandler = false;
+  
+  /**
+   * Layout 渲染的目标画布对应的 2d context
+   */
   public renderContext: CanvasRenderingContext2D | null = null;
   public renderport: IViewPort = {
     width: 0,
@@ -65,8 +72,19 @@ class Layout extends Element {
     x: 0,
     y: 0,
   };
+
+  /**
+   * 画布尺寸和实际被渲染到屏幕的物理尺寸比
+   */
   public viewportScale = 1;
+  /**
+   * 用于标识updateViewPort方法是否被调用过了，这在小游戏环境非常重要
+   */
   public hasViewPortSet = false;
+
+  /**
+   * 最终渲染到屏幕的左上角物理坐标
+   */
   public realLayoutBox: {
     realX: number;
     realY: number;
@@ -78,6 +96,11 @@ class Layout extends Element {
   public bitMapFonts: BitMapFont[] = [];
   public eleCount = 0;
   public state: STATE = STATE.UNINIT;
+
+  /**
+   * 用于在 ticker 的循环里面标识当前帧是否需要重绘
+   * 重绘一般是图片加载完成、文字修改等场景
+   */
   public isNeedRepaint = false;
   public ticker: Ticker = new Ticker();
   public tickerFunc = () => {
@@ -102,6 +125,7 @@ class Layout extends Element {
     });
 
     this.eventHandlerData = {
+      hasEventBind: false,
       touchMsg: {},
       handlers: {
         touchStart: this.eventHandler('touchstart'),
@@ -116,13 +140,9 @@ class Layout extends Element {
      * 触发的方式是给 Layout 抛个 `repaint` 的事件，为了性能，每次接收到 repaint 请求不会执行真正的渲染
      * 而是执行一个置脏操作，ticker 每一次执行 update 会检查这个标记位，进而执行真正的重绘操作
      */
-    // this.isNeedRepaint = false;
-
     this.on('repaint', () => {
       this.isNeedRepaint = true;
     });
-
-    // this.ticker = new Ticker();
 
     /**
      * 将 Tween 挂载到 Layout，对于 Tween 的使用完全遵循 Tween.js 的文档
@@ -403,11 +423,11 @@ class Layout extends Element {
    * 执行全局的事件绑定逻辑 
    */
   bindEvents() {
-    if (this.hasEventHandler) {
+    if (this.eventHandlerData.hasEventBind) {
       return;
     }
 
-    this.hasEventHandler = true;
+    this.eventHandlerData.hasEventBind = true;
 
     if (typeof __env !== 'undefined') {
       __env.onTouchStart(this.eventHandlerData.handlers.touchStart);
@@ -438,7 +458,7 @@ class Layout extends Element {
       document.onmouseleave = null;
     }
 
-    this.hasEventHandler = false;
+    this.eventHandlerData.hasEventBind = false;
   }
 
   emit(event: string, data: any) {

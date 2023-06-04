@@ -9,7 +9,7 @@
     "moduleResolution": "node"
   },
   "include": [
-    "src/**/*",
+    "./src/**/*",
   ], // 包含的 TypeScript 文件
   "exclude": [
     "node_modules",
