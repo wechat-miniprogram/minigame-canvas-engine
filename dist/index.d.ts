@@ -75,7 +75,7 @@ declare class Rect {
 }
 
 type IDataset = Record<string, any>;
-type Callback$2 = (...args: any[]) => void;
+type Callback = (...args: any[]) => void;
 interface GameTouch {
     timeStamp: number;
     identifier: number;
@@ -92,6 +92,14 @@ interface GameTouchEvent {
     changedTouches: GameTouch[];
 }
 
+interface IElementOptions {
+    style?: IStyle;
+    idName?: string;
+    className?: string;
+    id?: number;
+    dataset?: IDataset;
+}
+
 interface ILayoutBox {
     left: number;
     top: number;
@@ -102,7 +110,6 @@ interface ILayoutBox {
     originalAbsoluteX: number;
     originalAbsoluteY: number;
 }
-type Callback$1 = (...args: any[]) => void;
 declare class Element {
     /**
      * 子节点列表
@@ -169,13 +176,7 @@ declare class Element {
      */
     tagName?: string;
     private originStyle;
-    constructor({ style, idName, className, id, dataset, }: {
-        style?: IStyle;
-        idName?: string;
-        className?: string;
-        id?: number;
-        dataset?: IDataset;
-    });
+    constructor({ style, idName, className, id, dataset, }: IElementOptions);
     backgroundImageSetHandler(backgroundImage: string): void;
     /**
      * 监听属性的变化判断是否需要执行 reflow、repaint 操作
@@ -238,9 +239,9 @@ declare class Element {
      */
     removeChild(element: Element): void;
     emit(event: string, ...theArgs: any[]): void;
-    on(event: string, callback: Callback$1): void;
-    once(event: string, callback: Callback$1): void;
-    off(event: string, callback?: Callback$1): void;
+    on(event: string, callback: Callback): void;
+    once(event: string, callback: Callback): void;
+    off(event: string, callback?: Callback): void;
     /**
      * 渲染 border 相关能力抽象，子类可按需调用
      */
@@ -293,7 +294,6 @@ declare class BitMapFont {
     getConfigByKeyInOneLine(configText: string[] | string, key: string): number;
 }
 
-type Callback = (...args: any[]) => void;
 declare class Ticker {
     private count;
     private started;
@@ -310,26 +310,16 @@ declare class Ticker {
     stop(): void;
 }
 
-interface IViewOptions {
-    style?: IStyle;
-    idName?: string;
-    className?: string;
-    dataset?: IDataset;
-}
 declare class View extends Element {
-    constructor({ style, idName, className, dataset, }: IViewOptions);
+    constructor({ style, idName, className, dataset, }: IElementOptions);
     destroySelf(): void;
     checkNeedRender(): boolean;
     render(): void;
     repaint(): void;
 }
 
-interface IImageOptions {
-    style?: IStyle;
-    idName?: string;
-    className?: string;
+interface IImageOptions extends IElementOptions {
     src?: string;
-    dataset?: IDataset;
 }
 declare class Image extends Element {
     private imgsrc;
@@ -343,12 +333,8 @@ declare class Image extends Element {
     render(): void;
 }
 
-interface ITextProps {
-    style?: IStyle;
-    idName?: string;
-    className?: string;
+interface ITextProps extends IElementOptions {
     value?: string;
-    dataset?: IDataset;
 }
 declare class Text extends Element {
     private valuesrc;
@@ -368,13 +354,9 @@ declare class Text extends Element {
     render(): void;
 }
 
-interface IScrollViewOptions {
-    style?: IStyle;
-    idName?: string;
-    className?: string;
+interface IScrollViewOptions extends IElementOptions {
     scrollX?: boolean | undefined;
     scrollY?: boolean | undefined;
-    dataset?: IDataset;
 }
 interface IInnerScrollerOption {
     scrollingX?: boolean;
@@ -413,13 +395,9 @@ declare class ScrollView extends View {
     scrollTo(left?: number, top?: number, animate?: boolean): void;
 }
 
-interface IBitMapTextOptions {
-    style?: IStyle;
-    idName?: string;
-    className?: string;
+interface IBitMapTextOptions extends IElementOptions {
     value?: string;
     font?: string;
-    dataset?: IDataset;
 }
 declare class BitMapText extends Element {
     ctx: CanvasRenderingContext2D | null;
@@ -439,11 +417,7 @@ declare class BitMapText extends Element {
     renderText(ctx: CanvasRenderingContext2D): void;
 }
 
-interface ICanvasOptions {
-    style?: IStyle;
-    idName?: string;
-    className?: string;
-    dataset?: IDataset;
+interface ICanvasOptions extends IElementOptions {
     width?: number;
     height?: number;
     autoCreateCanvas?: boolean;
@@ -481,13 +455,27 @@ interface IPlugin<T> {
     uninstall?: (app: T, ...options: any[]) => void;
 }
 declare class Layout extends Element {
+    /**
+     * 当前 Layout 版本，一般跟小游戏插件版本对齐
+     */
     version: string;
-    hasEventHandler: boolean;
+    /**
+     * Layout 渲染的目标画布对应的 2d context
+     */
     renderContext: CanvasRenderingContext2D | null;
     renderport: IViewPort;
     viewport: IViewPortBox;
+    /**
+     * 画布尺寸和实际被渲染到屏幕的物理尺寸比
+     */
     viewportScale: number;
+    /**
+     * 用于标识updateViewPort方法是否被调用过了，这在小游戏环境非常重要
+     */
     hasViewPortSet: boolean;
+    /**
+     * 最终渲染到屏幕的左上角物理坐标
+     */
     realLayoutBox: {
         realX: number;
         realY: number;
@@ -495,6 +483,10 @@ declare class Layout extends Element {
     bitMapFonts: BitMapFont[];
     eleCount: number;
     state: STATE;
+    /**
+     * 用于在 ticker 的循环里面标识当前帧是否需要重绘
+     * 重绘一般是图片加载完成、文字修改等场景
+     */
     isNeedRepaint: boolean;
     ticker: Ticker;
     tickerFunc: () => void;
@@ -512,7 +504,7 @@ declare class Layout extends Element {
      * y坐标
      */
     updateViewPort(box: IViewPortBox): void;
-    init(template: string, style: Record<string, IStyle>, attrValueProcessor: Callback$2): void;
+    init(template: string, style: Record<string, IStyle>, attrValueProcessor: Callback): void;
     reflow(isFirst?: boolean): void;
     /**
      * init阶段核心仅仅是根据xml和css创建了节点树
@@ -548,9 +540,9 @@ declare class Layout extends Element {
      */
     unBindEvents(): void;
     emit(event: string, data: any): void;
-    on(event: string, callback: Callback$2): void;
-    once(event: string, callback: Callback$2): void;
-    off(event: string, callback: Callback$2): void;
+    on(event: string, callback: Callback): void;
+    once(event: string, callback: Callback): void;
+    off(event: string, callback: Callback): void;
     destroyAll(tree: Layout | Element): void;
     /**
      * 清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行init和layout方法渲染界面。

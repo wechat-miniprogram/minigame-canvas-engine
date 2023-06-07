@@ -2,10 +2,10 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    [path.join('..', 'demos', 'noengine', 'sub', 'engine')]: path.join('..', 'src', 'index'),
-    [path.join('..', 'demos', 'noengine', 'engine')]: path.join('..', 'src', 'index'),
-    [path.join('..', 'dist', 'index')]: path.join('..', 'src', 'index'),
-    [path.join('..', 'packages', 'plugin', 'plugin', 'engine')]: path.join('..', 'src', 'index'),
+    [path.join('..', 'demos', 'noengine', 'sub', 'engine')]: './src/index.ts',
+    [path.join('..', 'demos', 'noengine', 'engine')]: './src/index.ts',
+    [path.join('..', 'dist', 'index')]: './src/index.ts',
+    [path.join('..', 'packages', 'plugin', 'plugin', 'engine')]: './src/index.ts',
   },
   output: {
     path: path.resolve(__dirname, ''),

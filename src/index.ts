@@ -307,7 +307,7 @@ class Layout extends Element {
     debugInfo.start('layout_other');
     this.bindEvents();
 
-    debugInfo.start('observeStyleAndEvent', true);
+    debugInfo.start('layout_observeStyleAndEvent', true);
     iterateTree(this.children[0], element => element.observeStyleAndEvent());
     debugInfo.end('layout_observeStyleAndEvent');
 

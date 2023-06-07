@@ -120,3 +120,12 @@ testText.on('click', () => {
     Layout.ticker.remove(updateRank);
   }
 });
+
+wx.onTouchStart((result) => {
+  const path = canvas.toTempFilePathSync();
+  console.log(path)
+
+  wx.showShareImageMenu({
+    path
+  })
+})
