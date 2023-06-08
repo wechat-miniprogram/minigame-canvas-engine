@@ -65,6 +65,15 @@ module.exports = {
         ]
       },
       {
+        title: '插件机制',
+        collapsable: false, // 可选的, 默认值是 true,
+        sidebarDepth: 2,    // 可选的, 默认值是 1
+        children: [
+          '/plugin/guide',
+          '/plugin/richtext',
+        ]
+      },
+      {
         title: '更新日志',
         path: '/CHANGELOG',
       },
