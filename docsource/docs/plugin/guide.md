@@ -17,8 +17,9 @@ Layout.use(HelloPlugin);
 
 
 Layout.sayHello(); // 控制台打印 Hello Layout Plugin
-
 ```
+如果有需要，可以提供插件的 uninstall方法，通过 Layout.unUse 可以卸载插件。
+
 <iframe height="449.01165771484375" style="width: 100%;" scrolling="no" title="Layout Plugin" src="https://codepen.io/yuanzm/embed/wvQvrNo?default-tab=js%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
   See the Pen <a href="https://codepen.io/yuanzm/pen/wvQvrNo">
   Layout Plugin</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
