@@ -1,5 +1,18 @@
 import { defaultTheme } from 'vuepress';
 
+
+let statcounter = [];
+
+if (process.env === 'production') {
+  statcounter = [["script", {}, `
+  var sc_project=12873270; 
+  var sc_invisible=1; 
+  var sc_security="efed24b4"; 
+  `],
+  ["script", { src: "https://www.statcounter.com/counter/counter.js", async: true }]];
+}
+
+
 export default {
   title: 'Layout',
   base: "/minigame-canvas-engine/",
@@ -9,13 +22,7 @@ export default {
     ["meta", { name: "robots", content: "all" }],
     ["meta", { name: "author", content: "yuanzm" }],
     ["meta", { name: "keywords", content: "minigame-canvans-engine, minigame, canvas, engine, game engine" }],
-    ["script", {}, `
-      var sc_project=12873270; 
-      var sc_invisible=1; 
-      var sc_security="efed24b4"; 
-    `],
-    ["script", { src: "https://www.statcounter.com/counter/counter.js", async: true }]
-  ],
+  ].concat(statcounter),
   theme: defaultTheme({
     repo: 'wechat-miniprogram/minigame-canvas-engine',
     lastUpdated: true,
@@ -25,7 +32,7 @@ export default {
       // SidebarItem
       {
         text: '概览',   // 必要的
-        link: '/',       
+        link: '/',
       },
       {
         text: '安装使用',
@@ -36,27 +43,34 @@ export default {
         ],
       },
       {
-        text: 'API 文档',
-        link: '/api/api',
-        children: [
-          '/api/api',
-          '/components/overview.md',
-          '/components/element.md',
-          '/components/view.md',
-          '/components/image.md',
-          '/components/text.md',
-          '/components/bitmapfont.md',  
-          '/components/canvas.md',
-          '/components/scrollview.md',
-        ],
-      },
-      '/api/tween',
-      {
         text: '更多示例',
         link: '/demos/invite',
         children: [
           '/demos/invite',
           '/demos/rank'
+        ],
+      },
+      {
+        text: 'API 文档',
+        link: '/api/api',
+        children: [
+          '/api/api',
+          '/components/overview.md',
+          {
+            text: '组件',
+            link: '/components/element.md',
+            collapsible: true,
+            children: [
+              '/components/element.md',
+              '/components/view.md',
+              '/components/image.md',
+              '/components/text.md',
+              '/components/bitmapfont.md',
+              '/components/canvas.md',
+              '/components/scrollview.md',
+            ]
+          },
+          '/api/tween',
         ],
       },
       {
