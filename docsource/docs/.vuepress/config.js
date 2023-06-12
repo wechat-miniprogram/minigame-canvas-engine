@@ -1,4 +1,6 @@
-module.exports = {
+import { defaultTheme } from 'vuepress';
+
+export default {
   title: 'Layout',
   base: "/minigame-canvas-engine/",
   description: '轻量级canvas渲染引擎',
@@ -14,69 +16,61 @@ module.exports = {
     `],
     ["script", { src: "https://www.statcounter.com/counter/counter.js", async: true }]
   ],
-  themeConfig: {
+  theme: defaultTheme({
     repo: 'wechat-miniprogram/minigame-canvas-engine',
-    lastUpdated: '上次更新', // string | boolean
+    lastUpdated: true,
+    lastUpdatedText: '上次更新', // string | boolean
+    sidebarDepth: 1,
     sidebar: [
+      // SidebarItem
       {
-        title: '概览',   // 必要的
-        path: '/',       
+        text: '概览',   // 必要的
+        link: '/',       
       },
       {
-        title: '安装使用',
-        collapsable: false, // 可选的, 默认值是 true,
-        sidebarDepth: 2,    // 可选的, 默认值是 1
+        text: '安装使用',
+        link: '/overview/guide',
         children: [
           '/overview/guide',
           '/overview/plugin.md'
-        ]
+        ],
       },
       {
-        title: '更多示例',
-        collapsable: false, // 可选的, 默认值是 true,
-        sidebarDepth: 2,    // 可选的, 默认值是 1
-        children: [
-          '/demos/invite',
-          '/demos/rank',
-        ]
-      },
-      {
-        title: 'API 文档',
-        collapsable: false, // 可选的, 默认值是 true,
-        sidebarDepth: 1,    // 可选的, 默认值是 1
+        text: 'API 文档',
+        link: '/api/api',
         children: [
           '/api/api',
-          {
-            title: '组件',
-            collapsable: false, // 可选的, 默认值是 true,
-            sidebarDepth: 1,    // 可选的, 默认值是 1
-            children: [
-              '/components/overview.md',
-              '/components/element.md',
-              '/components/view.md',
-              '/components/image.md',
-              '/components/text.md',
-              '/components/bitmapfont.md',
-              '/components/canvas.md',
-              '/components/scrollview.md',
-            ]
-          },
-          '/api/tween',
-        ]
+          '/components/overview.md',
+          '/components/element.md',
+          '/components/view.md',
+          '/components/image.md',
+          '/components/text.md',
+          '/components/bitmapfont.md',  
+          '/components/canvas.md',
+          '/components/scrollview.md',
+        ],
+      },
+      '/api/tween',
+      {
+        text: '更多示例',
+        link: '/demos/invite',
+        children: [
+          '/demos/invite',
+          '/demos/rank'
+        ],
       },
       {
-        title: '插件机制',
-        collapsable: false, // 可选的, 默认值是 true,
-        sidebarDepth: 2,    // 可选的, 默认值是 1
+        text: '插件机制',
+        link: '/plugin/guide',
         children: [
           '/plugin/guide',
-          '/plugin/richtext',
-        ]
+          '/plugin/richtext'
+        ],
       },
       {
-        title: '更新日志',
-        path: '/CHANGELOG',
-      },
-    ]
-  }
+        text: '更新日志',
+        link: '/CHANGELOG',
+      }
+    ],
+  })
 }
