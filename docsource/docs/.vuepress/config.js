@@ -23,6 +23,7 @@ export default {
     ["meta", { name: "keywords", content: "minigame-canvans-engine, minigame, canvas, engine, game engine" }],
   ].concat(statcounter),
   theme: defaultTheme({
+    contributors: false,
     repo: 'wechat-miniprogram/minigame-canvas-engine',
     lastUpdated: true,
     lastUpdatedText: '上次更新', // string | boolean

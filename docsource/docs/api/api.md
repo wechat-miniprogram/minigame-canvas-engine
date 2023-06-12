@@ -77,11 +77,21 @@ Layout.registBitMapFont(name, src, config)
 ## getElementsById
 Layout.getElementsById(String elementId)
 
-获取元素id为**elementId**的一组元素，之所以是一组元素是因为这里 id 的实现没有对齐 Web，id并不是唯一的，只是一个标识。
+获取元素id为**elementId**的一组节点，之所以是一组节点是因为这里 id 的实现没有对齐 Web，id并不是唯一的，只是一个标识。
 ```js
 // <view id="container"></view>
 const container = Layout.getElementsById('container')[0];
 ```
+
+## getElementById
+Layout.getElementById(String elementId)
+
+获取元素id为**elementId**的第一个节点，id唯一性由业务侧自行保证。
+```js
+// <view id="container"></view>
+const container = Layout.getElementById('container');
+```
+
 
 ## getElementsByClassName
 Layout.getElementsByClassName(String className)
@@ -103,6 +113,8 @@ console.log(list.length); // 3
 
 ## cloneNode
 Layout.cloneNode(element: Element, deep: boolean)
+
+
 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中，该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。
 
 ``` js
@@ -132,18 +144,6 @@ list.appendChild(newListItem1);
   Layout CloneNode</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
   on <a href="https://codepen.io">CodePen</a>.
 </iframe>
-
-<!-- ## TWEEN
-Layout 默认挂载了[tween.js](https://github.com/tweenjs/tween.js/)模块，TWEEN 的使用与 tween.js 的使用并无差异。
-缓动系统的更多细节可见[缓动系统](/api/tween.html)。
-```js
-const ball = Layout.getElementsByClassName('ball')[0];
-
-new Layout.TWEEN.Tween(ball.style)
-  .to({ top: 250 }, 1000)
-  .easing(Layout.TWEEN.Easing.Bounce.Out)
-  .start();
-``` -->
 
 ## ticker
 类似游戏引擎，Layout 本身会依赖 requestAnimationFrame 维护个循环，每帧检测是否需要重渲染、重布局之类的操作。
@@ -175,3 +175,14 @@ Layout.ticker.next(() => {
   console.log(ball.getBoundingClientRect());
 });
 ```
+
+## use
+Layout.use(plugin)
+
+安装插件，详见[插件文档](../plugin/guide)。
+
+## unUse
+
+Layout.unUse(plugin)
+
+卸载插件。
