@@ -1,9 +1,8 @@
 import { defaultTheme } from 'vuepress';
 
-
 let statcounter = [];
 
-if (process.env === 'production') {
+if (process.env.NODE_ENV === 'production') {
   statcounter = [["script", {}, `
   var sc_project=12873270; 
   var sc_invisible=1; 
