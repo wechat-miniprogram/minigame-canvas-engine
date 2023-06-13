@@ -35,6 +35,19 @@ Element 是所有组件的基类，Element 描述了所有组件所普遍具有�
 const container = Layout.getElementsById('container')[0];
 ```
 
+### getElementById
+::: tip 兼容性
+v1.0.1版本开始支持
+:::
+Layout.getElementById(String elementId)
+
+获取元素id为**elementId**的第一个节点，id唯一性由业务侧自行保证。
+```js
+// <view id="container"></view>
+const container = Layout.getElementById('container');
+```
+
+
 ### getElementsByClassName(className: string): Element[]
 
 获取包含class为**className**的一组元素。

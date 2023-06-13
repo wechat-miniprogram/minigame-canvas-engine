@@ -3,7 +3,7 @@
 ## 安装
 
 ```shell
-// npm安装方式
+# npm安装方式
 npm install minigame-canvas-engine --save
 ```
 

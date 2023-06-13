@@ -4,12 +4,23 @@
 
 与浏览器的canvas标签类似，Layout 标签允许你插入一个画布自由更新画布内容，这在某些场景会非常有用，比如你想通过Layout完成构建小游戏示例，包括游戏和开放数据域，例如[noengine demo](https://github.com/wechat-miniprogram/minigame-canvas-engine/tree/master/demos/noengine)。
 
-### 特殊属性
+## 标签属性
 |      属性      |  类型  | 是否必填 |          说明          |
 |----------------|--------|--------|------------------------|
 | width | Number |    否  | canvas 画布的尺寸，与样式的尺寸不是一个概念 |
 | height | Number |    否  | canvas 画布的尺寸，与样式的尺寸不是一个概念 |
 | autoCreateCanvas | String | 否 | 是否自动创建 canvas，默认为 "false"，有些场景如微信小游戏场景，sharedCavans非业务创建，则需要手动设置canvas 实例|
+
+## 属性
+|      属性      |  类型   |          说明          |
+|----------------|--------|------------------------|
+| canvas | HTMLCanvasElement | 当标签属性 autoCreateCanvas 为 false 的时候，意味着 canvas 需要手动创建并设置给 Canvas 组件实例|
+
+## 方法
+### update
+Canvas 组件本身只是个容器，并不关心具体的 canvas 画布是不是更新了，需要手动调用 update 方法才能将 canvas 同步到 Layout 画布。
+
+## 示例
 
 ``` html
 <view id="container">
@@ -44,7 +55,6 @@ Layout.ticker.add(updateRank);
 
 ```
 
-### 示例
 <iframe height="621.406982421875" style="width: 100%;" scrolling="no" title="Untitled" src="https://codepen.io/yuanzm/embed/ExdPJKW?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
   See the Pen <a href="https://codepen.io/yuanzm/pen/ExdPJKW">
   Untitled</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)

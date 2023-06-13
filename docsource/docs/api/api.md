@@ -1,6 +1,11 @@
 # Layout
 Layout 是一个单例，给定 template 和 style 最终渲染到画布一般要经过 `Layout.clear`、`Layout.init` 和 `Layout.layout` 三个步骤，除了这三个方法，还有一些方法挂载在 Layout，下面一一介绍。
 
+## version
+用于表示 Layout 的版本，与 npm 版本无关，hardcode 到源码的一个字符串，目前版本为 `1.0.2`，一般而言版本跟微信小游戏[插件版本](../overview/plugin.html#版本列表)一一对应。
+
+文档有写 API 会标明兼容性，兼容性版本号就是指代 Layout.version 。
+
 ## clear
 清理画布，之前的计算出来的渲染树也会一并清理，此时可以再次执行`init`和`layout`方法渲染界面。
 
@@ -28,14 +33,23 @@ Layout.updateViewPort(Object box)
 | x | Number |  是   | canvas 距离屏幕左上角的物理像素x坐标|
 | y | Number |  是   | canvas 距离屏幕左上角的物理像素y坐标|
 
-::: tip
+::: tip 特别提示
 这一步非常重要，决定了点击、滑动等事件能否正确处理。
 :::
 
-在 Web 模式下，可以直接调用 Web 的API取得Canvas在屏幕中的位置：
+在 **Web 模式下**，可以直接调用 Web 的API取得Canvas在屏幕中的位置：
 ```js
 Layout.updateViewPort(canvas.getBoundingClientRect());
 ```
+
+## getElementViewportRect
+
+Layout.getElementViewportRect(element: [Element](../components/element.md))：[Rect](../components/rect.md)
+::: tip 兼容性
+v1.0.1版本开始支持
+:::
+
+返回一个节点在屏幕中的位置和尺寸信息，前提是正确调用updateViewPort，这在某些场景很有用，比如在小游戏里面，游戏的主域也是用 Layout 开发的，开放数据域是通过 Canvas 组件来绘，可以调用 Layout.getElementViewportRect 拿到 Canvas 组件在屏幕中的物理坐标和尺寸信息，以方便开放数据域做好事件处理。
 
 ## clearAll
 比起 Layout.clear 更彻底的清理，会清空图片对象池，减少内存占用。
@@ -62,9 +76,9 @@ Layout.registBitMapFont(name, src, config)
 
 | keyName  | 类型     |  描述    |
 |----------|----------| ---------|
-| name| String| 字体的名称|
-| src| String| bitMapFont字体的图片链接|
-| config| String| BitMapFont的配置信息|
+| name| string| 字体的名称|
+| src| string| bitMapFont字体的图片链接|
+| config| string| BitMapFont的配置信息|
 
 <iframe height="599.1077270507812" style="width: 100%;" scrolling="no" title="Layout BitMapText" src="https://codepen.io/yuanzm/embed/LYgGvQm?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
   See the Pen <a href="https://codepen.io/yuanzm/pen/LYgGvQm">
@@ -75,7 +89,7 @@ Layout.registBitMapFont(name, src, config)
 
 
 ## getElementsById
-Layout.getElementsById(String elementId)
+Layout.getElementsById(string elementId): [Element](../components/element.md)[]
 
 获取元素id为**elementId**的一组节点，之所以是一组节点是因为这里 id 的实现没有对齐 Web，id并不是唯一的，只是一个标识。
 ```js
@@ -84,7 +98,11 @@ const container = Layout.getElementsById('container')[0];
 ```
 
 ## getElementById
-Layout.getElementById(String elementId)
+::: tip 兼容性
+v1.0.1版本开始支持
+:::
+
+Layout.getElementById(string elementId): [Element](../components/element.md) | null
 
 获取元素id为**elementId**的第一个节点，id唯一性由业务侧自行保证。
 ```js
@@ -94,7 +112,7 @@ const container = Layout.getElementById('container');
 
 
 ## getElementsByClassName
-Layout.getElementsByClassName(String className)
+Layout.getElementsByClassName(string className): [Element](../components/element.md)[]
 
 获取包含class为**className**的一组元素。
 
@@ -112,7 +130,7 @@ console.log(list.length); // 3
 ```
 
 ## cloneNode
-Layout.cloneNode(element: Element, deep: boolean)
+Layout.cloneNode(element: [Element](../components/element.md), deep: boolean): [Element](../components/element.md)
 
 
 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中，该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。
