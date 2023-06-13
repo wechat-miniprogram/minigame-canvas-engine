@@ -17,3 +17,6 @@ node_modules
 coverage
 coverage.lcov
 packages
+docsource
+build
+src
