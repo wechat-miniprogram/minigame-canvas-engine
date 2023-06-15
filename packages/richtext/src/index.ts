@@ -402,6 +402,9 @@ function install(layout: Layout) {
 
   layout.registerComponent('richtext', RichText);
 
+  // @ts-ignore
+  layout.RichText = RichText;
+
   return RichText;
 }
 
