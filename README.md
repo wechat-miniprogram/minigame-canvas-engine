@@ -1,4 +1,8 @@
-# minigame-canvas-engine
+<p align="center">
+  <img src="https://mmgame.qpic.cn/image/9235d71eaaec4ce2c8b828fbe0c518011607610369702ed17684bce69cd3fdf5/0" style="width: 200px" />
+</p>
+
+
 轻量级canvas渲染引擎。
 
 [![npm version](https://badge.fury.io/js/minigame-canvas-engine.svg)](https://badge.fury.io/js/minigame-canvas-engine)
