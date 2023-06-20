@@ -13,7 +13,6 @@ if (process.env.NODE_ENV === 'production') {
 
 
 export default {
-  title: 'Layout',
   base: "/minigame-canvas-engine/",
   description: '轻量级canvas渲染引擎',
   head: [
@@ -21,8 +20,10 @@ export default {
     ["meta", { name: "robots", content: "all" }],
     ["meta", { name: "author", content: "yuanzm" }],
     ["meta", { name: "keywords", content: "minigame-canvans-engine, minigame, canvas, engine, game engine" }],
+    ['link', { rel: 'shortcut icon', type: "image/x-icon", href: `./imgs/favicon.ico` }]
   ].concat(statcounter),
   theme: defaultTheme({
+    logo: '/imgs/logo.png',
     contributors: false,
     repo: 'wechat-miniprogram/minigame-canvas-engine',
     lastUpdated: true,
