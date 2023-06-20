@@ -25,11 +25,11 @@ jobs:
       run: npm run docs:build
 
     - name: Copy playground
-      run: cp  docsource/playground/index.html docsources/docs/.vuepress/dist/playground.html && cp  docsource/playground/app.js docsources/docs/.vuepress/dist/app.js
+      run: cp docsource/playground/playground.html ./docsource/docs/.vuepress/dist && cp  docsource/playground/app.js ./docsource/docs/.vuepress/dist
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docsources/docs/.vuepress/dist
+        publish_dir: docsource/docs/.vuepress/dist
         destination_dir: '.'
