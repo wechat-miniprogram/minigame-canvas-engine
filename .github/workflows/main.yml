@@ -24,6 +24,9 @@ jobs:
     - name: Build docs
       run: npm run docs:build
 
+    - name: Copy playground
+      run: cp  docsource/playground/index.html docs/playground.html && cp  docsource/playground/app.js docs/app.js
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
