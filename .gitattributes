@@ -1,4 +1,4 @@
-demos/** linguist-vendored
+demos/* linguist-vendored
 build/** linguist-vendored
 dist/** linguist-vendored
 docs/** linguist-vendored
