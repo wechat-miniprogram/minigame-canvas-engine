@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 import View from './view';
 import { getDpr, copyTouchArray } from '../common/util';
-import { Scroller } from 'scroller';
+import Scroller from '../libs/scroller/index.js'
 import { iterateTree } from '../common/vd';
 import Element from './elements';
 import { IElementOptions } from './types';
@@ -241,9 +241,10 @@ export default class ScrollView extends View {
     this.hasEventBind = true;
     this.isFirstScroll = true;
 
+    // @ts-ignore
     this.scrollerObj = new Scroller(this.scrollHandler.bind(this), this.scrollerOption);
 
-    this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+    this.scrollerObj!.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
     this.on('touchstart', (e) => {
       if (!e.touches) {
@@ -275,7 +276,7 @@ export default class ScrollView extends View {
           touch.pageY *= dpr;
         }
       });
-      this.scrollerObj!.doTouchMove(touches, e.timeStamp);
+      this.scrollerObj!.doTouchMove(touches, e.timeStamp, undefined);
       this.currentEvent = e;
     });
 
@@ -287,6 +288,6 @@ export default class ScrollView extends View {
   }
 
   scrollTo(left = 0, top = 0, animate = true) {
-    this.scrollerObj!.scrollTo(left, top, animate);
+    this.scrollerObj!.scrollTo(left, top, animate, 1);
   }
 }

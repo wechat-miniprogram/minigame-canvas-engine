@@ -24,8 +24,9 @@ Layout 的目标在于用 Web 的开发方式来开发简单的 Canvas 应用。
 目前在微信小游戏平台已经超过1000+游戏使用 Layout 来开发开放数据域能力。
 
 
-<img :src="$withBase('/imgs/demo.png')" width=100> <img :src="$withBase('/imgs/ditiepaoku.png')" width=100> <img :src="$withBase('/imgs/dazhanggui.jpeg')" width=100> <img :src="$withBase('/imgs/jiuchongshilian.jpeg')" width=100> <img :src="$withBase('/imgs/lvxingchuanchuan.jpeg')" width=100>
+<img :src="$withBase('/imgs/demo.png')" width=120> <img :src="$withBase('/imgs/ditiepaoku.png')" width=120> <img :src="$withBase('/imgs/dazhanggui.jpeg')" width=120> <img :src="$withBase('/imgs/jiuchongshilian.jpeg')" width=120> <img :src="$withBase('/imgs/lvxingchuanchuan.jpeg')" width=120>
 
 ## 交流群
 如果遇到 Layout 是用上的问题或者有合理的需求想要支持，欢迎加入 Layout 交流QQ群探讨。
+
 <img :src="$withBase('/imgs/qq.jpg')" width=200>
