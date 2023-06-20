@@ -12,8 +12,8 @@
     "test": "./node_modules/.bin/mocha -r esm --require @babel/register -r jsdom-global/register --recursive test",
     "cover": "nyc --reporter=html --reporter=text-summary npm run test",
     "coverage-report": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-    "docs:dev": "vuepress dev docsource/docs",
-    "docs:build": "vuepress build  docsource/docs"
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "author": "",
   "license": "MIT",
