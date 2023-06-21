@@ -19,24 +19,24 @@ export function getUserInfo(callback = none) {
 
 export function getDataFromSource(item) {
   let source;
-  // try {
-  //     source = JSON.parse(item.KVDataList[0].value);
-  // } catch(e) {
-  //     source = {
-  //         "wxgame":{
-  //             "rankScore"      : 0,
-  //             "update_time": getCurrTime()
-  //         }
-  //     }
-  // }
+  try {
+      source = JSON.parse(item.KVDataList[0].value);
+  } catch(e) {
+      source = {
+          "wxgame":{
+              "rankScore"      : 0,
+              "update_time": getCurrTime()
+          }
+      }
+  }
 
   /******debug******/
-  source = {
-    wxgame: {
-      rankScore: 0,
-      update_time: getCurrTime(),
-    },
-  };
+  // source = {
+  //   wxgame: {
+  //     rankScore: 0,
+  //     update_time: getCurrTime(),
+  //   },
+  // };
   /******debug******/
   return source.wxgame;
 }
@@ -124,6 +124,8 @@ export function getFriendData(key, callback = none) {
       for (let i = 0; i < data.length; i++) {
         data[i].rank = i + 1;
       }
+
+      data.sort((a, b) => b.rankScore - a.rankScore)
 
       callback(data);
     },

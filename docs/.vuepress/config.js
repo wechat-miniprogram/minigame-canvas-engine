@@ -43,6 +43,13 @@ export default {
           '/overview/plugin.md'
         ],
       },
+      // {
+      //   text: '教程',
+      //   link: '/tutorial/overview',
+      //   children: [
+      //     '/tutorial/overview'
+      //   ],
+      // },
       {
         text: '更多示例',
         link: '/demos/invite',
