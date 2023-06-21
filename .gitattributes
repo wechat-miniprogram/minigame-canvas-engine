@@ -1,7 +1,0 @@
-demos/* linguist-vendored
-build/** linguist-vendored
-dist/** linguist-vendored
-docs/** linguist-vendored
-docsource/** linguist-vendored
-test/** linguist-vendored
-packages/** linguist-vendored
