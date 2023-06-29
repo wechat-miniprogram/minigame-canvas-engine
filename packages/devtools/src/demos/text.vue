@@ -69,7 +69,7 @@ let style = {
   },
   text: {
     fontSize: 36,
-    height: 36,
+    // height: 36,
   },
 };
 

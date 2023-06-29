@@ -16,14 +16,19 @@ import Layout from "minigame-canvas-engine";
 ```
 
 2. 编写模板字符串：这里采用 XML 去描述界面，而且支持有限的标签。需要特别注意的是，模板字符串只能有一个根节点，第二个节点会被忽略。如果想让模板更加强大，可以借助第三方模板引擎如[dot.js](https://olado.github.io/doT/index.html)。
-
+这一步需要开发者掌握一定程度的 Web 前端开发知识，如果你只有游戏开发经验没有任何 Web 前端开发经验，建议花点时间阅读下面教程：
+  - [CSS教程](https://www.runoob.com/css/css-tutorial.html)：能够了解 Web 端是如何组织页面样式的；
+  - [Flex布局教程](https://www.ruanyifeng.com/blog/2015/07/flex-grammar.html): 这个非常重要，Layout 布局仅仅支持 Flex 布局，通读教程能够了解如何进行页面布局；
 ```js
 let template = `
-    <view id="container">
-        <text id="testText" class="redText" value="hello canvas"></text>
-    </view>
+  <view id="container">
+    <text id="testText" class="redText" value="hello canvas"></text>
+  </view>
 `;
+
 ```
+如果对布局和样式仍然有一些疑惑，可以参照 [Layout demo 合集](https://codepen.io/collection/PYrdpO)，复制已有demo进行简单魔改是个不错的方案。
+
 
 3. 编写样式：样式为一个 style 对象，与 Web 开发不同的是，不受属性前后顺序的影响，class 的属性会覆盖 id 的同名属性。
    ::: tip
