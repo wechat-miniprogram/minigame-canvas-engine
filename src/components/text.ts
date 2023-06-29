@@ -70,7 +70,7 @@ interface ITextProps extends IElementOptions {
 
 export default class Text extends Element {
   private valuesrc = '';
-  private originStyleWidth: number | undefined;
+  private originStyleWidth: number | string | undefined;
   public fontSize?: number;
   public textBaseline: CanvasTextBaseline = 'top';
   public font = '';
@@ -92,6 +92,9 @@ export default class Text extends Element {
       value = parseText(style, value);
     }
 
+    if (style.height === undefined) {
+      style.height = style.lineHeight as number || style.fontSize || 12;
+    }
     super({
       idName,
       className,
@@ -160,7 +163,6 @@ export default class Text extends Element {
 
   render() {
     const ctx = this.ctx as CanvasRenderingContext2D;
-    // this.toCanvasData();
     ctx.save();
 
     const box = this.layoutBox;
