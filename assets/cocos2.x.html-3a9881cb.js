@@ -1,0 +1,1 @@
+import{_ as c,o,c as s,a as e,b as t}from"./app-cca44b8b.js";const a={},r=e("h1",{id:"cocos2-x版本适配",tabindex:"-1"},[e("a",{class:"header-anchor",href:"#cocos2-x版本适配","aria-hidden":"true"},"#"),t(" cocos2.x版本适配")],-1),_=[r];function n(d,i){return o(),s("div",null,_)}const l=c(a,[["render",n],["__file","cocos2.x.html.vue"]]);export{l as default};
