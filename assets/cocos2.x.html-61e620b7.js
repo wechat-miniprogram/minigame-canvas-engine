@@ -1,1 +1,0 @@
-const t=JSON.parse('{"key":"v-79802700","path":"/tutorial/cocos2.x.html","title":"cocos2.x版本适配","lang":"en-US","frontmatter":{},"headers":[],"git":{"updatedTime":1688022301000},"filePathRelative":"tutorial/cocos2.x.md"}');export{t as data};

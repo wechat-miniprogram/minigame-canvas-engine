@@ -1,1 +1,0 @@
-const t=JSON.parse('{"key":"v-4779190d","path":"/plugin/richtext.html","title":"富文本插件","lang":"en-US","frontmatter":{},"headers":[],"git":{"updatedTime":1688022301000},"filePathRelative":"plugin/richtext.md"}');export{t as data};
