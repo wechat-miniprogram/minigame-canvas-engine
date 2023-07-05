@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-3d4ac21a","path":"/overview/guide.html","title":"快速入门","lang":"en-US","frontmatter":{},"headers":[{"level":2,"title":"安装","slug":"安装","link":"#安装","children":[]},{"level":2,"title":"极简示例","slug":"极简示例","link":"#极简示例","children":[]}],"git":{"updatedTime":1688539236000},"filePathRelative":"overview/guide.md"}');export{e as data};
