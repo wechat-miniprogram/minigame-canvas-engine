@@ -78,10 +78,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 8
+        "__id__": 9
       },
       {
-        "__id__": 9
+        "__id__": 10
       }
     ],
     "_prefab": null,
@@ -245,6 +245,9 @@
       },
       {
         "__id__": 7
+      },
+      {
+        "__id__": 8
       }
     ],
     "_prefab": null,
@@ -258,8 +261,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 640,
-      "height": 960
+      "width": 480,
+      "height": 700
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -293,7 +296,49 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "fe0XFEiKJN7ZuX7l6QVxYm"
+    "_id": "88fhGyFFZF56ZrC+RFX6rL"
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 5
+    },
+    "_enabled": true,
+    "_materials": [
+      {
+        "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+      }
+    ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_spriteFrame": {
+      "__uuid__": "a23235d1-15db-4b95-8439-a2e005bfff91"
+    },
+    "_type": 0,
+    "_sizeMode": 0,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_atlas": null,
+    "_id": "4bogNvyJVE26qcU7mZUF9p"
+  },
+  {
+    "__type__": "e2f1evKIhFKtLtc+CAQdTRC",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 5
+    },
+    "_enabled": true,
+    "_id": "70VZxM0DRAo7n1uMJ/34TF"
   },
   {
     "__type__": "cc.SubContextView",
@@ -305,17 +350,7 @@
     "_enabled": true,
     "_firstlyEnabled": true,
     "_fps": 60,
-    "_id": "ae3IFmIKRN0qnEVC6DnKln"
-  },
-  {
-    "__type__": "e2f1evKIhFKtLtc+CAQdTRC",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 5
-    },
-    "_enabled": true,
-    "_id": "abxBGIyl9Am40TjiEZ+Hsl"
+    "_id": "2dl5hpgeVLz7A6AsFQ1Fd1"
   },
   {
     "__type__": "cc.Canvas",
@@ -344,7 +379,7 @@
     "_enabled": true,
     "alignMode": 1,
     "_target": null,
-    "_alignFlags": 45,
+    "_alignFlags": 0,
     "_left": 0,
     "_right": 0,
     "_top": 0,
@@ -357,8 +392,8 @@
     "_isAbsBottom": true,
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 0,
-    "_id": "35AYG69IBBoLeTjdHNnXMG"
+    "_originalWidth": 640,
+    "_originalHeight": 960,
+    "_id": "e2IyvJ+uNILYUoKuQSuqe3"
   }
 ]
