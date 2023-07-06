@@ -10,7 +10,7 @@
 
 ### 开放数据域引用
 
-1.在game.json配置插件引用:
+1.在game.json声明Layout插件:
 ``` json
 {
   "deviceOrientation": "portrait",
@@ -25,6 +25,13 @@
 }
 
 ```
+
+2. 添加Layout插件
+game.json 声明 Layout 插件之后，微信开发者工具控制台会出现添加插件按钮，点击添加即可。
+![Alt text](image.png)
+
+某些低版本的微信开发者工具可能没有这个添加入口，可以通过[链接](https://mp.weixin.qq.com/wxopen/plugindevdoc?appid=wx7a727ff7d940bb3f&token=&lang=zh_CN) 手动添加下。
+![Alt text](image-1.png)
 
 2.在开放数据域内引用插件：
 ``` js
