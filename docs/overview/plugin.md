@@ -33,12 +33,12 @@ game.json 声明 Layout 插件之后，微信开发者工具控制台会出现�
 某些低版本的微信开发者工具可能没有这个添加入口，可以通过[链接](https://mp.weixin.qq.com/wxopen/plugindevdoc?appid=wx7a727ff7d940bb3f&token=&lang=zh_CN) 手动添加下。
 ![Alt text](image-1.png)
 
-2.在开放数据域内引用插件：
+3. 在开放数据域内引用插件：
 ``` js
 const Layout = requirePlugin('Layout').default;
 ```
 
-3. 正常使用Layout来进行渲染。
+4. 使用Layout来进行渲染。
 
 ### 在游戏域引用
 ::: tip
