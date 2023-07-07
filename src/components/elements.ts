@@ -445,6 +445,10 @@ export default class Element {
     }
   }
 
+  setDirty() {
+    setDirty(this);
+  }
+
   // 子类填充实现
   destroySelf() {
 

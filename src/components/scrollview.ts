@@ -6,6 +6,7 @@ import Scroller from '../libs/scroller/index.js'
 import { iterateTree } from '../common/vd';
 import Element from './elements';
 import { IElementOptions } from './types';
+import ScrollBar, { ScrollBarDirection } from './scrollbar';
 
 const dpr = getDpr();
 
@@ -25,12 +26,14 @@ export default class ScrollView extends View {
   public hasEventBind = false;
   public currentEvent = null;
   public type = 'ScrollView';
-  
+
   private scrollYProp: boolean | undefined;
   private innerScrollerOption: IInnerScrollerOption;
 
   private scrollerObj?: Scroller;
   private isFirstScroll?: boolean;
+
+  private scrollbar!: ScrollBar;
 
   constructor({
     style = {},
@@ -65,9 +68,16 @@ export default class ScrollView extends View {
       return 0;
     }
 
-    const last = this.children[this.children.length - 1];
+    let maxHeight = 0;
+    this.children.forEach((item: Element) => {
+      if (item.style.position !== 'absolute') {
+        maxHeight = Math.max(maxHeight, item.layoutBox.top + item.layoutBox.height);
+      }
+    })
+    // const last = this.children[this.children.length - 1];
 
-    return last.layoutBox.top + last.layoutBox.height;
+    // return last.layoutBox.top + last.layoutBox.height;
+    return maxHeight;
   }
 
   get scrollWidth() {
@@ -179,7 +189,7 @@ export default class ScrollView extends View {
     // 可能被销毁了或者节点树还没准备好
     if (!this.isDestroyed && !this.isFirstScroll) {
       iterateTree(this, (ele) => {
-        if (ele !== this) {
+        if (ele !== this && ele.style.position !== 'absolute') {
           ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
           ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
         }
@@ -188,6 +198,9 @@ export default class ScrollView extends View {
       // 这里要把滚动状态保存起来，因为在reflow的时候需要做重置，渲染并不依赖这两个信息
       this.scrollTop = top;
       this.scrollLeft = left;
+      
+      console.log(this.scrollbar.layoutBox)
+      this.scrollbar.style.top = top;
 
       this.root!.emit('repaint');
 
@@ -195,6 +208,7 @@ export default class ScrollView extends View {
         this.emit('scroll', this.currentEvent);
       }
     }
+
     if (this.isFirstScroll) {
       this.isFirstScroll = false;
     }
@@ -229,7 +243,7 @@ export default class ScrollView extends View {
 
       // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
       iterateTree(this, (ele) => {
-        if (ele !== this) {
+        if (ele !== this && ele.style.position !== 'absolute') {
           ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - this.scrollTop;
           ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - this.scrollLeft;
         }
@@ -245,6 +259,27 @@ export default class ScrollView extends View {
     this.scrollerObj = new Scroller(this.scrollHandler.bind(this), this.scrollerOption);
 
     this.scrollerObj!.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+
+    // @ts-ignore
+    this.root.ticker.next(() => {
+      const scrollbar = new ScrollBar({
+        direction: ScrollBarDirection.Vertival,
+        scrollviewLayoutBox: this.layoutBox,
+      });
+
+      // this.appendChild(scrollbar);
+      scrollbar.root = this.root;
+      // @ts-ignore
+      scrollbar.insert(this.root.renderContext, true);
+      scrollbar.observeStyleAndEvent();
+      this.add(scrollbar);
+
+      scrollbar.setDirty();
+
+      this.scrollbar = scrollbar;
+
+      console.log(scrollbar)
+    });
 
     this.on('touchstart', (e) => {
       if (!e.touches) {
