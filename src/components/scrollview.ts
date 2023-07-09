@@ -33,7 +33,8 @@ export default class ScrollView extends View {
   private scrollerObj?: Scroller;
   private isFirstScroll?: boolean;
 
-  private scrollbar!: ScrollBar;
+  private vertivalScrollbar!: ScrollBar;
+  private horizontalScrollbar!: ScrollBar;
 
   constructor({
     style = {},
@@ -199,8 +200,8 @@ export default class ScrollView extends View {
       this.scrollTop = top;
       this.scrollLeft = left;
       
-      console.log(this.scrollbar.layoutBox)
-      this.scrollbar.style.top = top;
+      this.vertivalScrollbar?.onScroll(left, top);
+      this.horizontalScrollbar?.onScroll(left, top);
 
       this.root!.emit('repaint');
 
@@ -262,23 +263,48 @@ export default class ScrollView extends View {
 
     // @ts-ignore
     this.root.ticker.next(() => {
-      const scrollbar = new ScrollBar({
+      const dimensions = {
+        width: this.layoutBox.width,
+        height: this.layoutBox.height,
+        contentWidth: this.scrollerObj!.__contentWidth,
+        contentHeight: this.scrollerObj!.__contentHeight,
+        maxScrollLeft: this.scrollerObj!.__maxScrollLeft,
+        maxScrollTop: this.scrollerObj!.__maxScrollTop,
+      }
+
+      // console.log(JSON.stringify(dimensions), this.scrollerObj, this.scrollerObj!.__contentHeight)
+
+      const vertivalScrollbar = new ScrollBar({
+        dimensions,
         direction: ScrollBarDirection.Vertival,
-        scrollviewLayoutBox: this.layoutBox,
       });
 
       // this.appendChild(scrollbar);
-      scrollbar.root = this.root;
+      vertivalScrollbar.root = this.root;
       // @ts-ignore
-      scrollbar.insert(this.root.renderContext, true);
-      scrollbar.observeStyleAndEvent();
-      this.add(scrollbar);
+      vertivalScrollbar.insert(this.root.renderContext, true);
+      vertivalScrollbar.observeStyleAndEvent();
+      this.add(vertivalScrollbar);
 
-      scrollbar.setDirty();
+      vertivalScrollbar.setDirty();
 
-      this.scrollbar = scrollbar;
+      this.vertivalScrollbar = vertivalScrollbar;
 
-      console.log(scrollbar)
+      // const horizontalScrollbar = new ScrollBar({
+      //   dimensions,
+      //   direction: ScrollBarDirection.Horizontal,
+      // });
+
+      // // this.appendChild(scrollbar);
+      // horizontalScrollbar.root = this.root;
+      // // @ts-ignore
+      // horizontalScrollbar.insert(this.root.renderContext, true);
+      // horizontalScrollbar.observeStyleAndEvent();
+      // this.add(horizontalScrollbar);
+
+      // horizontalScrollbar.setDirty();
+
+      // this.horizontalScrollbar = horizontalScrollbar;
     });
 
     this.on('touchstart', (e) => {
