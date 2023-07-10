@@ -1,6 +1,7 @@
 
 import View from './view';
 import { clamp } from '../common/util';
+import { reflowAffectedStyles } from './style';
 
 export enum ScrollBarDirection {
   Vertival,
@@ -18,7 +19,6 @@ interface IDimensions {
 }
 
 interface IScrollBarOptions {
-  // scrollviewLayoutBox: ILayoutBox;
   direction: ScrollBarDirection;
   backgroundColor?: string;
   width?: number;
@@ -45,6 +45,7 @@ export default class ScrollBar extends View {
   // 当前滚动条的透明度
   private opacity = 1;
 
+  private innerWidth = 14;
 
   constructor({
     direction,
@@ -53,19 +54,18 @@ export default class ScrollBar extends View {
     width = 14,
   }: IScrollBarOptions) {
     const isVertical = direction === ScrollBarDirection.Vertival;
+    
     const { width: scrollWidth, height: scrollHeight, contentWidth, contentHeight } = dimensions;
 
     const style = {
       width: isVertical ? width : scrollWidth * (scrollWidth / contentWidth),
       height: isVertical ? scrollHeight * (scrollHeight / contentHeight) : width,
-      borderRadius: width / 2,
       backgroundColor,
       position: 'absolute',
+      borderRadius: width / 2,
       left: isVertical ? scrollWidth - width : 0,
       top: isVertical ? 0 : scrollHeight - width,
     };
-
-    console.log(style)
 
     super({
       style,
@@ -73,12 +73,48 @@ export default class ScrollBar extends View {
 
     this.direction = direction;
     this.dimensions = dimensions;
+    this.innerWidth = width;
+  }
+
+  get width() {
+    return this.innerWidth;
+  }
+
+  set width(value: number) {
+    if (value !== this.innerWidth) {
+      this.innerWidth = value;
+    }
+  }
+
+  styleChangeHandler(prop: string, val: any) {
+    // console.log(prop, val);
+    if (reflowAffectedStyles.indexOf(prop) > -1) {
+      
+    }
+
+    const isVertical = this.direction === ScrollBarDirection.Vertival;
+
+    if (prop === 'width' || prop === 'height') {
+      
+    }
   }
 
   hide() {
     if (this.hideTimerId) {
       return this.hideTimerId;
     }
+  }
+
+  setDimensions(dimensions: IDimensions) {
+    const isVertical = this.direction === ScrollBarDirection.Vertival;
+    const { width: scrollWidth, height: scrollHeight, contentWidth, contentHeight } = dimensions;
+
+    this.style.width = isVertical ? this.width : scrollWidth * (scrollWidth / contentWidth);
+    this.style.height = isVertical ? scrollHeight * (scrollHeight / contentHeight) : this.width;
+    this.style.left = isVertical ? scrollWidth - this.width : 0;
+    this.style.top = isVertical ? 0 : scrollHeight - this.width;
+
+    this.dimensions = dimensions;
   }
 
   calculteScrollValue(left: number, top: number) {
@@ -109,9 +145,12 @@ export default class ScrollBar extends View {
     const { scrollLeft, scrollTop } = this.calculteScrollValue(left, top);
 
     if (this.direction === ScrollBarDirection.Vertival) {
-      this.layoutBox.absoluteY = this.layoutBox.originalAbsoluteY + scrollTop;
+      this.layoutBox.absoluteY = this.parent!.layoutBox.originalAbsoluteY + scrollTop;
     } else {
-      this.layoutBox.absoluteX = this.layoutBox.originalAbsoluteX + scrollLeft;
+      this.layoutBox.absoluteX = this.parent!.layoutBox.originalAbsoluteX + scrollLeft;
     }
+  }
+
+  update() {
   }
 }

@@ -167,7 +167,7 @@ export default class Element {
    * element.dataset.foo = "bar2";
    */
   public dataset: IDataset;
-  
+
   /**
    * 节点的样式列表，在 Layout.init 会传入样式集合，会自动挑选出跟节点有关的样式统一 merge 到 style 对象上
    */
@@ -204,6 +204,10 @@ export default class Element {
   public tagName?: string;
 
   private originStyle: IStyle;
+
+  protected styleChangeHandler(prop: string, val: any) {
+
+  }
 
   constructor({
     style = {},
@@ -291,6 +295,7 @@ export default class Element {
         },
         set(target, prop, val, receiver) {
           if (typeof prop === 'string') {
+            ele.styleChangeHandler(prop, val);
             if (reflowAffectedStyles.indexOf(prop) > -1) {
               setDirty(ele);
             } else if (repaintAffectedStyles.indexOf(prop) > -1) {
@@ -313,13 +318,14 @@ export default class Element {
           set: (value) => {
             if (value !== innerStyle[key as keyof IStyle]) {
               innerStyle[key as keyof IStyle] = value;
+
               if (reflowAffectedStyles.indexOf(key) > -1) {
-              setDirty(this);
+                setDirty(this);
               } else if (repaintAffectedStyles.indexOf(key) > -1) {
                 this.root?.emit('repaint');
               } else if (key === 'backgroundImage') {
                 this.backgroundImageSetHandler(value);
-              }                
+              }
             }
           },
         });
@@ -433,7 +439,6 @@ export default class Element {
     }
 
     const index = parent.children.indexOf(this);
-
     if (index !== -1) {
       parent.children.splice(index, 1);
       this.unBindEvent();
