@@ -7,7 +7,6 @@ import { iterateTree } from '../common/vd';
 import Element from './elements';
 import { IElementOptions } from './types';
 import ScrollBar, { ScrollBarDirection } from './scrollbar';
-import { reflowAffectedStyles } from './style';
 import { sharedTicker } from '../common/ticker';
 
 const dpr = getDpr();
@@ -66,29 +65,16 @@ export default class ScrollView extends View {
    * 这里不能简单将所有子元素的高度累加，因为每个元素之间可能是有空隙的
    */
   get scrollHeight() {
-    // scrollview为空的情况
-    if (!this.children.length) {
-      return 0;
-    }
-
     let maxHeight = 0;
     this.children.forEach((item: Element) => {
       if (item.style.position !== 'absolute') {
         maxHeight = Math.max(maxHeight, item.layoutBox.top + item.layoutBox.height);
       }
     });
-    // const last = this.children[this.children.length - 1];
-
-    // return last.layoutBox.top + last.layoutBox.height;
     return maxHeight;
   }
 
   get scrollWidth() {
-    // scrollview为空的情况
-    if (!this.children.length) {
-      return 0;
-    }
-
     let maxWidth = 0;
     this.children.forEach((item: Element) => {
       if (item.style.position !== 'absolute') {
@@ -97,9 +83,6 @@ export default class ScrollView extends View {
     });
 
     return maxWidth;
-    // const last = this.children[this.children.length - 1];
-
-    // return last.layoutBox.left + last.layoutBox.width;
   }
 
   get scrollX() {
@@ -107,12 +90,12 @@ export default class ScrollView extends View {
   }
 
   set scrollX(value) {
+    this.scrollerObj!.scrollTo(0, this.scrollTop, true, 1);
     this.scrollerOption = {
       scrollingX: value,
     };
 
     this.updateScrollBar('scrollX', 'horizontalScrollbar');
-
   }
 
   get scrollY() {
@@ -121,6 +104,7 @@ export default class ScrollView extends View {
 
   set scrollY(value) {
     if (value !== this.scrollY) {
+      this.scrollerObj!.scrollTo(this.scrollLeft, 0, true, 1);
       this.scrollerOption = {
         scrollingY: value,
       };
@@ -186,6 +170,11 @@ export default class ScrollView extends View {
      * 这样 ScrollView 不用单独占用一个 canvas，内存合渲染都会得到优化
      */
     ctx.save();
+
+    if (this.style.opacity !== 1) {
+      ctx.globalAlpha = this.style.opacity as number;
+    }
+
     ctx.beginPath();
     ctx.rect(startX, startY, width, height);
     ctx.clip();
@@ -231,13 +220,6 @@ export default class ScrollView extends View {
       this.isFirstScroll = false;
     }
   }
-
-  // styleChangeHandler(prop: string, val: any) {
-  //   // console.log(prop, val);
-  //   if (reflowAffectedStyles.indexOf(prop) > -1) {
-
-  //   }
-  // }
 
   updateScrollBar(scrollProp: string, scrollBarName: string) {
     const dimensions = {

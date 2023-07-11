@@ -56,7 +56,7 @@ class Layout extends Element {
   /**
    * 当前 Layout 版本，一般跟小游戏插件版本对齐
    */
-  public version = '1.0.3';
+  public version = '1.0.4';
   
   /**
    * Layout 渲染的目标画布对应的 2d context

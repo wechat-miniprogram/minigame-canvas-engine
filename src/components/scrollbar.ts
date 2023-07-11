@@ -40,7 +40,6 @@ function updateStyleFromDimensions(width: number, direction: ScrollBarDirection,
   };
 }
 
-
 /**
  * 滚动组件的滚动条组件，滚动条本身也是Layout的一个节点
  */
@@ -65,7 +64,7 @@ export default class ScrollBar extends View {
   constructor({
     direction,
     dimensions,
-    backgroundColor = '#a2a2a2',
+    backgroundColor = 'rgba(162, 162, 162, 1)',
     width = 16,
   }: IScrollBarOptions) {
     const style = Object.assign({

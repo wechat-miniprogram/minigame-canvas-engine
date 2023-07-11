@@ -193,7 +193,6 @@ export default defineComponent({
 
       const list = Layout.getElementById('list');
 
-      console.log(list)
       // @ts-ignore
       window.list = list;
     },

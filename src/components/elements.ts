@@ -6,7 +6,6 @@ import TinyEmitter from 'tiny-emitter';
 import { IDataset } from '../types/index'
 import { IElementOptions } from './types';
 import { Callback } from '../types/index';
-import { getRgba } from '../common/util';
 
 export function getElementsById(tree: Element, list: Element[] = [], id: string) {
   tree.children.forEach((child: Element) => {

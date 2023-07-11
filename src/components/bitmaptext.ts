@@ -106,6 +106,10 @@ export default class BitMapText extends Element {
 
     ctx.save();
 
+    if (this.style.opacity !== 1) {
+      ctx.globalAlpha = this.style.opacity as number;
+    }
+
     const { needClip, needStroke } = this.renderBorder(ctx);
 
     if (needClip) {

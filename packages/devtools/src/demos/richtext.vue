@@ -77,9 +77,8 @@ export default defineComponent({
       <br>
       <p style="font-weight: 300">样式可以<span style="color: blue">继承</span>，也可以<span style="font-weight: bold">自定义</span>，这段很长的文字会自动换行，富文本组件都会自动处理好</p>
       <p style="text-align: center">这是一段居中的文本，居中的文本暂不支持内嵌标签</p>
+      <p>这是一段副文本测试</p>
   `
-
-      console.log(Layout.getElementById('richcontainer'))
     },
   },
 });

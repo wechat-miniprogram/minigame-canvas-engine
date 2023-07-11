@@ -168,6 +168,10 @@ export default class Text extends Element {
     const box = this.layoutBox;
     const { style } = this;
 
+    if (style.opacity !== 1) {
+      ctx.globalAlpha = style.opacity as number;
+    }
+
     ctx.textBaseline = this.textBaseline;
     ctx.font = this.font;
     ctx.textAlign = this.textAlign;
