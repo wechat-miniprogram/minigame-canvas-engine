@@ -6,6 +6,7 @@ import TinyEmitter from 'tiny-emitter';
 import { IDataset } from '../types/index'
 import { IElementOptions } from './types';
 import { Callback } from '../types/index';
+import { getRgba } from '../common/util';
 
 export function getElementsById(tree: Element, list: Element[] = [], id: string) {
   tree.children.forEach((child: Element) => {
@@ -58,30 +59,6 @@ const EE = new TinyEmitter();
 
 let uuid = 0;
 
-function hexToRgb(hex: string) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16),
-    }
-    : null;
-}
-
-function getRgba(hex: string, opacity: number) {
-  const rgbObj = hexToRgb(hex);
-
-  if (opacity === undefined) {
-    opacity = 1;
-  }
-
-  if (!rgbObj) {
-    return null;
-  }
-
-  return `rgba(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b}, ${opacity})`;
-}
 
 const toEventName = (event: string, id: number) => {
   const elementEvent = [
@@ -231,24 +208,6 @@ export default class Element {
     };
 
     this.dataset = dataset;
-
-    if (
-      style.opacity !== undefined
-      && style.color
-      && style.color.indexOf('#') > -1
-    ) {
-      // 颜色解析失败，降级为 hex
-      style.color = getRgba(style.color, style.opacity) || style.color;
-    }
-
-    if (
-      style.opacity !== undefined
-      && style.backgroundColor
-      && style.backgroundColor.indexOf('#') > -1
-    ) {
-      // 颜色解析失败，降级为 hex
-      style.backgroundColor = getRgba(style.backgroundColor, style.opacity) || style.backgroundColor;
-    }
 
     if (typeof style.backgroundImage === 'string') {
       this.backgroundImageSetHandler(style.backgroundImage);

@@ -1,7 +1,7 @@
 
 import View from './view';
 import { clamp } from '../common/util';
-import { reflowAffectedStyles } from './style';
+import { sharedTicker } from '../common/ticker';
 
 export enum ScrollBarDirection {
   Vertival,
@@ -26,6 +26,22 @@ interface IScrollBarOptions {
 }
 
 /**
+ * 根据滚动条的尺寸、ScrollView 视口和滚动窗口尺寸、滚动防线信息确认滚动条的样式信息
+ */
+function updateStyleFromDimensions(width: number, direction: ScrollBarDirection, dimensions: IDimensions) {
+  const isVertical = direction === ScrollBarDirection.Vertival;
+  const { width: scrollWidth, height: scrollHeight, contentWidth, contentHeight } = dimensions;
+
+  return {
+    width: isVertical ? width : scrollWidth * (scrollWidth / contentWidth),
+    height: isVertical ? scrollHeight * (scrollHeight / contentHeight) : width,
+    left: isVertical ? scrollWidth - width : 0,
+    top: isVertical ? 0 : scrollHeight - width,
+  };
+}
+
+
+/**
  * 滚动组件的滚动条组件，滚动条本身也是Layout的一个节点
  */
 export default class ScrollBar extends View {
@@ -40,32 +56,24 @@ export default class ScrollBar extends View {
   // 滚动完毕后自动隐藏时间
   public autoHideTime = 1000;
 
-  private hideTimerId!: number;
+  private autoHideRemainingTime = 0;
 
-  // 当前滚动条的透明度
-  private opacity = 1;
+  private innerWidth = 16;
 
-  private innerWidth = 14;
+  private isHide = false;
 
   constructor({
     direction,
     dimensions,
     backgroundColor = '#a2a2a2',
-    width = 14,
+    width = 16,
   }: IScrollBarOptions) {
-    const isVertical = direction === ScrollBarDirection.Vertival;
-    
-    const { width: scrollWidth, height: scrollHeight, contentWidth, contentHeight } = dimensions;
-
-    const style = {
-      width: isVertical ? width : scrollWidth * (scrollWidth / contentWidth),
-      height: isVertical ? scrollHeight * (scrollHeight / contentHeight) : width,
+    const style = Object.assign({
       backgroundColor,
       position: 'absolute',
       borderRadius: width / 2,
-      left: isVertical ? scrollWidth - width : 0,
-      top: isVertical ? 0 : scrollHeight - width,
-    };
+      opacity: 0,
+    }, updateStyleFromDimensions(width, direction, dimensions));
 
     super({
       style,
@@ -74,45 +82,41 @@ export default class ScrollBar extends View {
     this.direction = direction;
     this.dimensions = dimensions;
     this.innerWidth = width;
+
+    sharedTicker.add(this.update, true);
   }
 
   get width() {
     return this.innerWidth;
   }
 
+  /**
+   * 滚动条的粗细，因为要兼容横竖滚动，所以 style.width 在不同模式下代表的意思不一样
+   * 因此通过单独的 width 属性来代表滚动条的粗细
+   */
   set width(value: number) {
     if (value !== this.innerWidth) {
       this.innerWidth = value;
     }
-  }
 
-  styleChangeHandler(prop: string, val: any) {
-    // console.log(prop, val);
-    if (reflowAffectedStyles.indexOf(prop) > -1) {
-      
-    }
-
-    const isVertical = this.direction === ScrollBarDirection.Vertival;
-
-    if (prop === 'width' || prop === 'height') {
-      
-    }
+    this.style.borderRadius = this.innerWidth / 2;
+    this.setDimensions(this.dimensions);
   }
 
   hide() {
-    if (this.hideTimerId) {
-      return this.hideTimerId;
-    }
+    this.isHide = true;
+    this.style.opacity = 0;
+  }
+
+  show() {
+    this.isHide = false;
+    this.style.opacity = 1;
   }
 
   setDimensions(dimensions: IDimensions) {
-    const isVertical = this.direction === ScrollBarDirection.Vertival;
-    const { width: scrollWidth, height: scrollHeight, contentWidth, contentHeight } = dimensions;
+    const style = updateStyleFromDimensions(this.width, this.direction, dimensions);
 
-    this.style.width = isVertical ? this.width : scrollWidth * (scrollWidth / contentWidth);
-    this.style.height = isVertical ? scrollHeight * (scrollHeight / contentHeight) : this.width;
-    this.style.left = isVertical ? scrollWidth - this.width : 0;
-    this.style.top = isVertical ? 0 : scrollHeight - this.width;
+    Object.assign(this.style, style);
 
     this.dimensions = dimensions;
   }
@@ -127,8 +131,9 @@ export default class ScrollBar extends View {
       const scrollBarMaxScrollTop = this.dimensions.height * canScrollPercent;
 
       const percent = top / this.dimensions.maxScrollTop;
+      const percentTop = scrollBarMaxScrollTop * percent;
 
-      scrollTop = clamp(scrollBarMaxScrollTop * percent, 0, scrollBarMaxScrollTop);
+      scrollTop = clamp(percentTop, 0, scrollBarMaxScrollTop);
     } else {
       const canScrollPercent = 1 - this.dimensions.width / this.dimensions.contentWidth;
       const scrollBarMaxScrollLeft = this.dimensions.width * canScrollPercent;
@@ -142,6 +147,10 @@ export default class ScrollBar extends View {
   }
 
   onScroll(left: number, top: number) {
+    if (this.isHide) {
+      return;
+    }
+  
     const { scrollLeft, scrollTop } = this.calculteScrollValue(left, top);
 
     if (this.direction === ScrollBarDirection.Vertival) {
@@ -149,8 +158,28 @@ export default class ScrollBar extends View {
     } else {
       this.layoutBox.absoluteX = this.parent!.layoutBox.originalAbsoluteX + scrollLeft;
     }
+
+    if (this.autoHide) {
+      this.autoHideRemainingTime = this.autoHideTime;
+    }
+
+    this.style.opacity = 1;
   }
 
-  update() {
+  destroySelf() {
+    sharedTicker.remove(this.update, true);
+  }
+
+  update = (dt: number) => {
+    if (!this.autoHide || this.autoHideRemainingTime <= 0 || this.isHide) {
+      return;
+    }
+
+    this.autoHideRemainingTime -= dt;
+
+    if (this.autoHideRemainingTime <= this.autoHideTime) {
+      this.autoHideRemainingTime = Math.max(0, this.autoHideRemainingTime);
+      this.style.opacity = this.style.opacity as number * (this.autoHideRemainingTime / this.autoHideTime);
+    }
   }
 }

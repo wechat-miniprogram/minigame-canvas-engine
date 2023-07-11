@@ -122,6 +122,14 @@ export function create(node: TreeNode, style: Record<string, IStyle>, parent?: R
     if (isPercent(thisStyle.height)) {
       thisStyle.height = parentStyle.height ? convertPercent(thisStyle.height, parentStyle.height) : 0;
     }
+
+    if (typeof thisStyle.opacity === 'undefined') {
+      thisStyle.opacity = 1;
+    }
+
+    if (parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
+      thisStyle.opacity = parentStyle.opacity * thisStyle.opacity;
+    }
   }
 
   // console.log(args);

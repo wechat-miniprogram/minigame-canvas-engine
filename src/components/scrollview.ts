@@ -8,6 +8,7 @@ import Element from './elements';
 import { IElementOptions } from './types';
 import ScrollBar, { ScrollBarDirection } from './scrollbar';
 import { reflowAffectedStyles } from './style';
+import { sharedTicker } from '../common/ticker';
 
 const dpr = getDpr();
 
@@ -109,6 +110,9 @@ export default class ScrollView extends View {
     this.scrollerOption = {
       scrollingX: value,
     };
+
+    this.updateScrollBar('scrollX', 'horizontalScrollbar');
+
   }
 
   get scrollY() {
@@ -121,9 +125,7 @@ export default class ScrollView extends View {
         scrollingY: value,
       };
 
-      this.initScrollBar();
-
-      console.log(this.scrollerObj)
+      this.scrollerObj && this.updateScrollBar('scrollY', 'vertivalScrollbar');
     }
   }
 
@@ -214,7 +216,7 @@ export default class ScrollView extends View {
       // 这里要把滚动状态保存起来，因为在reflow的时候需要做重置，渲染并不依赖这两个信息
       this.scrollTop = top;
       this.scrollLeft = left;
-      
+
       this.vertivalScrollbar?.onScroll(left, top);
       this.horizontalScrollbar?.onScroll(left, top);
 
@@ -230,14 +232,14 @@ export default class ScrollView extends View {
     }
   }
 
-  styleChangeHandler(prop: string, val: any) {
-    // console.log(prop, val);
-    if (reflowAffectedStyles.indexOf(prop) > -1) {
-      
-    }
-  }
+  // styleChangeHandler(prop: string, val: any) {
+  //   // console.log(prop, val);
+  //   if (reflowAffectedStyles.indexOf(prop) > -1) {
 
-  initScrollBar() {
+  //   }
+  // }
+
+  updateScrollBar(scrollProp: string, scrollBarName: string) {
     const dimensions = {
       width: this.layoutBox.width,
       height: this.layoutBox.height,
@@ -247,37 +249,43 @@ export default class ScrollView extends View {
       maxScrollTop: this.scrollerObj!.__maxScrollTop,
     }
 
-    if (this.scrollY) {
-      if (this.vertivalScrollbar) {
-        this.vertivalScrollbar.setDimensions(dimensions);        
+    if (this[scrollProp as keyof ScrollView]) {
+      if (this[scrollBarName as keyof ScrollView]) {
+        this[scrollBarName as keyof ScrollView].setDimensions(dimensions);
       } else {
-        const vertivalScrollbar = new ScrollBar({
+        const scrollBar = new ScrollBar({
           dimensions,
-          direction: ScrollBarDirection.Vertival,
+          direction: scrollProp === 'scrollY' ? ScrollBarDirection.Vertival : ScrollBarDirection.Horizontal,
         });
-    
+
         // this.appendChild(scrollbar);
-        vertivalScrollbar.root = this.root;
+        scrollBar.root = this.root;
         // @ts-ignore
-        vertivalScrollbar.insert(this.root.renderContext, true);
-        vertivalScrollbar.observeStyleAndEvent();
-        this.add(vertivalScrollbar);
-    
-        vertivalScrollbar.setDirty();
-    
-        this.vertivalScrollbar = vertivalScrollbar;
+        scrollBar.insert(this.root.renderContext, true);
+        scrollBar.observeStyleAndEvent();
+        this.add(scrollBar);
+
+        scrollBar.setDirty();
 
         // @ts-ignore
-        this.root.ticker.next(() => {
-          this.vertivalScrollbar?.onScroll(this.scrollerObj!.__scrollLeft, this.scrollerObj!.__scheduledTop);
+        this[scrollBarName] = scrollBar;
+
+        sharedTicker.next(() => {
+          // @ts-ignore
+          this[scrollBarName]?.onScroll(this.scrollerObj!.__scrollLeft, this.scrollerObj!.__scheduledTop);
           this.root?.emit('repaint');
         });
       }
     } else {
       // 当不再需要纵向滚动的时候销毁纵向滚动条
-      if (this.vertivalScrollbar) {
-        this.vertivalScrollbar.remove();
-        this.vertivalScrollbar = null;
+      if (this[scrollBarName as keyof ScrollView]) {
+        const scrollBar = this[scrollBarName as keyof ScrollView];
+        scrollBar.remove();
+        scrollBar.destroy();
+        scrollBar.destroySelf();
+
+        // @ts-ignore
+        this[scrollBarName as keyof ScrollView] = null;
       }
     }
   }
@@ -308,9 +316,9 @@ export default class ScrollView extends View {
           this.scrollHeight,
         );
 
-        // @ts-ignore
-        this.root.ticker.next(() => {
-          this.initScrollBar();
+        sharedTicker.next(() => {
+          this.updateScrollBar('scrollY', 'vertivalScrollbar');
+          this.updateScrollBar('scrollX', 'horizontalScrollbar');
         });
       }
 
@@ -333,9 +341,9 @@ export default class ScrollView extends View {
 
     this.scrollerObj!.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
-    // @ts-ignore
-    this.root.ticker.next(() => {
-      this.initScrollBar();
+    sharedTicker.next(() => {
+      this.updateScrollBar('scrollY', 'vertivalScrollbar');
+      this.updateScrollBar('scrollX', 'horizontalScrollbar');
     });
 
     this.on('touchstart', (e) => {

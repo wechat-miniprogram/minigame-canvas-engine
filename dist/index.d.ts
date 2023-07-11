@@ -37,7 +37,7 @@ interface IStyle {
     justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around';
     alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
     alignSelf?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
-    position?: 'relative' | 'absolute';
+    position?: string;
     fontSize?: number;
     lineHeight?: number | 'string';
     textAlign?: 'left' | 'center' | 'right';
@@ -176,6 +176,7 @@ declare class Element {
      */
     tagName?: string;
     private originStyle;
+    protected styleChangeHandler(prop: string, val: any): void;
     constructor({ style, idName, className, id, dataset, }: IElementOptions);
     backgroundImageSetHandler(backgroundImage: string): void;
     /**
@@ -227,6 +228,7 @@ declare class Element {
      * 将节点从当前节点树中删除
      */
     remove(): void;
+    setDirty(): void;
     destroySelf(): void;
     destroy(): void;
     add(element: Element): void;
@@ -301,6 +303,7 @@ declare class Ticker {
     private cbs;
     private nextCbs;
     private innerCbs;
+    private lastTime;
     private update;
     cancelIfNeed(): void;
     add(cb: Callback, isInner?: boolean): void;
@@ -372,6 +375,8 @@ declare class ScrollView extends View {
     private innerScrollerOption;
     private scrollerObj?;
     private isFirstScroll?;
+    private vertivalScrollbar;
+    private horizontalScrollbar;
     constructor({ style, idName, className, scrollX, scrollY, dataset, }: IScrollViewOptions);
     /**
      * 获取滚动列表内所有元素的高度和
@@ -391,6 +396,8 @@ declare class ScrollView extends View {
     clear(): void;
     scrollRender(): void;
     scrollHandler(left: number, top: number): void;
+    styleChangeHandler(prop: string, val: any): void;
+    updateScrollBar(scrollProp: string, scrollBarName: string): void;
     insert(context: CanvasRenderingContext2D): void;
     scrollTo(left?: number, top?: number, animate?: boolean): void;
 }

@@ -8,7 +8,7 @@ let tpl = `
       <text font="fnt_number-export" class="title" value="等级"></text>
     </view>
     <view class="rankList">
-      <scrollview id="list" class="list" scrollY="true" >
+      <scrollview id="list" class="list" scrollY="true">
           {{~it.data :item:index}}
               {{? index % 2 === 1 }}
               <view class="listItem listItemOld">

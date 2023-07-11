@@ -117,3 +117,28 @@ export function isGameTouchEvent(e: MouseEvent | GameTouchEvent): e is GameTouch
 export function clamp(number: number, min: number, max: number): number {
   return Math.max(min, Math.min(number, max));
 }
+
+export function hexToRgb(hex: string) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16),
+    }
+    : null;
+}
+
+export function getRgba(hex: string, opacity: number) {
+  const rgbObj = hexToRgb(hex);
+
+  if (opacity === undefined) {
+    opacity = 1;
+  }
+
+  if (!rgbObj) {
+    return null;
+  }
+
+  return `rgba(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b}, ${opacity})`;
+}

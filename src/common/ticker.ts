@@ -9,18 +9,24 @@ export default class Ticker {
   private nextCbs: Callback[] = [];
   private innerCbs: Callback[] = [];
 
+  private lastTime!: number;
+
   private update = () => {
+    const time = Date.now();
+    const deltaTime = time - this.lastTime;
+    this.lastTime = time;
+    // console.log(dt)
     // 优先执行业务的ticker回调，因为有可能会触发reflow
     this.cbs.forEach((cb: Callback) => {
-      cb();
+      cb(deltaTime);
     });
 
     this.innerCbs.forEach((cb: Callback) => {
-      cb();
+      cb(deltaTime);
     });
 
     if (this.nextCbs.length) {
-      this.nextCbs.forEach(cb => cb());
+      this.nextCbs.forEach(cb => cb(deltaTime));
 
       this.nextCbs = [];
     }
@@ -55,7 +61,7 @@ export default class Ticker {
       this.nextCbs = [];
     }
 
-    if (typeof cb === 'function' && this.cbs.indexOf(cb) > -1) {
+    if (typeof cb === 'function' && (this.cbs.indexOf(cb) > -1 || this.innerCbs.indexOf(cb) > -1)) {
       const list = isInner ? this.innerCbs : this.cbs;
       list.splice(this.cbs.indexOf(cb), 1);
     }
@@ -68,6 +74,8 @@ export default class Ticker {
   start() {
     if (!this.started) {
       this.started = true;
+
+      this.lastTime = Date.now();
 
       if (this.animationId === null && (this.cbs.length || this.innerCbs.length)) {
         this.animationId = requestAnimationFrame(this.update);
@@ -83,3 +91,5 @@ export default class Ticker {
     }
   }
 }
+
+export const sharedTicker = new Ticker();

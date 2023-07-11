@@ -28,6 +28,7 @@ const repaintAffectedStyles = [
   'letterSpacing',
   'borderRadius',
   'borderColor',
+  'opacity'
 ];
 
 const allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
