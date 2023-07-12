@@ -717,6 +717,7 @@ export default class Scroller {
       // Compute new vertical scroll position
       if (this.__enableScrollY) {
         scrollTop -= moveY * this.options.speedMultiplier;
+        // console.log(moveY)
         var maxScrollTop = this.__maxScrollTop;
 
         if (scrollTop > maxScrollTop || scrollTop < 0) {

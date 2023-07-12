@@ -38,11 +38,11 @@ function draw(data = []) {
 function loadFriendDataAndRender(key) {
   getFriendData(key, (data) => {
     // mock
-    // for (let i = data.length; i < 50; i++) {
-    //   data[i] = JSON.parse(JSON.stringify(data[0]));
-    //   data[i].rank = i;
-    //   data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
-    // }
+    for (let i = data.length; i < 50; i++) {
+      data[i] = JSON.parse(JSON.stringify(data[0]));
+      data[i].rank = i;
+      data[i].rankScore = Math.floor(Math.random() * 1000 + 1);
+    }
 
     draw(data);
   });

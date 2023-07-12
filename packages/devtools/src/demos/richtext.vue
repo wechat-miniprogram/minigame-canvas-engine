@@ -6,7 +6,7 @@ import RichText from "minigame-canvas-engine-richtext";
 
 let tpl = `
     <view class="container" id="main">
-     <scrollview class="richcontainer" scrollY="true" >
+     <scrollview id="richcontainer" scrollY="true" >
        <richtext id="rich"></richtext>
     </scrollview>
   </view>
@@ -15,7 +15,7 @@ let tpl = `
 let style = {
   container: {
     width: 600,
-    height: 600,
+    height: 700,
     padding: 50,
     borderRadius: 12,
     backgroundColor: "#f3f3f3",
@@ -23,7 +23,7 @@ let style = {
 
   richcontainer: {
     width: 500,
-    height: 500,
+    height: 700,
   },
 
   rich: {
@@ -53,10 +53,10 @@ export default defineComponent({
       let context = canvas.getContext('2d');
 
        // 设置canvas的尺寸和样式的container比例一致
-      canvas.style.width = 1410 / 2 + 'px';
-      canvas.style.height = 960 / 2 + 'px';
-      canvas.width = 1410;
-      canvas.height = 960;
+      canvas.style.width = 600 / 2 + 'px';
+      canvas.style.height = 700 / 2 + 'px';
+      canvas.width = 600;
+      canvas.height = 700;
 
       Layout.updateViewPort(canvas.getBoundingClientRect());
 
@@ -77,6 +77,7 @@ export default defineComponent({
       <br>
       <p style="font-weight: 300">样式可以<span style="color: blue">继承</span>，也可以<span style="font-weight: bold">自定义</span>，这段很长的文字会自动换行，富文本组件都会自动处理好</p>
       <p style="text-align: center">这是一段居中的文本，居中的文本暂不支持内嵌标签</p>
+      <p>这是一段副文本测试</p>
   `
     },
   },

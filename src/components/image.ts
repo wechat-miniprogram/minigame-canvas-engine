@@ -29,26 +29,6 @@ export default class Image extends Element {
 
     this.imgsrc = src;
 
-    // Object.defineProperty(this, 'src', {
-    //   get() {
-    //     return this.imgsrc;
-    //   },
-    //   set(newValue) {
-    //     if (newValue !== this.imgsrc) {
-    //       this.imgsrc = newValue;
-    //       imageManager.loadImage(this.src, (img: HTMLImageElement) => {
-    //         if (!this.isDestroyed) {
-    //           this.img = img;
-    //           // 当图片加载完成，实例可能已经被销毁了
-    //           this.root.emit('repaint');
-    //         }
-    //       });
-    //     }
-    //   },
-    //   enumerable: true,
-    //   configurable: true,
-    // });
-
     this.img = imageManager.loadImage(this.src, (img, fromCache) => {
       if (fromCache) {
         this.img = img;
@@ -102,6 +82,10 @@ export default class Image extends Element {
     const ctx = this.ctx as CanvasRenderingContext2D;
 
     ctx.save();
+
+    if (style.opacity !== 1) {
+      ctx.globalAlpha = style.opacity as number;
+    }
 
     if (style.borderColor) {
       ctx.strokeStyle = style.borderColor;

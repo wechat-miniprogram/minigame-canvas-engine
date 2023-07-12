@@ -306,7 +306,7 @@ function install(layout: Layout) {
       });
 
       this.dcs = dcs;
-      this.style.height = lines * lineHeight;
+      this.style.height = (lines + 1) * lineHeight;
     }
 
     repaint() {

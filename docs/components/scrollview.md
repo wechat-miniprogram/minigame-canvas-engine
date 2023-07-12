@@ -3,13 +3,16 @@
 继承自 [View](../components/view.html)。
 
 滚动内容的容器，滚动的前提是正确调用[updateViewPort](../api/api.html#updateviewport)
+
 ## 标签属性
 |      属性      |  类型  | 是否必填 |          说明          |
 |----------------|--------|--------|------------------------|
 | scrollX | string |   否  |  是否需要横向滚动，支持 "true"和"false"，默认值为 "false" |
 | scrollY | string |   否  | 是否需要纵向滚动，支持 "true"和"false", 默认值为"false" |
+::: tip 温馨提示
+为了兼容历史版本，默认做了一个逻辑，如果当前纵向内容大于 ScrollView 本身高度会自动开启纵向滚动特性，如果需要关闭，可以强行在标签指定 scrollY = "false"
+:::
 
-滚动列表默认不支持滚动，需要在标签的属性手动指定。
 
 ``` html
 <scrollview scrollY="true"></scrollview>
@@ -20,6 +23,30 @@
 | --------- | ------ | -------------------------------------------------------------------------- |
 | scrollX   | boolean | 动态修改 ScrollView 是否可以横向滚动 |
 | scrollY   | boolean | 动态修改 ScrollView 是否可以纵向滚动 |
+| vertivalScrollbar | [ScrollBar](./scrollbar.md) | 纵向滚动条实例 |
+| horizontalScrollbar | [ScrollBar](./scrollbar.md)  | 横向滚动条实例 |
+
+当滚动开启时候，会自动插入滚动条组件，反之关闭的时候会删除滚动条组件。
+
+::: tip 兼容性
+滚动条特性 v1.0.4版本开始支持
+:::
+
+示例
+``` js
+const list = Layout.getElementById('list');
+// 将滚动列表动态设置为禁止纵向滚动
+list.scrollY = false;
+
+// 隐藏滚动条
+list.vertivalScrollbar.hide();
+
+// 改变滚动条的宽度
+list.vertivalScrollbar.width = 20;
+
+// 改变滚动条的背景颜色
+list.vertivalScrollbar.style.backgroundColor = 'red';
+```
 
 ## 方法
 ### scrollTo

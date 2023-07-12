@@ -107,3 +107,13 @@ export function copyTouchArray(touches: GameTouch[]) {
 export function isGameTouchEvent(e: MouseEvent | GameTouchEvent): e is GameTouchEvent {
   return 'touches' in e;
 }
+
+/**
+ * 取最小值和最大值之间的区间限定值
+ * @param {number} number 需要被处理的数字
+ * @param {number} min 最小值
+ * @param {number} max 最大值
+ */
+export function clamp(number: number, min: number, max: number): number {
+  return Math.max(min, Math.min(number, max));
+}

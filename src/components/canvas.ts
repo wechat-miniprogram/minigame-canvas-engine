@@ -73,6 +73,10 @@ export default class Canvas extends Element {
 
     ctx.save();
 
+    if (style.opacity !== 1) {
+      ctx.globalAlpha = style.opacity as number;
+    }
+
     if (style.borderColor) {
       ctx.strokeStyle = style.borderColor;
     }

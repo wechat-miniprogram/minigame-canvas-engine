@@ -8,7 +8,7 @@ let tpl = `
       <text font="fnt_number-export" class="title" value="等级"></text>
     </view>
     <view class="rankList">
-      <scrollview class="list" scrollY="true">
+      <scrollview id="list" class="list" scrollY="true">
           {{~it.data :item:index}}
               {{? index % 2 === 1 }}
               <view class="listItem listItemOld">
@@ -88,7 +88,7 @@ let style = {
   listItemNum: {
     fontSize: 32,
     fontWeight: "bold",
-    lineHeight: 45,
+    lineHeight: 150,
     height: 150,
     textAlign: "center",
     width: 120,
@@ -190,6 +190,11 @@ export default defineComponent({
       Layout.updateViewPort(canvas.getBoundingClientRect());
 
       Layout.layout(context);
+
+      const list = Layout.getElementById('list');
+
+      // @ts-ignore
+      window.list = list;
     },
   },
 });

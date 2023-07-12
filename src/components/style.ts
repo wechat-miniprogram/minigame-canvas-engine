@@ -28,6 +28,7 @@ const repaintAffectedStyles = [
   'letterSpacing',
   'borderRadius',
   'borderColor',
+  'opacity'
 ];
 
 const allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
@@ -72,7 +73,7 @@ interface IStyle {
   justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around';
   alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
   alignSelf?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
-  position?: 'relative' | 'absolute';
+  position?: string;
 
   // repaintAffectedStyles
   fontSize?: number;

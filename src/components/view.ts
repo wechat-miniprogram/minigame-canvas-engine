@@ -41,11 +41,14 @@ export default class View extends Element {
   render() {
     const style = this.style || {};
     const box = this.layoutBox;
-    // const { ctx } = this;
 
     const ctx = this.ctx as CanvasRenderingContext2D;
 
     ctx.save();
+
+    if (style.opacity !== 1) {
+      ctx.globalAlpha = style.opacity as number;
+    }
 
     const borderWidth = style.borderWidth || 0;
     const drawX = box.absoluteX;

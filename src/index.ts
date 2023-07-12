@@ -7,7 +7,7 @@ import { isClick, STATE, clearCanvas, isGameTouchEvent } from './common/util';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 import DebugInfo from './common/debugInfo';
-import Ticker from './common/ticker';
+import Ticker, { sharedTicker } from './common/ticker';
 import { create, renderChildren, layoutChildren, repaintChildren, iterateTree, clone, registerComponent } from './common/vd';
 import Rect from './common/rect';
 import imageManager from './common/imageManager';
@@ -56,7 +56,7 @@ class Layout extends Element {
   /**
    * 当前 Layout 版本，一般跟小游戏插件版本对齐
    */
-  public version = '1.0.3';
+  public version = '1.0.4';
   
   /**
    * Layout 渲染的目标画布对应的 2d context
@@ -102,7 +102,8 @@ class Layout extends Element {
    * 重绘一般是图片加载完成、文字修改等场景
    */
   public isNeedRepaint = false;
-  public ticker: Ticker = new Ticker();
+  // public ticker: Ticker = new Ticker();
+  public ticker: Ticker = sharedTicker;
   public tickerFunc = () => {
     if (this.isDirty) {
       this.reflow();

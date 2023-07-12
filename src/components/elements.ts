@@ -58,30 +58,6 @@ const EE = new TinyEmitter();
 
 let uuid = 0;
 
-function hexToRgb(hex: string) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16),
-    }
-    : null;
-}
-
-function getRgba(hex: string, opacity: number) {
-  const rgbObj = hexToRgb(hex);
-
-  if (opacity === undefined) {
-    opacity = 1;
-  }
-
-  if (!rgbObj) {
-    return null;
-  }
-
-  return `rgba(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b}, ${opacity})`;
-}
 
 const toEventName = (event: string, id: number) => {
   const elementEvent = [
@@ -167,7 +143,7 @@ export default class Element {
    * element.dataset.foo = "bar2";
    */
   public dataset: IDataset;
-  
+
   /**
    * 节点的样式列表，在 Layout.init 会传入样式集合，会自动挑选出跟节点有关的样式统一 merge 到 style 对象上
    */
@@ -205,6 +181,10 @@ export default class Element {
 
   private originStyle: IStyle;
 
+  protected styleChangeHandler(prop: string, val: any) {
+
+  }
+
   constructor({
     style = {},
     idName = '',
@@ -227,24 +207,6 @@ export default class Element {
     };
 
     this.dataset = dataset;
-
-    if (
-      style.opacity !== undefined
-      && style.color
-      && style.color.indexOf('#') > -1
-    ) {
-      // 颜色解析失败，降级为 hex
-      style.color = getRgba(style.color, style.opacity) || style.color;
-    }
-
-    if (
-      style.opacity !== undefined
-      && style.backgroundColor
-      && style.backgroundColor.indexOf('#') > -1
-    ) {
-      // 颜色解析失败，降级为 hex
-      style.backgroundColor = getRgba(style.backgroundColor, style.opacity) || style.backgroundColor;
-    }
 
     if (typeof style.backgroundImage === 'string') {
       this.backgroundImageSetHandler(style.backgroundImage);
@@ -291,6 +253,7 @@ export default class Element {
         },
         set(target, prop, val, receiver) {
           if (typeof prop === 'string') {
+            ele.styleChangeHandler(prop, val);
             if (reflowAffectedStyles.indexOf(prop) > -1) {
               setDirty(ele);
             } else if (repaintAffectedStyles.indexOf(prop) > -1) {
@@ -313,13 +276,14 @@ export default class Element {
           set: (value) => {
             if (value !== innerStyle[key as keyof IStyle]) {
               innerStyle[key as keyof IStyle] = value;
+
               if (reflowAffectedStyles.indexOf(key) > -1) {
-              setDirty(this);
+                setDirty(this);
               } else if (repaintAffectedStyles.indexOf(key) > -1) {
                 this.root?.emit('repaint');
               } else if (key === 'backgroundImage') {
                 this.backgroundImageSetHandler(value);
-              }                
+              }
             }
           },
         });
@@ -433,7 +397,6 @@ export default class Element {
     }
 
     const index = parent.children.indexOf(this);
-
     if (index !== -1) {
       parent.children.splice(index, 1);
       this.unBindEvent();
@@ -443,6 +406,10 @@ export default class Element {
     } else {
       console.warn('[Layout] this element has been removed');
     }
+  }
+
+  setDirty() {
+    setDirty(this);
   }
 
   // 子类填充实现
