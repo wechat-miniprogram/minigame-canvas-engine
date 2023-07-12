@@ -4,7 +4,7 @@
   "iOSHighPerformance": true,
   "plugins": {
     "Layout": {
-      "version": "dev-717bf416325ce831a1cb0565f7210036",
+      "version": "dev",
       "provider": "wx7a727ff7d940bb3f",
       "contexts": [
         {

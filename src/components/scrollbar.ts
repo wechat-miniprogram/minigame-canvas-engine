@@ -40,6 +40,11 @@ function updateStyleFromDimensions(width: number, direction: ScrollBarDirection,
   };
 }
 
+function checkNeedHideScrollBar(direction: ScrollBarDirection, dimensions: IDimensions) {
+  return !!(direction === ScrollBarDirection.Vertival && dimensions.maxScrollTop === 0
+    || direction === ScrollBarDirection.Horizontal && dimensions.maxScrollLeft === 0);
+}
+
 /**
  * 滚动组件的滚动条组件，滚动条本身也是Layout的一个节点
  */
@@ -82,6 +87,10 @@ export default class ScrollBar extends View {
     this.dimensions = dimensions;
     this.innerWidth = width;
 
+    if (checkNeedHideScrollBar(direction, dimensions)) {
+      this.hide();
+    }
+
     sharedTicker.add(this.update, true);
   }
 
@@ -116,6 +125,10 @@ export default class ScrollBar extends View {
     const style = updateStyleFromDimensions(this.width, this.direction, dimensions);
 
     Object.assign(this.style, style);
+
+    if (checkNeedHideScrollBar(this.direction, dimensions)) {
+      this.hide();
+    }
 
     this.dimensions = dimensions;
   }

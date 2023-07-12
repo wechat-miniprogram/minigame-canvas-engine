@@ -65,10 +65,10 @@ const list = Layout.getElementsByClassName('item');
 console.log(list.length); // 3
 ```
 
-### getBoundingClientRect(): [Rect](/components/rect.html)
+### getBoundingClientRect(): [Rect](./rect.md)
 返回一个组件在**canvas**画布中的位置和尺寸信息。
 
-### getViewportRect(): [Rect](/components/rect.html)
+### getViewportRect(): [Rect](./rect.md)
 返回一个组件在**屏幕**中的位置和尺寸信息，前提是正确调用[updateViewPort](/api/api.html#updateviewport)。
 
 ### appendChild(ele: Element)

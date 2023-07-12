@@ -396,7 +396,6 @@ declare class ScrollView extends View {
     clear(): void;
     scrollRender(): void;
     scrollHandler(left: number, top: number): void;
-    styleChangeHandler(prop: string, val: any): void;
     updateScrollBar(scrollProp: string, scrollBarName: string): void;
     insert(context: CanvasRenderingContext2D): void;
     scrollTo(left?: number, top?: number, animate?: boolean): void;

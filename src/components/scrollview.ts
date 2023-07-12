@@ -67,7 +67,7 @@ export default class ScrollView extends View {
   get scrollHeight() {
     let maxHeight = 0;
     this.children.forEach((item: Element) => {
-      if (item.style.position !== 'absolute') {
+      if (!(item instanceof ScrollBar)) {
         maxHeight = Math.max(maxHeight, item.layoutBox.top + item.layoutBox.height);
       }
     });
@@ -77,7 +77,7 @@ export default class ScrollView extends View {
   get scrollWidth() {
     let maxWidth = 0;
     this.children.forEach((item: Element) => {
-      if (item.style.position !== 'absolute') {
+       if (!(item instanceof ScrollBar)) {
         maxWidth = Math.max(maxWidth, item.layoutBox.left + item.layoutBox.width);
       }
     });
@@ -196,7 +196,7 @@ export default class ScrollView extends View {
     // 可能被销毁了或者节点树还没准备好
     if (!this.isDestroyed && !this.isFirstScroll) {
       iterateTree(this, (ele) => {
-        if (ele !== this && ele.style.position !== 'absolute') {
+        if (ele !== this && !(ele instanceof ScrollBar)) {
           ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
           ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
         }

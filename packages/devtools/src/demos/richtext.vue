@@ -15,7 +15,7 @@ let tpl = `
 let style = {
   container: {
     width: 600,
-    height: 600,
+    height: 700,
     padding: 50,
     borderRadius: 12,
     backgroundColor: "#f3f3f3",
@@ -23,7 +23,7 @@ let style = {
 
   richcontainer: {
     width: 500,
-    height: 500,
+    height: 700,
   },
 
   rich: {
@@ -54,9 +54,9 @@ export default defineComponent({
 
        // 设置canvas的尺寸和样式的container比例一致
       canvas.style.width = 600 / 2 + 'px';
-      canvas.style.height = 600 / 2 + 'px';
+      canvas.style.height = 700 / 2 + 'px';
       canvas.width = 600;
-      canvas.height = 600;
+      canvas.height = 700;
 
       Layout.updateViewPort(canvas.getBoundingClientRect());
 
