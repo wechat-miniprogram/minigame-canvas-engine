@@ -282,6 +282,7 @@ export default class ScrollView extends View {
      * 因此这里做一个兼容逻辑，如果 scrollHeight > this.layoutBox.height 自动开启纵向滚动
      */
     if (this.scrollHeight > this.layoutBox.height && typeof this.scrollYProp === 'undefined') {
+      console.log(`[Layout] 自动开启 scrollY`);
       this.scrollY = true;
     }
 
@@ -306,7 +307,7 @@ export default class ScrollView extends View {
 
       // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
       iterateTree(this, (ele) => {
-        if (ele !== this && ele.style.position !== 'absolute') {
+        if (ele !== this && !(ele instanceof ScrollBar)) {
           ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - this.scrollTop;
           ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - this.scrollLeft;
         }
