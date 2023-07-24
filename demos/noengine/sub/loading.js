@@ -12,10 +12,7 @@ const style = {
   loading: {
     width: 150,
     height: 150,
-    // borderRadius: 75,
-    transform: 'rotate(45deg)',
-    borderWidth: 1,
-    backgroundColor: 'red'
+    borderRadius: 75,
   },
 };
 

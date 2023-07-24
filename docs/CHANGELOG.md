@@ -1,3 +1,7 @@
+#### 2023.7.25
+1. `U` transform 部分属性支持，使用可见[教程](./tutorial/loading);
+2. `U` 小游戏插件发布 1.0.5 版本；
+
 #### 2023.7.12
 1. `U` ScrollView 支持 [滚动条](./components/scrollbar.md)特性；
 2. `U` 支持 opacity 样式属性；

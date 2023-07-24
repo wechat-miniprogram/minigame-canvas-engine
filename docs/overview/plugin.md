@@ -17,7 +17,7 @@
   "openDataContext": "sub",
   "plugins": {
     "Layout": {
-      "version": "1.0.4",
+      "version": "1.0.5",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"openDataContext"}]
     }
@@ -52,7 +52,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.4",
+      "version": "1.0.5",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}]
     }
@@ -75,7 +75,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.4",
+      "version": "1.0.5",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}, {"type":"openDataContext"}]
     }
@@ -86,6 +86,7 @@ const Layout = requirePlugin('Layout').default;
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
+| 1.0.5        | transform 部分属性支持，使用可见[教程](./tutorial/loading) |
 | 1.0.4        | ScrollView 支持 [滚动条](../components/scrollbar.md) 特性 |
 | 1.0.3        | 兼容在字节小游戏下报错问题 |
 | 1.0.2        | ts重构项目，支持富文本插件能力 |

@@ -21,6 +21,8 @@ import CanvasDemo from "./canvas.vue";
 import ImageDemo from "./image.vue";
 // @ts-ignore
 import Invite from "./invite.vue";
+// @ts-ignore
+import Rotate from "./rotate.vue";
 
 export default defineComponent({
   components: {
@@ -36,12 +38,13 @@ export default defineComponent({
     CanvasDemo,
     ImageDemo,
     Invite,
+    Rotate,
   },
   data() {
     return {
       isDev: true,
 
-      tabindex: 7,
+      tabindex: 9,
     };
   },
   mounted() {
@@ -98,6 +101,9 @@ export default defineComponent({
     </TabPanel>
     <TabPanel header="Invite">
       <Invite ref="panel__8" />
+    </TabPanel>
+     <TabPanel header="Rotate">
+      <Rotate ref="panel__9" />
     </TabPanel>
   </TabView>
 </template>

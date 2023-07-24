@@ -70,6 +70,11 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | backgroundColor | string | | 背景的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色 |
 | backgroundImage | string | | 背景图，格式为 'url(https:/www.foo.com/xxx.png)'  |
 | opacity | number | 1 | 透明度，范围[0, 1]，0表示透明，1表示不透明 |
+| transform | string | | transform 属性允许你旋转给定元素，目前支持的格式 `rotate(360deg)` |
+
+::: tip 兼容性
+v1.0.5版本开始支持 transform
+:::
 
 ### 边框
 

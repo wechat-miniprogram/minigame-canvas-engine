@@ -47,7 +47,8 @@ export default {
         text: '教程',
         link: '/tutorial/cocos2.x',
         children: [
-          '/tutorial/cocos2.x'
+          '/tutorial/cocos2.x',
+          '/tutorial/loading'
         ],
       },
       {

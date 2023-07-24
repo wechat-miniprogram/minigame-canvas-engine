@@ -584,8 +584,18 @@ export default class Element {
     let originY = 0;
 
     if (this.renderForLayout.rotate) {
-      originX = drawX + box.width / 2;
-      originY = drawY + box.height / 2;
+      if (this.parent?.renderForLayout.rotate) {
+        // @ts-ignore
+        originX = this.parent?.layoutBox.absoluteX + this.parent?.layoutBox.width / 2;
+        // @ts-ignore
+        originY = this.parent?.layoutBox.absoluteY + this.parent?.layoutBox.height / 2;
+      } else {
+        // @ts-ignore
+        originX = drawX + box.width / 2;
+        // @ts-ignore
+        originY = drawY + box.height / 2;
+      }
+      console.log(this, originX, originY)
       ctx.translate(originX, originY);
       ctx.rotate(this.renderForLayout.rotate);
     }
