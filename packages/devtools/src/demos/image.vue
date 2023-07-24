@@ -2,10 +2,12 @@
 import { defineComponent } from "vue";
 import { template } from "dot";
 
+// <image src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg" id="wegoing"></image>
+
 let tpl = `
 <view id="container">
-    <image src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg" class="wegoing"></image>
-   </view>
+  <image src="https://mmgame.qpic.cn/image/3d1e23022b2ffe0a5dc046c10428d5826c383042d8e993706fa1d630aa3917fd/0" id="wegoing"></image>
+</view>
 `;
 
 let style = {
@@ -17,9 +19,12 @@ let style = {
     alignItems: "center",
   },
   wegoing: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    // transform: 'rotate(45deg)',
+    // borderWidth: 1,
+    // backgroundColor: 'red'
   },
 };
 
@@ -46,6 +51,13 @@ export default defineComponent({
       Layout.updateViewPort(canvas.getBoundingClientRect());
 
       Layout.layout(context);
+
+      const image = Layout.getElementById('wegoing');
+      let degrees = 0;
+      Layout.ticker.add(() => {
+        degrees = (degrees + 2) % 360;
+        image.style.transform = `rotate(${degrees}deg)`;        
+      })
     },
   },
 });

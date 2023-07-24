@@ -6,6 +6,7 @@ import TinyEmitter from 'tiny-emitter';
 import { IDataset } from '../types/index'
 import { IElementOptions } from './types';
 import { Callback } from '../types/index';
+import { backgroundImageParser, rotateParser } from './styleParser';
 
 export function getElementsById(tree: Element, list: Element[] = [], id: string) {
   tree.children.forEach((child: Element) => {
@@ -86,6 +87,10 @@ export interface ILayoutBox {
   originalAbsoluteY: number;
 }
 
+export interface IRenderForLayout {
+  rotate?: number; // transform rotate解析之后得到的弧度制
+}
+
 export interface ILayout {
   width: number;
   height: number;
@@ -94,8 +99,6 @@ export interface ILayout {
   right: number;
   bottom: number;
 };
-
-const isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
 
 export default class Element {
   /**
@@ -181,6 +184,8 @@ export default class Element {
 
   private originStyle: IStyle;
 
+  protected renderForLayout: IRenderForLayout = {};
+
   protected styleChangeHandler(prop: string, val: any) {
 
   }
@@ -212,6 +217,15 @@ export default class Element {
       this.backgroundImageSetHandler(style.backgroundImage);
     }
 
+    if (typeof style.transform === 'string') {
+      if (style.transform.indexOf('rotate') > -1) {
+        const deg = rotateParser(style.transform);
+        if (deg) {
+          this.renderForLayout.rotate = deg; 
+        }
+      }
+    }
+
     this.originStyle = style;
     this.style = style;
     this.rect = null;
@@ -219,20 +233,16 @@ export default class Element {
   }
 
   backgroundImageSetHandler(backgroundImage: string) {
-    if (typeof backgroundImage === 'string') {
-      const list = backgroundImage.match(isValidUrlPropReg);
-      if (list) {
-        const url = list[1].replace(/('|")/g, '');
-        imageManager.loadImage(url, (img: HTMLImageElement) => {
-          if (!this.isDestroyed) {
-            this.backgroundImage = img;
-            // 当图片加载完成，实例可能已经被销毁了
-            this.root && this.root.emit('repaint');
-          }
-        });
-      } else {
-        console.error(`[Layout]: ${backgroundImage} is not a valid backgroundImage`);
-      }
+    const url = backgroundImageParser(backgroundImage);
+    
+    if (url) {
+      imageManager.loadImage(url, (img: HTMLImageElement) => {
+        if (!this.isDestroyed) {
+          this.backgroundImage = img;
+          // 当图片加载完成，实例可能已经被销毁了
+          this.root && this.root.emit('repaint');
+        }
+      });
     }
   }
 
@@ -254,6 +264,18 @@ export default class Element {
         set(target, prop, val, receiver) {
           if (typeof prop === 'string') {
             ele.styleChangeHandler(prop, val);
+
+            if (prop === 'transform') {
+              if (val.indexOf('rotate') > -1) {
+                const deg = rotateParser(val);
+                if (deg) {
+                  ele.renderForLayout.rotate = deg; 
+
+                  ele.root?.emit('repaint');
+                }
+              }
+            }
+
             if (reflowAffectedStyles.indexOf(prop) > -1) {
               setDirty(ele);
             } else if (repaintAffectedStyles.indexOf(prop) > -1) {
@@ -480,8 +502,9 @@ export default class Element {
 
   /**
    * 渲染 border 相关能力抽象，子类可按需调用
+   * 由于支持了rotate特性，所以所有的渲染都需要方向减去transform的中间点
    */
-  renderBorder(ctx: CanvasRenderingContext2D) {
+  renderBorder(ctx: CanvasRenderingContext2D, originX: number = 0, originY: number = 0) {
     const style = this.style || {};
     const radius = style.borderRadius || 0;
     const { borderWidth = 0 } = style;
@@ -509,35 +532,35 @@ export default class Element {
     ctx.lineWidth = borderWidth;
     ctx.strokeStyle = borderColor;
 
-    ctx.moveTo(x + borderTopLeftRadius, y);
-    ctx.lineTo(x + width - borderTopRightRadius, y);
+    ctx.moveTo(x + borderTopLeftRadius - originX, y - originY);
+    ctx.lineTo(x + width - borderTopRightRadius - originX, y - originY);
 
     // 右上角的圆角
-    ctx.arcTo(x + width, y, x + width, y + borderTopRightRadius, borderTopRightRadius);
+    ctx.arcTo(x + width - originX, y - originY, x + width - originX, y + borderTopRightRadius - originY, borderTopRightRadius);
 
     // 右下角的点
-    ctx.lineTo(x + width, y + height - borderBottomRightRadius);
+    ctx.lineTo(x + width - originX, y + height - borderBottomRightRadius - originY);
 
     // 右下角的圆角
     ctx.arcTo(
-      x + width,
-      y + height,
-      x + width - borderBottomRightRadius,
-      y + height,
+      x + width - originX,
+      y + height - originY,
+      x + width - borderBottomRightRadius - originX,
+      y + height - originY,
       borderBottomRightRadius,
     );
 
     // 左下角的点
-    ctx.lineTo(x + borderBottomLeftRadius, y + height);
+    ctx.lineTo(x + borderBottomLeftRadius - originX, y + height - originY);
 
     // 左下角的圆角
-    ctx.arcTo(x, y + height, x, y + height - borderBottomLeftRadius, borderBottomLeftRadius);
+    ctx.arcTo(x - originX, y + height - originY, x - originX, y + height - borderBottomLeftRadius - originY, borderBottomLeftRadius);
 
     // 左上角的点
-    ctx.lineTo(x, y + borderTopLeftRadius);
+    ctx.lineTo(x - originX, y + borderTopLeftRadius - originY);
 
     // 左上角的圆角
-    ctx.arcTo(x, y, x + borderTopLeftRadius, y, borderTopLeftRadius);
+    ctx.arcTo(x - originX, y - originY, x + borderTopLeftRadius - originX, y - originY, borderTopLeftRadius);
 
     return { needClip: !!hasRadius, needStroke: !!borderWidth };
   }

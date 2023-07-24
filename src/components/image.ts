@@ -81,10 +81,21 @@ export default class Image extends Element {
     const box = this.layoutBox;
     const ctx = this.ctx as CanvasRenderingContext2D;
 
+    const drawX = box.absoluteX;
+    const drawY = box.absoluteY;
+
     ctx.save();
 
     if (style.opacity !== 1) {
       ctx.globalAlpha = style.opacity as number;
+    }
+
+    const originX = drawX + box.width / 2;
+    const originY = drawY + box.height / 2;
+
+    if (this.renderForLayout.rotate) {
+      ctx.translate(originX, originY);
+      ctx.rotate(this.renderForLayout.rotate);
     }
 
     if (style.borderColor) {
@@ -93,10 +104,7 @@ export default class Image extends Element {
 
     ctx.lineWidth = style.borderWidth || 0;
 
-    const drawX = box.absoluteX;
-    const drawY = box.absoluteY;
-
-    const { needClip, needStroke } = this.renderBorder(ctx);
+    const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
 
     if (needClip) {
       ctx.clip();
@@ -104,19 +112,24 @@ export default class Image extends Element {
 
     if (style.backgroundColor) {
       ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(drawX, drawY, box.width, box.height);
+      ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
     }
 
     if (style.backgroundImage && this.backgroundImage) {
-      ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+      ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
     }
 
-    ctx.drawImage(this.img, drawX, drawY, box.width, box.height);
+    ctx.drawImage(this.img, drawX - originX, drawY - originY, box.width, box.height);
 
     if (needStroke) {
       ctx.stroke();
     }
 
+    if (this.renderForLayout.rotate) {
+      ctx.translate(-originX, -originY);
+    }
+
     ctx.restore();
   }
 }
+

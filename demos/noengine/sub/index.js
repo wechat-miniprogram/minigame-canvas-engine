@@ -1,5 +1,6 @@
 import style from "render/style.js";
 import tplFn from "render/tplfn.js";
+import { showLoading } from './loading.js';
 
 import Layout from "./engine.js";
 // const Layout = requirePlugin('Layout').default;
@@ -18,7 +19,6 @@ let sharedCanvas = wx.getSharedCanvas();
 let sharedContext = sharedCanvas.getContext("2d");
 
 function draw(data = []) {
-  console.log(data)
   const selfInfo = findSelf(data, userInfo);
   let template = tplFn({
     data,
@@ -54,11 +54,12 @@ function init() {
     if (data.event === "updateViewPort") {
       Layout.updateViewPort(data.box);
     } else if (data.event === 'showFriendRank') {
-      getUserInfo((info) => {
-        // 缓存个人信息
-        userInfo = info;
-        loadFriendDataAndRender(key);
-      });
+      showLoading();
+      // getUserInfo((info) => {
+      //   // 缓存个人信息
+      //   userInfo = info;
+      //   loadFriendDataAndRender(key);
+      // });
     } else if (data.event === 'close') {
       Layout.clear();
     }

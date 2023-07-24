@@ -28,7 +28,8 @@ const repaintAffectedStyles = [
   'letterSpacing',
   'borderRadius',
   'borderColor',
-  'opacity'
+  'opacity',
+  'transform',
 ];
 
 const allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
@@ -96,6 +97,8 @@ interface IStyle {
   opacity?: number;
   fontWeight?: string;
   fontFamily?: string;
+
+  transform?: string;
 }
 
 export { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle };

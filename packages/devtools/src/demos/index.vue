@@ -41,7 +41,7 @@ export default defineComponent({
     return {
       isDev: true,
 
-      tabindex: 1,
+      tabindex: 7,
     };
   },
   mounted() {
