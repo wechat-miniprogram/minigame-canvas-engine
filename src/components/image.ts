@@ -90,10 +90,12 @@ export default class Image extends Element {
       ctx.globalAlpha = style.opacity as number;
     }
 
-    const originX = drawX + box.width / 2;
-    const originY = drawY + box.height / 2;
+    let originX = 0;
+    let originY = 0;
 
     if (this.renderForLayout.rotate) {
+      originX = drawX + box.width / 2;
+      originY = drawY + box.height / 2;
       ctx.translate(originX, originY);
       ctx.rotate(this.renderForLayout.rotate);
     }

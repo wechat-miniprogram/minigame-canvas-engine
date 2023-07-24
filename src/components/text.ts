@@ -166,20 +166,30 @@ export default class Text extends Element {
     ctx.save();
 
     const box = this.layoutBox;
+    let drawX = box.absoluteX;
+    let drawY = box.absoluteY;
     const { style } = this;
 
     if (style.opacity !== 1) {
       ctx.globalAlpha = style.opacity as number;
     }
 
+    let originX = 0;
+    let originY = 0;
+
+    if (this.renderForLayout.rotate) {
+      originX = drawX + box.width / 2;
+      originY = drawY + box.height / 2;
+      ctx.translate(originX, originY);
+      ctx.rotate(this.renderForLayout.rotate);
+    }
+
     ctx.textBaseline = this.textBaseline;
     ctx.font = this.font;
     ctx.textAlign = this.textAlign;
 
-    let drawX = box.absoluteX;
-    let drawY = box.absoluteY;
 
-    const { needClip, needStroke } = this.renderBorder(ctx);
+    const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
 
     if (needClip) {
       ctx.clip();
@@ -187,11 +197,11 @@ export default class Text extends Element {
 
     if (style.backgroundColor) {
       ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(drawX, drawY, box.width, box.height);
+      ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
     }
 
     if (style.backgroundImage && this.backgroundImage) {
-      ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+      ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
     }
 
     if (needStroke) {
@@ -213,9 +223,13 @@ export default class Text extends Element {
 
     ctx.fillText(
       this.value,
-      drawX,
-      drawY,
+      drawX - originX,
+      drawY - originY,
     );
+
+    if (this.renderForLayout.rotate) {
+      ctx.translate(-originX, -originY);
+    }
 
     ctx.restore();
   }

@@ -1,8 +1,6 @@
 import Element from './elements';
 import Pool from '../common/pool';
-import { IStyle } from './style';
 import BitMapFont from '../common/bitMapFont';
-import { IDataset } from '../types';
 import { IElementOptions } from './types';
 
 const bitMapPool = new Pool<BitMapFont>('bitMapPool');
@@ -106,16 +104,6 @@ export default class BitMapText extends Element {
 
     ctx.save();
 
-    if (this.style.opacity !== 1) {
-      ctx.globalAlpha = this.style.opacity as number;
-    }
-
-    const { needClip, needStroke } = this.renderBorder(ctx);
-
-    if (needClip) {
-      ctx.clip();
-    }
-
     const box = this.layoutBox;
     const { style } = this;
 
@@ -134,16 +122,36 @@ export default class BitMapText extends Element {
     let x = box.absoluteX;
     let y = box.absoluteY;
 
+    if (this.style.opacity !== 1) {
+      ctx.globalAlpha = this.style.opacity as number;
+    }
+
+    let originX = 0;
+    let originY = 0;
+
+    if (this.renderForLayout.rotate) {
+      originX = x + box.width / 2;
+      originY = y + box.height / 2;
+      ctx.translate(originX, originY);
+      ctx.rotate(this.renderForLayout.rotate);
+    }
+
+    const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
+
+    if (needClip) {
+      ctx.clip();
+    }
+
     const scaleY = lineHeight / defaultLineHeight;
     const realWidth = scaleY * bounds.width;
 
     if (style.backgroundColor) {
       ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(x, y, box.width, box.height);
+      ctx.fillRect(x - originX, y - originY, box.width, box.height);
     }
 
     if (style.backgroundImage && this.backgroundImage) {
-      ctx.drawImage(this.backgroundImage, x, y, box.width, box.height);
+      ctx.drawImage(this.backgroundImage, x - originX, y - originY, box.width, box.height);
     }
 
     // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
@@ -182,8 +190,8 @@ export default class BitMapText extends Element {
           cfg.y,
           cfg.w,
           cfg.h,
-          x + cfg.offX * scaleY,
-          y + cfg.offY * scaleY,
+          x + cfg.offX * scaleY - originX,
+          y + cfg.offY * scaleY - originY,
           cfg.w * scaleY,
           cfg.h * scaleY,
         );
@@ -196,6 +204,10 @@ export default class BitMapText extends Element {
 
     if (needStroke) {
       ctx.stroke();
+    }
+
+    if (this.renderForLayout.rotate) {
+      ctx.translate(-originX, -originY);
     }
 
     ctx.restore();
