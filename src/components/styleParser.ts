@@ -21,6 +21,7 @@ export function rotateParser(val: string) {
   return null;
 }
 
+// 解析背景图片
 export function backgroundImageParser(val: string) {
   if (typeof val === 'string') {
     const list = val.match(isValidUrlPropReg);

@@ -564,4 +564,53 @@ export default class Element {
 
     return { needClip: !!hasRadius, needStroke: !!borderWidth };
   }
+
+  /**
+   * 每个子类都会有自己的渲染逻辑，但他们都有些通用的处理，比如透明度、旋转和border的处理，baseRender 用于处理通用的渲染逻辑
+   */
+  baseRender() {
+    const ctx = this.ctx as CanvasRenderingContext2D;
+
+    const style = this.style;
+    const box = this.layoutBox;
+    
+    const { absoluteX: drawX, absoluteY: drawY, width, height } = box;
+
+    if (style.opacity !== 1) {
+      ctx.globalAlpha = style.opacity as number;
+    }
+
+    let originX = 0;
+    let originY = 0;
+
+    if (this.renderForLayout.rotate) {
+      originX = drawX + box.width / 2;
+      originY = drawY + box.height / 2;
+      ctx.translate(originX, originY);
+      ctx.rotate(this.renderForLayout.rotate);
+    }
+
+    if (style.borderColor) {
+      ctx.strokeStyle = style.borderColor;
+    }
+
+    ctx.lineWidth = style.borderWidth || 0;
+
+    const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
+
+    if (needClip) {
+      ctx.clip();
+    }
+
+    if (style.backgroundColor) {
+      ctx.fillStyle = style.backgroundColor;
+      ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
+    }
+
+    if (style.backgroundImage && this.backgroundImage) {
+      ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
+    }
+
+    return { needStroke, originX, originY, drawX, drawY, width, height};
+  }
 }

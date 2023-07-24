@@ -171,10 +171,6 @@ export default class ScrollView extends View {
      */
     ctx.save();
 
-    if (this.style.opacity !== 1) {
-      ctx.globalAlpha = this.style.opacity as number;
-    }
-
     ctx.beginPath();
     ctx.rect(startX, startY, width, height);
     ctx.clip();

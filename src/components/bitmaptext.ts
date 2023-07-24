@@ -104,13 +104,13 @@ export default class BitMapText extends Element {
 
     ctx.save();
 
-    const box = this.layoutBox;
+    let { needStroke, originX, originY, drawX, drawY } = this.baseRender();
+
     const { style } = this;
 
     const {
       width = 0, // 没有设置采用计算出来的宽度
       height = 0, // 没有设置则采用计算出来的宽度
-      // lineHeight = defaultLineHeight, // 没有设置则采用计算出来的高度
       textAlign, // 文字左右对齐方式
       verticalAlign,
       letterSpacing = 0,
@@ -118,69 +118,35 @@ export default class BitMapText extends Element {
     // 没有设置则采用计算出来的高度
     const lineHeight = (style.lineHeight || defaultLineHeight) as number
 
-    // 元素包围盒的左上角坐标
-    let x = box.absoluteX;
-    let y = box.absoluteY;
-
-    if (this.style.opacity !== 1) {
-      ctx.globalAlpha = this.style.opacity as number;
-    }
-
-    let originX = 0;
-    let originY = 0;
-
-    if (this.renderForLayout.rotate) {
-      originX = x + box.width / 2;
-      originY = y + box.height / 2;
-      ctx.translate(originX, originY);
-      ctx.rotate(this.renderForLayout.rotate);
-    }
-
-    const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
-
-    if (needClip) {
-      ctx.clip();
-    }
-
     const scaleY = lineHeight / defaultLineHeight;
     const realWidth = scaleY * bounds.width;
-
-    if (style.backgroundColor) {
-      ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(x - originX, y - originY, box.width, box.height);
-    }
-
-    if (style.backgroundImage && this.backgroundImage) {
-      ctx.drawImage(this.backgroundImage, x - originX, y - originY, box.width, box.height);
-    }
 
     // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
     if (lineHeight < height) {
       if (verticalAlign === 'middle') {
-        y += (height - lineHeight) / 2;
+        drawY += (height - lineHeight) / 2;
       } else if (verticalAlign === 'bottom') {
-        y = y + height - lineHeight;
+        drawY = drawY + height - lineHeight;
       }
     }
 
     if (width > realWidth) {
       if (textAlign === 'center') {
-        x += (width - realWidth) / 2;
+        drawX += (width - realWidth) / 2;
       } else if (textAlign === 'right') {
-        x += (width - realWidth);
+        drawY += (width - realWidth);
       }
     }
 
     // 记录上一个字符，方便处理 kerning
     let prevCharCode = null;
 
-
     for (let i = 0; i < this.value.length; i++) {
       const char = this.value[i];
       const cfg = this.font.chars[char];
 
       if (prevCharCode && cfg.kerning[prevCharCode]) {
-        x += cfg.kerning[prevCharCode];
+        drawX += cfg.kerning[prevCharCode];
       }
 
       if (cfg) {
@@ -190,13 +156,13 @@ export default class BitMapText extends Element {
           cfg.y,
           cfg.w,
           cfg.h,
-          x + cfg.offX * scaleY - originX,
-          y + cfg.offY * scaleY - originY,
+          drawX + cfg.offX * scaleY - originX,
+          drawY + cfg.offY * scaleY - originY,
           cfg.w * scaleY,
           cfg.h * scaleY,
         );
 
-        x += (cfg.xadvance * scaleY + letterSpacing);
+        drawX += (cfg.xadvance * scaleY + letterSpacing);
 
         prevCharCode = char;
       }
@@ -206,9 +172,7 @@ export default class BitMapText extends Element {
       ctx.stroke();
     }
 
-    if (this.renderForLayout.rotate) {
-      ctx.translate(-originX, -originY);
-    }
+    ctx.translate(-originX, -originY);
 
     ctx.restore();
   }

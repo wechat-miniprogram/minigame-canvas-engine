@@ -77,59 +77,20 @@ export default class Image extends Element {
       return;
     }
 
-    const style = this.style || {};
-    const box = this.layoutBox;
     const ctx = this.ctx as CanvasRenderingContext2D;
-
-    const drawX = box.absoluteX;
-    const drawY = box.absoluteY;
-
     ctx.save();
 
-    if (style.opacity !== 1) {
-      ctx.globalAlpha = style.opacity as number;
-    }
+    const { needStroke, originX, originY, drawX, drawY, width, height } = this.baseRender();
 
-    let originX = 0;
-    let originY = 0;
-
-    if (this.renderForLayout.rotate) {
-      originX = drawX + box.width / 2;
-      originY = drawY + box.height / 2;
-      ctx.translate(originX, originY);
-      ctx.rotate(this.renderForLayout.rotate);
-    }
-
-    if (style.borderColor) {
-      ctx.strokeStyle = style.borderColor;
-    }
-
-    ctx.lineWidth = style.borderWidth || 0;
-
-    const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
-
-    if (needClip) {
-      ctx.clip();
-    }
-
-    if (style.backgroundColor) {
-      ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
-    }
-
-    if (style.backgroundImage && this.backgroundImage) {
-      ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
-    }
-
-    ctx.drawImage(this.img, drawX - originX, drawY - originY, box.width, box.height);
+    // 自定义渲染逻辑 开始
+    ctx.drawImage(this.img, drawX - originX, drawY - originY, width, height);
+    // 自定义渲染逻辑 结束
 
     if (needStroke) {
       ctx.stroke();
     }
 
-    if (this.renderForLayout.rotate) {
-      ctx.translate(-originX, -originY);
-    }
+    ctx.translate(-originX, -originY);
 
     ctx.restore();
   }

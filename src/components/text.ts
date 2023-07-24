@@ -162,47 +162,15 @@ export default class Text extends Element {
 
 
   render() {
+    const style = this.style;
     const ctx = this.ctx as CanvasRenderingContext2D;
     ctx.save();
 
-    const box = this.layoutBox;
-    let drawX = box.absoluteX;
-    let drawY = box.absoluteY;
-    const { style } = this;
-
-    if (style.opacity !== 1) {
-      ctx.globalAlpha = style.opacity as number;
-    }
-
-    let originX = 0;
-    let originY = 0;
-
-    if (this.renderForLayout.rotate) {
-      originX = drawX + box.width / 2;
-      originY = drawY + box.height / 2;
-      ctx.translate(originX, originY);
-      ctx.rotate(this.renderForLayout.rotate);
-    }
+    let { needStroke, originX, originY, drawX, drawY, width, height } = this.baseRender();
 
     ctx.textBaseline = this.textBaseline;
     ctx.font = this.font;
     ctx.textAlign = this.textAlign;
-
-
-    const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
-
-    if (needClip) {
-      ctx.clip();
-    }
-
-    if (style.backgroundColor) {
-      ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
-    }
-
-    if (style.backgroundImage && this.backgroundImage) {
-      ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
-    }
 
     if (needStroke) {
       ctx.stroke();
@@ -211,9 +179,9 @@ export default class Text extends Element {
     ctx.fillStyle = this.fillStyle;
 
     if (this.textAlign === 'center') {
-      drawX += box.width / 2;
+      drawX += width / 2;
     } else if (this.textAlign === 'right') {
-      drawX += box.width;
+      drawX += width;
     }
 
     if (style.lineHeight) {
@@ -227,9 +195,7 @@ export default class Text extends Element {
       drawY - originY,
     );
 
-    if (this.renderForLayout.rotate) {
-      ctx.translate(-originX, -originY);
-    }
+    ctx.translate(-originX, -originY);
 
     ctx.restore();
   }

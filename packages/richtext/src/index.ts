@@ -351,7 +351,21 @@ function install(layout: Layout) {
       let drawX = box.absoluteX;
       let drawY = box.absoluteY;
 
-      const { needClip, needStroke } = this.renderBorder(ctx);
+      if (style.opacity !== 1) {
+        ctx.globalAlpha = style.opacity as number;
+      }
+
+      let originX = 0;
+      let originY = 0;
+  
+      if (this.renderForLayout.rotate) {
+        originX = drawX + box.width / 2;
+        originY = drawY + box.height / 2;
+        ctx.translate(originX, originY);
+        ctx.rotate(this.renderForLayout.rotate);
+      }
+
+      const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
 
       if (needClip) {
         ctx.clip();
@@ -359,11 +373,11 @@ function install(layout: Layout) {
 
       if (style.backgroundColor) {
         ctx.fillStyle = style.backgroundColor;
-        ctx.fillRect(drawX, drawY, box.width, box.height);
+        ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
       }
 
       if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, drawX, drawY, box.width, box.height);
+        ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
       }
 
       if (needStroke) {
@@ -387,14 +401,18 @@ function install(layout: Layout) {
               }
 
               ctx.font = `${dc.fontStyle || ''} ${dc.fontWeight || ''} ${dc.fontSize || fontSize}px ${DEFAULT_FONT_FAMILY}`;
-              ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
+              ctx.fillText(dc.text, drawX + dc.x - originX, drawY + dc.y - originY);
               ctx.restore();
             } else {
-              ctx.fillText(dc.text, drawX + dc.x, drawY + dc.y);
+              ctx.fillText(dc.text, drawX + dc.x - originX, drawY + dc.y - originY);
             }
           }
         });
       }
+
+      if (this.renderForLayout.rotate) {
+        ctx.translate(-originX, -originY);
+      }  
 
       ctx.restore();
     }
