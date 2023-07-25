@@ -38,13 +38,13 @@ export default defineComponent({
     CanvasDemo,
     ImageDemo,
     Invite,
-    Rotate,
+    // Rotate,
   },
   data() {
     return {
       isDev: true,
 
-      tabindex: 9,
+      tabindex: 0,
     };
   },
   mounted() {
@@ -102,8 +102,8 @@ export default defineComponent({
     <TabPanel header="Invite">
       <Invite ref="panel__8" />
     </TabPanel>
-     <TabPanel header="Rotate">
+     <!-- <TabPanel header="Rotate">
       <Rotate ref="panel__9" />
-    </TabPanel>
+    </TabPanel> -->
   </TabView>
 </template>

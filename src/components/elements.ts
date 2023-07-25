@@ -583,19 +583,14 @@ export default class Element {
     let originX = 0;
     let originY = 0;
 
+    /**
+     * 请注意，这里暂时仅支持没有子节点的元素发生旋转，如果父节点旋转了子节点并不会跟着旋转
+     * 要实现父节点带动子节点旋转的能力，需要引入矩阵库，对代码改动也比较大，暂时不做改造。
+     */
     if (this.renderForLayout.rotate) {
-      if (this.parent?.renderForLayout.rotate) {
-        // @ts-ignore
-        originX = this.parent?.layoutBox.absoluteX + this.parent?.layoutBox.width / 2;
-        // @ts-ignore
-        originY = this.parent?.layoutBox.absoluteY + this.parent?.layoutBox.height / 2;
-      } else {
-        // @ts-ignore
-        originX = drawX + box.width / 2;
-        // @ts-ignore
-        originY = drawY + box.height / 2;
-      }
-      console.log(this, originX, originY)
+      originX = drawX + box.width / 2;
+      originY = drawY + box.height / 2;
+
       ctx.translate(originX, originY);
       ctx.rotate(this.renderForLayout.rotate);
     }

@@ -56,6 +56,7 @@ interface IStyle {
     opacity?: number;
     fontWeight?: string;
     fontFamily?: string;
+    transform?: string;
 }
 
 declare class Rect {
@@ -109,6 +110,9 @@ interface ILayoutBox {
     absoluteY: number;
     originalAbsoluteX: number;
     originalAbsoluteY: number;
+}
+interface IRenderForLayout {
+    rotate?: number;
 }
 declare class Element {
     /**
@@ -176,6 +180,7 @@ declare class Element {
      */
     tagName?: string;
     private originStyle;
+    protected renderForLayout: IRenderForLayout;
     protected styleChangeHandler(prop: string, val: any): void;
     constructor({ style, idName, className, id, dataset, }: IElementOptions);
     backgroundImageSetHandler(backgroundImage: string): void;
@@ -246,10 +251,23 @@ declare class Element {
     off(event: string, callback?: Callback): void;
     /**
      * 渲染 border 相关能力抽象，子类可按需调用
+     * 由于支持了rotate特性，所以所有的渲染都需要方向减去transform的中间点
      */
-    renderBorder(ctx: CanvasRenderingContext2D): {
+    renderBorder(ctx: CanvasRenderingContext2D, originX?: number, originY?: number): {
         needClip: boolean;
         needStroke: boolean;
+    };
+    /**
+     * 每个子类都会有自己的渲染逻辑，但他们都有些通用的处理，比如透明度、旋转和border的处理，baseRender 用于处理通用的渲染逻辑
+     */
+    baseRender(): {
+        needStroke: boolean;
+        originX: number;
+        originY: number;
+        drawX: number;
+        drawY: number;
+        width: number;
+        height: number;
     };
 }
 
@@ -316,7 +334,6 @@ declare class Ticker {
 declare class View extends Element {
     constructor({ style, idName, className, dataset, }: IElementOptions);
     destroySelf(): void;
-    checkNeedRender(): boolean;
     render(): void;
     repaint(): void;
 }

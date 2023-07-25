@@ -55,11 +55,11 @@ function init() {
       Layout.updateViewPort(data.box);
     } else if (data.event === 'showFriendRank') {
       showLoading();
-      // getUserInfo((info) => {
-      //   // 缓存个人信息
-      //   userInfo = info;
-      //   loadFriendDataAndRender(key);
-      // });
+      getUserInfo((info) => {
+        // 缓存个人信息
+        userInfo = info;
+        loadFriendDataAndRender(key);
+      });
     } else if (data.event === 'close') {
       Layout.clear();
     }

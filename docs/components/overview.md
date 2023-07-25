@@ -72,9 +72,13 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | opacity | number | 1 | 透明度，范围[0, 1]，0表示透明，1表示不透明 |
 | transform | string | | transform 属性允许你旋转给定元素，目前支持的格式 `rotate(360deg)` |
 
-::: tip 兼容性
-v1.0.5版本开始支持 transform
+::: tip transform 特殊说明
+v1.0.5版本开始支持 transform。
+
+请注意，这里暂时仅支持**没有子节点**的元素发生旋转，如果父节点旋转了子节点并不会跟着旋转，要实现父节点带动子节点旋转的能力，需要引入矩阵库，对代码改动也比较大，暂时不做改造。
+transform 的 rotate 特性一般用来做loading效果，详情可见[教程](../tutorial/loading)
 :::
+
 
 ### 边框
 
