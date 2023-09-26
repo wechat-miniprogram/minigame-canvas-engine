@@ -509,6 +509,9 @@ class Layout extends Element {
     if (removeTicker) {
       this.ticker.remove();
       this.ticker.stop();
+    } else {
+      // inner的应该默认都移除，否则前后两次初始化会导致前后状态有问题
+      this.ticker.removeInner();
     }
   }
 

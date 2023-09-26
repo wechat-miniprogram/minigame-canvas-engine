@@ -3065,8 +3065,9 @@ var Ticker = /** @class */ (function () {
         this.started = false;
         this.animationId = null;
         this.cbs = [];
-        this.nextCbs = [];
         this.innerCbs = [];
+        this.nextCbs = [];
+        this.innerNextCbs = [];
         this.update = function () {
             var time = Date.now();
             var deltaTime = time - _this.lastTime;
@@ -3079,6 +3080,10 @@ var Ticker = /** @class */ (function () {
             _this.innerCbs.forEach(function (cb) {
                 cb(deltaTime);
             });
+            if (_this.innerNextCbs.length) {
+                _this.innerNextCbs.forEach(function (cb) { return cb(deltaTime); });
+                _this.innerNextCbs = [];
+            }
             if (_this.nextCbs.length) {
                 _this.nextCbs.forEach(function (cb) { return cb(deltaTime); });
                 _this.nextCbs = [];
@@ -3099,10 +3104,15 @@ var Ticker = /** @class */ (function () {
             isInner ? this.innerCbs.push(cb) : this.cbs.push(cb);
         }
     };
-    Ticker.prototype.next = function (cb) {
+    Ticker.prototype.next = function (cb, isInner) {
+        if (isInner === void 0) { isInner = false; }
         if (typeof cb === 'function') {
-            this.nextCbs.push(cb);
+            isInner ? this.innerNextCbs.push(cb) : this.nextCbs.push(cb);
         }
+    };
+    Ticker.prototype.removeInner = function () {
+        this.innerCbs = [];
+        this.innerNextCbs = [];
     };
     Ticker.prototype.remove = function (cb, isInner) {
         if (isInner === void 0) { isInner = false; }
@@ -3110,6 +3120,7 @@ var Ticker = /** @class */ (function () {
             this.cbs = [];
             this.innerCbs = [];
             this.nextCbs = [];
+            this.innerNextCbs = [];
         }
         if (typeof cb === 'function' && (this.cbs.indexOf(cb) > -1 || this.innerCbs.indexOf(cb) > -1)) {
             var list = isInner ? this.innerCbs : this.cbs;
@@ -3997,7 +4008,7 @@ var ScrollView = /** @class */ (function (_super) {
                     // @ts-ignore
                     (_a = _this[scrollBarName]) === null || _a === void 0 ? void 0 : _a.onScroll(_this.scrollerObj.__scrollLeft, _this.scrollerObj.__scheduledTop);
                     (_b = _this.root) === null || _b === void 0 ? void 0 : _b.emit('repaint');
-                });
+                }, true);
             }
         }
         else {
@@ -4035,7 +4046,7 @@ var ScrollView = /** @class */ (function (_super) {
                 _common_ticker__WEBPACK_IMPORTED_MODULE_5__.sharedTicker.next(function () {
                     _this.updateScrollBar('scrollY', 'vertivalScrollbar');
                     _this.updateScrollBar('scrollX', 'horizontalScrollbar');
-                });
+                }, true);
             }
             // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
             (0,_common_vd__WEBPACK_IMPORTED_MODULE_3__.iterateTree)(this, function (ele) {
@@ -4054,7 +4065,7 @@ var ScrollView = /** @class */ (function (_super) {
         _common_ticker__WEBPACK_IMPORTED_MODULE_5__.sharedTicker.next(function () {
             _this.updateScrollBar('scrollY', 'vertivalScrollbar');
             _this.updateScrollBar('scrollX', 'horizontalScrollbar');
-        });
+        }, true);
         this.on('touchstart', function (e) {
             if (!e.touches) {
                 e.touches = [e];
@@ -6143,6 +6154,10 @@ var Layout = /** @class */ (function (_super) {
         if (removeTicker) {
             this.ticker.remove();
             this.ticker.stop();
+        }
+        else {
+            // inner的应该默认都移除，否则前后两次初始化会导致前后状态有问题
+            this.ticker.removeInner();
         }
     };
     Layout.prototype.clearPool = function () {

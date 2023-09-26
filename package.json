@@ -1,6 +1,6 @@
 {
   "name": "minigame-canvas-engine",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "1. 安装Node 2. 安装tnpm: 3. 安装webpack: npm install --save-dev webpack",
   "main": "dist/index.js",
   "scripts": {

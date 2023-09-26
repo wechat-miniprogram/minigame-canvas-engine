@@ -319,13 +319,15 @@ declare class Ticker {
     private started;
     private animationId;
     private cbs;
-    private nextCbs;
     private innerCbs;
+    private nextCbs;
+    private innerNextCbs;
     private lastTime;
     private update;
     cancelIfNeed(): void;
     add(cb: Callback, isInner?: boolean): void;
-    next(cb: Callback): void;
+    next(cb: Callback, isInner?: boolean): void;
+    removeInner(): void;
     remove(cb?: Callback, isInner?: boolean): void;
     start(): void;
     stop(): void;

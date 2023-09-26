@@ -252,7 +252,7 @@ export default class ScrollView extends View {
           // @ts-ignore
           this[scrollBarName]?.onScroll(this.scrollerObj!.__scrollLeft, this.scrollerObj!.__scheduledTop);
           this.root?.emit('repaint');
-        });
+        }, true);
       }
     } else {
       // 当不再需要纵向滚动的时候销毁纵向滚动条
@@ -298,7 +298,7 @@ export default class ScrollView extends View {
         sharedTicker.next(() => {
           this.updateScrollBar('scrollY', 'vertivalScrollbar');
           this.updateScrollBar('scrollX', 'horizontalScrollbar');
-        });
+        }, true);
       }
 
       // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
@@ -323,7 +323,7 @@ export default class ScrollView extends View {
     sharedTicker.next(() => {
       this.updateScrollBar('scrollY', 'vertivalScrollbar');
       this.updateScrollBar('scrollX', 'horizontalScrollbar');
-    });
+    }, true);
 
     this.on('touchstart', (e) => {
       if (!e.touches) {

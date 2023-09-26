@@ -6,8 +6,9 @@ export default class Ticker {
   private animationId: number | null = null;
 
   private cbs: Callback[] = [];
-  private nextCbs: Callback[] = [];
   private innerCbs: Callback[] = [];
+  private nextCbs: Callback[] = [];
+  private innerNextCbs: Callback[] = [];
 
   private lastTime!: number;
 
@@ -24,6 +25,11 @@ export default class Ticker {
     this.innerCbs.forEach((cb: Callback) => {
       cb(deltaTime);
     });
+
+    if (this.innerNextCbs.length) {
+      this.innerNextCbs.forEach(cb => cb(deltaTime));
+      this.innerNextCbs = [];
+    }
 
     if (this.nextCbs.length) {
       this.nextCbs.forEach(cb => cb(deltaTime));
@@ -44,14 +50,19 @@ export default class Ticker {
 
   add(cb: Callback, isInner = false) {
     if (typeof cb === 'function' && this.cbs.indexOf(cb) === -1) {
-      isInner ? this.innerCbs.push(cb) :  this.cbs.push(cb);
+      isInner ? this.innerCbs.push(cb) : this.cbs.push(cb);
     }
   }
 
-  next(cb: Callback) {
+  next(cb: Callback, isInner = false) {
     if (typeof cb === 'function') {
-      this.nextCbs.push(cb);
+      isInner ? this.innerNextCbs.push(cb) : this.nextCbs.push(cb);
     }
+  }
+
+  removeInner() {
+    this.innerCbs = [];
+    this.innerNextCbs = [];
   }
 
   remove(cb?: Callback, isInner = false) {
@@ -59,6 +70,7 @@ export default class Ticker {
       this.cbs = [];
       this.innerCbs = [];
       this.nextCbs = [];
+      this.innerNextCbs = [];
     }
 
     if (typeof cb === 'function' && (this.cbs.indexOf(cb) > -1 || this.innerCbs.indexOf(cb) > -1)) {
