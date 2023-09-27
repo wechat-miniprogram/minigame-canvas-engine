@@ -479,6 +479,16 @@ interface IPlugin<T> {
     install: (app: T, ...options: any[]) => void;
     uninstall?: (app: T, ...options: any[]) => void;
 }
+/**
+ * 默认暴露 Layout 的实例，但在某些场景下，可能需要多个 Layout 实例，因此 Layout 类也暴露出去
+ * const myLayout = new Layout({
+ *   style: {
+ *      width: 0,
+ *      height: 0,
+ *   },
+ *  name: 'myLayoutName',
+ * });
+ */
 declare class Layout extends Element {
     /**
      * 当前 Layout 版本，一般跟小游戏插件版本对齐
@@ -617,4 +627,4 @@ declare class Layout extends Element {
 }
 declare const _default: Layout;
 
-export { EE, _default as default };
+export { EE, Layout, _default as default };

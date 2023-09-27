@@ -1,5 +1,5 @@
 import Element from './elements';
-import { createCanvas } from '../common/util';
+import env from '../env'
 import { IElementOptions } from './types';
 
 interface ICanvasOptions extends IElementOptions {
@@ -33,7 +33,7 @@ export default class Canvas extends Element {
      * 微信小游戏场景下，sharedCanvas 实例不方便自动创建，提供 setter 手动设置
      */
     if (autoCreateCanvas) {
-      this.canvasInstance = createCanvas() as HTMLCanvasElement;
+      this.canvasInstance = env.createCanvas() as HTMLCanvasElement;
       this.canvasInstance.width = Number(width);
       this.canvasInstance.height = Number(height);
     }

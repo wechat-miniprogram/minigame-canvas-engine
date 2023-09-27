@@ -1,4 +1,4 @@
-import './env';
+import env from './env';
 import Element from './components/elements';
 import Pool from './common/pool';
 import TinyEmitter from 'tiny-emitter';
@@ -67,6 +67,8 @@ export class Layout extends Element {
    * 当前 Layout 版本，一般跟小游戏插件版本对齐
    */
   public version = '1.0.5';
+
+  env = env;
   
   /**
    * Layout 渲染的目标画布对应的 2d context
@@ -112,7 +114,6 @@ export class Layout extends Element {
    * 重绘一般是图片加载完成、文字修改等场景
    */
   public isNeedRepaint = false;
-  // public ticker: Ticker = new Ticker();
   public ticker: Ticker = new Ticker();
   public tickerFunc = () => {
     if (this.isDirty) {
@@ -139,10 +140,10 @@ export class Layout extends Element {
       hasEventBind: false,
       touchMsg: {},
       handlers: {
-        touchStart: this.eventHandler('touchstart'),
-        touchMove: this.eventHandler('touchmove'),
-        touchEnd: this.eventHandler('touchend'),
-        touchCancel: this.eventHandler('touchcancel'),
+        touchStart: this.eventHandler('touchstart').bind(this),
+        touchMove: this.eventHandler('touchmove').bind(this),
+        touchEnd: this.eventHandler('touchend').bind(this),
+        touchCancel: this.eventHandler('touchcancel').bind(this),
       },
     };
 
@@ -439,35 +440,20 @@ export class Layout extends Element {
     }
 
     this.eventHandlerData.hasEventBind = true;
-
-    if (typeof __env !== 'undefined') {
-      __env.onTouchStart(this.eventHandlerData.handlers.touchStart);
-      __env.onTouchMove(this.eventHandlerData.handlers.touchMove);
-      __env.onTouchEnd(this.eventHandlerData.handlers.touchEnd);
-      __env.onTouchCancel(this.eventHandlerData.handlers.touchCancel);
-    } else {
-      document.onmousedown = this.eventHandlerData.handlers.touchStart;
-      document.onmousemove = this.eventHandlerData.handlers.touchMove;
-      document.onmouseup = this.eventHandlerData.handlers.touchEnd;
-      document.onmouseleave = this.eventHandlerData.handlers.touchCancel;
-    }
+    env.onTouchStart(this.eventHandlerData.handlers.touchStart);
+    env.onTouchMove(this.eventHandlerData.handlers.touchMove);
+    env.onTouchEnd(this.eventHandlerData.handlers.touchEnd);
+    env.onTouchCancel(this.eventHandlerData.handlers.touchCancel);
   }
 
   /**
    * 全局事件解绑 
    */
   unBindEvents() {
-    if (typeof __env !== 'undefined') {
-      __env.offTouchStart(this.eventHandlerData.handlers.touchStart);
-      __env.offTouchMove(this.eventHandlerData.handlers.touchMove);
-      __env.offTouchEnd(this.eventHandlerData.handlers.touchEnd);
-      __env.offTouchCancel(this.eventHandlerData.handlers.touchCancel);
-    } else {
-      document.onmousedown = null;
-      document.onmousemove = null;
-      document.onmouseup = null;
-      document.onmouseleave = null;
-    }
+    env.offTouchStart(this.eventHandlerData.handlers.touchStart);
+    env.offTouchMove(this.eventHandlerData.handlers.touchMove);
+    env.offTouchEnd(this.eventHandlerData.handlers.touchEnd);
+    env.offTouchCancel(this.eventHandlerData.handlers.touchCancel);
 
     this.eventHandlerData.hasEventBind = false;
   }
@@ -591,7 +577,7 @@ export class Layout extends Element {
     plugin.install(this, ...options);
     Layout.installedPlugins.push(plugin);
 
-    console.log(`[Layout] 插件 ${plugin.name || ''} 已安装`)
+    // console.log(`[Layout] 插件 ${plugin.name || ''} 已安装`)
   }
 
   /**
@@ -601,7 +587,7 @@ export class Layout extends Element {
     const pluginIndex = Layout.installedPlugins.indexOf(plugin);
 
     if (pluginIndex === -1) {
-      console.warn('This plugin is not installed.');
+      console.warn('[Layout] This plugin is not installed.');
       return;
     }
 
@@ -609,7 +595,7 @@ export class Layout extends Element {
       plugin.uninstall(this, ...options);
     }
 
-    console.log(`[Layout] 插件 ${plugin.name || ''} 已卸载`)
+    // console.log(`[Layout] 插件 ${plugin.name || ''} 已卸载`)
     Layout.installedPlugins.splice(pluginIndex, 1);
   }
 }

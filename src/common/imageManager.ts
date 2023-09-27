@@ -1,5 +1,6 @@
 import Pool from './pool';
-import { none, createImage } from './util';
+import { none } from './util';
+import env from '../env';
 
 type Callback = (img: HTMLImageElement, fromCache: boolean) => void;
 interface ImageCache {
@@ -42,7 +43,7 @@ class ImageManager {
       cache.onerrorcbks.push(fail);
     } else {
       // 创建图片，将回调函数推入回调函数栈
-      img = createImage() as HTMLImageElement;
+      img = env.createImage() as HTMLImageElement;
       const newCache = {
         img,
         loadDone: false,

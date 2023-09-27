@@ -1,7 +1,7 @@
 import Element from './elements';
-import { createCanvas } from '../common/util';
 import { IStyle } from './style';
 import { IElementOptions } from './types';
+import env from '../env'
 
 const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
 let context: CanvasRenderingContext2D | null = null;
@@ -11,7 +11,7 @@ const getContext = (): CanvasRenderingContext2D => {
     return context;
   }
 
-  const canvas = createCanvas();
+  const canvas = env.createCanvas();
   canvas.width = 1;
   canvas.height = 1;
   context = canvas.getContext('2d') as CanvasRenderingContext2D;

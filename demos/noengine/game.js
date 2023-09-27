@@ -120,3 +120,13 @@ testText.on('click', () => {
     Layout.ticker.remove(updateRank);
   }
 });
+
+
+// wx.onTouchStart((result) => {
+//   console.log('servicecommentpage')
+//   wx.openBusinessView({
+//     businessType: 'servicecommentpage',
+//     success: console.log,
+//     fail: console.error
+//   })
+// }) 

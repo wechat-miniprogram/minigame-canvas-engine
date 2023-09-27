@@ -1,14 +1,15 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import View from './view';
-import { getDpr, copyTouchArray } from '../common/util';
+import { copyTouchArray } from '../common/util';
 import Scroller from '../libs/scroller/index.js'
 import { iterateTree } from '../common/vd';
 import Element from './elements';
 import { IElementOptions } from './types';
 import ScrollBar, { ScrollBarDirection } from './scrollbar';
+import env from '../env'
 
-const dpr = getDpr();
+const dpr = env.getDevicePixelRatio();
 
 interface IScrollViewOptions extends IElementOptions {
   scrollX?: boolean | undefined;
