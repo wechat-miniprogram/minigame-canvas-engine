@@ -103,5 +103,3 @@ export default class Ticker {
     }
   }
 }
-
-export const sharedTicker = new Ticker();

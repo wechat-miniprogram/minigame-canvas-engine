@@ -7,7 +7,7 @@ import { isClick, STATE, clearCanvas, isGameTouchEvent } from './common/util';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
 import DebugInfo from './common/debugInfo';
-import Ticker, { sharedTicker } from './common/ticker';
+import Ticker from './common/ticker';
 import { create, renderChildren, layoutChildren, repaintChildren, iterateTree, clone, registerComponent } from './common/vd';
 import Rect from './common/rect';
 import imageManager from './common/imageManager';
@@ -52,7 +52,17 @@ interface IPlugin<T> {
   uninstall?: (app: T, ...options: any[]) => void;
 }
 
-class Layout extends Element {
+/**
+ * 默认暴露 Layout 的实例，但在某些场景下，可能需要多个 Layout 实例，因此 Layout 类也暴露出去
+ * const myLayout = new Layout({
+ *   style: {
+ *      width: 0,
+ *      height: 0,
+ *   },
+ *  name: 'myLayoutName',
+ * });
+ */
+export class Layout extends Element {
   /**
    * 当前 Layout 版本，一般跟小游戏插件版本对齐
    */
@@ -103,7 +113,7 @@ class Layout extends Element {
    */
   public isNeedRepaint = false;
   // public ticker: Ticker = new Ticker();
-  public ticker: Ticker = sharedTicker;
+  public ticker: Ticker = new Ticker();
   public tickerFunc = () => {
     if (this.isDirty) {
       this.reflow();

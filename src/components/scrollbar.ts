@@ -1,7 +1,6 @@
 
 import View from './view';
 import { clamp } from '../common/util';
-import { sharedTicker } from '../common/ticker';
 
 export enum ScrollBarDirection {
   Vertival,
@@ -90,8 +89,6 @@ export default class ScrollBar extends View {
     if (checkNeedHideScrollBar(direction, dimensions)) {
       this.hide();
     }
-
-    sharedTicker.add(this.update, true);
   }
 
   get width() {
@@ -109,6 +106,15 @@ export default class ScrollBar extends View {
 
     this.style.borderRadius = this.innerWidth / 2;
     this.setDimensions(this.dimensions);
+  }
+
+  init() {
+    if (!this.root) {
+      console.warn('[Layout]: please set root for scrollbar');
+    } else {
+      // @ts-ignore
+      this.root.ticker.add(this.update, true);    
+    }
   }
 
   hide() {
@@ -179,7 +185,11 @@ export default class ScrollBar extends View {
   }
 
   destroySelf() {
-    sharedTicker.remove(this.update, true);
+    // @ts-ignore
+    this.root.ticker.remove(this.update, true);
+
+    this.isDestroyed = true;
+    this.root = null;
   }
 
   update = (dt: number) => {

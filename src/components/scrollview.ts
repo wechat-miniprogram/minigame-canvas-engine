@@ -7,7 +7,6 @@ import { iterateTree } from '../common/vd';
 import Element from './elements';
 import { IElementOptions } from './types';
 import ScrollBar, { ScrollBarDirection } from './scrollbar';
-import { sharedTicker } from '../common/ticker';
 
 const dpr = getDpr();
 
@@ -238,6 +237,7 @@ export default class ScrollView extends View {
 
         // this.appendChild(scrollbar);
         scrollBar.root = this.root;
+        scrollBar.init();
         // @ts-ignore
         scrollBar.insert(this.root.renderContext, true);
         scrollBar.observeStyleAndEvent();
@@ -248,7 +248,8 @@ export default class ScrollView extends View {
         // @ts-ignore
         this[scrollBarName] = scrollBar;
 
-        sharedTicker.next(() => {
+        // @ts-ignore
+        this.root.ticker.next(() => {
           // @ts-ignore
           this[scrollBarName]?.onScroll(this.scrollerObj!.__scrollLeft, this.scrollerObj!.__scheduledTop);
           this.root?.emit('repaint');
@@ -295,7 +296,8 @@ export default class ScrollView extends View {
           this.scrollHeight,
         );
 
-        sharedTicker.next(() => {
+        // @ts-ignore
+        this.root.ticker.next(() => {
           this.updateScrollBar('scrollY', 'vertivalScrollbar');
           this.updateScrollBar('scrollX', 'horizontalScrollbar');
         }, true);
@@ -320,7 +322,8 @@ export default class ScrollView extends View {
 
     this.scrollerObj!.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
 
-    sharedTicker.next(() => {
+    // @ts-ignore
+    this.root.ticker.next(() => {
       this.updateScrollBar('scrollY', 'vertivalScrollbar');
       this.updateScrollBar('scrollX', 'horizontalScrollbar');
     }, true);

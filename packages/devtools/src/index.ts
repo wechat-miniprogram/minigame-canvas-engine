@@ -25,6 +25,7 @@ class LayoutDevtools {
   constructor() {
     // 本地调试用
     if (process.env.NODE_ENV !== 'production') {
+      console.log(111, require('minigame-canvas-engine'))
       const Layout: typeof import('minigame-canvas-engine').default = require('minigame-canvas-engine').default;
       (window as any).Layout = Layout;
     }
