@@ -39,34 +39,6 @@ export function isClick(touchMsg: TouchMsg) {
     && touchTimes < 300);
 }
 
-// let _dpr: number;
-// // only Baidu platform need to recieve system info from main context
-// if (typeof swan !== 'undefined') {
-//   __env.onMessage((res: any) => {
-//     if (res && res.type === 'engine') {
-//       if (res.event === 'systemInfo') {
-//         _dpr = res.systemInfo.devicePixelRatio;
-//       }
-//     }
-//   });
-// }
-
-// export function getDpr() {
-//   // return 3;
-//   if (typeof _dpr !== 'undefined') {
-//     return _dpr;
-//   }
-//   if (typeof __env !== 'undefined' && __env.getSystemInfoSync) {
-//     _dpr = __env.getSystemInfoSync().devicePixelRatio;
-//   } else if (window.devicePixelRatio) {
-//     _dpr = window.devicePixelRatio;
-//   } else {
-//     console.warn('[Layout] failed to access device pixel ratio, fallback to 1');
-//     _dpr = 1;
-//   }
-//   return _dpr;
-// }
-
 export enum STATE {
   UNINIT = 'UNINIT',
   INITED = 'INITED',

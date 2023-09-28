@@ -1,5 +1,27 @@
 import TinyEmitter from 'tiny-emitter';
 
+/**
+ * Layout 可能用在不用的平台，而Layout会依赖平台下面的一些方法来实现具体的功能，比如创建图片
+ * 为了更好做平台适配，统一封装 env 模块，不同平台要做适配，替换 env 的具体方法即可
+ */
+declare const _default: {
+    onTouchStart: any;
+    onTouchMove: any;
+    onTouchEnd: any;
+    onTouchCancel: any;
+    offTouchStart: any;
+    offTouchMove: any;
+    offTouchEnd: any;
+    offTouchCancel: any;
+    getRootCanvasSize(): {
+        width: any;
+        height: any;
+    };
+    getDevicePixelRatio(): any;
+    createCanvas(): any;
+    createImage(): any;
+};
+
 interface IStyle {
     width?: number;
     height?: number;
@@ -494,6 +516,23 @@ declare class Layout extends Element {
      * 当前 Layout 版本，一般跟小游戏插件版本对齐
      */
     version: string;
+    env: {
+        onTouchStart: any;
+        onTouchMove: any;
+        onTouchEnd: any;
+        onTouchCancel: any;
+        offTouchStart: any;
+        offTouchMove: any;
+        offTouchEnd: any;
+        offTouchCancel: any;
+        getRootCanvasSize(): {
+            width: any;
+            height: any;
+        };
+        getDevicePixelRatio(): any;
+        createCanvas(): any;
+        createImage(): any;
+    };
     /**
      * Layout 渲染的目标画布对应的 2d context
      */
@@ -625,6 +664,6 @@ declare class Layout extends Element {
      */
     unUse(plugin: IPlugin<Layout>, ...options: any[]): void;
 }
-declare const _default: Layout;
+declare const layout: Layout;
 
-export { EE, Layout, _default as default };
+export { EE, Layout, layout as default, _default as env };

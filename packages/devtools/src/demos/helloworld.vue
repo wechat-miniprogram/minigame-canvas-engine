@@ -8,7 +8,6 @@ let template = `
 `;
 
 // console.log(JSON.stringify(parser.html2json(template)))
-
 let style = {
   container: {
     width: 400,

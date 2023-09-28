@@ -4,6 +4,7 @@ import { View, Text, Image, ScrollView, BitMapText, Canvas, Element } from '../c
 import { IStyle } from '../components/style';
 import { ILayout, ILayoutBox } from '../components/elements';
 import { Callback } from '../types';
+import env from '../env';
 
 
 interface Constructor {
@@ -106,15 +107,8 @@ export function create(node: TreeNode, style: Record<string, IStyle>, parent?: R
     let parentStyle;
     if (parent) {
       parentStyle = parent.style;
-    } else if (typeof sharedCanvas !== 'undefined') {
-      parentStyle = sharedCanvas;
-    } else if (typeof __env !== 'undefined') {
-      parentStyle = __env.getSharedCanvas();
     } else {
-      parentStyle = {
-        width: 300,
-        height: 150,
-      };
+      parentStyle = env.getRootCanvasSize();
     }
     if (isPercent(thisStyle.width)) {
       thisStyle.width = parentStyle.width ? convertPercent(thisStyle.width, parentStyle.width) : 0;

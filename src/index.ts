@@ -16,7 +16,7 @@ import { IStyle } from './components/style';
 import { GameTouch, GameTouchEvent, Callback } from './types/index';
 
 // 全局事件管道
-export const EE = new TinyEmitter();
+const EE = new TinyEmitter();
 const imgPool = new Pool('imgPool');
 const bitMapPool = new Pool('bitMapPool');
 const debugInfo = new DebugInfo();
@@ -62,7 +62,7 @@ interface IPlugin<T> {
  *  name: 'myLayoutName',
  * });
  */
-export class Layout extends Element {
+class Layout extends Element {
   /**
    * 当前 Layout 版本，一般跟小游戏插件版本对齐
    */
@@ -600,10 +600,17 @@ export class Layout extends Element {
   }
 }
 
-export default new Layout({
+const layout = new Layout({
   style: {
     width: 0,
     height: 0,
   },
   name: 'layout',
 });
+
+export {
+  layout as default,
+  Layout,
+  env,
+  EE,
+}
