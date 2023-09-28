@@ -1,3 +1,12 @@
+# 平台适配
+
+Layout 最开始设计出来是为了提升微信小游戏开放数据域开发效率，但现在 Layout 已经被用到各种各样的小游戏平台，作为轻量级 Canvas 应用的解决方案。
+
+对于渲染引擎，一定会依赖平台的能力，比如创建图片、监听事件等，一般引擎的解决方案是主动适配主要运行平台，比如适配浏览器和微信小游戏。Layout 同样如此，目前已经适配了 浏览器、微信小游戏、字节小游戏和百度小游戏平台，但如果一个全新的平台想要使用 Layout，无需更改 Layout 源码，同样可以进行适配，下面进行简单的介绍。
+
+## 原理
+Layout 对于平台环境的依赖并不多，主要是事件监听、图片创建等，所有平台相关的依赖都被封装到 env 模块，它非常精简，代码如下：
+``` ts
 import { Callback } from "./types";
 
 if (typeof GameGlobal !== 'undefined') {
@@ -94,3 +103,18 @@ export default {
     return document.createElement('img');
   }
 }
+```
+
+## 示例
+因此想要实现平台适配，只需要在 Layout 初始化之前魔改 env 模块的实现即可，下面是一个例子：
+``` js
+import { env, Layout } from 'minigame-canvas-engine';
+
+env.createImage = () => {
+  return new ImageClassInCurrentPlatform();
+}
+
+env.onTouchStart = currentPlatform.onTouchStart;
+
+// 下面正常执行 Layout的使用
+```

@@ -48,7 +48,8 @@ export default {
         link: '/tutorial/cocos2.x',
         children: [
           '/tutorial/cocos2.x',
-          '/tutorial/loading'
+          '/tutorial/loading',
+          '/tutorial/platform',
         ],
       },
       {
