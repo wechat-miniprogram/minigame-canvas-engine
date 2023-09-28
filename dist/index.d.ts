@@ -530,7 +530,9 @@ declare class Layout extends Element {
             height: any;
         };
         getDevicePixelRatio(): any;
-        createCanvas(): any;
+        createCanvas(): any; /**
+         * 最终渲染到屏幕的左上角物理坐标
+         */
         createImage(): any;
     };
     /**
