@@ -1,4 +1,5 @@
 import { defaultTheme } from 'vuepress';
+import { searchPlugin } from '@vuepress/plugin-search';
 
 let statcounter = [];
 
@@ -13,6 +14,14 @@ if (process.env.NODE_ENV === 'production') {
 
 
 export default {
+  plugins: [
+    searchPlugin({
+      // 配置项
+      '/zh/': {
+        placeholder: '搜索',
+      },
+    }),
+  ],
   base: "/minigame-canvas-engine/",
   description: '轻量级canvas渲染引擎',
   head: [
