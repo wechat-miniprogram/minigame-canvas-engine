@@ -221,7 +221,7 @@ export default class Element {
       if (style.transform.indexOf('rotate') > -1) {
         const deg = rotateParser(style.transform);
         if (deg) {
-          this.renderForLayout.rotate = deg; 
+          this.renderForLayout.rotate = deg;
         }
       }
     }
@@ -234,7 +234,7 @@ export default class Element {
 
   backgroundImageSetHandler(backgroundImage: string) {
     const url = backgroundImageParser(backgroundImage);
-    
+
     if (url) {
       imageManager.loadImage(url, (img: HTMLImageElement) => {
         if (!this.isDestroyed) {
@@ -269,7 +269,7 @@ export default class Element {
               if (val.indexOf('rotate') > -1) {
                 const deg = rotateParser(val);
                 if (deg) {
-                  ele.renderForLayout.rotate = deg; 
+                  ele.renderForLayout.rotate = deg;
 
                   ele.root?.emit('repaint');
                 }
@@ -562,6 +562,8 @@ export default class Element {
     // 左上角的圆角
     ctx.arcTo(x - originX, y - originY, x + borderTopLeftRadius - originX, y - originY, borderTopLeftRadius);
 
+    ctx.closePath();
+
     return { needClip: !!hasRadius, needStroke: !!borderWidth };
   }
 
@@ -573,7 +575,7 @@ export default class Element {
 
     const style = this.style;
     const box = this.layoutBox;
-    
+
     const { absoluteX: drawX, absoluteY: drawY, width, height } = box;
 
     if (style.opacity !== 1) {
@@ -603,19 +605,38 @@ export default class Element {
 
     const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
 
+    // if (needClip) {
+    //   ctx.clip();
+    // }
+
     if (needClip) {
-      ctx.clip();
+      // 保存当前的 globalCompositeOperation
+      const originalGCO = ctx.globalCompositeOperation;
+      // 设置 globalCompositeOperation 为 "source-atop"，这样图片只会绘制在已有图形的上方
+      ctx.globalCompositeOperation = 'source-atop';
+
+      if (style.backgroundColor) {
+        ctx.fillStyle = style.backgroundColor;
+        // ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
+        ctx.fill();
+      }
+
+      if (style.backgroundImage && this.backgroundImage) {
+        ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
+      }
+
+      ctx.globalCompositeOperation = originalGCO;
+    } else {
+      if (style.backgroundColor) {
+        ctx.fillStyle = style.backgroundColor;
+        ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
+      }
+
+      if (style.backgroundImage && this.backgroundImage) {
+        ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
+      }
     }
 
-    if (style.backgroundColor) {
-      ctx.fillStyle = style.backgroundColor;
-      ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
-    }
-
-    if (style.backgroundImage && this.backgroundImage) {
-      ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
-    }
-
-    return { needStroke, originX, originY, drawX, drawY, width, height};
+    return { needStroke, originX, originY, drawX, drawY, width, height };
   }
 }
