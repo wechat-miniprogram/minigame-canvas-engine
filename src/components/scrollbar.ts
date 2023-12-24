@@ -70,6 +70,9 @@ export default class ScrollBar extends View {
 
   private isHide = false;
 
+  private currLeft = 0;
+  private currTop = 0;
+
   constructor({
     direction,
     dimensions,
@@ -119,6 +122,18 @@ export default class ScrollBar extends View {
     } else {
       // @ts-ignore
       this.root.ticker.add(this.update, true);    
+
+      this.root.on('before_reflow', () => {
+        // console.log('before_reflow')
+        const { scrollLeft, scrollTop } = this.calculteScrollValue(this.currLeft, this.currTop);
+
+        // console.log(this, scrollLeft, scrollTop)
+        if (this.direction === ScrollBarDirection.Vertival) {
+          this.style.top = scrollTop;
+        } else {
+          this.style.left = scrollLeft;
+        }
+      });
     }
   }
 
@@ -149,7 +164,6 @@ export default class ScrollBar extends View {
 
     if (this.direction === ScrollBarDirection.Vertival) {
       this.style.top = scrollTop;
-
     } else {
       this.style.left = scrollLeft;
     }
@@ -186,6 +200,9 @@ export default class ScrollBar extends View {
     if (this.isHide) {
       return;
     }
+
+    this.currLeft = left;
+    this.currTop = top;
   
     const { scrollLeft, scrollTop } = this.calculteScrollValue(left, top);
 
