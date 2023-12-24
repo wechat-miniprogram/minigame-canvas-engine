@@ -59,7 +59,6 @@ const EE = new TinyEmitter();
 
 let uuid = 0;
 
-
 const toEventName = (event: string, id: number) => {
   const elementEvent = [
     'click',
@@ -508,60 +507,52 @@ export default class Element {
     const style = this.style || {};
     const radius = style.borderRadius || 0;
     const { borderWidth = 0 } = style;
-    const borderTopLeftRadius = style.borderTopLeftRadius || radius;
-    const borderTopRightRadius = style.borderTopRightRadius || radius;
-    const borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
-    const borderBottomRightRadius = style.borderBottomRightRadius || radius;
+    const tlr = style.borderTopLeftRadius || radius;
+    const trr = style.borderTopRightRadius || radius;
+    const bbr = style.borderBottomLeftRadius || radius;
+    const brr = style.borderBottomRightRadius || radius;
     const box = this.layoutBox;
     const { borderColor = '' } = style;
     const x = box.absoluteX;
     const y = box.absoluteY;
     const { width, height } = box;
 
-    const hasRadius = radius
-      || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius;
+    const hasRadius = radius || tlr || trr || bbr || brr;
 
     // borderWidth 和 radius 都没有，不需要执行后续逻辑，提升性能
     if (!borderWidth && !hasRadius) {
       return { needClip: false, needStroke: false };
     }
 
-    // 左上角的点
-    ctx.beginPath();
+    if (typeof ctx.roundRect === 'function') {
+      ctx.beginPath();
+      ctx.roundRect(x, y, width, height, [radius]);
+      ctx.closePath();
+
+      return { needClip: !!hasRadius, needStroke: !!borderWidth };
+    }
 
     ctx.lineWidth = borderWidth;
     ctx.strokeStyle = borderColor;
 
-    ctx.moveTo(x + borderTopLeftRadius - originX, y - originY);
-    ctx.lineTo(x + width - borderTopRightRadius - originX, y - originY);
-
-    // 右上角的圆角
-    ctx.arcTo(x + width - originX, y - originY, x + width - originX, y + borderTopRightRadius - originY, borderTopRightRadius);
-
-    // 右下角的点
-    ctx.lineTo(x + width - originX, y + height - borderBottomRightRadius - originY);
-
-    // 右下角的圆角
-    ctx.arcTo(
-      x + width - originX,
-      y + height - originY,
-      x + width - borderBottomRightRadius - originX,
-      y + height - originY,
-      borderBottomRightRadius,
-    );
-
-    // 左下角的点
-    ctx.lineTo(x + borderBottomLeftRadius - originX, y + height - originY);
-
-    // 左下角的圆角
-    ctx.arcTo(x - originX, y + height - originY, x - originX, y + height - borderBottomLeftRadius - originY, borderBottomLeftRadius);
-
     // 左上角的点
-    ctx.lineTo(x - originX, y + borderTopLeftRadius - originY);
-
+    ctx.beginPath();
+    ctx.moveTo(x + tlr - originX, y - originY);
+    ctx.lineTo(x + width - trr - originX, y - originY);
+    // 右上角的圆角
+    ctx.arcTo(x + width - originX, y - originY, x + width - originX, y + trr - originY, trr);
+    // 右下角的点
+    ctx.lineTo(x + width - originX, y + height - brr - originY);
+    // 右下角的圆角
+    ctx.arcTo(x + width - originX, y + height - originY, x + width - brr - originX, y + height - originY, brr);
+    // 左下角的点
+    ctx.lineTo(x + bbr - originX, y + height - originY);
+    // 左下角的圆角
+    ctx.arcTo(x - originX, y + height - originY, x - originX, y + height - bbr - originY, bbr);
+    // 左上角的点
+    ctx.lineTo(x - originX, y + tlr - originY);
     // 左上角的圆角
-    ctx.arcTo(x - originX, y - originY, x + borderTopLeftRadius - originX, y - originY, borderTopLeftRadius);
-
+    ctx.arcTo(x - originX, y - originY, x + tlr - originX, y - originY, tlr);
     ctx.closePath();
 
     return { needClip: !!hasRadius, needStroke: !!borderWidth };
@@ -603,40 +594,27 @@ export default class Element {
 
     ctx.lineWidth = style.borderWidth || 0;
 
+    // for clip
     const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
 
-    // if (needClip) {
-    //   ctx.clip();
-    // }
-
     if (needClip) {
-      // 保存当前的 globalCompositeOperation
-      const originalGCO = ctx.globalCompositeOperation;
-      // 设置 globalCompositeOperation 为 "source-atop"，这样图片只会绘制在已有图形的上方
-      ctx.globalCompositeOperation = 'source-atop';
-
-      if (style.backgroundColor) {
-        ctx.fillStyle = style.backgroundColor;
-        // ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
-        ctx.fill();
-      }
-
-      if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
-      }
-
-      ctx.globalCompositeOperation = originalGCO;
-    } else {
-      if (style.backgroundColor) {
-        ctx.fillStyle = style.backgroundColor;
-        ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
-      }
-
-      if (style.backgroundImage && this.backgroundImage) {
-        ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
-      }
+      ctx.save();
+      ctx.clip();
     }
 
-    return { needStroke, originX, originY, drawX, drawY, width, height };
+    if (style.backgroundColor) {
+      ctx.fillStyle = style.backgroundColor;
+      ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
+    }
+
+    if (style.backgroundImage && this.backgroundImage) {
+      ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
+    }
+
+    if (needClip) {
+      ctx.restore();
+    }
+
+    return { needStroke, needClip, originX, originY, drawX, drawY, width, height };
   }
 }

@@ -29,7 +29,11 @@ export default class View extends Element {
     const ctx = this.ctx as CanvasRenderingContext2D;
     ctx.save();
 
-    const { needStroke, originX, originY } = this.baseRender();
+    const { needStroke, needClip, originX, originY } = this.baseRender();
+
+    if (needClip) {
+      this.renderBorder(ctx, originX, originY);
+    }
 
     if (needStroke) {
       ctx.stroke();

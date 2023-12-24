@@ -230,12 +230,9 @@ export default class ScrollView extends View {
       scrollTop: this.scrollerObj!.__scrollTop,
     }
 
-    console.log('dimensions', JSON.stringify(dimensions))
-
     if (this[scrollProp as keyof ScrollView]) {
       if (this[scrollBarName as keyof ScrollView]) {
         this[scrollBarName as keyof ScrollView].setDimensions(dimensions);
-        console.log(this[scrollBarName as keyof ScrollView])
       } else {
         const scrollBar = new ScrollBar({
           dimensions,
@@ -254,8 +251,6 @@ export default class ScrollView extends View {
 
         // @ts-ignore
         this[scrollBarName] = scrollBar;
-
-        console.log(scrollBar)
 
         // @ts-ignore
         this.root.ticker.next(() => {

@@ -57,7 +57,7 @@ export default class ScrollBar extends View {
   public dimensions: IDimensions;
 
   // 滚动完毕后一段时间后自动隐藏
-  public autoHide = false;
+  public autoHide = true;
 
   // 滚动完毕后自动隐藏时间
   public autoHideTime = 1500;
@@ -78,7 +78,7 @@ export default class ScrollBar extends View {
       backgroundColor,
       position: 'absolute',
       borderRadius: width / 2,
-      opacity: 1,
+      opacity: 0,
     }, updateStyleFromDimensions(width, direction, dimensions));
 
     super({
