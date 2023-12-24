@@ -278,7 +278,7 @@ export default class Scroller {
     this.__computeScrollMax();
 
     // Refresh scroll position
-    this.scrollTo(this.__scrollLeft, this.__scrollTop, true);
+    this.scrollTo(this.__scrollLeft, this.__scrollTop, false);
   }
 
 

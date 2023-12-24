@@ -15,6 +15,9 @@ interface IDimensions {
 
   maxScrollLeft: number;
   maxScrollTop: number;
+
+  scrollLeft: number;
+  scrollTop: number;
 }
 
 interface IScrollBarOptions {
@@ -54,10 +57,10 @@ export default class ScrollBar extends View {
   public dimensions: IDimensions;
 
   // 滚动完毕后一段时间后自动隐藏
-  public autoHide = true;
+  public autoHide = false;
 
   // 滚动完毕后自动隐藏时间
-  public autoHideTime = 1000;
+  public autoHideTime = 1500;
 
   private autoHideRemainingTime = 0;
 
@@ -75,7 +78,7 @@ export default class ScrollBar extends View {
       backgroundColor,
       position: 'absolute',
       borderRadius: width / 2,
-      opacity: 0,
+      opacity: 1,
     }, updateStyleFromDimensions(width, direction, dimensions));
 
     super({
@@ -134,9 +137,20 @@ export default class ScrollBar extends View {
 
     if (checkNeedHideScrollBar(this.direction, dimensions)) {
       this.hide();
+    } else {
+      this.show();
     }
 
     this.dimensions = dimensions;
+
+    const { scrollLeft, scrollTop } = this.calculteScrollValue(dimensions.scrollLeft, dimensions.scrollTop);
+
+    if (this.direction === ScrollBarDirection.Vertival) {
+      this.style.top = scrollTop;
+
+    } else {
+      this.style.left = scrollLeft;
+    }
   }
 
   calculteScrollValue(left: number, top: number) {
