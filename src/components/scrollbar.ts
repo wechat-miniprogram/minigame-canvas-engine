@@ -60,7 +60,9 @@ export default class ScrollBar extends View {
   public autoHide = true;
 
   // 滚动完毕后自动隐藏时间
-  public autoHideTime = 1500;
+  public autoHideTime = 2000;
+
+  public autoHideDelayTime = 1500;
 
   private autoHideRemainingTime = 0;
 
@@ -137,7 +139,7 @@ export default class ScrollBar extends View {
 
     if (checkNeedHideScrollBar(this.direction, dimensions)) {
       this.hide();
-    } else {
+    } else if (this.isHide) {
       this.show();
     }
 
@@ -151,6 +153,8 @@ export default class ScrollBar extends View {
     } else {
       this.style.left = scrollLeft;
     }
+
+    this.autoHideRemainingTime = this.autoHideTime + this.autoHideDelayTime;
   }
 
   calculteScrollValue(left: number, top: number) {
@@ -192,7 +196,8 @@ export default class ScrollBar extends View {
     }
 
     if (this.autoHide) {
-      this.autoHideRemainingTime = this.autoHideTime;
+      // this.autoHideRemainingTime = this.autoHideTime;
+      this.autoHideRemainingTime = this.autoHideTime + this.autoHideDelayTime;
     }
 
     this.style.opacity = 1;
