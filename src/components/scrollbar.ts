@@ -147,6 +147,12 @@ export default class ScrollBar extends View {
     this.style.opacity = 1;
   }
 
+  /**
+   * 根据 ScrollView 容器宽高和实际内容宽高决定滚动条的位置和尺寸信息
+   * 但核心需要考虑的情况是：
+   * 1. 在不断地 reflow 过程中，ScrollBar 也会存在需要切换展示和隐藏的情况
+   * 2. reflow 之后，ScrollBar 的位置不是简单的设置为 ScrollView 顶部和左边，还可能是滚动了一段距离后执行的 reflow
+   */
   setDimensions(dimensions: IDimensions) {
     const style = updateStyleFromDimensions(this.width, this.direction, dimensions);
 
@@ -160,6 +166,7 @@ export default class ScrollBar extends View {
 
     this.dimensions = dimensions;
 
+    // 已经滚动过一段距离的情况，重新计算新的滚动位置
     const { scrollLeft, scrollTop } = this.calculteScrollValue(dimensions.scrollLeft, dimensions.scrollTop);
 
     if (this.direction === ScrollBarDirection.Vertival) {

@@ -45,7 +45,9 @@ export function getElementsByClassName(tree: Element, list: Element[] = [], clas
 /**
  * 将当前节点置脏，Layout 的 ticker 会根据这个标记位执行 reflow
  */
-function setDirty(ele: Element) {
+export function setDirty(ele: Element, reason?: string) {
+  // for debug
+  // console.log('[Layout] trigger reflow cause', ele, reason);
   ele.isDirty = true;
   let { parent } = ele;
   while (parent) {
@@ -261,7 +263,8 @@ export default class Element {
           return Reflect.get(target, prop, receiver);
         },
         set(target, prop, val, receiver) {
-          if (typeof prop === 'string') {
+          let oldVal = Reflect.get(target, prop, receiver);
+          if (typeof prop === 'string' && oldVal !== val) {
             ele.styleChangeHandler(prop, val);
 
             if (prop === 'transform') {
@@ -276,7 +279,7 @@ export default class Element {
             }
 
             if (reflowAffectedStyles.indexOf(prop) > -1) {
-              setDirty(ele);
+              setDirty(ele, `change prop ${prop} from ${oldVal} to ${val}`);
             } else if (repaintAffectedStyles.indexOf(prop) > -1) {
               ele.root?.emit('repaint');
             } else if (prop === 'backgroundImage') {
@@ -299,7 +302,7 @@ export default class Element {
               innerStyle[key as keyof IStyle] = value;
 
               if (reflowAffectedStyles.indexOf(key) > -1) {
-                setDirty(this);
+                setDirty(this, `change prop ${key} to ${value}`);
               } else if (repaintAffectedStyles.indexOf(key) > -1) {
                 this.root?.emit('repaint');
               } else if (key === 'backgroundImage') {
@@ -421,7 +424,7 @@ export default class Element {
     if (index !== -1) {
       parent.children.splice(index, 1);
       this.unBindEvent();
-      setDirty(this);
+      setDirty(this, `remove`);
       this.parent = null;
       this.ctx = null;
     } else {
@@ -467,7 +470,7 @@ export default class Element {
   appendChild(element: Element) {
     this.add(element);
 
-    setDirty(this);
+    setDirty(this, `appendChild ${element}`);
   }
 
   /**
@@ -477,7 +480,7 @@ export default class Element {
     const index = this.children.indexOf(element);
     if (index !== -1) {
       element.remove();
-      setDirty(this);
+      setDirty(this, `removeChild ${element}`);
     } else {
       console.warn('[Layout] the element to be removed is not a child of this element');
     }

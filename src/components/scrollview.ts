@@ -4,7 +4,7 @@ import View from './view';
 import { copyTouchArray } from '../common/util';
 import Scroller from '../libs/scroller/index.js'
 import { iterateTree } from '../common/vd';
-import Element from './elements';
+import Element, { setDirty } from './elements';
 import { IElementOptions } from './types';
 import ScrollBar, { ScrollBarDirection } from './scrollbar';
 import env from '../env'
@@ -77,7 +77,7 @@ export default class ScrollView extends View {
   get scrollWidth() {
     let maxWidth = 0;
     this.children.forEach((item: Element) => {
-       if (!(item instanceof ScrollBar)) {
+      if (!(item instanceof ScrollBar)) {
         maxWidth = Math.max(maxWidth, item.layoutBox.left + item.layoutBox.width);
       }
     });
@@ -140,7 +140,9 @@ export default class ScrollView extends View {
   }
 
   renderTreeWithTop(tree: Element) {
-    tree.render();
+    if (!(tree instanceof ScrollBar)) {
+      tree.render();
+    }
 
     tree.children.forEach((child: Element) => {
       this.renderTreeWithTop(child);
@@ -185,6 +187,10 @@ export default class ScrollView extends View {
       }
     });
 
+    // 上面的渲染应该先跳过滚动条，否则可能出现渲染顺序问题，ScrollView的节点反而把滚动条盖住了
+    this.vertivalScrollbar?.render();
+    this.horizontalScrollbar?.render();
+
     ctx.restore();
   }
 
@@ -217,6 +223,9 @@ export default class ScrollView extends View {
     }
   }
 
+  /**
+   * 当执行reflow之后，滚动列表的高度可能发生了变化，滚动条也需要同步进行更新
+   */
   updateScrollBar(scrollProp: string, scrollBarName: string) {
     const dimensions = {
       width: this.layoutBox.width,
@@ -230,6 +239,9 @@ export default class ScrollView extends View {
       scrollTop: this.scrollerObj!.__scrollTop,
     }
 
+    // console.log('updateScrollBar', JSON.stringify(dimensions))
+
+    // 非第一次创建的情况，一般是 reflow 执行到这里
     if (this[scrollProp as keyof ScrollView]) {
       if (this[scrollBarName as keyof ScrollView]) {
         this[scrollBarName as keyof ScrollView].setDimensions(dimensions);
@@ -247,7 +259,7 @@ export default class ScrollView extends View {
         scrollBar.observeStyleAndEvent();
         this.add(scrollBar);
 
-        scrollBar.setDirty();
+        setDirty(scrollBar, 'appendToScrollView')
 
         // @ts-ignore
         this[scrollBarName] = scrollBar;
@@ -300,6 +312,10 @@ export default class ScrollView extends View {
           this.scrollHeight,
         );
 
+        /**
+         * 这里之所以要延迟一帧是因为这里的变动来自 reflow 之后，正在做 reflow 之后的后续事情
+         * 如果立即修改滚动条的样式，实际上并不会生效。
+         */
         // @ts-ignore
         this.root.ticker.next(() => {
           this.updateScrollBar('scrollY', 'vertivalScrollbar');

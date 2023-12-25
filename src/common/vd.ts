@@ -220,6 +220,7 @@ interface ElementArgs {
   dataset: object;
   src?: string;
   value?: string;
+  name?: string;
 }
 
 export function clone<T extends Element>(root: T, element: Element, deep = true, parent?: Element) {
@@ -234,6 +235,7 @@ export function clone<T extends Element>(root: T, element: Element, deep = true,
     // @ts-ignore
     id: root.eleCount,
     dataset: Object.assign({}, element.dataset),
+    name: element.tagName,
   };
 
   if (element instanceof Image) {
@@ -260,4 +262,3 @@ export function clone<T extends Element>(root: T, element: Element, deep = true,
 
   return newElemenet;
 }
-
