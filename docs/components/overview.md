@@ -54,6 +54,7 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | 属性名 | 支持的值或类型 | 默认值 |
 | --------------- | ------------------- | ----------- |
 | fontSize | number | 14 |
+| fontFamily      | string              | 无默认值，规则对齐 CSS 的font-family，详情可见[font-family](https://developer.mozilla.org/en-US/docs/Web/CSS/font-family)，参考值如 'Georgia, serif'        |
 | lineHeight | number / string | '1.4em' |
 | textAlign | left, center, right | left |
 | verticalAlign | top, middle, bottom | top |
