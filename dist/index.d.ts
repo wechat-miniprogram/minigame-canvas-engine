@@ -284,6 +284,7 @@ declare class Element {
      */
     baseRender(): {
         needStroke: boolean;
+        needClip: boolean;
         originX: number;
         originY: number;
         drawX: number;
@@ -437,6 +438,9 @@ declare class ScrollView extends View {
     clear(): void;
     scrollRender(): void;
     scrollHandler(left: number, top: number): void;
+    /**
+     * 当执行reflow之后，滚动列表的高度可能发生了变化，滚动条也需要同步进行更新
+     */
     updateScrollBar(scrollProp: string, scrollBarName: string): void;
     insert(context: CanvasRenderingContext2D): void;
     scrollTo(left?: number, top?: number, animate?: boolean): void;

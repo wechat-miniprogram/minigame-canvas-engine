@@ -22,7 +22,7 @@ let style = {
     height: "100%",
     lineHeight: 200,
     fontSize: 40,
-    textAlign: "center",
+    textAlign: "center",    
   },
   // 文字的最终颜色为#ff0000
   redText: {

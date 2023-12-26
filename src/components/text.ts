@@ -3,7 +3,7 @@ import { IStyle } from './style';
 import { IElementOptions } from './types';
 import env from '../env'
 
-const DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
+const DEFAULT_FONT_FAMILY = 'sans-serif';
 let context: CanvasRenderingContext2D | null = null;
 
 const getContext = (): CanvasRenderingContext2D => {
@@ -18,7 +18,6 @@ const getContext = (): CanvasRenderingContext2D => {
 
   return context;
 };
-
 
 function getTextWidth(style: IStyle, value: string) {
   const context = getContext();
@@ -72,7 +71,7 @@ export default class Text extends Element {
   private valuesrc = '';
   private originStyleWidth: number | string | undefined;
   public fontSize?: number;
-  public textBaseline: CanvasTextBaseline = 'top';
+  public textBaseline: CanvasTextBaseline = 'bottom';
   public font = '';
   public textAlign: CanvasTextAlign = 'left';
   public fillStyle = '#000000';
@@ -136,7 +135,7 @@ export default class Text extends Element {
 
     this.fontSize = style.fontSize || 12;
     this.textBaseline = 'top';
-    this.font = `${style.fontWeight || ''} ${style.fontSize || 12}px ${DEFAULT_FONT_FAMILY}`;
+    this.font = `${style.fontWeight || ''} ${style.fontSize || 12}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
     this.textAlign = style.textAlign || 'left';
     this.fillStyle = style.color || '#000';
   }

@@ -527,13 +527,13 @@ export default class Element {
       return { needClip: false, needStroke: false };
     }
 
-    if (typeof ctx.roundRect === 'function') {
-      ctx.beginPath();
-      ctx.roundRect(x, y, width, height, [radius]);
-      ctx.closePath();
+    // if (typeof ctx.roundRect === 'function') {
+    //   ctx.beginPath();
+    //   ctx.roundRect(x, y, width, height, [radius]);
+    //   ctx.closePath();
 
-      return { needClip: !!hasRadius, needStroke: !!borderWidth };
-    }
+    //   return { needClip: !!hasRadius, needStroke: !!borderWidth };
+    // }
 
     ctx.lineWidth = borderWidth;
     ctx.strokeStyle = borderColor;

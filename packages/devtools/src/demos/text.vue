@@ -5,7 +5,7 @@ let tpl = `
     <scrollview class="container" id="main" scrollY="true">
       <view class="item">
         <image src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg" class="wegoing"></image>
-        <text id="text" class="testtext" value="测试文本"></text>
+        <text id="text" class="testtext" value="abcdefgABCDEFG"></text>
       </view>
       <view class="item">
         <image src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg" class="wegoing"></image>
@@ -71,6 +71,9 @@ let style = {
     fontSize: 36,
     // height: 36,
   },
+  testtext: {
+    fontFamily: '"Lucida Console", "Courier New", monospace',
+  }
 };
 
 export default defineComponent({
