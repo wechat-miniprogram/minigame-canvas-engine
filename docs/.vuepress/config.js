@@ -59,6 +59,7 @@ export default {
           '/tutorial/cocos2.x',
           '/tutorial/loading',
           '/tutorial/platform',
+          '/tutorial/templateengine'
         ],
       },
       {
@@ -78,7 +79,7 @@ export default {
           {
             text: '组件',
             link: '/components/element.md',
-            collapsible: true,
+            collapsible: false,
             children: [
               '/components/element.md',
               '/components/view.md',
