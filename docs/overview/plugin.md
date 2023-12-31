@@ -17,7 +17,7 @@
   "openDataContext": "sub",
   "plugins": {
     "Layout": {
-      "version": "1.0.5",
+      "version": "1.0.6",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"openDataContext"}]
     }
@@ -42,7 +42,7 @@ const Layout = requirePlugin('Layout').default;
 
 ### 在游戏域引用
 ::: tip
-在游戏域引用和在开放数据域引用的差别在于 contexts 的类型，在游戏域为 **isolatedContext**，在开放数据域为 **openDataContext**
+在游戏域引用和在开放数据域引用的差别在于 contexts 的类型，在游戏域为 **gameContext**，在开放数据域为 **openDataContext**
 :::
 
 
@@ -52,7 +52,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.5",
+      "version": "1.0.6",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}]
     }
@@ -75,7 +75,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.5",
+      "version": "1.0.6",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}, {"type":"openDataContext"}]
     }
@@ -86,7 +86,8 @@ const Layout = requirePlugin('Layout').default;
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
-| 1.0.5        | transform 部分属性支持，使用可见[教程](./tutorial/loading) |
+| 1.0.6        | 1. 修复圆角矩形在有borderRadius的时候绘制不够圆润问题；2. 文字样式支持fontFamily属性；3. 修复 ScrollView 的滚动条在页面布局变化时会位置异常问题; |
+| 1.0.5        | transform 部分属性支持，使用可见[教程](../tutorial/loading.md) |
 | 1.0.4        | ScrollView 支持 [滚动条](../components/scrollbar.md) 特性 |
 | 1.0.3        | 兼容在字节小游戏下报错问题 |
 | 1.0.2        | ts重构项目，支持富文本插件能力 |

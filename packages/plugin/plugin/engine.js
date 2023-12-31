@@ -110,7 +110,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   getElementById: () => (/* binding */ getElementById),
 /* harmony export */   getElementsByClassName: () => (/* binding */ getElementsByClassName),
-/* harmony export */   getElementsById: () => (/* binding */ getElementsById)
+/* harmony export */   getElementsById: () => (/* binding */ getElementsById),
+/* harmony export */   setDirty: () => (/* binding */ setDirty)
 /* harmony export */ });
 /* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* harmony import */ var _common_rect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
@@ -164,7 +165,9 @@ function getElementsByClassName(tree, list, className) {
 /**
  * 将当前节点置脏，Layout 的 ticker 会根据这个标记位执行 reflow
  */
-function setDirty(ele) {
+function setDirty(ele, reason) {
+    // for debug
+    // console.log('[Layout] trigger reflow cause', ele, reason);
     ele.isDirty = true;
     var parent = ele.parent;
     while (parent) {
@@ -282,7 +285,8 @@ var Element = /** @class */ (function () {
                 },
                 set: function (target, prop, val, receiver) {
                     var _a, _b;
-                    if (typeof prop === 'string') {
+                    var oldVal = Reflect.get(target, prop, receiver);
+                    if (typeof prop === 'string' && oldVal !== val) {
                         ele_1.styleChangeHandler(prop, val);
                         if (prop === 'transform') {
                             if (val.indexOf('rotate') > -1) {
@@ -294,7 +298,7 @@ var Element = /** @class */ (function () {
                             }
                         }
                         if (_style__WEBPACK_IMPORTED_MODULE_0__.reflowAffectedStyles.indexOf(prop) > -1) {
-                            setDirty(ele_1);
+                            setDirty(ele_1, "change prop ".concat(prop, " from ").concat(oldVal, " to ").concat(val));
                         }
                         else if (_style__WEBPACK_IMPORTED_MODULE_0__.repaintAffectedStyles.indexOf(prop) > -1) {
                             (_b = ele_1.root) === null || _b === void 0 ? void 0 : _b.emit('repaint');
@@ -319,7 +323,7 @@ var Element = /** @class */ (function () {
                         if (value !== innerStyle_1[key]) {
                             innerStyle_1[key] = value;
                             if (_style__WEBPACK_IMPORTED_MODULE_0__.reflowAffectedStyles.indexOf(key) > -1) {
-                                setDirty(_this);
+                                setDirty(_this, "change prop ".concat(key, " to ").concat(value));
                             }
                             else if (_style__WEBPACK_IMPORTED_MODULE_0__.repaintAffectedStyles.indexOf(key) > -1) {
                                 (_a = _this.root) === null || _a === void 0 ? void 0 : _a.emit('repaint');
@@ -418,7 +422,7 @@ var Element = /** @class */ (function () {
         if (index !== -1) {
             parent.children.splice(index, 1);
             this.unBindEvent();
-            setDirty(this);
+            setDirty(this, "remove");
             this.parent = null;
             this.ctx = null;
         }
@@ -455,7 +459,7 @@ var Element = /** @class */ (function () {
      */
     Element.prototype.appendChild = function (element) {
         this.add(element);
-        setDirty(this);
+        setDirty(this, "appendChild ".concat(element));
     };
     /**
      * 移除给定的子节点，只有一级节点能够移除
@@ -464,7 +468,7 @@ var Element = /** @class */ (function () {
         var index = this.children.indexOf(element);
         if (index !== -1) {
             element.remove();
-            setDirty(this);
+            setDirty(this, "removeChild ".concat(element));
         }
         else {
             console.warn('[Layout] the element to be removed is not a child of this element');
@@ -496,41 +500,47 @@ var Element = /** @class */ (function () {
         var style = this.style || {};
         var radius = style.borderRadius || 0;
         var _a = style.borderWidth, borderWidth = _a === void 0 ? 0 : _a;
-        var borderTopLeftRadius = style.borderTopLeftRadius || radius;
-        var borderTopRightRadius = style.borderTopRightRadius || radius;
-        var borderBottomLeftRadius = style.borderBottomLeftRadius || radius;
-        var borderBottomRightRadius = style.borderBottomRightRadius || radius;
+        var tlr = style.borderTopLeftRadius || radius;
+        var trr = style.borderTopRightRadius || radius;
+        var bbr = style.borderBottomLeftRadius || radius;
+        var brr = style.borderBottomRightRadius || radius;
         var box = this.layoutBox;
         var _b = style.borderColor, borderColor = _b === void 0 ? '' : _b;
         var x = box.absoluteX;
         var y = box.absoluteY;
         var width = box.width, height = box.height;
-        var hasRadius = radius
-            || borderTopLeftRadius || borderTopRightRadius || borderBottomLeftRadius || borderBottomRightRadius;
+        var hasRadius = radius || tlr || trr || bbr || brr;
         // borderWidth 和 radius 都没有，不需要执行后续逻辑，提升性能
         if (!borderWidth && !hasRadius) {
             return { needClip: false, needStroke: false };
         }
-        // 左上角的点
-        ctx.beginPath();
+        // if (typeof ctx.roundRect === 'function') {
+        //   ctx.beginPath();
+        //   ctx.roundRect(x, y, width, height, [radius]);
+        //   ctx.closePath();
+        //   return { needClip: !!hasRadius, needStroke: !!borderWidth };
+        // }
         ctx.lineWidth = borderWidth;
         ctx.strokeStyle = borderColor;
-        ctx.moveTo(x + borderTopLeftRadius - originX, y - originY);
-        ctx.lineTo(x + width - borderTopRightRadius - originX, y - originY);
-        // 右上角的圆角
-        ctx.arcTo(x + width - originX, y - originY, x + width - originX, y + borderTopRightRadius - originY, borderTopRightRadius);
-        // 右下角的点
-        ctx.lineTo(x + width - originX, y + height - borderBottomRightRadius - originY);
-        // 右下角的圆角
-        ctx.arcTo(x + width - originX, y + height - originY, x + width - borderBottomRightRadius - originX, y + height - originY, borderBottomRightRadius);
-        // 左下角的点
-        ctx.lineTo(x + borderBottomLeftRadius - originX, y + height - originY);
-        // 左下角的圆角
-        ctx.arcTo(x - originX, y + height - originY, x - originX, y + height - borderBottomLeftRadius - originY, borderBottomLeftRadius);
         // 左上角的点
-        ctx.lineTo(x - originX, y + borderTopLeftRadius - originY);
+        ctx.beginPath();
+        ctx.moveTo(x + tlr - originX, y - originY);
+        ctx.lineTo(x + width - trr - originX, y - originY);
+        // 右上角的圆角
+        ctx.arcTo(x + width - originX, y - originY, x + width - originX, y + trr - originY, trr);
+        // 右下角的点
+        ctx.lineTo(x + width - originX, y + height - brr - originY);
+        // 右下角的圆角
+        ctx.arcTo(x + width - originX, y + height - originY, x + width - brr - originX, y + height - originY, brr);
+        // 左下角的点
+        ctx.lineTo(x + bbr - originX, y + height - originY);
+        // 左下角的圆角
+        ctx.arcTo(x - originX, y + height - originY, x - originX, y + height - bbr - originY, bbr);
+        // 左上角的点
+        ctx.lineTo(x - originX, y + tlr - originY);
         // 左上角的圆角
-        ctx.arcTo(x - originX, y - originY, x + borderTopLeftRadius - originX, y - originY, borderTopLeftRadius);
+        ctx.arcTo(x - originX, y - originY, x + tlr - originX, y - originY, tlr);
+        ctx.closePath();
         return { needClip: !!hasRadius, needStroke: !!borderWidth };
     };
     /**
@@ -560,8 +570,10 @@ var Element = /** @class */ (function () {
             ctx.strokeStyle = style.borderColor;
         }
         ctx.lineWidth = style.borderWidth || 0;
+        // for clip
         var _a = this.renderBorder(ctx, originX, originY), needClip = _a.needClip, needStroke = _a.needStroke;
         if (needClip) {
+            ctx.save();
             ctx.clip();
         }
         if (style.backgroundColor) {
@@ -571,7 +583,10 @@ var Element = /** @class */ (function () {
         if (style.backgroundImage && this.backgroundImage) {
             ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
         }
-        return { needStroke: needStroke, originX: originX, originY: originY, drawX: drawX, drawY: drawY, width: width, height: height };
+        if (needClip) {
+            ctx.restore();
+        }
+        return { needStroke: needStroke, needClip: needClip, originX: originX, originY: originY, drawX: drawX, drawY: drawY, width: width, height: height };
     };
     return Element;
 }());
@@ -3390,6 +3405,7 @@ function clone(root, element, deep, parent) {
         // @ts-ignore
         id: root.eleCount,
         dataset: Object.assign({}, element.dataset),
+        name: element.tagName,
     };
     if (element instanceof _components_index__WEBPACK_IMPORTED_MODULE_0__.Image) {
         args.src = element.src;
@@ -3494,7 +3510,10 @@ var View = /** @class */ (function (_super) {
     View.prototype.render = function () {
         var ctx = this.ctx;
         ctx.save();
-        var _a = this.baseRender(), needStroke = _a.needStroke, originX = _a.originX, originY = _a.originY;
+        var _a = this.baseRender(), needStroke = _a.needStroke, needClip = _a.needClip, originX = _a.originX, originY = _a.originY;
+        if (needClip) {
+            this.renderBorder(ctx, originX, originY);
+        }
         if (needStroke) {
             ctx.stroke();
         }
@@ -3646,7 +3665,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 })();
 
 
-var DEFAULT_FONT_FAMILY = 'PingFangSC-Regular, sans-serif';
+var DEFAULT_FONT_FAMILY = 'sans-serif';
 var context = null;
 var getContext = function () {
     if (context) {
@@ -3713,7 +3732,7 @@ var Text = /** @class */ (function (_super) {
             dataset: dataset,
         }) || this;
         _this.valuesrc = '';
-        _this.textBaseline = 'top';
+        _this.textBaseline = 'bottom';
         _this.font = '';
         _this.textAlign = 'left';
         _this.fillStyle = '#000000';
@@ -3751,7 +3770,7 @@ var Text = /** @class */ (function (_super) {
         var style = this.style || {};
         this.fontSize = style.fontSize || 12;
         this.textBaseline = 'top';
-        this.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize || 12, "px ").concat(DEFAULT_FONT_FAMILY);
+        this.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize || 12, "px ").concat(style.fontFamily || DEFAULT_FONT_FAMILY);
         this.textAlign = style.textAlign || 'left';
         this.fillStyle = style.color || '#000';
     };
@@ -3813,8 +3832,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _libs_scroller_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(26);
 /* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
-/* harmony import */ var _scrollbar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(28);
-/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(1);
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2);
+/* harmony import */ var _scrollbar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(28);
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(1);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3838,7 +3858,8 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-var dpr = _env__WEBPACK_IMPORTED_MODULE_5__["default"].getDevicePixelRatio();
+
+var dpr = _env__WEBPACK_IMPORTED_MODULE_6__["default"].getDevicePixelRatio();
 ;
 var ScrollView = /** @class */ (function (_super) {
     __extends(ScrollView, _super);
@@ -3872,7 +3893,7 @@ var ScrollView = /** @class */ (function (_super) {
         get: function () {
             var maxHeight = 0;
             this.children.forEach(function (item) {
-                if (!(item instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_4__["default"])) {
+                if (!(item instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_5__["default"])) {
                     maxHeight = Math.max(maxHeight, item.layoutBox.top + item.layoutBox.height);
                 }
             });
@@ -3885,7 +3906,7 @@ var ScrollView = /** @class */ (function (_super) {
         get: function () {
             var maxWidth = 0;
             this.children.forEach(function (item) {
-                if (!(item instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_4__["default"])) {
+                if (!(item instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_5__["default"])) {
                     maxWidth = Math.max(maxWidth, item.layoutBox.left + item.layoutBox.width);
                 }
             });
@@ -3950,7 +3971,9 @@ var ScrollView = /** @class */ (function (_super) {
     };
     ScrollView.prototype.renderTreeWithTop = function (tree) {
         var _this = this;
-        tree.render();
+        if (!(tree instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_5__["default"])) {
+            tree.render();
+        }
         tree.children.forEach(function (child) {
             _this.renderTreeWithTop(child);
         });
@@ -3961,6 +3984,7 @@ var ScrollView = /** @class */ (function (_super) {
     };
     ScrollView.prototype.scrollRender = function () {
         var _this = this;
+        var _a, _b;
         var box = this.layoutBox;
         var startX = box.absoluteX, startY = box.absoluteY, width = box.width, height = box.height;
         var ctx = this.ctx;
@@ -3985,6 +4009,9 @@ var ScrollView = /** @class */ (function (_super) {
                 _this.renderTreeWithTop(child);
             }
         });
+        // 上面的渲染应该先跳过滚动条，否则可能出现渲染顺序问题，ScrollView的节点反而把滚动条盖住了
+        (_a = this.vertivalScrollbar) === null || _a === void 0 ? void 0 : _a.render();
+        (_b = this.horizontalScrollbar) === null || _b === void 0 ? void 0 : _b.render();
         ctx.restore();
     };
     ScrollView.prototype.scrollHandler = function (left, top) {
@@ -3993,7 +4020,7 @@ var ScrollView = /** @class */ (function (_super) {
         // 可能被销毁了或者节点树还没准备好
         if (!this.isDestroyed && !this.isFirstScroll) {
             (0,_common_vd__WEBPACK_IMPORTED_MODULE_3__.iterateTree)(this, function (ele) {
-                if (ele !== _this && !(ele instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_4__["default"])) {
+                if (ele !== _this && !(ele instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_5__["default"])) {
                     ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - top;
                     ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - left;
                 }
@@ -4012,6 +4039,9 @@ var ScrollView = /** @class */ (function (_super) {
             this.isFirstScroll = false;
         }
     };
+    /**
+     * 当执行reflow之后，滚动列表的高度可能发生了变化，滚动条也需要同步进行更新
+     */
     ScrollView.prototype.updateScrollBar = function (scrollProp, scrollBarName) {
         var _this = this;
         var dimensions = {
@@ -4021,15 +4051,19 @@ var ScrollView = /** @class */ (function (_super) {
             contentHeight: this.scrollerObj.__contentHeight,
             maxScrollLeft: this.scrollerObj.__maxScrollLeft,
             maxScrollTop: this.scrollerObj.__maxScrollTop,
+            scrollLeft: this.scrollerObj.__scrollLeft,
+            scrollTop: this.scrollerObj.__scrollTop,
         };
+        // console.log('updateScrollBar', JSON.stringify(dimensions))
+        // 非第一次创建的情况，一般是 reflow 执行到这里
         if (this[scrollProp]) {
             if (this[scrollBarName]) {
                 this[scrollBarName].setDimensions(dimensions);
             }
             else {
-                var scrollBar = new _scrollbar__WEBPACK_IMPORTED_MODULE_4__["default"]({
+                var scrollBar = new _scrollbar__WEBPACK_IMPORTED_MODULE_5__["default"]({
                     dimensions: dimensions,
-                    direction: scrollProp === 'scrollY' ? _scrollbar__WEBPACK_IMPORTED_MODULE_4__.ScrollBarDirection.Vertival : _scrollbar__WEBPACK_IMPORTED_MODULE_4__.ScrollBarDirection.Horizontal,
+                    direction: scrollProp === 'scrollY' ? _scrollbar__WEBPACK_IMPORTED_MODULE_5__.ScrollBarDirection.Vertival : _scrollbar__WEBPACK_IMPORTED_MODULE_5__.ScrollBarDirection.Horizontal,
                 });
                 // this.appendChild(scrollbar);
                 scrollBar.root = this.root;
@@ -4038,7 +4072,7 @@ var ScrollView = /** @class */ (function (_super) {
                 scrollBar.insert(this.root.renderContext, true);
                 scrollBar.observeStyleAndEvent();
                 this.add(scrollBar);
-                scrollBar.setDirty();
+                (0,_elements__WEBPACK_IMPORTED_MODULE_4__.setDirty)(scrollBar, 'appendToScrollView');
                 // @ts-ignore
                 this[scrollBarName] = scrollBar;
                 // @ts-ignore
@@ -4082,6 +4116,10 @@ var ScrollView = /** @class */ (function (_super) {
                 || this.scrollWidth !== this.scrollerObj.__contentWidth
                 || this.scrollHeight !== this.scrollerObj.__contentHeight) {
                 this.scrollerObj.setDimensions(this.layoutBox.width, this.layoutBox.height, this.scrollWidth, this.scrollHeight);
+                /**
+                 * 这里之所以要延迟一帧是因为这里的变动来自 reflow 之后，正在做 reflow 之后的后续事情
+                 * 如果立即修改滚动条的样式，实际上并不会生效。
+                 */
                 // @ts-ignore
                 this.root.ticker.next(function () {
                     _this.updateScrollBar('scrollY', 'vertivalScrollbar');
@@ -4090,7 +4128,7 @@ var ScrollView = /** @class */ (function (_super) {
             }
             // reflow 之后，会从 csslayout 同步布局信息，原先的滚动信息会丢失，这里需要一个复位的操作
             (0,_common_vd__WEBPACK_IMPORTED_MODULE_3__.iterateTree)(this, function (ele) {
-                if (ele !== _this && !(ele instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_4__["default"])) {
+                if (ele !== _this && !(ele instanceof _scrollbar__WEBPACK_IMPORTED_MODULE_5__["default"])) {
                     ele.layoutBox.absoluteY = ele.layoutBox.originalAbsoluteY - _this.scrollTop;
                     ele.layoutBox.absoluteX = ele.layoutBox.originalAbsoluteX - _this.scrollLeft;
                 }
@@ -4372,7 +4410,7 @@ var Scroller = /** @class */ (function () {
         // Refresh maximums
         this.__computeScrollMax();
         // Refresh scroll position
-        this.scrollTo(this.__scrollLeft, this.__scrollTop, true);
+        this.scrollTo(this.__scrollLeft, this.__scrollTop, false);
     };
     /**
      * Sets the client coordinates in relation to the document.
@@ -5318,10 +5356,13 @@ var ScrollBar = /** @class */ (function (_super) {
         // 滚动完毕后一段时间后自动隐藏
         _this.autoHide = true;
         // 滚动完毕后自动隐藏时间
-        _this.autoHideTime = 1000;
+        _this.autoHideTime = 2000;
+        _this.autoHideDelayTime = 1500;
         _this.autoHideRemainingTime = 0;
         _this.innerWidth = 16;
         _this.isHide = false;
+        _this.currLeft = 0;
+        _this.currTop = 0;
         _this.update = function (dt) {
             if (!_this.autoHide || _this.autoHideRemainingTime <= 0 || _this.isHide) {
                 return;
@@ -5359,12 +5400,24 @@ var ScrollBar = /** @class */ (function (_super) {
         configurable: true
     });
     ScrollBar.prototype.init = function () {
+        var _this = this;
         if (!this.root) {
             console.warn('[Layout]: please set root for scrollbar');
         }
         else {
             // @ts-ignore
             this.root.ticker.add(this.update, true);
+            this.root.on('before_reflow', function () {
+                // console.log('before_reflow')
+                var _a = _this.calculteScrollValue(_this.currLeft, _this.currTop), scrollLeft = _a.scrollLeft, scrollTop = _a.scrollTop;
+                // console.log(this, scrollLeft, scrollTop)
+                if (_this.direction === ScrollBarDirection.Vertival) {
+                    _this.style.top = scrollTop;
+                }
+                else {
+                    _this.style.left = scrollLeft;
+                }
+            });
         }
     };
     ScrollBar.prototype.hide = function () {
@@ -5375,13 +5428,31 @@ var ScrollBar = /** @class */ (function (_super) {
         this.isHide = false;
         this.style.opacity = 1;
     };
+    /**
+     * 根据 ScrollView 容器宽高和实际内容宽高决定滚动条的位置和尺寸信息
+     * 但核心需要考虑的情况是：
+     * 1. 在不断地 reflow 过程中，ScrollBar 也会存在需要切换展示和隐藏的情况
+     * 2. reflow 之后，ScrollBar 的位置不是简单的设置为 ScrollView 顶部和左边，还可能是滚动了一段距离后执行的 reflow
+     */
     ScrollBar.prototype.setDimensions = function (dimensions) {
         var style = updateStyleFromDimensions(this.width, this.direction, dimensions);
         Object.assign(this.style, style);
         if (checkNeedHideScrollBar(this.direction, dimensions)) {
             this.hide();
         }
+        else if (this.isHide) {
+            this.show();
+        }
         this.dimensions = dimensions;
+        // 已经滚动过一段距离的情况，重新计算新的滚动位置
+        var _a = this.calculteScrollValue(dimensions.scrollLeft, dimensions.scrollTop), scrollLeft = _a.scrollLeft, scrollTop = _a.scrollTop;
+        if (this.direction === ScrollBarDirection.Vertival) {
+            this.style.top = scrollTop;
+        }
+        else {
+            this.style.left = scrollLeft;
+        }
+        this.autoHideRemainingTime = this.autoHideTime + this.autoHideDelayTime;
     };
     ScrollBar.prototype.calculteScrollValue = function (left, top) {
         var scrollLeft = 0;
@@ -5406,6 +5477,8 @@ var ScrollBar = /** @class */ (function (_super) {
         if (this.isHide) {
             return;
         }
+        this.currLeft = left;
+        this.currTop = top;
         var _a = this.calculteScrollValue(left, top), scrollLeft = _a.scrollLeft, scrollTop = _a.scrollTop;
         if (this.direction === ScrollBarDirection.Vertival) {
             this.layoutBox.absoluteY = this.parent.layoutBox.originalAbsoluteY + scrollTop;
@@ -5414,7 +5487,8 @@ var ScrollBar = /** @class */ (function (_super) {
             this.layoutBox.absoluteX = this.parent.layoutBox.originalAbsoluteX + scrollLeft;
         }
         if (this.autoHide) {
-            this.autoHideRemainingTime = this.autoHideTime;
+            // this.autoHideRemainingTime = this.autoHideTime;
+            this.autoHideRemainingTime = this.autoHideTime + this.autoHideDelayTime;
         }
         this.style.opacity = 1;
     };
@@ -5841,7 +5915,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.5';
+        _this.version = '1.0.6';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context
@@ -5883,6 +5957,7 @@ var Layout = /** @class */ (function (_super) {
         _this.ticker = new _common_ticker__WEBPACK_IMPORTED_MODULE_9__["default"]();
         _this.tickerFunc = function () {
             if (_this.isDirty) {
+                _this.emit('before_reflow', '');
                 _this.reflow();
             }
             else if (_this.isNeedRepaint) {
