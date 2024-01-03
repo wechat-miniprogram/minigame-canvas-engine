@@ -62,7 +62,7 @@ export const style = {
     },
 
     listHeadImg: {
-        // borderRadius: 6,
+        borderRadius: 6,
         width: 90,
         height: 90,
     },

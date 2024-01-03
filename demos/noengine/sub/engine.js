@@ -573,7 +573,6 @@ var Element = /** @class */ (function () {
         // for clip
         var _a = this.renderBorder(ctx, originX, originY), needClip = _a.needClip, needStroke = _a.needStroke;
         if (needClip) {
-            ctx.save();
             ctx.clip();
         }
         if (style.backgroundColor) {
@@ -582,9 +581,6 @@ var Element = /** @class */ (function () {
         }
         if (style.backgroundImage && this.backgroundImage) {
             ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
-        }
-        if (needClip) {
-            ctx.restore();
         }
         return { needStroke: needStroke, needClip: needClip, originX: originX, originY: originY, drawX: drawX, drawY: drawY, width: width, height: height };
     };
@@ -3511,9 +3507,6 @@ var View = /** @class */ (function (_super) {
         var ctx = this.ctx;
         ctx.save();
         var _a = this.baseRender(), needStroke = _a.needStroke, needClip = _a.needClip, originX = _a.originX, originY = _a.originY;
-        if (needClip) {
-            this.renderBorder(ctx, originX, originY);
-        }
         if (needStroke) {
             ctx.stroke();
         }
@@ -3622,10 +3615,13 @@ var Image = /** @class */ (function (_super) {
         }
         var ctx = this.ctx;
         ctx.save();
-        var _b = this.baseRender(), needStroke = _b.needStroke, originX = _b.originX, originY = _b.originY, drawX = _b.drawX, drawY = _b.drawY, width = _b.width, height = _b.height;
+        var _b = this.baseRender(), needStroke = _b.needStroke, needClip = _b.needClip, originX = _b.originX, originY = _b.originY, drawX = _b.drawX, drawY = _b.drawY, width = _b.width, height = _b.height;
         // 自定义渲染逻辑 开始
         ctx.drawImage(this.img, drawX - originX, drawY - originY, width, height);
         // 自定义渲染逻辑 结束
+        if (needClip) {
+            this.renderBorder(ctx, originX, originY);
+        }
         if (needStroke) {
             ctx.stroke();
         }
@@ -5915,7 +5911,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.6';
+        _this.version = '1.0.7';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context
