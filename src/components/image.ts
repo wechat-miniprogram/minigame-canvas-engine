@@ -80,11 +80,15 @@ export default class Image extends Element {
     const ctx = this.ctx as CanvasRenderingContext2D;
     ctx.save();
 
-    const { needStroke, originX, originY, drawX, drawY, width, height } = this.baseRender();
+    const { needStroke, needClip, originX, originY, drawX, drawY, width, height } = this.baseRender();
 
     // 自定义渲染逻辑 开始
     ctx.drawImage(this.img, drawX - originX, drawY - originY, width, height);
     // 自定义渲染逻辑 结束
+
+    if (needClip) {
+      this.renderBorder(ctx, originX, originY);
+    }
 
     if (needStroke) {
       ctx.stroke();

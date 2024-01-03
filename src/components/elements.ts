@@ -601,7 +601,6 @@ export default class Element {
     const { needClip, needStroke } = this.renderBorder(ctx, originX, originY);
 
     if (needClip) {
-      ctx.save();
       ctx.clip();
     }
 
@@ -612,10 +611,6 @@ export default class Element {
 
     if (style.backgroundImage && this.backgroundImage) {
       ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
-    }
-
-    if (needClip) {
-      ctx.restore();
     }
 
     return { needStroke, needClip, originX, originY, drawX, drawY, width, height };

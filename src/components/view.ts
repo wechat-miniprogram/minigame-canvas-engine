@@ -31,10 +31,6 @@ export default class View extends Element {
 
     const { needStroke, needClip, originX, originY } = this.baseRender();
 
-    if (needClip) {
-      this.renderBorder(ctx, originX, originY);
-    }
-
     if (needStroke) {
       ctx.stroke();
     }
