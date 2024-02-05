@@ -20,10 +20,14 @@
 ``` js
 const list = Layout.getElementById('scrolllist');
 
-// 设置滚动条的粗细
-list.vertivalScrollbar.width = 20;
+// 在 init 之后内部有些异步逻辑取不到 vertivalScrollbar，需要延迟一帧执行
+Layout.ticker.next(() => {
+  // 设置滚动条的粗细
+  list.vertivalScrollbar.width = 20;
 
-list.vertivalScrollbar.autoHide = false;
+  list.vertivalScrollbar.autoHide = false;
+});
+
 ```
 
 ## 方法
@@ -34,7 +38,10 @@ list.vertivalScrollbar.autoHide = false;
 ```js
 const list = Layout.getElementById('scrolllist');
 
-list.vertivalScrollbar.hide();
+// 在 init 之后内部有些异步逻辑取不到 vertivalScrollbar，需要延迟一帧执行
+Layout.ticker.next(() => {
+  list.vertivalScrollbar.hide();
+});
 ```
 
 ### show
@@ -43,7 +50,10 @@ list.vertivalScrollbar.hide();
 ```js
 const list = Layout.getElementById('scrolllist');
 
-list.vertivalScrollbar.show();
+// 在 init 之后内部有些异步逻辑取不到 vertivalScrollbar，需要延迟一帧执行
+Layout.ticker.next(() => {
+  list.vertivalScrollbar.show();
+});
 ```
 
 ## 样式
@@ -63,6 +73,8 @@ ScrollBar 本身只是个普通的 View 组件，只不过默认带了一些样�
 示例
 ``` js
 const list = Layout.getElementById('scrolllist');
-
-list.vertivalScrollbar.style.backgroundColor = 'red';
+// 在 init 之后内部有些异步逻辑取不到 vertivalScrollbar，需要延迟一帧执行
+Layout.ticker.next(() => {
+  list.vertivalScrollbar.style.backgroundColor = 'red';
+});
 ```

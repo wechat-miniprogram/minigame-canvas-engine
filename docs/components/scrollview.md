@@ -38,14 +38,17 @@ const list = Layout.getElementById('list');
 // 将滚动列表动态设置为禁止纵向滚动
 list.scrollY = false;
 
-// 隐藏滚动条
-list.vertivalScrollbar.hide();
+// 在 init 之后内部有些异步逻辑取不到 vertivalScrollbar，需要延迟一帧执行
+Layout.ticker.next(() => {
+  // 隐藏滚动条
+  list.vertivalScrollbar.hide();
 
-// 改变滚动条的宽度
-list.vertivalScrollbar.width = 20;
+  // 改变滚动条的宽度
+  list.vertivalScrollbar.width = 20;
 
-// 改变滚动条的背景颜色
-list.vertivalScrollbar.style.backgroundColor = 'red';
+  // 改变滚动条的背景颜色
+  list.vertivalScrollbar.style.backgroundColor = 'red';
+});
 ```
 
 ## 方法
