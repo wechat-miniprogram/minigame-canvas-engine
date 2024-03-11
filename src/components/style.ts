@@ -99,6 +99,11 @@ interface IStyle {
   fontFamily?: string;
 
   transform?: string;
+
+  // 文字描边的宽度，默认不描边
+  textStrokeWidth?: number;
+  // 文字描边的颜色，如果指定了描边颜色但是没有指定描边宽度，描边宽度默认设置为1
+  textStrokeColor?: string;
 }
 
 export { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle };

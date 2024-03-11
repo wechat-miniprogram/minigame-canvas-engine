@@ -194,6 +194,17 @@ export default class Text extends Element {
       drawY - originY,
     );
 
+    if (style.textStrokeColor) {
+      ctx.lineWidth = style.textStrokeWidth || 1;
+      ctx.strokeStyle = style.textStrokeColor as string;
+
+      ctx.strokeText(
+        this.value,
+        drawX - originX,
+        drawY - originY,
+      );
+    }
+
     ctx.translate(-originX, -originY);
 
     ctx.restore();
