@@ -1,3 +1,7 @@
+#### 2024.3.12
+1. `U` 文字支持textStrokeWidth和textStrokeColor实现描边功能;
+2. `U` 小游戏插件发布1.0.8版本；
+
 #### 2023.1.03
 1. `U` 小游戏插件发布1.0.7版本；
 2. `F` 修复1.0.6版本Image的borderRadius失效问题

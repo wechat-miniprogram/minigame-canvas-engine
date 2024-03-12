@@ -30,6 +30,8 @@ const repaintAffectedStyles = [
   'borderColor',
   'opacity',
   'transform',
+  'textStrokeColor',
+  'textStrokeWidth',
 ];
 
 const allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
