@@ -73,6 +73,7 @@ let style = {
     fontSize: 50,
     textAlign: 'center',
     marginTop: 20,
+    // textShadow: '2px 2px 2px red',
   },
 
   rank: {

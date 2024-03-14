@@ -1,7 +1,7 @@
 const template = `
 <view class="container" id="main">
   <view class="header">
-    <text class="title" value="排行榜"></text>
+    <text class="title" value="ranklist"></text>
   </view>
   <view class="rankList">
       <scrollview class="list" scrollY="true">

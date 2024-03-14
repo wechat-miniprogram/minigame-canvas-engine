@@ -37,3 +37,8 @@ export function backgroundImageParser(val: string) {
 
   return null;
 }
+
+const textShadowReg = /^(\d+px\s){2}\d+px\s[a-zA-Z]+(,\s*(\d+px\s){2}\d+px\s[a-zA-Z]+)*$/;
+export function isValidTextShadow(textShadow: string) {
+  return textShadowReg.test(textShadow);
+}

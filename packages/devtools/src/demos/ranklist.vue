@@ -116,6 +116,7 @@ let style = {
     lineHeight: 150,
     width: 350,
     marginLeft: 30,
+    textShadow: '1px 1px 2px #0000ff',
   },
   listScoreUnit: {
     opacity: 0.5,

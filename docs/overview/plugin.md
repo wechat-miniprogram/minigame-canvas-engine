@@ -17,7 +17,7 @@
   "openDataContext": "sub",
   "plugins": {
     "Layout": {
-      "version": "1.0.7",
+      "version": "1.0.8",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"openDataContext"}]
     }
@@ -52,7 +52,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.7",
+      "version": "1.0.8",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}]
     }
@@ -75,7 +75,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.7",
+      "version": "1.0.8",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}, {"type":"openDataContext"}]
     }
@@ -86,6 +86,7 @@ const Layout = requirePlugin('Layout').default;
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
+| 1.0.8        | 支持文字描边和文字阴影效果，详情可见[布局和样式](../components//overview.md) |
 | 1.0.7        | 修复1.0.6版本Image的borderRadius失效问题 |
 | 1.0.6        | 1. 修复圆角矩形在有borderRadius的时候绘制不够圆润问题；2. 文字样式支持fontFamily属性；3. 修复 ScrollView 的滚动条在页面布局变化时会位置异常问题; |
 | 1.0.5        | transform 部分属性支持，使用可见[教程](../tutorial/loading.md) |

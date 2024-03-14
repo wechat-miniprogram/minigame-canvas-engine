@@ -23,6 +23,6 @@ export function tplFn(it) {
           out += ' <text class="listItemNum" value="' + (index + 1) + '"></text> <image class="listHeadImg" src="' + (item.avatarUrl) + '"></image> <text class="listItemName" value="' + (item.nickname) + '"></text> <text class="listItemScore" value="' + (item.rankScore) + '"></text> <text class="listScoreUnit" value="分"></text> </view> ';
       }
   }
-  out += ' </scrollview> <text class="listTips" value="仅展示前50位好友排名"></text> <view class="listItem selfListItem"> <text class="listItemNum" value="' + (it.selfIndex) + '"></text> <image class="listHeadImg" src="' + (it.self.avatarUrl) + '"></image> <text class="listItemName" value="' + (it.self.nickname) + '"></text> <text class="listItemScore" value="' + (item.rankScore) + '"></text> <text class="listScoreUnit" value="分"></text> </view> </view></view>';
+  out += ' </scrollview> <text class="listTips" value="仅展示前50位好友排名"></text> <view class="listItem selfListItem"> <text class="listItemNum" value="' + (it.selfIndex) + '"></text> <image class="listHeadImg" src="' + (it.self.avatarUrl) + '"></image> <text class="listItemName listItemNameSelf" value="' + (it.self.nickname) + '"></text> <text class="listItemScore" value="' + (item.rankScore) + '"></text> <text class="listScoreUnit" value="分"></text> </view> </view></view>';
   return out;
 }

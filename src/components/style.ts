@@ -32,6 +32,7 @@ const repaintAffectedStyles = [
   'transform',
   'textStrokeColor',
   'textStrokeWidth',
+  'textShadow',
 ];
 
 const allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
@@ -106,6 +107,14 @@ interface IStyle {
   textStrokeWidth?: number;
   // 文字描边的颜色，如果指定了描边颜色但是没有指定描边宽度，描边宽度默认设置为1
   textStrokeColor?: string;
+
+  /**
+   * 文字阴影效果，textShadow的格式并不是严格的CSS格式，仅支持两种格式
+   * textShadow: 1px 1px 2px pink
+   * textShadow: 1px 1px 2px red, 0 0 1px blue, 0 0 1px blue, 1px 1px 2px red
+   * 也就是支持任意数量的阴影效果，每个阴影效果由四个值指定，分别是 shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor
+   */
+  textShadow?: string;
 }
 
 export { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle };

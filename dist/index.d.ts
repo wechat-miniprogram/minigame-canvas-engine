@@ -79,6 +79,15 @@ interface IStyle {
     fontWeight?: string;
     fontFamily?: string;
     transform?: string;
+    textStrokeWidth?: number;
+    textStrokeColor?: string;
+    /**
+     * 文字阴影效果，textShadow的格式并不是严格的CSS格式，仅支持两种格式
+     * textShadow: 1px 1px 2px pink
+     * textShadow: 1px 1px 2px red, 0 0 1px blue, 0 0 1px blue, 1px 1px 2px red
+     * 也就是支持任意数量的阴影效果，每个阴影效果由四个值指定，分别是 shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor
+     */
+    textShadow?: string;
 }
 
 declare class Rect {
@@ -381,6 +390,12 @@ declare class Image extends Element {
 interface ITextProps extends IElementOptions {
     value?: string;
 }
+interface ITextShadow {
+    offsetX: number;
+    offsetY: number;
+    blurRadius: number;
+    color: string;
+}
 declare class Text extends Element {
     private valuesrc;
     private originStyleWidth;
@@ -389,7 +404,10 @@ declare class Text extends Element {
     font: string;
     textAlign: CanvasTextAlign;
     fillStyle: string;
+    textShadows: null | ITextShadow[];
     constructor({ style, idName, className, value, dataset, }: ITextProps);
+    styleChangeHandler(prop: string, val: any): void;
+    private parseTextShadow;
     get value(): string;
     set value(newValue: string);
     toCanvasData(): void;

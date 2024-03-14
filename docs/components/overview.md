@@ -62,8 +62,14 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | backgroundColor | string | | 背景的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色 |
 | textOverflow | ellipsis, clip | 默认为空，出于性能考虑，只有显式指定 textOverflow 属性的时候才会对文字进行截断处理 |
 | letterSpacing | number | 默认值为 0，只对 bitmaptext 标签生效 |
-| textStrokeWidth | number | 文字描边的宽度，默认不描边 |
-| textStrokeColor |  string | 描边的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色， 如果指定了描边颜色但是没有指定描边宽度，描边宽度默认设置为1 | 
+| textStrokeWidth  **(v1.0.8开始支持)**| number | 文字描边的宽度，默认不描边 |
+| textStrokeColor  **(v1.0.8开始支持)**|  string | 描边的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色， 如果指定了描边颜色但是没有指定描边宽度，描边宽度默认设置为1 |
+| textShadow  **(v1.0.8开始支持)** | string |  文字阴影效果，textShadow的格式并不是严格的CSS格式，仅支持两种格式 如`textShadow: 1px 1px 2px pink`和`textShadow: 1px 1px 2px red, 0 0 1px blue, 0 0 1px blue, 1px 1px 2px red`，也就是支持任意数量的阴影效果，每个阴影效果由四个值指定，分别是 shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor |
+
+::: tip textShadow 特殊说明
+微信小游戏开放数据域暂不支持文字阴影效果，近期版本支持中。
+:::
+
 
 ### 容器
 

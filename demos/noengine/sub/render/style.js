@@ -17,14 +17,19 @@ export default {
   },
 
   title: {
+    fontFamily: '猫啃什锦黑',
     width: 144,
-    fontSize: 48,
+    fontSize: 60,
     height: 120,
     lineHeight: 120,
     textAlign: "center",
     fontWeight: "bold",
     borderBottomWidth: 6,
     borderColor: "#000000",
+    color: '#ffffff',
+    textStrokeWidth: 2,
+    textStrokeColor: '#000000',
+    textShadow: '1px 1px 2px #0000ff',
   },
 
   rankList: {
@@ -91,6 +96,7 @@ export default {
     width: 350,
     marginLeft: 30,
     fontFamily: '"Lucida Console", "Courier New", monospace',
+    textShadow: '2px 2px 2px red',
   },
 
   listScoreUnit: {

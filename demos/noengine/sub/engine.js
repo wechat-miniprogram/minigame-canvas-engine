@@ -631,6 +631,9 @@ var repaintAffectedStyles = [
     'borderColor',
     'opacity',
     'transform',
+    'textStrokeColor',
+    'textStrokeWidth',
+    'textShadow',
 ];
 var allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
 
@@ -957,6 +960,7 @@ module.exports.TinyEmitter = E;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   backgroundImageParser: () => (/* binding */ backgroundImageParser),
+/* harmony export */   isValidTextShadow: () => (/* binding */ isValidTextShadow),
 /* harmony export */   rotateParser: () => (/* binding */ rotateParser)
 /* harmony export */ });
 function degreesToRadians(degrees) {
@@ -985,6 +989,10 @@ function backgroundImageParser(val) {
     }
     console.error("[Layout]: ".concat(val, " is not a valid backgroundImage"));
     return null;
+}
+var textShadowReg = /^(\d+px\s){2}\d+px\s[a-zA-Z]+(,\s*(\d+px\s){2}\d+px\s[a-zA-Z]+)*$/;
+function isValidTextShadow(textShadow) {
+    return textShadowReg.test(textShadow);
 }
 
 
@@ -3708,8 +3716,8 @@ function parseText(style, value) {
 var Text = /** @class */ (function (_super) {
     __extends(Text, _super);
     function Text(_a) {
-        var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, _e = _a.value, value = _e === void 0 ? '' : _e, dataset = _a.dataset;
         var _this = this;
+        var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, _e = _a.value, value = _e === void 0 ? '' : _e, dataset = _a.dataset;
         var originStyleWidth = style.width;
         // 没有设置宽度的时候通过canvas计算出文字宽度
         if (originStyleWidth === undefined) {
@@ -3736,8 +3744,31 @@ var Text = /** @class */ (function (_super) {
         _this.ctx = null;
         _this.valuesrc = value;
         _this.originStyleWidth = originStyleWidth;
+        if (style.textShadow) {
+            _this.parseTextShadow(style.textShadow);
+        }
         return _this;
     }
+    Text.prototype.styleChangeHandler = function (prop, val) {
+        if (prop === 'textShadow') {
+            this.parseTextShadow(val);
+        }
+    };
+    Text.prototype.parseTextShadow = function (textShadow) {
+        // if (!isValidTextShadow(textShadow)) {
+        //   console.error(`[Layout]: ${textShadow} is not a valid textShadow`);
+        // } else {
+        // 解析 text-shadow 字符串
+        this.textShadows = textShadow.split(',').map(function (shadow) {
+            var parts = shadow.trim().split(/\s+/);
+            var offsetX = parseFloat(parts[0]);
+            var offsetY = parseFloat(parts[1]);
+            var blurRadius = parseFloat(parts[2]);
+            var color = parts[3];
+            return { offsetX: offsetX, offsetY: offsetY, blurRadius: blurRadius, color: color };
+        });
+        // }
+    };
     Object.defineProperty(Text.prototype, "value", {
         get: function () {
             return this.valuesrc;
@@ -3785,6 +3816,7 @@ var Text = /** @class */ (function (_super) {
         }
     };
     Text.prototype.render = function () {
+        var _this = this;
         var style = this.style;
         var ctx = this.ctx;
         ctx.save();
@@ -3806,7 +3838,26 @@ var Text = /** @class */ (function (_super) {
             ctx.textBaseline = 'middle';
             drawY += style.lineHeight / 2;
         }
-        ctx.fillText(this.value, drawX - originX, drawY - originY);
+        // 纹理文字描边
+        if (style.textStrokeColor) {
+            ctx.lineWidth = style.textStrokeWidth || 1;
+            ctx.strokeStyle = style.textStrokeColor;
+            ctx.strokeText(this.value, drawX - originX, drawY - originY);
+        }
+        // 处理文字阴影
+        if (this.textShadows) {
+            this.textShadows.forEach(function (_a) {
+                var offsetX = _a.offsetX, offsetY = _a.offsetY, blurRadius = _a.blurRadius, color = _a.color;
+                ctx.shadowOffsetX = offsetX;
+                ctx.shadowOffsetY = offsetY;
+                ctx.shadowBlur = blurRadius;
+                ctx.shadowColor = color;
+                ctx.fillText(_this.value, drawX - originX, drawY - originY);
+            });
+        }
+        else {
+            ctx.fillText(this.value, drawX - originX, drawY - originY);
+        }
         ctx.translate(-originX, -originY);
         ctx.restore();
     };
@@ -5338,8 +5389,8 @@ function checkNeedHideScrollBar(direction, dimensions) {
 var ScrollBar = /** @class */ (function (_super) {
     __extends(ScrollBar, _super);
     function ScrollBar(_a) {
-        var direction = _a.direction, dimensions = _a.dimensions, _b = _a.backgroundColor, backgroundColor = _b === void 0 ? 'rgba(162, 162, 162, 1)' : _b, _c = _a.width, width = _c === void 0 ? 16 : _c;
         var _this = this;
+        var direction = _a.direction, dimensions = _a.dimensions, _b = _a.backgroundColor, backgroundColor = _b === void 0 ? 'rgba(162, 162, 162, 1)' : _b, _c = _a.width, width = _c === void 0 ? 16 : _c;
         var style = Object.assign({
             backgroundColor: backgroundColor,
             position: 'absolute',
@@ -5911,7 +5962,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.7';
+        _this.version = '1.0.8';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context

@@ -1,6 +1,7 @@
 import Element from './elements';
 import { IStyle } from './style';
 import { IElementOptions } from './types';
+import { isValidTextShadow } from './styleParser';
 import env from '../env'
 
 const DEFAULT_FONT_FAMILY = 'sans-serif';
@@ -67,6 +68,13 @@ interface ITextProps extends IElementOptions {
   value?: string;
 }
 
+interface ITextShadow {
+  offsetX: number;
+  offsetY: number;
+  blurRadius: number;
+  color: string;
+}
+
 export default class Text extends Element {
   private valuesrc = '';
   private originStyleWidth: number | string | undefined;
@@ -76,6 +84,8 @@ export default class Text extends Element {
   public textAlign: CanvasTextAlign = 'left';
   public fillStyle = '#000000';
 
+  public textShadows!: null | ITextShadow[];
+  
   constructor({
     style = {},
     idName = '',
@@ -105,6 +115,33 @@ export default class Text extends Element {
     this.ctx = null;
     this.valuesrc = value;
     this.originStyleWidth = originStyleWidth;
+
+    if (style.textShadow) {
+      this.parseTextShadow(style.textShadow);
+    }
+  }
+
+  styleChangeHandler(prop: string, val: any) {
+    if (prop === 'textShadow') {
+      this.parseTextShadow(val);
+    }
+  }
+
+  private parseTextShadow(textShadow: string) {
+    // if (!isValidTextShadow(textShadow)) {
+    //   console.error(`[Layout]: ${textShadow} is not a valid textShadow`);
+    // } else {
+      // 解析 text-shadow 字符串
+      this.textShadows = textShadow.split(',').map(shadow => {
+        const parts = shadow.trim().split(/\s+/);
+        const offsetX = parseFloat(parts[0]);
+        const offsetY = parseFloat(parts[1]);
+        const blurRadius = parseFloat(parts[2]);
+        const color = parts[3];
+
+        return { offsetX, offsetY, blurRadius, color };
+      });
+    // }
   }
 
   get value() {
@@ -188,12 +225,7 @@ export default class Text extends Element {
       drawY += (style.lineHeight as number) / 2;
     }
 
-    ctx.fillText(
-      this.value,
-      drawX - originX,
-      drawY - originY,
-    );
-
+    // 纹理文字描边
     if (style.textStrokeColor) {
       ctx.lineWidth = style.textStrokeWidth || 1;
       ctx.strokeStyle = style.textStrokeColor as string;
@@ -203,6 +235,27 @@ export default class Text extends Element {
         drawX - originX,
         drawY - originY,
       );
+    }
+
+    // 处理文字阴影
+    if (this.textShadows) {
+      this.textShadows.forEach(({ offsetX, offsetY, blurRadius, color }) => {
+        ctx.shadowOffsetX = offsetX;
+        ctx.shadowOffsetY = offsetY;
+        ctx.shadowBlur = blurRadius;
+        ctx.shadowColor = color;
+        ctx.fillText(
+          this.value,
+          drawX - originX,
+          drawY - originY,
+        );
+      });
+    } else {
+      ctx.fillText(
+        this.value,
+        drawX - originX,
+        drawY - originY,
+      );  
     }
 
     ctx.translate(-originX, -originY);

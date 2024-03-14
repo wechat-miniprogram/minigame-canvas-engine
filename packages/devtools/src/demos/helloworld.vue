@@ -3,7 +3,7 @@ import { defineComponent } from "vue";
 
 let template = `
   <view id="container">
-    <text id="testText" class="redText" value="hello canvas"></text>
+    <text id="testText" class="redText" value="Hello World"></text>
   </view>
 `;
 
@@ -22,7 +22,7 @@ let style = {
     height: "100%",
     lineHeight: 200,
     fontSize: 40,
-    textAlign: "center",    
+    textAlign: "center",
   },
   // 文字的最终颜色为#ff0000
   redText: {
@@ -53,6 +53,13 @@ export default defineComponent({
       Layout.updateViewPort(canvas.getBoundingClientRect());
 
       Layout.layout(context);
+
+      let testText = Layout.getElementById('testText');
+
+      // console.log(testText.style.textShadow)
+
+      // testText.style.textShadow = '2px 2px 2px blue'
+
     },
   },
 });
