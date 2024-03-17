@@ -50,10 +50,11 @@ export default defineComponent({
       Layout.layout(context);
 
       const image = Layout.getElementById('loading');
+      image.style.transform = `rotate(${358}deg) scale(0.5, 0.5)`;
       let degrees = 0;
       Layout.ticker.add(() => {
         degrees = (degrees + 2) % 360;
-        image.style.transform = `rotate(${degrees}deg)`;        
+        image.style.transform = `rotate(${degrees}deg)`;     
       });
     },
   },

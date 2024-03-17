@@ -11,7 +11,7 @@ import Ticker from './common/ticker';
 import { create, renderChildren, layoutChildren, repaintChildren, iterateTree, clone, registerComponent } from './common/vd';
 import Rect from './common/rect';
 import imageManager from './common/imageManager';
-import { View, Text, Image, ScrollView, BitMapText, Canvas } from './components';
+import { View, Text, Image, ScrollView, BitMapText, Canvas, Button } from './components';
 import { IStyle } from './components/style';
 import { GameTouch, GameTouchEvent, Callback } from './types/index';
 
@@ -562,6 +562,7 @@ class Layout extends Element {
   ScrollView = ScrollView;
   BitMapText = BitMapText;
   Canvas = Canvas;
+  Button = Button;
 
   registerComponent = registerComponent;
 

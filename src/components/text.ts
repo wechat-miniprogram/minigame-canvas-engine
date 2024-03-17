@@ -1,7 +1,6 @@
 import Element from './elements';
 import { IStyle } from './style';
 import { IElementOptions } from './types';
-import { isValidTextShadow } from './styleParser';
 import env from '../env'
 
 const DEFAULT_FONT_FAMILY = 'sans-serif';

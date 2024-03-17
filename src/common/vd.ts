@@ -1,11 +1,10 @@
 /* eslint-disable no-param-reassign */
 // components
-import { View, Text, Image, ScrollView, BitMapText, Canvas, Element } from '../components/index';
+import { View, Text, Image, ScrollView, BitMapText, Canvas, Element, Button } from '../components/index';
 import { IStyle } from '../components/style';
 import { ILayout, ILayoutBox } from '../components/elements';
 import { Callback } from '../types';
 import env from '../env';
-
 
 interface Constructor {
   new (...args: any[]): any;
@@ -24,6 +23,7 @@ const constructorMap: { [key: string]: Constructor } = {
   scrollview: ScrollView,
   bitmaptext: BitMapText,
   canvas: Canvas,
+  button: Button,
 };
 
 export function registerComponent(name: string, Constructor: Constructor) {

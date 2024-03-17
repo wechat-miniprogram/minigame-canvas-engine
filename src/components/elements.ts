@@ -6,7 +6,7 @@ import TinyEmitter from 'tiny-emitter';
 import { IDataset } from '../types/index'
 import { IElementOptions } from './types';
 import { Callback } from '../types/index';
-import { backgroundImageParser, rotateParser } from './styleParser';
+import { backgroundImageParser, rotateParser, parseTransform } from './styleParser';
 
 export function getElementsById(tree: Element, list: Element[] = [], id: string) {
   tree.children.forEach((child: Element) => {
@@ -90,6 +90,8 @@ export interface ILayoutBox {
 
 export interface IRenderForLayout {
   rotate?: number; // transform rotate解析之后得到的弧度制
+  scaleX?: number;
+  scaleY?: number;
 }
 
 export interface ILayout {
@@ -219,12 +221,13 @@ export default class Element {
     }
 
     if (typeof style.transform === 'string') {
-      if (style.transform.indexOf('rotate') > -1) {
-        const deg = rotateParser(style.transform);
-        if (deg) {
-          this.renderForLayout.rotate = deg;
-        }
-      }
+      this.renderForLayout = parseTransform(style.transform);
+      // if (style.transform.indexOf('rotate') > -1) {
+      //   const deg = rotateParser(style.transform);
+      //   if (deg) {
+      //     this.renderForLayout.rotate = deg;
+      //   }
+      // }
     }
 
     this.originStyle = style;
@@ -268,14 +271,11 @@ export default class Element {
             ele.styleChangeHandler(prop, val);
 
             if (prop === 'transform') {
-              if (val.indexOf('rotate') > -1) {
-                const deg = rotateParser(val);
-                if (deg) {
-                  ele.renderForLayout.rotate = deg;
+              // Object.assign(ele.renderForLayout, parseTransform(val));
+              // console.log(ele.renderForLayout)
+              ele.renderForLayout = parseTransform(val);
 
-                  ele.root?.emit('repaint');
-                }
-              }
+              ele.root?.emit('repaint');
             }
 
             if (reflowAffectedStyles.indexOf(prop) > -1) {
@@ -527,14 +527,6 @@ export default class Element {
       return { needClip: false, needStroke: false };
     }
 
-    // if (typeof ctx.roundRect === 'function') {
-    //   ctx.beginPath();
-    //   ctx.roundRect(x, y, width, height, [radius]);
-    //   ctx.closePath();
-
-    //   return { needClip: !!hasRadius, needStroke: !!borderWidth };
-    // }
-
     ctx.lineWidth = borderWidth;
     ctx.strokeStyle = borderColor;
 
@@ -579,16 +571,23 @@ export default class Element {
     let originX = 0;
     let originY = 0;
 
-    /**
-     * 请注意，这里暂时仅支持没有子节点的元素发生旋转，如果父节点旋转了子节点并不会跟着旋转
-     * 要实现父节点带动子节点旋转的能力，需要引入矩阵库，对代码改动也比较大，暂时不做改造。
-     */
-    if (this.renderForLayout.rotate) {
+    if (this.renderForLayout.rotate !== undefined || this.renderForLayout.scaleX !== undefined || this.renderForLayout.scaleY !== undefined) {
       originX = drawX + box.width / 2;
       originY = drawY + box.height / 2;
 
       ctx.translate(originX, originY);
+    }
+    /**
+     * 请注意，这里暂时仅支持没有子节点的元素发生旋转，如果父节点旋转了子节点并不会跟着旋转
+     * 要实现父节点带动子节点旋转的能力，需要引入矩阵库，对代码改动也比较大，暂时不做改造。
+     */
+    if (this.renderForLayout.rotate !== undefined) {
       ctx.rotate(this.renderForLayout.rotate);
+    }
+
+    if (this.renderForLayout.scaleX !== undefined || this.renderForLayout.scaleY !== undefined) {
+      // console.log(this.renderForLayout.rotate, this.renderForLayout.scaleX !== undefined ? this.renderForLayout.scaleX : 1 , this.renderForLayout.scaleY !== undefined ? this.renderForLayout.scaleY : 1)
+      ctx.scale(this.renderForLayout.scaleX !== undefined ? this.renderForLayout.scaleX : 1 , this.renderForLayout.scaleY !== undefined ? this.renderForLayout.scaleY : 1);
     }
 
     if (style.borderColor) {

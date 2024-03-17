@@ -23,6 +23,9 @@ import ImageDemo from "./image.vue";
 import Invite from "./invite.vue";
 // @ts-ignore
 import Rotate from "./rotate.vue";
+// @ts-ignore
+import Button from "./button.vue";
+
 
 export default defineComponent({
   components: {
@@ -39,12 +42,13 @@ export default defineComponent({
     ImageDemo,
     Invite,
     // Rotate,
+    Button,
   },
   data() {
     return {
       isDev: true,
 
-      tabindex: 0,
+      tabindex: 9,
     };
   },
   mounted() {
@@ -75,6 +79,7 @@ export default defineComponent({
     :activeIndex="tabindex"
     @tab-change="demoChangeHandler"
   >
+    
     <TabPanel header="HelloWorld">
       <HelloWorld ref="panel__0" />
     </TabPanel>
@@ -102,8 +107,8 @@ export default defineComponent({
     <TabPanel header="Invite">
       <Invite ref="panel__8" />
     </TabPanel>
-     <!-- <TabPanel header="Rotate">
-      <Rotate ref="panel__9" />
-    </TabPanel> -->
+     <TabPanel header="Button">
+      <Button ref="panel__9" />
+    </TabPanel>
   </TabView>
 </template>
