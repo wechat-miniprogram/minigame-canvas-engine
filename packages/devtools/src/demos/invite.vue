@@ -109,12 +109,12 @@ export default defineComponent({
       Layout.updateViewPort(canvas.getBoundingClientRect());
       Layout.layout(context);
 
-      const buttons = Layout.getElementsByClassName("listInviteButton");
-      buttons.forEach((button) => {
-        button.on("click", () => {
-          alert("button click");
-        });
-      });
+      // const buttons = Layout.getElementsByClassName("listInviteButton");
+      // buttons.forEach((button) => {
+      //   button.on("click", () => {
+      //     alert("button click");
+      //   });
+      // });
     },
   },
 });

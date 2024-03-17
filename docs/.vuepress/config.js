@@ -59,7 +59,8 @@ export default {
           '/tutorial/cocos2.x',
           '/tutorial/loading',
           '/tutorial/platform',
-          '/tutorial/templateengine'
+          '/tutorial/templateengine',
+          '/api/tween',
         ],
       },
       {
@@ -90,7 +91,7 @@ export default {
               '/components/scrollview.md',
             ]
           },
-          '/api/tween',
+          // '/api/tween',
         ],
       },
       {

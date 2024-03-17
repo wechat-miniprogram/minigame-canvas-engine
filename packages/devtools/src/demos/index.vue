@@ -18,7 +18,7 @@ import Tween from "./tween.vue";
 // @ts-ignore
 import CanvasDemo from "./canvas.vue";
 // @ts-ignore
-import ImageDemo from "./image.vue";
+import Loading from "./loading.vue";
 // @ts-ignore
 import Invite from "./invite.vue";
 // @ts-ignore
@@ -39,7 +39,7 @@ export default defineComponent({
     RankList,
     Tween,
     CanvasDemo,
-    ImageDemo,
+    Loading,
     Invite,
     // Rotate,
     Button,
@@ -101,13 +101,13 @@ export default defineComponent({
     <TabPanel header="Canvas">
       <CanvasDemo ref="panel__6" />
     </TabPanel>
-    <TabPanel header="Image">
-      <ImageDemo ref="panel__7" />
+    <TabPanel header="Loading">
+      <Loading ref="panel__7" />
     </TabPanel>
     <TabPanel header="Invite">
       <Invite ref="panel__8" />
     </TabPanel>
-     <TabPanel header="Button">
+    <TabPanel header="Button">
       <Button ref="panel__9" />
     </TabPanel>
   </TabView>

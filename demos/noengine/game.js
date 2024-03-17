@@ -100,6 +100,14 @@ const updateRank = () => {
   rank.update();
 }
 
+testText.on('touchstart', () => {
+  testText.style.transform = 'scale(1.05, 1.05)';
+})
+
+testText.on('touchend', () => {
+  testText.style.transform = 'scale(1, 1)';
+})
+
 testText.on('click', () => {
   console.log(testText.value)
   if (testText.value === '打开排行榜') {

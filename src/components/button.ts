@@ -56,7 +56,14 @@ export default class Button extends View {
 
     this.appendChild(this.label);
 
-    console.log(this)
+    this.on('touchstart', () => {
+      this.style.transform = 'scale(1.05, 1.05)';
+    });
+    this.on('touchend', () => {
+      this.style.transform = 'scale(1, 1)';
+    });
+
+    console.log(this);
   }
 
   private interactableInner = true;

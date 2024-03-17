@@ -59,6 +59,9 @@ export function setDirty(ele: Element, reason?: string) {
 // 全局事件管道
 const EE = new TinyEmitter();
 
+// @ts-ignore
+window.EE = EE
+
 let uuid = 0;
 
 const toEventName = (event: string, id: number) => {
@@ -222,12 +225,6 @@ export default class Element {
 
     if (typeof style.transform === 'string') {
       this.renderForLayout = parseTransform(style.transform);
-      // if (style.transform.indexOf('rotate') > -1) {
-      //   const deg = rotateParser(style.transform);
-      //   if (deg) {
-      //     this.renderForLayout.rotate = deg;
-      //   }
-      // }
     }
 
     this.originStyle = style;
@@ -317,6 +314,9 @@ export default class Element {
     // 事件冒泡逻辑
     ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach((eventName) => {
       this.on(eventName, (e, touchMsg) => {
+        if (eventName !== 'touchmove') {
+          console.log(this, eventName)
+        }
         this.parent && this.parent.emit(eventName, e, touchMsg);
       });
     });

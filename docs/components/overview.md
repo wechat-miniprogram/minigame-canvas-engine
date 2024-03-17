@@ -79,15 +79,20 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | backgroundColor | string | | 背景的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色 |
 | backgroundImage | string | | 背景图，格式为 'url(https:/www.foo.com/xxx.png)'  |
 | opacity | number | 1 | 透明度，范围[0, 1]，0表示透明，1表示不透明 |
-| transform | string | | transform 属性允许你旋转给定元素，目前支持的格式 `rotate(360deg)` |
+| transform | string | | transform 属性允许你旋转和缩放给定元素，目前支持的格式 `rotate(360deg)` |
 
-::: tip transform 特殊说明
-v1.0.5版本开始支持 transform。
 
-请注意，这里暂时仅支持**没有子节点**的元素发生旋转，如果父节点旋转了子节点并不会跟着旋转，要实现父节点带动子节点旋转的能力，需要引入矩阵库，对代码改动也比较大，暂时不做改造。
-transform 的 rotate 特性一般用来做loading效果，详情可见[教程](../tutorial/loading)
-:::
+#### transform 特殊说明
+v1.0.5版本开始支持 transform，目前为止，transform 不会递归影响子节点，也就是父节点旋转缩放了之后子节点不会连带旋转缩放，要实现连带旋转缩放的能力，一方面是目前为止需求不够强，另一方面，对代码体积影响较大，会违背 Layout 轻量的初衷，暂时不做改造。
 
+transform 可以同时指定多个变换，比如需要同时进行旋转和缩放，可以写为`rotate(30deg) scale(1.5, 1.5)`代表先旋转30度然后进行1.5倍放大。
+
+**transform 不会影响布局仅仅影响渲染，在重新设置transform的时候，不需要重新计算布局，这意味着做一些动画它的性能更好。**
+
+| 属性  | 兼容性 | 示例 | 说明 |
+|---------------|--------|--------|--------|
+| rotate | >=v1.0.5 | transform: 'rotate(30deg)' | 元素旋转一定的角度，0 ~ 360 deg代表旋转一周，rotate 特性一般用来做loading效果，详情可见[教程](../tutorial/loading)。 |
+| scale | >=1.0.9 | transform: 'scale(1.5, 1.5)' | 分别指定X轴和Y轴的缩放。 |
 
 ### 边框
 
