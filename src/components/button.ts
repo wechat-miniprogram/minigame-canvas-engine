@@ -1,7 +1,7 @@
 import Text from './text';
 import { IElementOptions } from './types';
 import View from './view';
-
+import { lerp } from '../common/util'
 interface IButtonProps extends IElementOptions {
   value?: string;
 }
@@ -16,11 +16,7 @@ enum Transition {
   IMAGE,
 }
 
-export default class Button extends View {
-  static Transition = Transition;
-
-  public label: View;
-
+export default class Button extends Text {
   constructor({
     style = {},
     idName = '',
@@ -40,30 +36,78 @@ export default class Button extends View {
         borderRadius: 10,
         backgroundColor: '#34a123',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        ...style,
       },
       dataset,
-    });
-
-    this.label = new Text({
-      style: {
-        color: '#ffffff',
-        fontSize: 30,
-        textAlign: 'center',
-      },
       value: value || 'button',
     });
 
-    this.appendChild(this.label);
+    // this.label = new Text({
+    //   style: {
+    //     color: style.color || '#ffffff',
+    //     fontSize: style.fontSize || 30,
+    //     textAlign: style.textAlign || 'center',
+    //     lineHeight: style.lineHeight || style.height || defaultStyle.height,
+    //     verticalAlign: 'middle',
+    //   },
+    //   value: value || 'button',
+    //   id: 100,
+    // });
+
+    // this.appendChild(this.label);
 
     this.on('touchstart', () => {
-      this.style.transform = 'scale(1.05, 1.05)';
+      this.fromScale = 1;
+      this.toScale = this.scale;
+      this.timeClick = 0;
+      this.scaleDone = false;
     });
     this.on('touchend', () => {
-      this.style.transform = 'scale(1, 1)';
+      this.fromScale = this.renderForLayout.scaleX || 1;
+      this.toScale = 1;
+      this.timeClick = 0;
+      this.scaleDone = false;
     });
 
-    console.log(this);
+    console.log(this)
+  }
+
+  public scale = 1.05;
+  public scaleDuration = 100;
+  private timeClick = 0;
+  private scaleDone = true;
+  private fromScale = 1;
+  private toScale = 1;
+
+  afterCreate() {
+    // this.label.root = this.root;
+    // @ts-ignore
+    this.root.ticker.add(this.update);
+  }
+
+  update = (dt: number) => {
+    if (this.scaleDone) {
+      return;
+    }
+    this.timeClick += dt;
+    
+    let ratio = 1;
+
+    ratio = this.timeClick / this.scaleDuration;
+
+    if (ratio > 1) {
+      ratio = 1;
+    }
+
+    let scale = lerp(this.fromScale, this.toScale, ratio);
+    let transform = `scale(${scale}, ${scale})`;
+    this.style.transform = transform;
+    // this.label.style.transform = transform;
+
+    if (ratio === 1) {
+      this.scaleDone = true;
+    }
   }
 
   private interactableInner = true;

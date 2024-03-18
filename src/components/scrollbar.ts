@@ -121,7 +121,7 @@ export default class ScrollBar extends View {
       console.warn('[Layout]: please set root for scrollbar');
     } else {
       // @ts-ignore
-      this.root.ticker.add(this.update, true);    
+      this.root.ticker.add(this.update, true);
 
       this.root.on('before_reflow', () => {
         // console.log('before_reflow')

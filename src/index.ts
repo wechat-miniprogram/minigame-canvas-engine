@@ -117,6 +117,7 @@ class Layout extends Element {
   public ticker: Ticker = new Ticker();
   public tickerFunc = () => {
     if (this.isDirty) {
+      console.log('before_reflow')
       this.emit('before_reflow', '');
       this.reflow();
     } else if (this.isNeedRepaint) {

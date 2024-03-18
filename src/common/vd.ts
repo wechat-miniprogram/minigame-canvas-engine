@@ -132,6 +132,8 @@ export function create(node: TreeNode, style: Record<string, IStyle>, parent?: R
   element.root = this;
   element.tagName = node.name;
 
+  element.afterCreate();
+
   children.forEach((childNode: TreeNode) => {
     // @ts-ignore
     const childElement = create.call(this, childNode, style, args);

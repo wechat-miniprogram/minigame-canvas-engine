@@ -47,7 +47,7 @@ export function getElementsByClassName(tree: Element, list: Element[] = [], clas
  */
 export function setDirty(ele: Element, reason?: string) {
   // for debug
-  // console.log('[Layout] trigger reflow cause', ele, reason);
+  console.log('[Layout] trigger reflow cause', ele, reason);
   ele.isDirty = true;
   let { parent } = ele;
   while (parent) {
@@ -58,9 +58,6 @@ export function setDirty(ele: Element, reason?: string) {
 
 // 全局事件管道
 const EE = new TinyEmitter();
-
-// @ts-ignore
-window.EE = EE
 
 let uuid = 0;
 
@@ -268,8 +265,6 @@ export default class Element {
             ele.styleChangeHandler(prop, val);
 
             if (prop === 'transform') {
-              // Object.assign(ele.renderForLayout, parseTransform(val));
-              // console.log(ele.renderForLayout)
               ele.renderForLayout = parseTransform(val);
 
               ele.root?.emit('repaint');
@@ -314,9 +309,9 @@ export default class Element {
     // 事件冒泡逻辑
     ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach((eventName) => {
       this.on(eventName, (e, touchMsg) => {
-        if (eventName !== 'touchmove') {
-          console.log(this, eventName)
-        }
+        // if (eventName !== 'touchmove') {
+          // console.log(this, eventName)
+        // }
         this.parent && this.parent.emit(eventName, e, touchMsg);
       });
     });
@@ -333,6 +328,11 @@ export default class Element {
    * 节点渲染接口子类填充实现
    */
   render() { }
+
+  /**
+   * 节点构造函数初始化后调用的方法，子类填充实现
+   */
+  afterCreate() {}
 
   /**
    * 参照 Web 规范：https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect

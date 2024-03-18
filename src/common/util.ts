@@ -73,3 +73,10 @@ export function isGameTouchEvent(e: MouseEvent | GameTouchEvent): e is GameTouch
 export function clamp(number: number, min: number, max: number): number {
   return Math.max(min, Math.min(number, max));
 }
+
+/**
+ * 两个数之间的线性插值。
+ */
+export function lerp(from: number, to: number, ratio: number): number {
+  return from + (to - from) * ratio;
+}

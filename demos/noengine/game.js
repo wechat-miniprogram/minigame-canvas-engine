@@ -51,7 +51,7 @@ function closeRank() {
 let template = `
   <view id="container">
     <canvas id="rank" width="960" height="1410"></canvas>
-    <text id="rankText" value="打开排行榜"></text>
+    <button id="rankText" value="打开排行榜"></button>
   </view>
 `;
 
@@ -64,7 +64,6 @@ let style = {
     alignItems: 'center',
   },
   rankText: {
-    color: '#ffffff',
     backgroundColor: '#34a123',
     borderRadius: 10,
     width: 400,
@@ -100,16 +99,7 @@ const updateRank = () => {
   rank.update();
 }
 
-testText.on('touchstart', () => {
-  testText.style.transform = 'scale(1.05, 1.05)';
-})
-
-testText.on('touchend', () => {
-  testText.style.transform = 'scale(1, 1)';
-})
-
 testText.on('click', () => {
-  console.log(testText.value)
   if (testText.value === '打开排行榜') {
     testText.value = '关闭排行榜';
     // 更新开放数据域最终被绘制到屏幕的位置，方便开放数据域做事件处理
