@@ -86,6 +86,7 @@ export default {
               '/components/view.md',
               '/components/image.md',
               '/components/text.md',
+              '/components/button.md',
               '/components/bitmapfont.md',
               '/components/canvas.md',
               '/components/scrollview.md',

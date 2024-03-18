@@ -6,7 +6,7 @@ import { defineComponent } from "vue";
 
 let template = `
   <view id="container">
-    <button id="testButton" value="button"></button>
+    <button id="testButton" value="邀请"></button>
   </view>
 `;
 
@@ -19,6 +19,9 @@ let style = {
     justifyContent: "center",
     alignItems: "center",
   },
+
+  testButton: {
+  }
 };
 export default defineComponent({
   components: {},
@@ -44,10 +47,11 @@ export default defineComponent({
 
       Layout.layout(context);
 
-      const btn = Layout.getElementById('testButton');
-      btn.on('touchstart', () => {
-        // console.log(111)
-      })
+      const testButton = Layout.getElementById('testButton');
+
+    testButton.label.value = '按钮';
+
+    // testButton.label.style.color = 'red';
     },
   },
 });

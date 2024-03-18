@@ -30,6 +30,6 @@ module.exports = {
       openAnalyzer: false,
     }),
   ],
-  mode: 'none',
-  // devtool: 'inline-source-map',
+  mode: 'development',
+  devtool: 'inline-source-map',
 };
