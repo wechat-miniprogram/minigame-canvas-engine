@@ -201,9 +201,7 @@ export default class Text extends Element {
     const ctx = this.ctx as CanvasRenderingContext2D;
     ctx.save();
 
-    debugger
-    let { needStroke, originX, originY, drawX, drawY, width, height } = this.baseRender();
-
+    let { needStroke, originX, originY, drawX, drawY, width, height } = this.baseRender('test');
     ctx.textBaseline = this.textBaseline;
     ctx.font = this.font;
     ctx.textAlign = this.textAlign;
@@ -251,9 +249,9 @@ export default class Text extends Element {
         );
       });
     } else {
-      console.log( this.value,
-        drawX - originX,
-        drawY - originY,)
+      // console.log( this.value,
+      //   drawX - originX,
+      //   drawY - originY,)
       ctx.fillText(
         this.value,
         drawX - originX,

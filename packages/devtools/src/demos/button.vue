@@ -46,7 +46,7 @@ export default defineComponent({
 
       const btn = Layout.getElementById('testButton');
       btn.on('touchstart', () => {
-        console.log(111)
+        // console.log(111)
       })
     },
   },

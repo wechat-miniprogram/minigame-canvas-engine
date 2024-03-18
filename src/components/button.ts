@@ -16,7 +16,8 @@ enum Transition {
   IMAGE,
 }
 
-export default class Button extends Text {
+export default class Button extends View {
+  public label: Text;
   constructor({
     style = {},
     idName = '',
@@ -40,22 +41,21 @@ export default class Button extends Text {
         ...style,
       },
       dataset,
-      value: value || 'button',
     });
 
-    // this.label = new Text({
-    //   style: {
-    //     color: style.color || '#ffffff',
-    //     fontSize: style.fontSize || 30,
-    //     textAlign: style.textAlign || 'center',
-    //     lineHeight: style.lineHeight || style.height || defaultStyle.height,
-    //     verticalAlign: 'middle',
-    //   },
-    //   value: value || 'button',
-    //   id: 100,
-    // });
+    this.label = new Text({
+      style: {
+        color: style.color || '#ffffff',
+        fontSize: style.fontSize || 30,
+        textAlign: style.textAlign || 'center',
+        lineHeight: style.lineHeight || style.height || defaultStyle.height,
+        verticalAlign: 'middle',
+      },
+      value: value || 'button',
+      id: 100,
+    });
 
-    // this.appendChild(this.label);
+    this.appendChild(this.label);
 
     this.on('touchstart', () => {
       this.fromScale = 1;
@@ -69,8 +69,6 @@ export default class Button extends Text {
       this.timeClick = 0;
       this.scaleDone = false;
     });
-
-    console.log(this)
   }
 
   public scale = 1.05;
@@ -103,11 +101,27 @@ export default class Button extends Text {
     let scale = lerp(this.fromScale, this.toScale, ratio);
     let transform = `scale(${scale}, ${scale})`;
     this.style.transform = transform;
-    // this.label.style.transform = transform;
+    this.label.style.transform = transform;
 
     if (ratio === 1) {
       this.scaleDone = true;
     }
+  }
+
+  // 重写view的render方法
+  render() {
+    const ctx = this.ctx as CanvasRenderingContext2D;
+    ctx.save();
+
+    const { needStroke, needClip, originX, originY, drawX, drawY } = this.baseRender();
+
+    if (needStroke) {
+      ctx.stroke();
+    }
+
+    ctx.translate(-originX, -originY);
+
+    ctx.restore();
   }
 
   private interactableInner = true;

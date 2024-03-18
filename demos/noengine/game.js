@@ -100,8 +100,8 @@ const updateRank = () => {
 }
 
 testText.on('click', () => {
-  if (testText.value === '打开排行榜') {
-    testText.value = '关闭排行榜';
+  if (testText.label.value === '打开排行榜') {
+    testText.label.value = '关闭排行榜';
     // 更新开放数据域最终被绘制到屏幕的位置，方便开放数据域做事件处理
     updateRankViewPort(rank);
 
@@ -114,7 +114,7 @@ testText.on('click', () => {
     // 要求Layout每帧刷新开放数据域 canvas 的绘制
     Layout.ticker.add(updateRank);
   } else {
-    testText.value = '打开排行榜';
+    testText.label.value = '打开排行榜';
     closeRank();
     Layout.ticker.remove(updateRank);
   }

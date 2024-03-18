@@ -144,6 +144,8 @@ interface ILayoutBox {
 }
 interface IRenderForLayout {
     rotate?: number;
+    scaleX?: number;
+    scaleY?: number;
 }
 declare class Element {
     /**
@@ -232,6 +234,10 @@ declare class Element {
      * 节点渲染接口子类填充实现
      */
     render(): void;
+    /**
+     * 节点构造函数初始化后调用的方法，子类填充实现
+     */
+    afterCreate(): void;
     /**
      * 参照 Web 规范：https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
      */
@@ -502,6 +508,39 @@ declare class Canvas extends Element {
     render(): void;
 }
 
+interface IButtonProps extends IElementOptions {
+    value?: string;
+}
+/**
+ * 按钮的过度类型枚举
+ */
+declare enum Transition {
+    NONE = 0,
+    COLOR = 1,
+    SCALE = 2,
+    IMAGE = 3
+}
+declare class Button extends Text {
+    constructor({ style, idName, className, value, dataset, }: IButtonProps);
+    scale: number;
+    scaleDuration: number;
+    private timeClick;
+    private scaleDone;
+    private fromScale;
+    private toScale;
+    afterCreate(): void;
+    update: (dt: number) => void;
+    private interactableInner;
+    /**
+     * 当前按钮是否可交互，如果不可交互，点击没反应
+     */
+    get interactable(): boolean;
+    set interactable(val: boolean);
+    private transitionInner;
+    get transition(): Transition;
+    set transition(val: Transition);
+}
+
 interface Constructor {
     new (...args: any[]): any;
 }
@@ -552,9 +591,7 @@ declare class Layout extends Element {
             height: any;
         };
         getDevicePixelRatio(): any;
-        createCanvas(): any; /**
-         * 最终渲染到屏幕的左上角物理坐标
-         */
+        createCanvas(): any;
         createImage(): any;
     };
     /**
@@ -677,6 +714,7 @@ declare class Layout extends Element {
     ScrollView: typeof ScrollView;
     BitMapText: typeof BitMapText;
     Canvas: typeof Canvas;
+    Button: typeof Button;
     registerComponent: typeof registerComponent;
     private static installedPlugins;
     /**

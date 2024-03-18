@@ -537,12 +537,12 @@ var Element = /** @class */ (function () {
     /**
      * 每个子类都会有自己的渲染逻辑，但他们都有些通用的处理，比如透明度、旋转和border的处理，baseRender 用于处理通用的渲染逻辑
      */
-    Element.prototype.baseRender = function () {
+    Element.prototype.baseRender = function (type) {
         var ctx = this.ctx;
         var style = this.style;
         var box = this.layoutBox;
         var drawX = box.absoluteX, drawY = box.absoluteY, width = box.width, height = box.height;
-        if (style.opacity !== 1) {
+        if (style.opacity !== undefined) {
             ctx.globalAlpha = style.opacity;
         }
         var originX = 0;
@@ -3879,8 +3879,7 @@ var Text = /** @class */ (function (_super) {
         var style = this.style;
         var ctx = this.ctx;
         ctx.save();
-        debugger;
-        var _a = this.baseRender(), needStroke = _a.needStroke, originX = _a.originX, originY = _a.originY, drawX = _a.drawX, drawY = _a.drawY, width = _a.width, height = _a.height;
+        var _a = this.baseRender('test'), needStroke = _a.needStroke, originX = _a.originX, originY = _a.originY, drawX = _a.drawX, drawY = _a.drawY, width = _a.width, height = _a.height;
         ctx.textBaseline = this.textBaseline;
         ctx.font = this.font;
         ctx.textAlign = this.textAlign;
@@ -3916,7 +3915,9 @@ var Text = /** @class */ (function (_super) {
             });
         }
         else {
-            console.log(this.value, drawX - originX, drawY - originY);
+            // console.log( this.value,
+            //   drawX - originX,
+            //   drawY - originY,)
             ctx.fillText(this.value, drawX - originX, drawY - originY);
         }
         ctx.translate(-originX, -originY);
@@ -5873,7 +5874,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(24);
-/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5902,6 +5904,7 @@ var __assign = (undefined && undefined.__assign) || function () {
 };
 
 
+
 /**
  * 按钮的过度类型枚举
  */
@@ -5926,7 +5929,6 @@ var Button = /** @class */ (function (_super) {
             className: className,
             style: __assign(__assign(__assign({}, defaultStyle), { borderRadius: 10, backgroundColor: '#34a123', justifyContent: 'center', alignItems: 'center' }), style),
             dataset: dataset,
-            value: value || 'button',
         }) || this;
         _this.scale = 1.05;
         _this.scaleDuration = 100;
@@ -5944,28 +5946,28 @@ var Button = /** @class */ (function (_super) {
             if (ratio > 1) {
                 ratio = 1;
             }
-            var scale = (0,_common_util__WEBPACK_IMPORTED_MODULE_1__.lerp)(_this.fromScale, _this.toScale, ratio);
+            var scale = (0,_common_util__WEBPACK_IMPORTED_MODULE_2__.lerp)(_this.fromScale, _this.toScale, ratio);
             var transform = "scale(".concat(scale, ", ").concat(scale, ")");
             _this.style.transform = transform;
-            // this.label.style.transform = transform;
+            _this.label.style.transform = transform;
             if (ratio === 1) {
                 _this.scaleDone = true;
             }
         };
         _this.interactableInner = true;
         _this.transitionInner = Transition.COLOR;
-        // this.label = new Text({
-        //   style: {
-        //     color: style.color || '#ffffff',
-        //     fontSize: style.fontSize || 30,
-        //     textAlign: style.textAlign || 'center',
-        //     lineHeight: style.lineHeight || style.height || defaultStyle.height,
-        //     verticalAlign: 'middle',
-        //   },
-        //   value: value || 'button',
-        //   id: 100,
-        // });
-        // this.appendChild(this.label);
+        _this.label = new _text__WEBPACK_IMPORTED_MODULE_0__["default"]({
+            style: {
+                color: style.color || '#ffffff',
+                fontSize: style.fontSize || 30,
+                textAlign: style.textAlign || 'center',
+                lineHeight: style.lineHeight || style.height || defaultStyle.height,
+                verticalAlign: 'middle',
+            },
+            value: value || 'button',
+            id: 100,
+        });
+        _this.appendChild(_this.label);
         _this.on('touchstart', function () {
             _this.fromScale = 1;
             _this.toScale = _this.scale;
@@ -5978,13 +5980,23 @@ var Button = /** @class */ (function (_super) {
             _this.timeClick = 0;
             _this.scaleDone = false;
         });
-        console.log(_this);
         return _this;
     }
     Button.prototype.afterCreate = function () {
         // this.label.root = this.root;
         // @ts-ignore
         this.root.ticker.add(this.update);
+    };
+    // 重写view的render方法
+    Button.prototype.render = function () {
+        var ctx = this.ctx;
+        ctx.save();
+        var _a = this.baseRender(), needStroke = _a.needStroke, needClip = _a.needClip, originX = _a.originX, originY = _a.originY, drawX = _a.drawX, drawY = _a.drawY;
+        if (needStroke) {
+            ctx.stroke();
+        }
+        ctx.translate(-originX, -originY);
+        ctx.restore();
     };
     Object.defineProperty(Button.prototype, "interactable", {
         /**
@@ -6010,7 +6022,7 @@ var Button = /** @class */ (function (_super) {
         configurable: true
     });
     return Button;
-}(_text__WEBPACK_IMPORTED_MODULE_0__["default"]));
+}(_view__WEBPACK_IMPORTED_MODULE_1__["default"]));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
 
 
