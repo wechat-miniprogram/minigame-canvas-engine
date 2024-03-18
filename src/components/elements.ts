@@ -47,7 +47,7 @@ export function getElementsByClassName(tree: Element, list: Element[] = [], clas
  */
 export function setDirty(ele: Element, reason?: string) {
   // for debug
-  console.log('[Layout] trigger reflow cause', ele, reason);
+  // console.log('[Layout] trigger reflow cause', ele, reason);
   ele.isDirty = true;
   let { parent } = ele;
   while (parent) {
@@ -309,14 +309,26 @@ export default class Element {
     // 事件冒泡逻辑
     ['touchstart', 'touchmove', 'touchcancel', 'touchend', 'click'].forEach((eventName) => {
       this.on(eventName, (e, touchMsg) => {
-        // if (eventName !== 'touchmove') {
-          // console.log(this, eventName)
-        // }
+        // 处理伪类逻辑
+        if (eventName === 'touchstart') {
+          this.activeHandler(e);
+        }
         this.parent && this.parent.emit(eventName, e, touchMsg);
       });
     });
 
     this.classNameList = this.className.split(/\s+/);
+  }
+
+  activeHandler(e: any) {
+    if (this.style[':active']) {
+      console.log(this.style[':active'])
+      Object.assign(this.style, this.style[':active']);
+    }
+  }
+  
+  deactiveHandler() {
+    
   }
 
   /**

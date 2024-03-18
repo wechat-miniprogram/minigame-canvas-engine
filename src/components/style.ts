@@ -115,6 +115,8 @@ interface IStyle {
    * 也就是支持任意数量的阴影效果，每个阴影效果由四个值指定，分别是 shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor
    */
   textShadow?: string;
+
+  ':active'?: IStyle;
 }
 
 export { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle };

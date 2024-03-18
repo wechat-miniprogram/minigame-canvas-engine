@@ -68,8 +68,10 @@ export default class Button extends View {
         backgroundColor: '#34a123',
         justifyContent: 'center',
         alignItems: 'center',
-        transform: 'scale(1.2, 1.2)',
         ...style,
+        ':active': {
+          transform: 'scale(1.05, 1.05)',
+        },
       },
       dataset,
     });
@@ -85,10 +87,8 @@ export default class Button extends View {
     this.appendChild(this.label);
 
     // 绑定默认的事件处理程序
-    this.on('touchstart', this.touchstartHandler);
-    this.on('touchend', this.touchendHandler);
-
-    console.log(this.renderForLayout)
+    // this.on('touchstart', this.touchstartHandler);
+    // this.on('touchend', this.touchendHandler);
   }
 
   touchstartHandler = () => {
