@@ -8,32 +8,12 @@ interface IButtonProps extends IElementOptions {
   value?: string;
 }
 
-/**
- * 按钮的过度类型枚举
- */
-enum Transition {
-  NONE,
-  COLOR,
-  SCALE,
-  IMAGE,
-}
-
-const DEFAULTCOLOR = 'rgba(52, 161, 35, 1)';
-const PRESSEDCOLOR = 'rgba(52, 161, 35, 0.7)';
-
 export default class Button extends View {
   // 按钮的文本实例
   public label: Text;
 
   // 按钮当前是否可点击
   private interactableInner = true;
-
-  // 按钮点击交互行为
-  private transitionInner = Transition.SCALE;
-
-  // 按钮的交互操作为颜色切换
-  private normalColorInner = DEFAULTCOLOR;
-  private pressedColorInner = PRESSEDCOLOR;
 
   // 按钮的交互操作为缩放
   private normalScaleInner = 1;
@@ -82,92 +62,45 @@ export default class Button extends View {
       style: {
         color: style.color || '#ffffff',
         fontSize: style.fontSize || 30,
+        // ':active': {
+        //   transform: 'scale(1.05, 1.05)',
+        // },
       },
       value: value || 'button',
     });
 
     this.appendChild(this.label);
-
-    // 绑定默认的事件处理程序
-    // this.on('touchstart', this.touchstartHandler);
-    // this.on('touchend', this.touchendHandler);
   }
 
-  private cacheStyle!: IStyle;
+  // touchstartHandler = () => {
+  //   if (!this.interactable || this.transition === Transition.NONE) {
+  //     return;
+  //   }
 
-  /**
-   * Button 对伪类的 transform 属性做了特殊处理，具备动效
-   */
-  activeHandler(e: any) {
-    if (this.style[':active']) {
-      console.log(this.style[':active'])
+  //   if (this.transition === Transition.SCALE) {
+  //     this.fromScale = this.normalScaleInner;
+  //     this.toScale = this.pressedScaleInner;
+  //     this.timeClick = 0;
+  //     this.scaleDone = false;
+  //   } else if (this.transition === Transition.COLOR) {
+  //     this.style.backgroundColor = this.pressedColorInner;
+  //   }
+  // }
 
-      this.cacheStyle = Object.assign({}, this.style);
-      
-      // Object.assign(this.style, this.style[':active']);
-      const activeStyle = this.style[':active'];
-      Object.assign(this.style, activeStyle);
+  // touchendHandler = () => {
+  //   if (!this.interactable || this.transition === Transition.NONE) {
+  //     return;
+  //   }
 
-      // if (activeStyle.transform) {
-      //   let res = parseTransform(activeStyle.transform);
-
-      //   console.log('transform', res);
-
-      //   if (res.scaleX !== undefined || res.scaleY !== undefined) {
-      //     this.fromScale = this.renderForLayout.scaleX || 1;
-      //     this.toScale = res.scaleX || res.scaleY || 1;
-      //     this.timeClick = 0;
-      //     this.scaleDone = false;
-      //   }
-      // }
-    }
-  }
-
-  deactiveHandler(e: any) {
-    console.log(11, JSON.stringify(this.cacheStyle))
-    if (this.style[':active']) {
-      const activeStyle = this.style[':active'];
-
-      Object.keys(activeStyle).forEach((key) => {
-        if (this.cacheStyle[key as keyof IStyle]) {
-          // @ts-ignore
-          this.style[key] = this.cacheStyle[key as keyof IStyle]
-        } else {
-          delete this.style[key as keyof IStyle];
-        }
-      });
-    }
-  }
-
-  touchstartHandler = () => {
-    if (!this.interactable || this.transition === Transition.NONE) {
-      return;
-    }
-
-    if (this.transition === Transition.SCALE) {
-      this.fromScale = this.normalScaleInner;
-      this.toScale = this.pressedScaleInner;
-      this.timeClick = 0;
-      this.scaleDone = false;
-    } else if (this.transition === Transition.COLOR) {
-      this.style.backgroundColor = this.pressedColorInner;
-    }
-  }
-
-  touchendHandler = () => {
-    if (!this.interactable || this.transition === Transition.NONE) {
-      return;
-    }
-
-    if (this.transition === Transition.SCALE) {
-      this.fromScale = this.renderForLayout.scaleX || 1; // 当前的缩放值
-      this.toScale = this.normalScaleInner;
-      this.timeClick = 0;
-      this.scaleDone = false;
-    } else if (this.transition === Transition.COLOR) {
-      this.style.backgroundColor = this.normalColorInner;
-    }
-  }
+  //   if (this.transition === Transition.SCALE) {
+  //     this.fromScale = this.renderForLayout.scaleX || 1; // 当前的缩放值
+  //     this.toScale = this.normalScaleInner;
+  //     this.timeClick = 0;
+  //     this.scaleDone = false;
+  //   } else if (this.transition === Transition.COLOR) {
+  //     this.style.backgroundColor = this.normalColorInner;
+  //   }
+  // }
 
   afterCreate() {
     this.label.root = this.root;
@@ -216,13 +149,5 @@ export default class Button extends View {
 
   set interactable(val: boolean) {
     this.interactable = val;
-  }
-
-  get transition() {
-    return this.transitionInner;
-  }
-
-  set transition(val: Transition) {
-    this.transitionInner = val;
   }
 }

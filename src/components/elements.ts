@@ -238,14 +238,6 @@ export default class Element {
     }
   }
 
-  /**
-   * 监听属性的变化判断是否需要执行 reflow、repaint 操作
-   * 经过测试，Object.defineProperty 是一个比较慢的方法， 特别是属性比较多的时候
-   * 因此会先判断是否支持 Proxy，iMac (Retina 5K, 27-inch, 2017)测试结果
-   * 总共 312 个节点，observeStyleAndEvent总耗时为：
-   * Proxy: 3ms
-   * Object.defineProperty: 20ms
-   */
   observeStyleAndEvent() {
     if (typeof Proxy === 'function') {
       const ele = this;
@@ -263,6 +255,10 @@ export default class Element {
             if (prop === 'transform') {
               ele.renderForLayout = parseTransform(val);
 
+              if (ele.children.length) {
+                ele.children[0].style.transform = val;
+              }
+
               ele.root?.emit('repaint');
             }
 
@@ -277,28 +273,19 @@ export default class Element {
 
           return Reflect.set(target, prop, val, receiver);
         },
-      });
-    } else {
-      const innerStyle = Object.assign({}, this.style) as IStyle;
-      allStyles.forEach((key) => {
-        Object.defineProperty(this.style, key, {
-          configurable: true,
-          enumerable: true,
-          get: () => innerStyle[key as keyof IStyle],
-          set: (value) => {
-            if (value !== innerStyle[key as keyof IStyle]) {
-              innerStyle[key as keyof IStyle] = value;
+        deleteProperty(target, prop) {
+          if (prop === 'transform') {
+            ele.renderForLayout = {};
 
-              if (reflowAffectedStyles.indexOf(key) > -1) {
-                setDirty(this, `change prop ${key} to ${value}`);
-              } else if (repaintAffectedStyles.indexOf(key) > -1) {
-                this.root?.emit('repaint');
-              } else if (key === 'backgroundImage') {
-                this.backgroundImageSetHandler(value);
-              }
+            if (ele.children.length) {
+              delete ele.children[0].style.transform;
+              ele.children[0].renderForLayout = {};
             }
-          },
-        });
+            ele.root?.emit('repaint');
+          }
+
+          return Reflect.deleteProperty(target, prop); 
+        },
       });
     }
 
@@ -318,15 +305,31 @@ export default class Element {
     this.classNameList = this.className.split(/\s+/);
   }
 
+  protected cacheStyle!: IStyle;
+
   activeHandler(e: any) {
     if (this.style[':active']) {
-      console.log(this.style[':active'])
-      Object.assign(this.style, this.style[':active']);
+      // 将当前的style缓存起来，在 active 取消的时候重置回去
+      this.cacheStyle = Object.assign({}, this.style);
+      
+      const activeStyle = this.style[':active'];
+      Object.assign(this.style, activeStyle);
     }
   }
   
   deactiveHandler(e: any) {
-    
+    if (this.style[':active']) {
+      const activeStyle = this.style[':active'];
+
+      Object.keys(activeStyle).forEach((key) => {
+        if (this.cacheStyle[key as keyof IStyle]) {
+          // @ts-ignore
+          this.style[key] = this.cacheStyle[key as keyof IStyle]
+        } else {
+          delete this.style[key as keyof IStyle];
+        }
+      });
+    }
   }
 
   /**
