@@ -6,7 +6,7 @@ import TinyEmitter from 'tiny-emitter';
 import { IDataset } from '../types/index'
 import { IElementOptions } from './types';
 import { Callback } from '../types/index';
-import { backgroundImageParser, rotateParser, parseTransform } from './styleParser';
+import { backgroundImageParser, parseTransform, IRenderForLayout } from './styleParser';
 
 export function getElementsById(tree: Element, list: Element[] = [], id: string) {
   tree.children.forEach((child: Element) => {
@@ -86,12 +86,6 @@ export interface ILayoutBox {
   absoluteY: number;
   originalAbsoluteX: number;
   originalAbsoluteY: number;
-}
-
-export interface IRenderForLayout {
-  rotate?: number; // transform rotate解析之后得到的弧度制
-  scaleX?: number;
-  scaleY?: number;
 }
 
 export interface ILayout {
@@ -255,6 +249,7 @@ export default class Element {
   observeStyleAndEvent() {
     if (typeof Proxy === 'function') {
       const ele = this;
+      
       this.style = new Proxy(this.originStyle, {
         get(target, prop, receiver) {
           return Reflect.get(target, prop, receiver);
@@ -262,6 +257,7 @@ export default class Element {
         set(target, prop, val, receiver) {
           let oldVal = Reflect.get(target, prop, receiver);
           if (typeof prop === 'string' && oldVal !== val) {
+
             ele.styleChangeHandler(prop, val);
 
             if (prop === 'transform') {
@@ -312,6 +308,8 @@ export default class Element {
         // 处理伪类逻辑
         if (eventName === 'touchstart') {
           this.activeHandler(e);
+        } else if (eventName === 'touchend' || eventName === 'touchcancel') {
+          this.deactiveHandler(e);
         }
         this.parent && this.parent.emit(eventName, e, touchMsg);
       });
@@ -327,7 +325,7 @@ export default class Element {
     }
   }
   
-  deactiveHandler() {
+  deactiveHandler(e: any) {
     
   }
 

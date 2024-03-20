@@ -249,9 +249,6 @@ export default class Text extends Element {
         );
       });
     } else {
-      // console.log( this.value,
-      //   drawX - originX,
-      //   drawY - originY,)
       ctx.fillText(
         this.value,
         drawX - originX,

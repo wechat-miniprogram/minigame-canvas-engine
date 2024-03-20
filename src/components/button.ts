@@ -2,6 +2,8 @@ import Text from './text';
 import { IElementOptions } from './types';
 import View from './view';
 import { lerp } from '../common/util'
+import { parseTransform } from './styleParser';
+import { IStyle } from './style';
 interface IButtonProps extends IElementOptions {
   value?: string;
 }
@@ -89,6 +91,52 @@ export default class Button extends View {
     // 绑定默认的事件处理程序
     // this.on('touchstart', this.touchstartHandler);
     // this.on('touchend', this.touchendHandler);
+  }
+
+  private cacheStyle!: IStyle;
+
+  /**
+   * Button 对伪类的 transform 属性做了特殊处理，具备动效
+   */
+  activeHandler(e: any) {
+    if (this.style[':active']) {
+      console.log(this.style[':active'])
+
+      this.cacheStyle = Object.assign({}, this.style);
+      
+      // Object.assign(this.style, this.style[':active']);
+      const activeStyle = this.style[':active'];
+      Object.assign(this.style, activeStyle);
+
+      // if (activeStyle.transform) {
+      //   let res = parseTransform(activeStyle.transform);
+
+      //   console.log('transform', res);
+
+      //   if (res.scaleX !== undefined || res.scaleY !== undefined) {
+      //     this.fromScale = this.renderForLayout.scaleX || 1;
+      //     this.toScale = res.scaleX || res.scaleY || 1;
+      //     this.timeClick = 0;
+      //     this.scaleDone = false;
+      //   }
+      // }
+    }
+  }
+
+  deactiveHandler(e: any) {
+    console.log(11, JSON.stringify(this.cacheStyle))
+    if (this.style[':active']) {
+      const activeStyle = this.style[':active'];
+
+      Object.keys(activeStyle).forEach((key) => {
+        if (this.cacheStyle[key as keyof IStyle]) {
+          // @ts-ignore
+          this.style[key] = this.cacheStyle[key as keyof IStyle]
+        } else {
+          delete this.style[key as keyof IStyle];
+        }
+      });
+    }
   }
 
   touchstartHandler = () => {

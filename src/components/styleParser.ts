@@ -3,23 +3,8 @@ function degreesToRadians(degrees: number) {
   return degrees * Math.PI / 180;
 }
 
-// 旋转的正则表达式
-const rotateReg = /rotate\((\d+)deg\)/;
-
 // 背景图正则表达式
 const isValidUrlPropReg = /\s*url\((.*?)\)\s*/;
-
-export function rotateParser(val: string) {
-  const match = val.match(rotateReg);
-
-  if (match) {
-    return degreesToRadians(parseInt(match[1]));
-  }
-
-  console.error(`[Layout]: ${val} is not a valid transform rotate`);
-
-  return null;
-}
 
 // 解析背景图片
 export function backgroundImageParser(val: string) {
@@ -54,17 +39,8 @@ export interface IRenderForLayout {
   scaleY?: number;
 }
 
-
 const transformRegex = /(\w+)\(([^)]+)\)/g;
 export function parseTransform(transform: string) {
-  // const result = {
-    // rotate: 0,
-    // scaleX: 1,
-    // scaleY: 1,
-    // translateX: 0,
-    // translateY: 0,
-  // };
-
   const result: IRenderForLayout = {};
 
   let match;
@@ -89,10 +65,6 @@ export function parseTransform(transform: string) {
         result.scaleX = values[0];
         result.scaleY = values[1] || values[0];
         break;
-      // case 'translate':
-      //   result.translateX = values[0];
-      //   result.translateY = values[1] || 0;
-      //   break;
       default:
         break;
     }
@@ -100,8 +72,3 @@ export function parseTransform(transform: string) {
 
   return result;
 }
-
-parseTransform('rotate(45)');
-parseTransform('rotate(360deg)');
-parseTransform('xxxx');
-parseTransform('scale(3,4)');
