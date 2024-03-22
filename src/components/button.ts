@@ -2,8 +2,6 @@ import Text from './text';
 import { IElementOptions } from './types';
 import View from './view';
 import { lerp } from '../common/util'
-import { parseTransform } from './styleParser';
-import { IStyle } from './style';
 interface IButtonProps extends IElementOptions {
   value?: string;
 }
@@ -62,45 +60,15 @@ export default class Button extends View {
       style: {
         color: style.color || '#ffffff',
         fontSize: style.fontSize || 30,
-        // ':active': {
-        //   transform: 'scale(1.05, 1.05)',
-        // },
+        ':active': {
+          transform: 'scale(1.05, 1.05)',
+        },
       },
       value: value || 'button',
     });
 
     this.appendChild(this.label);
   }
-
-  // touchstartHandler = () => {
-  //   if (!this.interactable || this.transition === Transition.NONE) {
-  //     return;
-  //   }
-
-  //   if (this.transition === Transition.SCALE) {
-  //     this.fromScale = this.normalScaleInner;
-  //     this.toScale = this.pressedScaleInner;
-  //     this.timeClick = 0;
-  //     this.scaleDone = false;
-  //   } else if (this.transition === Transition.COLOR) {
-  //     this.style.backgroundColor = this.pressedColorInner;
-  //   }
-  // }
-
-  // touchendHandler = () => {
-  //   if (!this.interactable || this.transition === Transition.NONE) {
-  //     return;
-  //   }
-
-  //   if (this.transition === Transition.SCALE) {
-  //     this.fromScale = this.renderForLayout.scaleX || 1; // 当前的缩放值
-  //     this.toScale = this.normalScaleInner;
-  //     this.timeClick = 0;
-  //     this.scaleDone = false;
-  //   } else if (this.transition === Transition.COLOR) {
-  //     this.style.backgroundColor = this.normalColorInner;
-  //   }
-  // }
 
   afterCreate() {
     this.label.root = this.root;
@@ -138,16 +106,5 @@ export default class Button extends View {
     if (ratio === 1) {
       this.scaleDone = true;
     }
-  }
-
-  /**
-   * 当前按钮是否可交互，如果不可交互，点击没反应
-   */
-  get interactable() {
-    return this.interactableInner;
-  }
-
-  set interactable(val: boolean) {
-    this.interactable = val;
   }
 }

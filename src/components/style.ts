@@ -35,7 +35,11 @@ const repaintAffectedStyles = [
   'textShadow',
 ];
 
-const allStyles = reflowAffectedStyles.concat(repaintAffectedStyles);
+export const renderAffectStyles = [
+  'textShadow',
+  'transform',
+  'backgroundImage',
+]
 
 interface IStyle {
   // reflowAffectedStyles
@@ -119,4 +123,4 @@ interface IStyle {
   ':active'?: IStyle;
 }
 
-export { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle };
+export { repaintAffectedStyles, reflowAffectedStyles, IStyle };

@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { repaintAffectedStyles, reflowAffectedStyles, allStyles, IStyle } from './style';
+import { repaintAffectedStyles, reflowAffectedStyles, renderAffectStyles, IStyle } from './style';
 import Rect from '../common/rect';
 import imageManager from '../common/imageManager';
 import TinyEmitter from 'tiny-emitter';
@@ -97,6 +97,11 @@ export interface ILayout {
   bottom: number;
 };
 
+export enum StyleOpType {
+  Set,
+  Delete,
+}
+
 export default class Element {
   /**
    * 子节点列表
@@ -181,9 +186,13 @@ export default class Element {
 
   private originStyle: IStyle;
 
+  /**
+   * 有些 style 属性并不能直接用来渲染，需要经过解析之后才能进行渲染，这些值不会存储在 style 上
+   * 比如 style.transform，如果每次都解析性能太差了
+   */
   protected renderForLayout: IRenderForLayout = {};
 
-  protected styleChangeHandler(prop: string, val: any) {
+  protected styleChangeHandler(prop: string, styleOpType: StyleOpType, val?: any) {
 
   }
 
@@ -209,14 +218,20 @@ export default class Element {
     };
 
     this.dataset = dataset;
+    
+    // if (typeof style.backgroundImage === 'string') {
+    //   this.backgroundImageSetHandler(style.backgroundImage);
+    // }
 
-    if (typeof style.backgroundImage === 'string') {
-      this.backgroundImageSetHandler(style.backgroundImage);
-    }
+    // if (typeof style.transform === 'string') {
+    //   this.renderForLayout = parseTransform(style.transform);
+    // }
 
-    if (typeof style.transform === 'string') {
-      this.renderForLayout = parseTransform(style.transform);
-    }
+    renderAffectStyles.forEach((prop: string) => {
+      if (typeof style[prop as keyof IStyle] !== undefined) {
+        this.calculateRenderForLayout(prop, StyleOpType.Set, style[prop as keyof IStyle]);
+      }
+    });
 
     this.originStyle = style;
     this.style = style;
@@ -224,17 +239,39 @@ export default class Element {
     this.classNameList = null;
   }
 
-  backgroundImageSetHandler(backgroundImage: string) {
-    const url = backgroundImageParser(backgroundImage);
+  private calculateRenderForLayout(prop: string, styleOpType: StyleOpType, val?: any) {
+    if (styleOpType === StyleOpType.Set) {
+      switch (prop) {
+        case 'backgroundImage':
+          const url = backgroundImageParser(val);
 
-    if (url) {
-      imageManager.loadImage(url, (img: HTMLImageElement) => {
-        if (!this.isDestroyed) {
-          this.backgroundImage = img;
-          // 当图片加载完成，实例可能已经被销毁了
-          this.root && this.root.emit('repaint');
-        }
-      });
+          if (url) {
+            imageManager.loadImage(url, (img: HTMLImageElement) => {
+              if (!this.isDestroyed) {
+                this.renderForLayout.backgroundImage = img;
+                // 当图片加载完成，实例可能已经被销毁了
+                this.root?.emit('repaint');
+              }
+            });
+          }
+          break;
+        
+        case 'transform':
+          Object.assign(this.renderForLayout, parseTransform(val));
+          break; 
+      }
+    } else {
+      switch (prop) {
+        case 'backgroundImage':
+          this.renderForLayout.backgroundImage = undefined;
+          break;
+        
+        case 'transform':
+          delete this.renderForLayout.scaleX;
+          delete this.renderForLayout.scaleY;
+          delete this.renderForLayout.rotate;
+          break;
+      }
     }
   }
 
@@ -250,37 +287,25 @@ export default class Element {
           let oldVal = Reflect.get(target, prop, receiver);
           if (typeof prop === 'string' && oldVal !== val) {
 
-            ele.styleChangeHandler(prop, val);
-
-            if (prop === 'transform') {
-              ele.renderForLayout = parseTransform(val);
-
-              if (ele.children.length) {
-                ele.children[0].style.transform = val;
-              }
-
-              ele.root?.emit('repaint');
-            }
+            ele.styleChangeHandler(prop, StyleOpType.Set, val);
+            ele.calculateRenderForLayout(prop, StyleOpType.Set, val);
 
             if (reflowAffectedStyles.indexOf(prop) > -1) {
               setDirty(ele, `change prop ${prop} from ${oldVal} to ${val}`);
             } else if (repaintAffectedStyles.indexOf(prop) > -1) {
               ele.root?.emit('repaint');
-            } else if (prop === 'backgroundImage') {
-              ele.backgroundImageSetHandler(val);
             }
           }
 
           return Reflect.set(target, prop, val, receiver);
         },
-        deleteProperty(target, prop) {
-          if (prop === 'transform') {
-            ele.renderForLayout = {};
+        deleteProperty(target, prop: string) {
+          ele.styleChangeHandler(prop as string, StyleOpType.Delete);
+          ele.calculateRenderForLayout(prop as string, StyleOpType.Delete);
 
-            if (ele.children.length) {
-              delete ele.children[0].style.transform;
-              ele.children[0].renderForLayout = {};
-            }
+          if (reflowAffectedStyles.indexOf(prop) > -1) {
+            setDirty(ele, `delete prop ${prop}`);
+          } else if (repaintAffectedStyles.indexOf(prop) > -1) {
             ele.root?.emit('repaint');
           }
 

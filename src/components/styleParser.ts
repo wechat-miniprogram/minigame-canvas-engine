@@ -34,9 +34,21 @@ function isValidTransformValue(value: string) {
 }
 
 export interface IRenderForLayout {
-  rotate?: number; // transform rotate解析之后得到的弧度制
-  scaleX?: number;
-  scaleY?: number;
+  rotate?: number; // style.transform rotate解析之后得到的弧度制
+  scaleX?: number; // style.transform 解析之后得到的横向缩放值
+  scaleY?: number; // style.transform 解析之后得到的纵向缩放值
+  backgroundImage?: HTMLImageElement; // style.backgroundImage 解析并加载之后得到的图片实例
+}
+
+interface ITextShadow {
+  offsetX: number;
+  offsetY: number;
+  blurRadius: number;
+  color: string;
+}
+
+export interface ITextRenderForLayout extends IRenderForLayout {
+  textShadows?: null | ITextShadow[];
 }
 
 const transformRegex = /(\w+)\(([^)]+)\)/g;

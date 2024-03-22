@@ -1,7 +1,8 @@
-import Element from './elements';
+import Element, { StyleOpType, setDirty } from './elements';
 import { IStyle } from './style';
 import { IElementOptions } from './types';
 import env from '../env'
+import { isValidTextShadow, ITextRenderForLayout } from './styleParser';
 
 const DEFAULT_FONT_FAMILY = 'sans-serif';
 let context: CanvasRenderingContext2D | null = null;
@@ -67,13 +68,6 @@ interface ITextProps extends IElementOptions {
   value?: string;
 }
 
-interface ITextShadow {
-  offsetX: number;
-  offsetY: number;
-  blurRadius: number;
-  color: string;
-}
-
 export default class Text extends Element {
   private valuesrc = '';
   private originStyleWidth: number | string | undefined;
@@ -83,7 +77,7 @@ export default class Text extends Element {
   public textAlign: CanvasTextAlign = 'left';
   public fillStyle = '#000000';
 
-  public textShadows!: null | ITextShadow[];
+  protected renderForLayout: ITextRenderForLayout = {};
   
   constructor({
     style = {},
@@ -120,18 +114,22 @@ export default class Text extends Element {
     }
   }
 
-  styleChangeHandler(prop: string, val: any) {
+  styleChangeHandler(prop: string, styleOpType: StyleOpType, val?: any) {
     if (prop === 'textShadow') {
-      this.parseTextShadow(val);
+      if (styleOpType === StyleOpType.Set) {
+        this.parseTextShadow(val);
+      } else {
+        this.renderForLayout.textShadows = null;
+      }
     }
   }
 
   private parseTextShadow(textShadow: string) {
-    // if (!isValidTextShadow(textShadow)) {
-    //   console.error(`[Layout]: ${textShadow} is not a valid textShadow`);
-    // } else {
+    if (!isValidTextShadow(textShadow)) {
+      console.error(`[Layout]: ${textShadow} is not a valid textShadow`);
+    } else {
       // 解析 text-shadow 字符串
-      this.textShadows = textShadow.split(',').map(shadow => {
+      this.renderForLayout.textShadows = textShadow.split(',').map(shadow => {
         const parts = shadow.trim().split(/\s+/);
         const offsetX = parseFloat(parts[0]);
         const offsetY = parseFloat(parts[1]);
@@ -140,7 +138,7 @@ export default class Text extends Element {
 
         return { offsetX, offsetY, blurRadius, color };
       });
-    // }
+    }
   }
 
   get value() {
@@ -157,12 +155,7 @@ export default class Text extends Element {
 
       this.valuesrc = newValue;
 
-      this.isDirty = true;
-      let { parent } = this;
-      while (parent) {
-        parent.isDirty = true;
-        parent = parent.parent;
-      }
+      setDirty(this, 'value change');
     }
   }
 
@@ -194,7 +187,6 @@ export default class Text extends Element {
       this.render();
     }
   }
-
 
   render() {
     const style = this.style;
@@ -236,8 +228,8 @@ export default class Text extends Element {
     }
 
     // 处理文字阴影
-    if (this.textShadows) {
-      this.textShadows.forEach(({ offsetX, offsetY, blurRadius, color }) => {
+    if (this.renderForLayout.textShadows) {
+      this.renderForLayout.textShadows.forEach(({ offsetX, offsetY, blurRadius, color }) => {
         ctx.shadowOffsetX = offsetX;
         ctx.shadowOffsetY = offsetY;
         ctx.shadowBlur = blurRadius;
