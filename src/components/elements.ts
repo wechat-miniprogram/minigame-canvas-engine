@@ -219,17 +219,10 @@ export default class Element {
 
     this.dataset = dataset;
     
-    // if (typeof style.backgroundImage === 'string') {
-    //   this.backgroundImageSetHandler(style.backgroundImage);
-    // }
-
-    // if (typeof style.transform === 'string') {
-    //   this.renderForLayout = parseTransform(style.transform);
-    // }
-
     renderAffectStyles.forEach((prop: string) => {
-      if (typeof style[prop as keyof IStyle] !== undefined) {
-        this.calculateRenderForLayout(prop, StyleOpType.Set, style[prop as keyof IStyle]);
+      let val = style[prop as keyof IStyle];
+      if (typeof val !== 'undefined') {
+        this.calculateRenderForLayout(prop, StyleOpType.Set, val);
       }
     });
 
@@ -240,6 +233,8 @@ export default class Element {
   }
 
   private calculateRenderForLayout(prop: string, styleOpType: StyleOpType, val?: any) {
+    this.styleChangeHandler(prop, styleOpType, val);
+  
     if (styleOpType === StyleOpType.Set) {
       switch (prop) {
         case 'backgroundImage':
@@ -273,6 +268,13 @@ export default class Element {
           break;
       }
     }
+
+    if (reflowAffectedStyles.indexOf(prop) > -1) {
+      // setDirty(this, `change prop ${prop} from ${oldVal} to ${val}`);
+      setDirty(this);
+    } else if (repaintAffectedStyles.indexOf(prop) > -1) {
+      this.root?.emit('repaint');
+    }
   }
 
   observeStyleAndEvent() {
@@ -286,28 +288,13 @@ export default class Element {
         set(target, prop, val, receiver) {
           let oldVal = Reflect.get(target, prop, receiver);
           if (typeof prop === 'string' && oldVal !== val) {
-
-            ele.styleChangeHandler(prop, StyleOpType.Set, val);
             ele.calculateRenderForLayout(prop, StyleOpType.Set, val);
-
-            if (reflowAffectedStyles.indexOf(prop) > -1) {
-              setDirty(ele, `change prop ${prop} from ${oldVal} to ${val}`);
-            } else if (repaintAffectedStyles.indexOf(prop) > -1) {
-              ele.root?.emit('repaint');
-            }
           }
 
           return Reflect.set(target, prop, val, receiver);
         },
         deleteProperty(target, prop: string) {
-          ele.styleChangeHandler(prop as string, StyleOpType.Delete);
           ele.calculateRenderForLayout(prop as string, StyleOpType.Delete);
-
-          if (reflowAffectedStyles.indexOf(prop) > -1) {
-            setDirty(ele, `delete prop ${prop}`);
-          } else if (repaintAffectedStyles.indexOf(prop) > -1) {
-            ele.root?.emit('repaint');
-          }
 
           return Reflect.deleteProperty(target, prop); 
         },
@@ -332,19 +319,21 @@ export default class Element {
 
   protected cacheStyle!: IStyle;
 
-  activeHandler(e: any) {
-    if (this.style[':active']) {
+  activeHandler(e?: any) {
+    const activeStyle = this.style[':active'];
+
+    if (activeStyle) {
       // 将当前的style缓存起来，在 active 取消的时候重置回去
       this.cacheStyle = Object.assign({}, this.style);
       
-      const activeStyle = this.style[':active'];
       Object.assign(this.style, activeStyle);
     }
   }
   
-  deactiveHandler(e: any) {
-    if (this.style[':active']) {
-      const activeStyle = this.style[':active'];
+  deactiveHandler(e?: any) {
+    const activeStyle = this.style[':active'];
+
+    if (activeStyle) {
 
       Object.keys(activeStyle).forEach((key) => {
         if (this.cacheStyle[key as keyof IStyle]) {
@@ -497,7 +486,6 @@ export default class Element {
 
   add(element: Element) {
     element.parent = this;
-    // element.parentId = this.id;
 
     this.children.push(element);
   }
@@ -623,7 +611,6 @@ export default class Element {
     }
 
     if (this.renderForLayout.scaleX !== undefined || this.renderForLayout.scaleY !== undefined) {
-      // console.log(this.renderForLayout.rotate, this.renderForLayout.scaleX !== undefined ? this.renderForLayout.scaleX : 1 , this.renderForLayout.scaleY !== undefined ? this.renderForLayout.scaleY : 1)
       ctx.scale(this.renderForLayout.scaleX !== undefined ? this.renderForLayout.scaleX : 1 , this.renderForLayout.scaleY !== undefined ? this.renderForLayout.scaleY : 1);
     }
 

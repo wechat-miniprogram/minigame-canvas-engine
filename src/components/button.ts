@@ -1,21 +1,7 @@
-import Text from './text';
-import { IElementOptions } from './types';
-import View from './view';
+import Text, { ITextProps } from './text';
 import { lerp } from '../common/util'
-interface IButtonProps extends IElementOptions {
-  value?: string;
-}
 
-export default class Button extends View {
-  // 按钮的文本实例
-  public label: Text;
-
-  // 按钮当前是否可点击
-  private interactableInner = true;
-
-  // 按钮的交互操作为缩放
-  private normalScaleInner = 1;
-  private pressedScaleInner = 0.95;
+export default class Button extends Text {
   // 缩放动画的时长
   public scaleDuration = 100;
   // 当前缩放动画是否播放完毕
@@ -27,51 +13,37 @@ export default class Button extends View {
   // 缩放动画的 scale 目标值
   private toScale = 1;
 
-  // 按钮的交互操作为图片切换
-  private normalImageInner = '';
-  private pressedImageInner = '';
-
   constructor({
     style = {},
     idName = '',
     className = '',
     value = '',
     dataset,
-  }: IButtonProps) {
+  }: ITextProps) {
     super({
       idName,
       className,
       style: {
         width: 300,
         height: 60,
+        lineHeight: 60,
+        fontSize: 30,
         borderRadius: 10,
         backgroundColor: '#34a123',
-        justifyContent: 'center',
-        alignItems: 'center',
+        color: '#ffffff',
+        textAlign: 'center',
         ...style,
         ':active': {
           transform: 'scale(1.05, 1.05)',
+          ...style[':active'],
         },
       },
+      value,
       dataset,
     });
-
-    this.label = new Text({
-      style: {
-        color: style.color || '#ffffff',
-        fontSize: style.fontSize || 30,
-        ':active': {
-          transform: 'scale(1.05, 1.05)',
-        },
-      },
-      value: value || 'button',
-    });
-
-    this.appendChild(this.label);
   }
 
   afterCreate() {
-    this.label.root = this.root;
     // @ts-ignore
     this.root.ticker.add(this.update);
   }
@@ -80,7 +52,6 @@ export default class Button extends View {
     // @ts-ignore
     this.root.ticker.remove(this.update);
     this.isDestroyed = true;
-    this.children = [];
     this.root = null;
   }
 
@@ -101,7 +72,6 @@ export default class Button extends View {
     let scale = lerp(this.fromScale, this.toScale, ratio);
     let transform = `scale(${scale}, ${scale})`;
     this.style.transform = transform;
-    this.label.style.transform = transform;
 
     if (ratio === 1) {
       this.scaleDone = true;

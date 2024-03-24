@@ -64,7 +64,7 @@ function parseText(style: IStyle, value: string): string {
     : str);
 }
 
-interface ITextProps extends IElementOptions {
+export interface ITextProps extends IElementOptions {
   value?: string;
 }
 
