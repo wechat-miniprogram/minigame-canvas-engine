@@ -81,6 +81,9 @@ let style = {
     width: "100%",
     textAlign: "center",
     height: 30,
+    ':active': {
+      transform: 'scale(1.05, 1.05)',
+    }
   },
 };
 
@@ -109,12 +112,12 @@ export default defineComponent({
       Layout.updateViewPort(canvas.getBoundingClientRect());
       Layout.layout(context);
 
-      // const buttons = Layout.getElementsByClassName("listInviteButton");
-      // buttons.forEach((button) => {
-      //   button.on("click", () => {
-      //     alert("button click");
-      //   });
-      // });
+      const buttons = Layout.getElementsByClassName("listInviteButton");
+      buttons.forEach((button) => {
+        button.on("click", () => {
+          alert("button click");
+        });
+      });
     },
   },
 });

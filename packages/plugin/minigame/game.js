@@ -72,6 +72,9 @@ let style = {
     fontSize: 50,
     textAlign: 'center',
     marginTop: 20,
+    ':active': {
+      transform: 'scale(1.05, 1.05)',
+    },
   },
 
   rank: {

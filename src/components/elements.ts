@@ -222,7 +222,7 @@ export default class Element {
     renderAffectStyles.forEach((prop: string) => {
       let val = style[prop as keyof IStyle];
       if (typeof val !== 'undefined') {
-        this.calculateRenderForLayout(prop, StyleOpType.Set, val);
+        this.calculateRenderForLayout(true, prop, StyleOpType.Set, val);
       }
     });
 
@@ -232,8 +232,10 @@ export default class Element {
     this.classNameList = null;
   }
 
-  private calculateRenderForLayout(prop: string, styleOpType: StyleOpType, val?: any) {
-    this.styleChangeHandler(prop, styleOpType, val);
+  private calculateRenderForLayout(init: boolean, prop: string, styleOpType: StyleOpType, val?: any) {
+    if (!init) {
+      this.styleChangeHandler(prop, styleOpType, val);
+    }
   
     if (styleOpType === StyleOpType.Set) {
       switch (prop) {
@@ -252,6 +254,9 @@ export default class Element {
           break;
         
         case 'transform':
+          delete this.renderForLayout.scaleX;
+          delete this.renderForLayout.scaleY;
+          delete this.renderForLayout.rotate;
           Object.assign(this.renderForLayout, parseTransform(val));
           break; 
       }
@@ -269,11 +274,14 @@ export default class Element {
       }
     }
 
-    if (reflowAffectedStyles.indexOf(prop) > -1) {
-      // setDirty(this, `change prop ${prop} from ${oldVal} to ${val}`);
-      setDirty(this);
-    } else if (repaintAffectedStyles.indexOf(prop) > -1) {
-      this.root?.emit('repaint');
+    // 初始化的逻辑不需要做这些判断
+    if (!init) {
+      if (reflowAffectedStyles.indexOf(prop) > -1) {
+        // setDirty(this, `change prop ${prop} from ${oldVal} to ${val}`);
+        setDirty(this);
+      } else if (repaintAffectedStyles.indexOf(prop) > -1) {
+        this.root?.emit('repaint');
+      }  
     }
   }
 
@@ -288,13 +296,13 @@ export default class Element {
         set(target, prop, val, receiver) {
           let oldVal = Reflect.get(target, prop, receiver);
           if (typeof prop === 'string' && oldVal !== val) {
-            ele.calculateRenderForLayout(prop, StyleOpType.Set, val);
+            ele.calculateRenderForLayout(false, prop, StyleOpType.Set, val);
           }
 
           return Reflect.set(target, prop, val, receiver);
         },
         deleteProperty(target, prop: string) {
-          ele.calculateRenderForLayout(prop as string, StyleOpType.Delete);
+          ele.calculateRenderForLayout(false, prop as string, StyleOpType.Delete);
 
           return Reflect.deleteProperty(target, prop); 
         },

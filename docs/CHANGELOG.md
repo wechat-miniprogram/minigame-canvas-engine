@@ -1,3 +1,8 @@
+#### 2024.3.25
+1. `U` 样式支持伪类功能;
+2. `U` transform 拓展支持scale能力;
+2. `U` 小游戏插件发布1.0.9版本；
+
 #### 2024.3.14
 1. `U` 文字支持textStrokeWidth和textStrokeColor实现描边功能;
 2. `U` 文字支持textShadow实现阴影功能;

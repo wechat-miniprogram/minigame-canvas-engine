@@ -88,6 +88,7 @@ interface IStyle {
      * 也就是支持任意数量的阴影效果，每个阴影效果由四个值指定，分别是 shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor
      */
     textShadow?: string;
+    ':active'?: IStyle;
 }
 
 declare class Rect {
@@ -132,6 +133,22 @@ interface IElementOptions {
     dataset?: IDataset;
 }
 
+interface IRenderForLayout {
+    rotate?: number;
+    scaleX?: number;
+    scaleY?: number;
+    backgroundImage?: HTMLImageElement;
+}
+interface ITextShadow {
+    offsetX: number;
+    offsetY: number;
+    blurRadius: number;
+    color: string;
+}
+interface ITextRenderForLayout extends IRenderForLayout {
+    textShadows?: null | ITextShadow[];
+}
+
 interface ILayoutBox {
     left: number;
     top: number;
@@ -142,10 +159,9 @@ interface ILayoutBox {
     originalAbsoluteX: number;
     originalAbsoluteY: number;
 }
-interface IRenderForLayout {
-    rotate?: number;
-    scaleX?: number;
-    scaleY?: number;
+declare enum StyleOpType {
+    Set = 0,
+    Delete = 1
 }
 declare class Element {
     /**
@@ -213,19 +229,18 @@ declare class Element {
      */
     tagName?: string;
     private originStyle;
-    protected renderForLayout: IRenderForLayout;
-    protected styleChangeHandler(prop: string, val: any): void;
-    constructor({ style, idName, className, id, dataset, }: IElementOptions);
-    backgroundImageSetHandler(backgroundImage: string): void;
     /**
-     * 监听属性的变化判断是否需要执行 reflow、repaint 操作
-     * 经过测试，Object.defineProperty 是一个比较慢的方法， 特别是属性比较多的时候
-     * 因此会先判断是否支持 Proxy，iMac (Retina 5K, 27-inch, 2017)测试结果
-     * 总共 312 个节点，observeStyleAndEvent总耗时为：
-     * Proxy: 3ms
-     * Object.defineProperty: 20ms
+     * 有些 style 属性并不能直接用来渲染，需要经过解析之后才能进行渲染，这些值不会存储在 style 上
+     * 比如 style.transform，如果每次都解析性能太差了
      */
+    protected renderForLayout: IRenderForLayout;
+    protected styleChangeHandler(prop: string, styleOpType: StyleOpType, val?: any): void;
+    constructor({ style, idName, className, id, dataset, }: IElementOptions);
+    private calculateRenderForLayout;
     observeStyleAndEvent(): void;
+    protected cacheStyle: IStyle;
+    activeHandler(e?: any): void;
+    deactiveHandler(e?: any): void;
     /**
      * 节点重绘接口，子类填充实现
      */
@@ -297,7 +312,7 @@ declare class Element {
     /**
      * 每个子类都会有自己的渲染逻辑，但他们都有些通用的处理，比如透明度、旋转和border的处理，baseRender 用于处理通用的渲染逻辑
      */
-    baseRender(): {
+    baseRender(type?: string): {
         needStroke: boolean;
         needClip: boolean;
         originX: number;
@@ -396,12 +411,6 @@ declare class Image extends Element {
 interface ITextProps extends IElementOptions {
     value?: string;
 }
-interface ITextShadow {
-    offsetX: number;
-    offsetY: number;
-    blurRadius: number;
-    color: string;
-}
 declare class Text extends Element {
     private valuesrc;
     private originStyleWidth;
@@ -410,9 +419,9 @@ declare class Text extends Element {
     font: string;
     textAlign: CanvasTextAlign;
     fillStyle: string;
-    textShadows: null | ITextShadow[];
+    protected renderForLayout: ITextRenderForLayout;
     constructor({ style, idName, className, value, dataset, }: ITextProps);
-    styleChangeHandler(prop: string, val: any): void;
+    styleChangeHandler(prop: string, styleOpType: StyleOpType, val?: any): void;
     private parseTextShadow;
     get value(): string;
     set value(newValue: string);
@@ -508,37 +517,16 @@ declare class Canvas extends Element {
     render(): void;
 }
 
-interface IButtonProps extends IElementOptions {
-    value?: string;
-}
-/**
- * 按钮的过度类型枚举
- */
-declare enum Transition {
-    NONE = 0,
-    COLOR = 1,
-    SCALE = 2,
-    IMAGE = 3
-}
 declare class Button extends Text {
-    constructor({ style, idName, className, value, dataset, }: IButtonProps);
-    scale: number;
     scaleDuration: number;
-    private timeClick;
     private scaleDone;
+    private timeClick;
     private fromScale;
     private toScale;
+    constructor({ style, idName, className, value, dataset, }: ITextProps);
     afterCreate(): void;
+    destroySelf(): void;
     update: (dt: number) => void;
-    private interactableInner;
-    /**
-     * 当前按钮是否可交互，如果不可交互，点击没反应
-     */
-    get interactable(): boolean;
-    set interactable(val: boolean);
-    private transitionInner;
-    get transition(): Transition;
-    set transition(val: Transition);
 }
 
 interface Constructor {

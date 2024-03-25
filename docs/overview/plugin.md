@@ -86,6 +86,7 @@ const Layout = requirePlugin('Layout').default;
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
+| 1.0.9        | 样式支持伪类能力，transform支持scale，详情可见[布局和样式](../components//overview.md) |
 | 1.0.8        | 支持文字描边和文字阴影效果，详情可见[布局和样式](../components//overview.md) |
 | 1.0.7        | 修复1.0.6版本Image的borderRadius失效问题 |
 | 1.0.6        | 1. 修复圆角矩形在有borderRadius的时候绘制不够圆润问题；2. 文字样式支持fontFamily属性；3. 修复 ScrollView 的滚动条在页面布局变化时会位置异常问题; |

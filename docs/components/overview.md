@@ -48,6 +48,37 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | alignItems, alignSelf                                                             | flex-start, center, flex-end, stretch                     | flex-start |
 | position                                                                          | relative, absolute                                        | relative   |
 
+### 伪类
+用来添加一些选择器的特殊效果，目前仅支持最场景的 `:active` 场景，后续会试场景补充。
+
+| 属性名 | 支持的值或类型 | 说明 |
+| --------------- | ------------------- | ----------- |
+| ':active' | Object | **(v1.0.9开始支持)**，当节点触发 'touchstart' 事件的时候触发 |
+
+如下所示，当元素被点击的时候，元素会放大，当点击结束，元素又会重置会原样，这对实现按钮特性的时候尤为有用，不需要单独给按钮绑定点击事件手动对元素进行缩放和重置。
+``` json
+{
+  color: '#ffffff',
+  backgroundColor: '#34a123',
+  borderRadius: 10,
+  width: 400,
+  height: 120,
+  lineHeight: 120,
+  fontSize: 50,
+  textAlign: 'center',
+  marginTop: 20,
+  ':active': {
+    transform: 'scale(1.05, 1.05)',
+  },
+}
+```
+
+<iframe height="439.15838623046875" style="width: 100%;" scrolling="no" title="Layout Text Button" src="https://codepen.io/yuanzm/embed/MWRoexw?default-tab=js%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/yuanzm/pen/MWRoexw">
+  Layout Text Button</a> by yuanzm (<a href="https://codepen.io/yuanzm">@yuanzm</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
 ### 文本
 
 支持的标签：`text`

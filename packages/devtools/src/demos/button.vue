@@ -49,9 +49,6 @@ export default defineComponent({
 
       const testButton = Layout.getElementById('testButton');
 
-    testButton.label.value = '按钮';
-
-    // testButton.label.style.color = 'red';
     },
   },
 });
