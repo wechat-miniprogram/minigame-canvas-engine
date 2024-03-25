@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-cfeec4e4","path":"/tutorial/platform.html","title":"平台适配","lang":"en-US","frontmatter":{},"headers":[{"level":2,"title":"原理","slug":"原理","link":"#原理","children":[]},{"level":2,"title":"示例","slug":"示例","link":"#示例","children":[]}],"git":{"updatedTime":1711352131000},"filePathRelative":"tutorial/platform.md"}');export{e as data};

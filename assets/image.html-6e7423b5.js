@@ -1,1 +1,0 @@
-const e=JSON.parse('{"key":"v-d82ea0c4","path":"/components/image.html","title":"Image","lang":"en-US","frontmatter":{},"headers":[{"level":2,"title":"特殊属性","slug":"特殊属性","link":"#特殊属性","children":[]},{"level":2,"title":"示例","slug":"示例","link":"#示例","children":[]}],"git":{"updatedTime":1710415716000},"filePathRelative":"components/image.md"}');export{e as data};
