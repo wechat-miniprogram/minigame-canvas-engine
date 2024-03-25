@@ -42,7 +42,7 @@ export default {
   list: {
     width: 960,
     height: 950,
-    backgroundColor: "#ffffff",
+    // backgroundColor: "#ffffff",
     marginTop: 30,
     // borderWidth: 1,
     // backgroundColor: "red",

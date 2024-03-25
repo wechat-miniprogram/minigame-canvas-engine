@@ -32,13 +32,13 @@ export const style = {
   rankList: {
     width: 960,
     height: 1000,
-    backgroundColor: '#ffffff',
+    backgroundImage: 'url(https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM7mL9dDQ8VibStCkTOfNVluNXh3rqZnWAKF27npl0S04l2EFgRutKI7LNxfibiakibE3VA84HNAswmoyg/132)'
   },
 
   list: {
     width: 960,
     height: 950,
-    backgroundColor: '#ffffff',
+    // backgroundColor: '#ffffff',
     marginTop: 30,
   },
 

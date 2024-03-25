@@ -608,8 +608,8 @@ var Element = /** @class */ (function () {
             ctx.fillStyle = style.backgroundColor;
             ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
         }
-        if (style.backgroundImage && this.backgroundImage) {
-            ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
+        if (this.renderForLayout.backgroundImage) {
+            ctx.drawImage(this.renderForLayout.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
         }
         return { needStroke: needStroke, needClip: needClip, originX: originX, originY: originY, drawX: drawX, drawY: drawY, width: width, height: height };
     };
@@ -1151,8 +1151,6 @@ var computeLayout = (function() {
         bottom: 0
       };
     }
-
-    // console.log('fillNodes', node.layout, node.isDirty, node)
 
     if (!node.style) {
       node.style = {};
@@ -2218,7 +2216,6 @@ var computeLayout = (function() {
       node.lastLayout.parentMaxWidth === parentMaxWidth &&
       node.lastLayout.direction === direction;
 
-    // console.log('skipLayout', skipLayout, node)
     if (skipLayout) {
       node.layout.width = node.lastLayout.width;
       node.layout.height = node.lastLayout.height;
@@ -6130,7 +6127,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.9';
+        _this.version = '1.0.10';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context

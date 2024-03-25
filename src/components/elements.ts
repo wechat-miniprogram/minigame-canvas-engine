@@ -640,8 +640,8 @@ export default class Element {
       ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
     }
 
-    if (style.backgroundImage && this.backgroundImage) {
-      ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
+    if (this.renderForLayout.backgroundImage) {
+      ctx.drawImage(this.renderForLayout.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
     }
 
     return { needStroke, needClip, originX, originY, drawX, drawY, width, height };

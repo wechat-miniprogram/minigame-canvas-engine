@@ -66,7 +66,7 @@ class Layout extends Element {
   /**
    * 当前 Layout 版本，一般跟小游戏插件版本对齐
    */
-  public version = '1.0.9';
+  public version = '1.0.10';
 
   env = env;
   
