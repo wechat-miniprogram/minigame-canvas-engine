@@ -339,9 +339,19 @@ var Element = /** @class */ (function () {
                 // 处理伪类逻辑
                 if (eventName === 'touchstart') {
                     _this.activeHandler(e);
+                    if (_this !== _this.root) {
+                        // @ts-ignore
+                        _this.root.activeElements.push(_this);
+                    }
                 }
                 else if (eventName === 'touchend' || eventName === 'touchcancel') {
                     _this.deactiveHandler(e);
+                    // @ts-ignore
+                    var index = _this.root.activeElements.indexOf(_this);
+                    if (index > -1) {
+                        // @ts-ignore
+                        _this.root.activeElements.splice(index, 1);
+                    }
                 }
                 _this.parent && _this.parent.emit(eventName, e, touchMsg);
             });
@@ -1151,6 +1161,8 @@ var computeLayout = (function() {
         bottom: 0
       };
     }
+
+    // console.log('fillNodes', node.layout, node.isDirty, node)
 
     if (!node.style) {
       node.style = {};
@@ -2216,6 +2228,7 @@ var computeLayout = (function() {
       node.lastLayout.parentMaxWidth === parentMaxWidth &&
       node.lastLayout.direction === direction;
 
+    // console.log('skipLayout', skipLayout, node)
     if (skipLayout) {
       node.layout.width = node.lastLayout.width;
       node.layout.height = node.lastLayout.height;
@@ -6127,7 +6140,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.10';
+        _this.version = '1.0.11';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context
@@ -6177,6 +6190,7 @@ var Layout = /** @class */ (function (_super) {
                 _this.repaint();
             }
         };
+        _this.activeElements = [];
         _this.eventHandler = function (eventName) {
             return function (e) {
                 var touch;
@@ -6430,6 +6444,7 @@ var Layout = /** @class */ (function (_super) {
      * 执行全局的事件绑定逻辑
      */
     Layout.prototype.bindEvents = function () {
+        var _this = this;
         if (this.eventHandlerData.hasEventBind) {
             return;
         }
@@ -6438,6 +6453,23 @@ var Layout = /** @class */ (function (_super) {
         _env__WEBPACK_IMPORTED_MODULE_0__["default"].onTouchMove(this.eventHandlerData.handlers.touchMove);
         _env__WEBPACK_IMPORTED_MODULE_0__["default"].onTouchEnd(this.eventHandlerData.handlers.touchEnd);
         _env__WEBPACK_IMPORTED_MODULE_0__["default"].onTouchCancel(this.eventHandlerData.handlers.touchCancel);
+        /**
+         * 当触发 touchstart 事件的时候，如果手指移除元素外，不会触发 touchend，这就导致 deactiveHandler 不能触发
+         * 要做到比较完善，事件系统要做较大改用，目前比较好的做法就是根节点在监听到 touchend 和 touchcancel 的时候兜底
+         * 触发下 deactiveHandler
+         */
+        this.on('touchend', function () {
+            _this.activeElements.forEach(function (ele) {
+                ele.deactiveHandler();
+            });
+            _this.activeElements = [];
+        });
+        this.on('touchcancel', function () {
+            _this.activeElements.forEach(function (ele) {
+                ele.deactiveHandler();
+            });
+            _this.activeElements = [];
+        });
     };
     /**
      * 全局事件解绑
@@ -6493,6 +6525,7 @@ var Layout = /** @class */ (function (_super) {
             // inner的应该默认都移除，否则前后两次初始化会导致前后状态有问题
             this.ticker.removeInner();
         }
+        this.activeElements = [];
     };
     Layout.prototype.clearPool = function () {
         imgPool.clear();

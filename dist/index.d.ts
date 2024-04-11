@@ -614,6 +614,7 @@ declare class Layout extends Element {
     ticker: Ticker;
     tickerFunc: () => void;
     private eventHandlerData;
+    protected activeElements: Element[];
     constructor({ style, }: {
         style?: IStyle;
         name?: string;

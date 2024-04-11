@@ -315,8 +315,19 @@ export default class Element {
         // 处理伪类逻辑
         if (eventName === 'touchstart') {
           this.activeHandler(e);
+          if (this !== this.root) {
+            // @ts-ignore
+            this.root.activeElements.push(this);
+          }
         } else if (eventName === 'touchend' || eventName === 'touchcancel') {
           this.deactiveHandler(e);
+
+          // @ts-ignore
+          let index = this.root.activeElements.indexOf(this);
+          if (index > -1) {
+            // @ts-ignore
+            this.root.activeElements.splice(index, 1);
+          }
         }
         this.parent && this.parent.emit(eventName, e, touchMsg);
       });
@@ -342,7 +353,6 @@ export default class Element {
     const activeStyle = this.style[':active'];
 
     if (activeStyle) {
-
       Object.keys(activeStyle).forEach((key) => {
         if (this.cacheStyle[key as keyof IStyle]) {
           // @ts-ignore

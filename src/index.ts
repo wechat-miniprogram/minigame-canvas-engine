@@ -66,7 +66,7 @@ class Layout extends Element {
   /**
    * 当前 Layout 版本，一般跟小游戏插件版本对齐
    */
-  public version = '1.0.10';
+  public version = '1.0.11';
 
   env = env;
   
@@ -126,6 +126,8 @@ class Layout extends Element {
   };
 
   private eventHandlerData: EventHandlerData;
+
+  protected activeElements: Element[] = [];
 
   constructor({
     style,
@@ -446,6 +448,26 @@ class Layout extends Element {
     env.onTouchMove(this.eventHandlerData.handlers.touchMove);
     env.onTouchEnd(this.eventHandlerData.handlers.touchEnd);
     env.onTouchCancel(this.eventHandlerData.handlers.touchCancel);
+
+    /**
+     * 当触发 touchstart 事件的时候，如果手指移除元素外，不会触发 touchend，这就导致 deactiveHandler 不能触发
+     * 要做到比较完善，事件系统要做较大改用，目前比较好的做法就是根节点在监听到 touchend 和 touchcancel 的时候兜底
+     * 触发下 deactiveHandler
+     */
+    this.on('touchend', () => {
+      this.activeElements.forEach((ele: Element) => {
+        ele.deactiveHandler();
+      });
+
+      this.activeElements = [];
+    });
+    this.on('touchcancel', () => {
+      this.activeElements.forEach((ele: Element) => {
+        ele.deactiveHandler();
+      });
+
+      this.activeElements = [];
+    });
   }
 
   /**
@@ -511,6 +533,8 @@ class Layout extends Element {
       // inner的应该默认都移除，否则前后两次初始化会导致前后状态有问题
       this.ticker.removeInner();
     }
+
+    this.activeElements = [];
   }
 
   clearPool() {
