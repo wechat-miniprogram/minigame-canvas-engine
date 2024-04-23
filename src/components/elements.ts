@@ -518,7 +518,7 @@ export default class Element {
   }
 
   /**
-   * 移除给定的子节点，只有一级节点能够移除 
+   * 移除给定的子节点，只有一级节点能够移除
    */
   removeChild(element: Element) {
     const index = this.children.indexOf(element);

@@ -1,3 +1,5 @@
+[[toc]]
+
 # Element
 
 Element 是所有组件的基类，Element 描述了所有组件所普遍具有的方法和属性。一些组件继承自 Element 并且增加了一些额外功能的接口描述了具体的行为。
@@ -83,6 +85,10 @@ listItem.forEach(item => {
   list.appendChild(Layout.cloneNode(item))
 });
 ```
+
+### removeChild(ele: Element)
+移除给定的子节点
+
 
 # 事件
 通过 getElementsById 或者 getElementsByClassName 获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`、`scroll(只有scrollview支持）`示例如下：

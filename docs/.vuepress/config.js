@@ -61,6 +61,7 @@ export default {
           '/tutorial/platform',
           '/tutorial/templateengine',
           '/api/tween',
+          '/tutorial/updateViewPort',
         ],
       },
       {
