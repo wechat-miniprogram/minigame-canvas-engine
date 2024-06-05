@@ -200,7 +200,7 @@ class Layout extends Element {
     this.hasViewPortSet = true;
   }
 
-  init(template: string, style: Record<string, IStyle>, attrValueProcessor: Callback) {
+  init(template: string, style: Record<string, IStyle>, attrValueProcessor?: Callback) {
     debugInfo.start('init');
     const parseConfig = {
       attributeNamePrefix: '',
@@ -640,4 +640,13 @@ export {
   Layout,
   env,
   EE,
+  IStyle,
+  Element,
+  View,
+  Text,
+  Image,
+  ScrollView,
+  BitMapText,
+  Canvas,
+  Button,
 }

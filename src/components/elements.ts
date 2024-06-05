@@ -354,6 +354,9 @@ export default class Element {
 
     if (activeStyle) {
       Object.keys(activeStyle).forEach((key) => {
+        if (!this.cacheStyle) {
+          return;
+        }
         if (this.cacheStyle[key as keyof IStyle]) {
           // @ts-ignore
           this.style[key] = this.cacheStyle[key as keyof IStyle]
