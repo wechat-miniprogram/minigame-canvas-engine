@@ -628,7 +628,7 @@ declare class Layout extends Element {
      * y坐标
      */
     updateViewPort(box: IViewPortBox): void;
-    init(template: string, style: Record<string, IStyle>, attrValueProcessor: Callback): void;
+    init(template: string, style: Record<string, IStyle>, attrValueProcessor?: Callback): void;
     reflow(isFirst?: boolean): void;
     /**
      * init阶段核心仅仅是根据xml和css创建了节点树
@@ -717,4 +717,4 @@ declare class Layout extends Element {
 }
 declare const layout: Layout;
 
-export { EE, Layout, layout as default, _default as env };
+export { BitMapText, Button, Canvas, EE, Element, IStyle, Image, Layout, ScrollView, Text, View, layout as default, _default as env };

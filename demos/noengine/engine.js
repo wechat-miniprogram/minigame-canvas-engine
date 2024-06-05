@@ -371,6 +371,9 @@ var Element = /** @class */ (function () {
         var activeStyle = this.style[':active'];
         if (activeStyle) {
             Object.keys(activeStyle).forEach(function (key) {
+                if (!_this.cacheStyle) {
+                    return;
+                }
                 if (_this.cacheStyle[key]) {
                     // @ts-ignore
                     _this.style[key] = _this.cacheStyle[key];
@@ -1161,8 +1164,6 @@ var computeLayout = (function() {
         bottom: 0
       };
     }
-
-    // console.log('fillNodes', node.layout, node.isDirty, node)
 
     if (!node.style) {
       node.style = {};
@@ -2228,7 +2229,6 @@ var computeLayout = (function() {
       node.lastLayout.parentMaxWidth === parentMaxWidth &&
       node.lastLayout.direction === direction;
 
-    // console.log('skipLayout', skipLayout, node)
     if (skipLayout) {
       node.layout.width = node.lastLayout.width;
       node.layout.height = node.lastLayout.height;
@@ -6055,8 +6055,16 @@ var __webpack_exports__ = {};
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BitMapText: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.BitMapText),
+/* harmony export */   Button: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Button),
+/* harmony export */   Canvas: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Canvas),
 /* harmony export */   EE: () => (/* binding */ EE),
+/* harmony export */   Element: () => (/* reexport safe */ _components_elements__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   Image: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Image),
 /* harmony export */   Layout: () => (/* binding */ Layout),
+/* harmony export */   ScrollView: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.ScrollView),
+/* harmony export */   Text: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Text),
+/* harmony export */   View: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.View),
 /* harmony export */   "default": () => (/* binding */ layout),
 /* harmony export */   env: () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
