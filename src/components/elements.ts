@@ -8,7 +8,7 @@ import { IElementOptions } from './types';
 import { Callback } from '../types/index';
 import { backgroundImageParser, parseTransform, IRenderForLayout } from './styleParser';
 
-export function getElementsById(tree: Element, list: Element[] = [], id: string) {
+export function getElementsById<T>(tree: Element, list: (Element | T)[] = [], id: string): T[] {
   tree.children.forEach((child: Element) => {
     if (child.idName === id) {
       list.push(child);
@@ -19,16 +19,16 @@ export function getElementsById(tree: Element, list: Element[] = [], id: string)
     }
   });
 
-  return list;
+  return list as T[];
 }
 
-export function getElementById(tree: Element, id: string) {
+export function getElementById<T>(tree: Element, id: string): T {
   const list = getElementsById(tree, [], id);
 
   return list?.[0] || null;
 }
 
-export function getElementsByClassName(tree: Element, list: Element[] = [], className: string) {
+export function getElementsByClassName<T>(tree: Element, list: (Element | T)[] = [], className: string): T[] {
   tree.children.forEach((child: Element) => {
     if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
       list.push(child);
@@ -39,7 +39,7 @@ export function getElementsByClassName(tree: Element, list: Element[] = [], clas
     }
   });
 
-  return list;
+  return list as T[];
 }
 
 /**
@@ -409,23 +409,23 @@ export default class Element {
    * 查询当前节点树下，idName 为给定参数的的节点
    * 节点的 id 唯一性 Layout 并不保证，但这里只返回符合条件的第一个节点 
    */
-  getElementById(id: string): Element | null {
-    return getElementById(this, id);
+  getElementById<T = Element>(id: string): T | null {
+    return getElementById<T>(this, id);
   }
 
   /**
    * 查询当前节点树下，idName 为给定参数的的节点
    * 节点的 id 唯一性 Layout 并不保证，这里返回符合条件的节点集合
    */
-  getElementsById(id: string): (Element | null)[] {
-    return getElementsById(this, [], id);
+  getElementsById<T = Element>(id: string): (T | null)[] {
+    return getElementsById<T>(this, [], id);
   }
 
   /**
    * 查询当前节点树下，className 包含给定参数的的节点集合
    */
-  getElementsByClassName(className: string): (Element | null)[] {
-    return getElementsByClassName(this, [], className);
+  getElementsByClassName<T = Element>(className: string): (T | null)[] {
+    return getElementsByClassName<T>(this, [], className);
   }
 
   /**

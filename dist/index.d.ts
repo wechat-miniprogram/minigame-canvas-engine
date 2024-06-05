@@ -261,16 +261,16 @@ declare class Element {
      * 查询当前节点树下，idName 为给定参数的的节点
      * 节点的 id 唯一性 Layout 并不保证，但这里只返回符合条件的第一个节点
      */
-    getElementById(id: string): Element | null;
+    getElementById<T = Element>(id: string): T | null;
     /**
      * 查询当前节点树下，idName 为给定参数的的节点
      * 节点的 id 唯一性 Layout 并不保证，这里返回符合条件的节点集合
      */
-    getElementsById(id: string): (Element | null)[];
+    getElementsById<T = Element>(id: string): (T | null)[];
     /**
      * 查询当前节点树下，className 包含给定参数的的节点集合
      */
-    getElementsByClassName(className: string): (Element | null)[];
+    getElementsByClassName<T = Element>(className: string): (T | null)[];
     /**
      * 布局计算完成，准备执行渲染之前执行的操作，不同的子类有不同的行为
      * 比如 ScrollView 在渲染之前还需要初始化滚动相关的能力
@@ -717,4 +717,4 @@ declare class Layout extends Element {
 }
 declare const layout: Layout;
 
-export { BitMapText, Button, Canvas, EE, Element, IStyle, Image, Layout, ScrollView, Text, View, layout as default, _default as env };
+export { EE, Layout, layout as default, _default as env };

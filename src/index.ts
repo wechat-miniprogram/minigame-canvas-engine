@@ -640,13 +640,4 @@ export {
   Layout,
   env,
   EE,
-  IStyle,
-  Element,
-  View,
-  Text,
-  Image,
-  ScrollView,
-  BitMapText,
-  Canvas,
-  Button,
 }
