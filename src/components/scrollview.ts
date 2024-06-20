@@ -104,7 +104,7 @@ export default class ScrollView extends View {
 
   set scrollY(value) {
     if (value !== this.scrollY) {
-      this.scrollerObj!.scrollTo(this.scrollLeft, 0, true, 1);
+      this.scrollerObj&& this.scrollerObj.scrollTo(this.scrollLeft, 0, true, 1);
       this.scrollerOption = {
         scrollingY: value,
       };
