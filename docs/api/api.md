@@ -65,7 +65,7 @@ Layout.loadImgs([
     'sub/Buffet_icon_GiftPlate.png',
     'sub/UI_Icon_Rating.png',
 ]).then(() => {
-  console.log('所有资源加载完成')；
+  console.log('所有资源加载完成');
 })
 ```
 
@@ -184,6 +184,9 @@ Layout.ticker.add(selfTickerFunc);
 
 ### Layout.ticker.stop()
 结束 Layout 的循环。
+
+### Layout.ticker.frame(step:number)
+执行指定次数帧后结束 Layout 的循环
 
 ### Layout.ticker.next(callback: Function)
 在 Layout 的下一次循环之后执行一次事件回调。
