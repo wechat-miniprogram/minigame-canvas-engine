@@ -16,7 +16,8 @@
   "devDependencies": {
     "@types/dot": "^1.1.5",
     "@types/js-beautify": "^1.13.3",
-    "@types/stats.js": "^0.17.0"
+    "@types/stats.js": "^0.17.0",
+    "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
     "@highlightjs/vue-plugin": "^2.1.0",
@@ -27,6 +28,7 @@
     "html-webpack-plugin": "^5.5.1",
     "js-beautify": "^1.14.7",
     "minigame-canvas-engine": "file:../..",
+    "minigame-canvas-engine-richtext": "file:../richtext",
     "primevue": "^3.26.0",
     "stats.js": "^0.17.0",
     "ts-loader": "^9.4.2",
@@ -37,8 +39,7 @@
     "vue-template-compiler": "^2.7.14",
     "vuetify": "^3.1.14",
     "webpack": "^5.79.0",
-    "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.13.3"
+    "webpack-cli": "^5.0.1"
   },
   "files": [
     "dist"
