@@ -371,6 +371,9 @@ var Element = /** @class */ (function () {
         var activeStyle = this.style[':active'];
         if (activeStyle) {
             Object.keys(activeStyle).forEach(function (key) {
+                if (!_this.cacheStyle) {
+                    return;
+                }
                 if (_this.cacheStyle[key]) {
                     // @ts-ignore
                     _this.style[key] = _this.cacheStyle[key];
@@ -1161,8 +1164,6 @@ var computeLayout = (function() {
         bottom: 0
       };
     }
-
-    // console.log('fillNodes', node.layout, node.isDirty, node)
 
     if (!node.style) {
       node.style = {};
@@ -2228,7 +2229,6 @@ var computeLayout = (function() {
       node.lastLayout.parentMaxWidth === parentMaxWidth &&
       node.lastLayout.direction === direction;
 
-    // console.log('skipLayout', skipLayout, node)
     if (skipLayout) {
       node.layout.width = node.lastLayout.width;
       node.layout.height = node.lastLayout.height;
