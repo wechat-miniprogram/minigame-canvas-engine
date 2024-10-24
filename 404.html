@@ -1,37 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-US">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="generator" content="VuePress 2.0.0-beta.67">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-rc.18" />
     <style>
       :root {
-        --c-bg: #fff;
+        --vp-c-bg: #fff;
       }
-      html.dark {
-        --c-bg: #22272e;
+
+      [data-theme='dark'] {
+        --vp-c-bg: #1b1b1f;
       }
-      html, body {
-        background-color: var(--c-bg);
+
+      html,
+      body {
+        background-color: var(--vp-c-bg);
       }
     </style>
     <script>
-      const userMode = localStorage.getItem('vuepress-color-scheme');
-			const systemDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-			if (userMode === 'dark' || (userMode !== 'light' && systemDarkMode)) {
-				document.documentElement.classList.toggle('dark', true);
-			}
+      const userMode = localStorage.getItem('vuepress-color-scheme')
+      const systemDarkMode =
+        'matchMedia' in window
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false
+
+      if (userMode === 'light') {
+        document.documentElement.dataset.theme = 'light'
+      } else if (userMode === 'dark' || systemDarkMode) {
+        document.documentElement.dataset.theme = 'dark'
+      }
     </script>
     <meta name="robots" content="all"><meta name="author" content="yuanzm"><meta name="keywords" content="minigame-canvans-engine, minigame, canvas, engine, game engine"><link rel="shortcut icon" type="image/x-icon" href="./imgs/favicon.ico"><script>
   var sc_project=12873270; 
   var sc_invisible=1; 
   var sc_security="efed24b4"; 
   </script><script src="https://www.statcounter.com/counter/counter.js" async></script><title></title><meta name="description" content="轻量级canvas渲染引擎">
-    <link rel="preload" href="/minigame-canvas-engine/assets/style-e53aa8de.css" as="style"><link rel="stylesheet" href="/minigame-canvas-engine/assets/style-e53aa8de.css">
-    <link rel="modulepreload" href="/minigame-canvas-engine/assets/app-ff4dd70b.js"><link rel="modulepreload" href="/minigame-canvas-engine/assets/404.html-e78d1cfc.js"><link rel="modulepreload" href="/minigame-canvas-engine/assets/404.html-60b35caa.js"><link rel="prefetch" href="/minigame-canvas-engine/assets/CHANGELOG.html-7b3aad8f.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/index.html-5b9b57e5.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/api.html-1eb6538c.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/style.html-fd8fca8f.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/tags.html-113a95eb.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/tween.html-2728f332.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/bitmapfont.html-19a6782a.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/button.html-58fb8f49.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/canvas.html-6bf603f4.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/element.html-152943e0.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/image.html-0b155442.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/overview.html-9dd4b0cb.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/rect.html-cc309d24.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/scrollbar.html-e1e17d3f.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/scrollview.html-ab525f75.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/text.html-513bcd6b.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/view.html-f731679b.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/invite.html-bec5782b.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/rank.html-11b995e7.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/guide.html-6c067ff8.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/plugin.html-324da838.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/guide.html-003686c1.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/richtext.html-34aa5e9b.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/cocos2.x.html-8cfa0f84.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/loading.html-1a04cd36.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/platform.html-ea76f628.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/templateengine.html-db97aa1e.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/updateViewPort.html-85f171c4.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/CHANGELOG.html-37ff6957.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/index.html-57acaf18.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/api.html-d00915c5.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/style.html-c034b7e0.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/tags.html-8428de81.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/tween.html-e7d48598.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/bitmapfont.html-28bf96c0.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/button.html-1eab4ec7.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/canvas.html-58341b97.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/element.html-fc8e04fb.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/image.html-900f328a.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/overview.html-6e5e3613.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/rect.html-2d8cbdbc.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/scrollbar.html-bc2d29e7.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/scrollview.html-5e362dc3.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/text.html-2475ac3d.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/view.html-cc6b1d0f.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/invite.html-6fb13e42.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/rank.html-98afa3da.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/guide.html-c3c89ff7.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/plugin.html-829bb862.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/guide.html-f3168eb0.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/richtext.html-020b8e45.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/cocos2.x.html-e28381a7.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/loading.html-83e7d329.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/platform.html-71202585.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/templateengine.html-6fb8f7cd.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/updateViewPort.html-f0e2d2c3.js" as="script">
+    <link rel="preload" href="/minigame-canvas-engine/assets/style-DEIxwZe7.css" as="style"><link rel="stylesheet" href="/minigame-canvas-engine/assets/style-DEIxwZe7.css">
+    <link rel="modulepreload" href="/minigame-canvas-engine/assets/app-BDAF0ZOp.js"><link rel="modulepreload" href="/minigame-canvas-engine/assets/404.html-DtG9Z8Xv.js">
+    <link rel="prefetch" href="/minigame-canvas-engine/assets/CHANGELOG.html-BbRpEZ6J.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/index.html-DQ_kuICO.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/api.html-z7R9HFNu.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/style.html-CpiYbc6h.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/tags.html-EINZHshW.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/tween.html-QKnOxc7k.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/bitmapfont.html-CdDKsk0W.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/button.html-DtFE5k_3.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/canvas.html-CVxKsaB7.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/element.html-Ccsq2Is9.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/image.html-DBj-chMX.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/overview.html-BT9vN0QB.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/rect.html-B9KCQceN.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/scrollbar.html-CHV3CGiE.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/scrollview.html-6lFXnR8B.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/text.html-CWQoj3ry.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/view.html-581qIFnn.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/invite.html-CG35Jz9c.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/rank.html-CWVyIgIn.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/guide.html-CZGQr31B.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/plugin.html-D9jOWQ7m.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/guide.html-xFrxWOOy.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/richtext.html-CMuRxW-E.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/cocos2.x.html-CB-M09Mf.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/loading.html-D5ACKyhg.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/platform.html-nEWsqg7v.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/templateengine.html-C83qw6AM.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/updateViewPort.html-DMUEIJgb.js" as="script"><link rel="prefetch" href="/minigame-canvas-engine/assets/setupDevtools-7MC2TMWH-CYY_Ib46.js" as="script">
   </head>
   <body>
-    <div id="app"><!--[--><div class="theme-container"><main class="page"><div class="theme-default-content"><h1>404</h1><blockquote>There&#39;s nothing here.</blockquote><a href="/minigame-canvas-engine/" class="">Take me home</a></div></main></div><!----><!--]--></div>
-    <script type="module" src="/minigame-canvas-engine/assets/app-ff4dd70b.js" defer></script>
+    <div id="app"><!--[--><div class="vp-theme-container" vp-container data-v-67c08c1d><main class="page" data-v-67c08c1d><div class="theme-default-content" vp-content data-v-67c08c1d><h1 data-v-67c08c1d>404</h1><blockquote data-v-67c08c1d>How did we get here?</blockquote><a class="route-link" href="/minigame-canvas-engine/" data-v-67c08c1d>Take me home</a></div></main></div><!--[--><!----><!--]--><!--]--></div>
+    <script type="module" src="/minigame-canvas-engine/assets/app-BDAF0ZOp.js" defer></script>
   </body>
 </html>
