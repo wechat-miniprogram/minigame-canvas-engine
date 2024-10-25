@@ -6,7 +6,10 @@ coverage.lcov
 .wechatide
 .cache
 .temp
-docs/.vuepress/dist
+docsback/.vuepress/dist
+
+docs/.vitepress/dist
+docs/.vitepress/cache
 
 #///////////////////////////
 # Cocos Creator 3D Project

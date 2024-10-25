@@ -92,7 +92,7 @@ Layout.layout(context);
 
 6. 渲染结果
 
-<img :src="$withBase('/imgs/hello.jpg')" width=300>
+<img src="/imgs/hello.jpg" width=300>
 
 7. 事件绑定
 

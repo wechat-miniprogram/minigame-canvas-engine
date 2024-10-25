@@ -1,4 +1,4 @@
-## 简介
+# 简介
 
 
 当我们开发一个canvas应用的时候，出于效率的考量，免不了要选择一个渲染引擎（比如**PixiJS**)或者工具链更完备的游戏引擎（比如**Cocos Creator**、**Layabox**)。
@@ -18,15 +18,14 @@ Layout 的目标在于用 Web 的开发方式来开发简单的 Canvas 应用。
 为了方便调试，可以基于 codepen [模板](https://codepen.io/pen?template=VwEeLKw) 构建demo，旧版本[Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html)已不再维护。
 
 ## 效果预览
-<img :src="$withBase('/imgs/screenshot.gif')" width=300>
+<img src="/imgs/screenshot.gif" width=300>
 
 ## 谁在使用
-目前在微信小游戏平台已经超过1000+游戏使用 Layout 来开发开放数据域能力。
+目前在微信小游戏平台已经超过3000+游戏使用 Layout 来开发开放数据域能力。
 
-
-<img :src="$withBase('/imgs/demo.png')" width=120> <img :src="$withBase('/imgs/ditiepaoku.png')" width=120> <img :src="$withBase('/imgs/dazhanggui.jpeg')" width=120> <img :src="$withBase('/imgs/jiuchongshilian.jpeg')" width=120> <img :src="$withBase('/imgs/lvxingchuanchuan.jpeg')" width=120>
+<img src="/imgs/demo.png" width=120 style="display: inline"> <img style="display: inline" src="/imgs/ditiepaoku.png" width=120> <img style="display: inline" src="/imgs/dazhanggui.jpeg" width=120> <img style="display: inline" src="/imgs/jiuchongshilian.jpeg" width=120> <img style="display: inline" src="/imgs/lvxingchuanchuan.jpeg" width=120>
 
 ## 交流群
 如果遇到 Layout 是用上的问题或者有合理的需求想要支持，欢迎加入 Layout 交流QQ群探讨，如需反馈问题，请基于 codepen [模板](https://codepen.io/pen?template=VwEeLKw) 构建可复现问题的最小demo。
 
-<img :src="$withBase('/imgs/qq.jpg')" width=200>
+<img src="/imgs/qq.jpg" width=200>

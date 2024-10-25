@@ -99,7 +99,7 @@ title: {
 
 
 ### 示例
-<img :src="$withBase('/imgs/bitmapfont.png')" width=400>
+<img :src="imgs/bitmapfont.png" width=400>
 
 ## canvas
 ### 特殊属性
