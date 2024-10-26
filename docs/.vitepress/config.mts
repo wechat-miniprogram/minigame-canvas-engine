@@ -61,7 +61,6 @@ export default defineConfig({
     outline: {
       label: '页面导航'
     },
-    // https://vitepress.dev/reference/default-theme-config
     nav: [
       {
         text: "微信小游戏官方文档",
@@ -72,7 +71,11 @@ export default defineConfig({
     sidebar: [
       {
         text: "概览",
-        link: "/index"
+        link: "/index",
+        items: [
+          { text: '简介', link: '/index'},
+          { text: '常见问题', link: '/qa'}
+        ]
       },
 
       {
@@ -89,6 +92,7 @@ export default defineConfig({
         items: [
           { text: '模板引擎使用', link: '/tutorial/templateengine'},
           { text: 'cocos2.x版本适配', link: '/tutorial/cocos2.x'},
+          { text: '使用字体', link: '/tutorial/font'},
           { text: '加载中效果实现', link: '/tutorial/loading'},
           { text: '平台适配', link: '/tutorial/platform'},
           { text: '缓动系统', link: '/api/tween'},
@@ -98,8 +102,8 @@ export default defineConfig({
         text: '更多示例',
         link:'/demos/invite',
         items: [
+          { text: '好友排行榜', link: '/demos/rank'},
           { text: '邀请好友组件', link: '/demos/invite'},
-          { text: '好有排行榜', link: '/demos/rank'},
         ],
       },
       {

@@ -15,7 +15,7 @@ npm install minigame-canvas-engine --save
 import Layout from "minigame-canvas-engine";
 ```
 
-2. 编写模板字符串：这里采用 XML 去描述界面，而且支持有限的标签。需要特别注意的是，模板字符串只能有一个根节点，第二个节点会被忽略。如果想让模板更加强大，可以借助第三方模板引擎如[dot.js](https://olado.github.io/doT/index.html)。
+2. 编写模板字符串：这里采用 XML 去描述界面，而且支持有限的标签。需要特别注意的是，模板字符串只能有一个根节点，第二个节点会被忽略。如果想让模板更加强大，可以借助第三方模板引擎如[dot.js](https://olado.github.io/doT/index.html)，关于模板引擎的使用请查看[模板引擎使用](../tutorial/templateengine)。
 这一步需要开发者掌握一定程度的 Web 前端开发知识，如果你只有游戏开发经验没有任何 Web 前端开发经验，建议花点时间阅读下面教程：
   - [CSS教程](https://www.runoob.com/css/css-tutorial.html)：能够了解 Web 端是如何组织页面样式的；
   - [Flex布局教程](https://www.ruanyifeng.com/blog/2015/07/flex-grammar.html): 这个非常重要，Layout 布局仅仅支持 Flex 布局，通读教程能够了解如何进行页面布局；

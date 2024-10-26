@@ -15,7 +15,7 @@ Layout 的目标在于用 Web 的开发方式来开发简单的 Canvas 应用。
 
 ## web端调试
 
-为了方便调试，可以基于 codepen [模板](https://codepen.io/pen?template=VwEeLKw) 构建demo，旧版本[Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html)已不再维护。
+为了方便调试，可以基于 codepen [模板](https://codepen.io/pen?template=VwEeLKw) 构建demo，更多效果可以查看[Layout demo 合集](https://codepen.io/collection/PYrdpO)，旧版本[Playground](https://wechat-miniprogram.github.io/minigame-canvas-engine/playground.html)已不再维护。
 
 ## 效果预览
 <img src="/imgs/screenshot.gif" width=300>

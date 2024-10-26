@@ -89,6 +89,8 @@ listItem.forEach(item => {
 ### removeChild(ele: Element)
 移除给定的子节点
 
+### remove()
+将节点从当前节点树中删除
 
 # 事件
 通过 getElementsById 或者 getElementsByClassName 获取元素之后，可以的绑定事件，支持的事件有`touchstart`、`touchmove`、`touchend`、`touchcancel`、`click`、`scroll(只有scrollview支持）`示例如下：
