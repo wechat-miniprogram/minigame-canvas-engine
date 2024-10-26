@@ -11,18 +11,17 @@ export default defineConfig({
     ["meta", { name: "author", content: "yuanzm" }],
     ["meta", { name: "keywords", content: "minigame-canvans-engine, minigame, canvas, engine, game engine" }],
     ['link', { rel: 'shortcut icon', type: "image/x-icon", href: `./imgs/favicon.ico` }],
-    // [
-    //   'script',
-    //   { id: 'statcounter' },
-    //   `
-    //     var sc_project=12873270; 
-    //     var sc_invisible=1; 
-    //     var sc_security="efed24b4";
-    //   `
-    // ],
-    // ["script", { src: "https://www.statcounter.com/counter/counter.js", async: "true" }]
+    [
+      'script',
+      { id: 'statcounter' },
+      `
+        var sc_project=12873270; 
+        var sc_invisible=1; 
+        var sc_security="efed24b4";
+      `
+    ],
+    ["script", { src: "https://www.statcounter.com/counter/counter.js", async: "true" }]
   ],
-  
 
   themeConfig: {
     search: {
