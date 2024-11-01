@@ -66,7 +66,7 @@ export default class ScrollBar extends View {
 
   private autoHideRemainingTime = 0;
 
-  private innerWidth = 16;
+  private innerWidth = 10;
 
   private isHide = false;
 
@@ -76,8 +76,8 @@ export default class ScrollBar extends View {
   constructor({
     direction,
     dimensions,
-    backgroundColor = 'rgba(162, 162, 162, 1)',
-    width = 16,
+    backgroundColor = 'rgba(162, 162, 162, 0.7)',
+    width = 10,
   }: IScrollBarOptions) {
     const style = Object.assign({
       backgroundColor,

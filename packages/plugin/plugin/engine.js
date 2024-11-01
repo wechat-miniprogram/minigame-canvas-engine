@@ -200,8 +200,8 @@ var StyleOpType;
 })(StyleOpType || (StyleOpType = {}));
 var Element = /** @class */ (function () {
     function Element(_a) {
-        var _this = this;
         var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, _e = _a.id, id = _e === void 0 ? uuid += 1 : _e, _f = _a.dataset, dataset = _f === void 0 ? {} : _f;
+        var _this = this;
         /**
          * 子节点列表
          */
@@ -2461,12 +2461,12 @@ var defaultOptions = {
     textNodeName: '#text',
     ignoreAttributes: true,
     ignoreNameSpace: false,
-    allowBooleanAttributes: false,
+    allowBooleanAttributes: false, //a tag can have attributes without any value
     //ignoreRootElement : false,
     parseNodeValue: true,
     parseAttributeValue: false,
     arrayMode: false,
-    trimValues: true,
+    trimValues: true, //Trim string values of tag and attributes
     cdataTagName: false,
     cdataPositionChar: '\\c',
     localeRange: '',
@@ -2713,7 +2713,7 @@ module.exports = function (tagname, parent, val) {
 
 var util = __webpack_require__(13);
 var defaultOptions = {
-    allowBooleanAttributes: false,
+    allowBooleanAttributes: false, //A tag can have attributes without any value
     localeRange: 'a-zA-Z',
 };
 var props = ['allowBooleanAttributes', 'localeRange'];
@@ -3798,8 +3798,8 @@ function parseText(style, value) {
 var Text = /** @class */ (function (_super) {
     __extends(Text, _super);
     function Text(_a) {
-        var _this = this;
         var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, _e = _a.value, value = _e === void 0 ? '' : _e, dataset = _a.dataset;
+        var _this = this;
         var originStyleWidth = style.width;
         // 没有设置宽度的时候通过canvas计算出文字宽度
         if (originStyleWidth === undefined) {
@@ -5473,8 +5473,8 @@ function checkNeedHideScrollBar(direction, dimensions) {
 var ScrollBar = /** @class */ (function (_super) {
     __extends(ScrollBar, _super);
     function ScrollBar(_a) {
+        var direction = _a.direction, dimensions = _a.dimensions, _b = _a.backgroundColor, backgroundColor = _b === void 0 ? 'rgba(162, 162, 162, 0.7)' : _b, _c = _a.width, width = _c === void 0 ? 10 : _c;
         var _this = this;
-        var direction = _a.direction, dimensions = _a.dimensions, _b = _a.backgroundColor, backgroundColor = _b === void 0 ? 'rgba(162, 162, 162, 1)' : _b, _c = _a.width, width = _c === void 0 ? 16 : _c;
         var style = Object.assign({
             backgroundColor: backgroundColor,
             position: 'absolute',
@@ -5490,7 +5490,7 @@ var ScrollBar = /** @class */ (function (_super) {
         _this.autoHideTime = 2000;
         _this.autoHideDelayTime = 1500;
         _this.autoHideRemainingTime = 0;
-        _this.innerWidth = 16;
+        _this.innerWidth = 10;
         _this.isHide = false;
         _this.currLeft = 0;
         _this.currTop = 0;
@@ -5722,11 +5722,16 @@ var BitMapText = /** @class */ (function (_super) {
         var style = this.style;
         var _a = style.letterSpacing, letterSpacing = _a === void 0 ? 0 : _a;
         var width = 0;
+        // 记录上一个字符，方便处理 kerning
+        var prevCharCode = null;
         for (var i = 0, len = this.value.length; i < len; i++) {
             var char = this.value[i];
             var cfg = this.font.chars[char];
             if (cfg) {
-                width += cfg.w;
+                if (prevCharCode && cfg.kerning[prevCharCode]) {
+                    width += cfg.kerning[prevCharCode];
+                }
+                width += cfg.xadvance;
                 if (i < len - 1) {
                     width += letterSpacing;
                 }
@@ -5763,7 +5768,7 @@ var BitMapText = /** @class */ (function (_super) {
                 drawX += (width - realWidth) / 2;
             }
             else if (textAlign === 'right') {
-                drawY += (width - realWidth);
+                drawX += (width - realWidth);
             }
         }
         // 记录上一个字符，方便处理 kerning
@@ -6140,7 +6145,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.11';
+        _this.version = '1.0.12';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context
@@ -6297,7 +6302,7 @@ var Layout = /** @class */ (function (_super) {
         debugInfo.start('init');
         var parseConfig = {
             attributeNamePrefix: '',
-            attrNodeName: 'attr',
+            attrNodeName: 'attr', // default is 'false'
             textNodeName: '#text',
             ignoreAttributes: false,
             ignoreNameSpace: true,

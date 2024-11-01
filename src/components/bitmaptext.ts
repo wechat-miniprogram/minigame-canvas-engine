@@ -83,11 +83,20 @@ export default class BitMapText extends Element {
     const { letterSpacing = 0 } = style;
     let width = 0;
 
+    // 记录上一个字符，方便处理 kerning
+    let prevCharCode = null;
+
+
     for (let i = 0, len = this.value.length; i < len; i++) {
       const char = this.value[i];
       const cfg = this.font.chars[char];
+
       if (cfg) {
-        width += cfg.w;
+        if (prevCharCode && cfg.kerning[prevCharCode]) {
+          width += cfg.kerning[prevCharCode];
+        }
+  
+        width += cfg.xadvance;
 
         if (i < len - 1) {
           width += letterSpacing;
@@ -119,6 +128,7 @@ export default class BitMapText extends Element {
     const lineHeight = (style.lineHeight || defaultLineHeight) as number
 
     const scaleY = lineHeight / defaultLineHeight;
+
     const realWidth = scaleY * bounds.width;
 
     // 如果文字的渲染区域高度小于盒子高度，采用对齐方式
@@ -134,7 +144,7 @@ export default class BitMapText extends Element {
       if (textAlign === 'center') {
         drawX += (width - realWidth) / 2;
       } else if (textAlign === 'right') {
-        drawY += (width - realWidth);
+        drawX += (width - realWidth);
       }
     }
 

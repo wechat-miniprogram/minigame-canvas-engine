@@ -73,7 +73,11 @@ export default defineConfig({
         link: "/index",
         items: [
           { text: '简介', link: '/index'},
-          { text: '常见问题', link: '/qa'}
+          { text: '常见问题', link: '/qa'},
+          {
+            text: '更新日志',
+            link: '/CHANGELOG',
+          }
         ]
       },
 
@@ -133,10 +137,6 @@ export default defineConfig({
           { text: '概览', link: '/plugin/guide', },
           { text: '富文本插件', link: '/plugin/richtext'}
         ],
-      },
-      {
-        text: '更新日志',
-        link: '/CHANGELOG',
       }
     ],
 
