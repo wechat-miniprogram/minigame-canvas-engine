@@ -3,17 +3,11 @@
 import { View, Text, Image, ScrollView, BitMapText, Canvas, Element, Button } from '../components/index';
 import { IStyle } from '../components/style';
 import { ILayout, ILayoutBox } from '../components/elements';
-import { Callback } from '../types';
+import { Callback, TreeNode } from '../types';
 import env from '../env';
 
 interface Constructor {
   new (...args: any[]): any;
-}
-
-interface TreeNode {
-  name: string;
-  attr: Record<string, string>;
-  children: TreeNode[];
 }
 
 const constructorMap: { [key: string]: Constructor } = {
@@ -121,7 +115,7 @@ export function create(node: TreeNode, style: Record<string, IStyle>, parent?: R
       thisStyle.opacity = 1;
     }
 
-    if (parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
+    if (parentStyle && parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
       thisStyle.opacity = parentStyle.opacity * thisStyle.opacity;
     }
   }

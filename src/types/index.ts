@@ -18,3 +18,9 @@ export interface GameTouchEvent {
   touches: GameTouch[];
   changedTouches: GameTouch[];
 }
+
+export interface TreeNode {
+  name: string;
+  attr: Record<string, string>;
+  children: TreeNode[];
+}

@@ -13,7 +13,7 @@ import Rect from './common/rect';
 import imageManager from './common/imageManager';
 import { View, Text, Image, ScrollView, BitMapText, Canvas, Button } from './components';
 import { IStyle } from './components/style';
-import { GameTouch, GameTouchEvent, Callback } from './types/index';
+import { GameTouch, GameTouchEvent, Callback, TreeNode } from './types/index';
 
 // 全局事件管道
 const EE = new TinyEmitter();
@@ -69,7 +69,7 @@ class Layout extends Element {
   public version = '1.0.12';
 
   env = env;
-  
+
   /**
    * Layout 渲染的目标画布对应的 2d context
    */
@@ -433,10 +433,10 @@ class Layout extends Element {
         item && item.emit('click', e);
       }
     };
-  }
+  };
 
   /**
-   * 执行全局的事件绑定逻辑 
+   * 执行全局的事件绑定逻辑
    */
   bindEvents() {
     if (this.eventHandlerData.hasEventBind) {
@@ -471,7 +471,7 @@ class Layout extends Element {
   }
 
   /**
-   * 全局事件解绑 
+   * 全局事件解绑
    */
   unBindEvents() {
     env.offTouchStart(this.eventHandlerData.handlers.touchStart);
@@ -559,14 +559,52 @@ class Layout extends Element {
   }
 
   /**
-   * 注册 bitmaptext 可用的字体。 
+   * 注册 bitmaptext 可用的字体。
    */
   registBitMapFont(name: string, src: string, config: string) {
     if (!bitMapPool.get(name)) {
       const font = new BitMapFont(name, src, config);
       this.bitMapFonts.push(font);
-      bitMapPool.set(name, font)
+      bitMapPool.set(name, font);
     }
+  }
+
+  /**
+   * 创建并插入节点
+   */
+  insertElement(template: string, style: Record<string, IStyle>, parent: Element | null | undefined) {
+    const parseConfig = {
+      attributeNamePrefix: '',
+      attrNodeName: 'attr', // default is 'false'
+      textNodeName: '#text',
+      ignoreAttributes: false,
+      ignoreNameSpace: true,
+      allowBooleanAttributes: true,
+      parseNodeValue: false,
+      parseAttributeValue: false,
+      trimValues: true,
+      parseTrueNumberOnly: false,
+      alwaysCreateTextNode: true,
+    };
+
+    debugInfo.start('create_xmlParse');
+    // 将xml字符串解析成xml节点树
+    const jsonObj = parser.parse(template, parseConfig, true);
+    // console.log(jsonObj)
+    debugInfo.end('create_xmlParse');
+
+    jsonObj.children.forEach((xmlTree: TreeNode) => {
+      // XML树生成渲染树
+      debugInfo.start('create_xml2Layout');
+      const layoutTree = create.call(this, xmlTree, style);
+      debugInfo.end('create_xml2Layout');
+  
+      if (parent) {
+        parent.appendChild(layoutTree);
+      } else {
+        this.add(layoutTree);
+      }
+    });
   }
 
   /**
@@ -593,7 +631,7 @@ class Layout extends Element {
 
   private static installedPlugins: IPlugin<Layout>[] = [];
   /**
-   * 安装给定的插件 
+   * 安装给定的插件
    */
   use(plugin: IPlugin<Layout>, ...options: any[]) {
     if (Layout.installedPlugins.includes(plugin)) {
@@ -608,7 +646,7 @@ class Layout extends Element {
   }
 
   /**
-   * 卸载给定插件 
+   * 卸载给定插件
    */
   unUse(plugin: IPlugin<Layout>, ...options: any[]) {
     const pluginIndex = Layout.installedPlugins.indexOf(plugin);
