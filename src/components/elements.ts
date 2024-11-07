@@ -3,9 +3,8 @@ import { repaintAffectedStyles, reflowAffectedStyles, renderAffectStyles, IStyle
 import Rect from '../common/rect';
 import imageManager from '../common/imageManager';
 import TinyEmitter from 'tiny-emitter';
-import { IDataset } from '../types/index'
+import { IDataset, Callback } from '../types/index'
 import { IElementOptions } from './types';
-import { Callback } from '../types/index';
 import { backgroundImageParser, parseTransform, IRenderForLayout } from './styleParser';
 
 export function getElementsById<T>(tree: Element, list: (Element | T)[] = [], id: string): T[] {
