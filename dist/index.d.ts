@@ -689,6 +689,10 @@ declare class Layout extends Element {
      */
     registBitMapFont(name: string, src: string, config: string): void;
     /**
+     * 创建并插入节点
+     */
+    insertElement(template: string, style: Record<string, IStyle>, parent: Element | null | undefined): void;
+    /**
      * 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中
      * 该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。
      */
