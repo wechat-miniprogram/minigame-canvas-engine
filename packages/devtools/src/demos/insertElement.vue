@@ -134,7 +134,7 @@ export default defineComponent({
       const loading = Layout.getElementsByClassName('loading')[0];
       loading?.remove();
       const scrollView = Layout.getElementsByClassName('scrollView')[0];
-      // Layout.insertElement(template, style, scrollView);
+      Layout.insertElement(template, style, scrollView);
       console.warn('scrollView', scrollView);
     },
   },
