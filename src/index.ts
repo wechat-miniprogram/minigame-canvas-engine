@@ -570,9 +570,9 @@ class Layout extends Element {
   }
 
   /**
-   * 创建并插入节点
+   * 创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
    */
-  insertElement(template: string, style: Record<string, IStyle>, parent: Element | null | undefined) {
+  insertElement(template: string, style: Record<string, IStyle>, parent: Element | null | undefined): Element[] {
     const parseConfig = {
       attributeNamePrefix: '',
       attrNodeName: 'attr', // default is 'false'
@@ -593,6 +593,7 @@ class Layout extends Element {
     // console.log(jsonObj)
     debugInfo.end('create_xmlParse');
 
+    const getElements: Element[] = [];
     jsonObj.children.forEach((xmlTree: TreeNode) => {
       // XML树生成渲染树
       debugInfo.start('create_xml2Layout');
@@ -601,10 +602,11 @@ class Layout extends Element {
   
       if (parent) {
         parent.appendChild(layoutTree);
-      } else {
-        this.add(layoutTree);
       }
+      getElements.push(layoutTree);
     });
+
+    return getElements;
   }
 
   /**

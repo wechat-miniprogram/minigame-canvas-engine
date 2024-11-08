@@ -163,6 +163,47 @@ list.appendChild(newListItem1);
   on <a href="https://codepen.io">CodePen</a>.
 </iframe>
 
+## insertElement
+layout.insertElement(template: string, style: object, parent?: [Element](../components/element.md)): [Element](../components/element.md)[]
+
+创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
+
+```js
+  let template = ``;
+  data?.forEach((user) => {
+    template += `
+        <view class="item ${user.openId}">
+          <image src="${user.avatarUrl}" class="avatar"></image>
+          <text class="name" value="${user.nickName}"></text>
+        </view>
+      `;
+  });
+  const style = {
+    item: {
+      flexDirection: 'row',
+      paddingLeft: 16 * pixelRatio,
+      paddingRight: 16 * pixelRatio,
+      paddingTop: 8 * pixelRatio,
+      paddingBottom: 8 * pixelRatio,
+      alignItems: 'center',
+    },
+    avatar: {
+      width: 48 * pixelRatio,
+      height: 48 * pixelRatio,
+      borderRadius: 8 * pixelRatio,
+    },
+    name: {
+      color: 'rgba(0,0,0,0.9)',
+      fontSize: 16 * pixelRatio,
+      marginLeft: 8 * pixelRatio,
+      width: 120 * pixelRatio,
+      textOverflow: 'ellipsis',
+    },
+  };
+  const scrollView = layout.getElementsByClassName('scrollView')[0];
+  Layout.insertElement(template, style, scrollview);
+```
+
 ## ticker
 类似游戏引擎，Layout 本身会依赖 requestAnimationFrame 维护个循环，每帧检测是否需要重渲染、重布局之类的操作。
 

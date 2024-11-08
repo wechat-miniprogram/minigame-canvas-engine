@@ -6571,7 +6571,7 @@ var Layout = /** @class */ (function (_super) {
         }
     };
     /**
-     * 创建并插入节点
+     * 创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
      */
     Layout.prototype.insertElement = function (template, style, parent) {
         var _this = this;
@@ -6593,6 +6593,7 @@ var Layout = /** @class */ (function (_super) {
         var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__.parse(template, parseConfig, true);
         // console.log(jsonObj)
         debugInfo.end('create_xmlParse');
+        var getElements = [];
         jsonObj.children.forEach(function (xmlTree) {
             // XML树生成渲染树
             debugInfo.start('create_xml2Layout');
@@ -6601,10 +6602,9 @@ var Layout = /** @class */ (function (_super) {
             if (parent) {
                 parent.appendChild(layoutTree);
             }
-            else {
-                _this.add(layoutTree);
-            }
+            getElements.push(layoutTree);
         });
+        return getElements;
     };
     /**
      * 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中
