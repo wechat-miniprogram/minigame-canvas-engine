@@ -177,7 +177,7 @@ function setDirty(ele, reason) {
     }
 }
 // 全局事件管道
-var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default())();
+var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default().TinyEmitter)();
 var uuid = 0;
 var toEventName = function (event, id) {
     var elementEvent = [
@@ -3029,8 +3029,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
+/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_1__);
 
-var Emitter = __webpack_require__(8);
+
 /**
  * http://www.angelcode.com/products/bmfont/doc/file_format.html
  */
@@ -3041,7 +3043,7 @@ var BitMapFont = /** @class */ (function () {
         this.ready = false;
         this.config = config;
         this.chars = this.parseConfig(config);
-        this.event = new Emitter();
+        this.event = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_1___default().TinyEmitter)();
         this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_0__["default"].loadImage(src, function (texture, fromCache) {
             if (fromCache) {
                 _this.texture = texture;
@@ -6060,8 +6062,16 @@ var __webpack_exports__ = {};
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BitMapText: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.BitMapText),
+/* harmony export */   Button: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Button),
+/* harmony export */   Canvas: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Canvas),
 /* harmony export */   EE: () => (/* binding */ EE),
+/* harmony export */   Element: () => (/* reexport safe */ _components_elements__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   Image: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Image),
 /* harmony export */   Layout: () => (/* binding */ Layout),
+/* harmony export */   ScrollView: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.ScrollView),
+/* harmony export */   Text: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Text),
+/* harmony export */   View: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.View),
 /* harmony export */   "default": () => (/* binding */ layout),
 /* harmony export */   env: () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
@@ -6120,7 +6130,7 @@ var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from
 
 
 // 全局事件管道
-var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default())();
+var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default().TinyEmitter)();
 var imgPool = new _common_pool__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
 var bitMapPool = new _common_pool__WEBPACK_IMPORTED_MODULE_2__["default"]('bitMapPool');
 var debugInfo = new _common_debugInfo__WEBPACK_IMPORTED_MODULE_8__["default"]();

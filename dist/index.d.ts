@@ -534,7 +534,7 @@ interface Constructor {
 }
 declare function registerComponent(name: string, Constructor: Constructor): void;
 
-declare const EE: TinyEmitter;
+declare const EE: TinyEmitter.TinyEmitter;
 interface IViewPort {
     width: number;
     height: number;
@@ -721,4 +721,4 @@ declare class Layout extends Element {
 }
 declare const layout: Layout;
 
-export { EE, Layout, layout as default, _default as env };
+export { BitMapText, Button, Canvas, EE, Element, type IStyle, Image, Layout, ScrollView, Text, View, layout as default, _default as env };

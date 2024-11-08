@@ -56,7 +56,7 @@ export function setDirty(ele: Element, reason?: string) {
 }
 
 // 全局事件管道
-const EE = new TinyEmitter();
+const EE = new TinyEmitter.TinyEmitter();
 
 let uuid = 0;
 

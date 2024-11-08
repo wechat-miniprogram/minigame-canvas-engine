@@ -16,7 +16,7 @@ import { IStyle } from './components/style';
 import { GameTouch, GameTouchEvent, Callback, TreeNode } from './types/index';
 
 // 全局事件管道
-const EE = new TinyEmitter();
+const EE = new TinyEmitter.TinyEmitter();
 const imgPool = new Pool('imgPool');
 const bitMapPool = new Pool('bitMapPool');
 const debugInfo = new DebugInfo();
@@ -678,4 +678,13 @@ export {
   Layout,
   env,
   EE,
+  IStyle,
+  Element,
+  View,
+  Text,
+  Image,
+  ScrollView,
+  BitMapText,
+  Canvas,
+  Button
 }
