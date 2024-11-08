@@ -261,16 +261,16 @@ declare class Element$1 {
 	 * 查询当前节点树下，idName 为给定参数的的节点
 	 * 节点的 id 唯一性 Layout 并不保证，但这里只返回符合条件的第一个节点
 	 */
-	getElementById<T = Element$1>(id: string): T | null;
+	getElementById<T extends Element$1>(id: string): T | null;
 	/**
 	 * 查询当前节点树下，idName 为给定参数的的节点
 	 * 节点的 id 唯一性 Layout 并不保证，这里返回符合条件的节点集合
 	 */
-	getElementsById<T = Element$1>(id: string): (T | null)[];
+	getElementsById<T extends Element$1>(id: string): (T | null)[];
 	/**
 	 * 查询当前节点树下，className 包含给定参数的的节点集合
 	 */
-	getElementsByClassName<T = Element$1>(className: string): (T | null)[];
+	getElementsByClassName<T extends Element$1>(className: string): (T | null)[];
 	/**
 	 * 布局计算完成，准备执行渲染之前执行的操作，不同的子类有不同的行为
 	 * 比如 ScrollView 在渲染之前还需要初始化滚动相关的能力
