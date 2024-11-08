@@ -7,10 +7,8 @@ const renderRect = {
 };
 const template = `
     <view class="container">
-      
-      <scrollview class="scrollView" scrollY="true">
       <text class="loading" value="加载中..."></text>
-      </scrollview>
+      <scrollview class="scrollView" scrollY="true"></scrollview>
     </view>`;
 
 const style = {
@@ -59,6 +57,7 @@ export default defineComponent({
       Layout.init(template, style);
 
       Layout.layout(context);
+      // 模拟数据加载
       setTimeout(() => {
         this.addList();
       }, 1000);
@@ -103,7 +102,7 @@ export default defineComponent({
             'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
           nickName: '折面',
         },
-      ]; // data 数据需要自行填写
+      ];
       data.forEach((user) => {
         template += `
             <view class="item ${user.openId}">
@@ -135,7 +134,6 @@ export default defineComponent({
       loading?.remove();
       const scrollView = Layout.getElementsByClassName('scrollView')[0];
       Layout.insertElement(template, style, scrollView);
-      console.warn('scrollView', scrollView);
     },
   },
 });

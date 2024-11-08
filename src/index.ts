@@ -599,6 +599,8 @@ class Layout extends Element {
       debugInfo.start('create_xml2Layout');
       const layoutTree = create.call(this, xmlTree, style);
       debugInfo.end('create_xml2Layout');
+
+      iterateTree(layoutTree, element => element.observeStyleAndEvent());
   
       if (parent) {
         parent.appendChild(layoutTree);
