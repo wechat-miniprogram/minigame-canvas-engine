@@ -66,7 +66,7 @@ class Layout extends Element {
   /**
    * 当前 Layout 版本，一般跟小游戏插件版本对齐
    */
-  public version = '1.0.12';
+  public version = '1.0.13';
 
   env = env;
 
@@ -572,7 +572,7 @@ class Layout extends Element {
   /**
    * 创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
    */
-  insertElement(template: string, style: Record<string, IStyle>, parent: Element | null | undefined): Element[] {
+  insertElement(template: string, style: Record<string, IStyle>, parent?: Element | null): Element[] {
     const parseConfig = {
       attributeNamePrefix: '',
       attrNodeName: 'attr', // default is 'false'

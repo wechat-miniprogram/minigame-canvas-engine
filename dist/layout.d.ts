@@ -676,7 +676,7 @@ export declare class Layout extends Element$1 {
 	/**
 	 * 创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
 	 */
-	insertElement(template: string, style: Record<string, IStyle>, parent: Element$1 | null | undefined): Element$1[];
+	insertElement(template: string, style: Record<string, IStyle>, parent?: Element$1 | null): Element$1[];
 	/**
 	 * 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中
 	 * 该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。

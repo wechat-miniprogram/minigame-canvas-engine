@@ -170,7 +170,8 @@ layout.insertElement(template: string, style: object, parent?: [Element](../comp
 
 ```js
   let template = ``;
-  data?.forEach((user) => {
+  const data = []; // data 数据需要自行填写
+  data.forEach((user) => {
     template += `
         <view class="item ${user.openId}">
           <image src="${user.avatarUrl}" class="avatar"></image>
@@ -181,27 +182,24 @@ layout.insertElement(template: string, style: object, parent?: [Element](../comp
   const style = {
     item: {
       flexDirection: 'row',
-      paddingLeft: 16 * pixelRatio,
-      paddingRight: 16 * pixelRatio,
-      paddingTop: 8 * pixelRatio,
-      paddingBottom: 8 * pixelRatio,
+      padding: 16,
       alignItems: 'center',
     },
     avatar: {
-      width: 48 * pixelRatio,
-      height: 48 * pixelRatio,
-      borderRadius: 8 * pixelRatio,
+      width: 48,
+      height: 48,
+      borderRadius: 8,
     },
     name: {
       color: 'rgba(0,0,0,0.9)',
-      fontSize: 16 * pixelRatio,
-      marginLeft: 8 * pixelRatio,
-      width: 120 * pixelRatio,
+      fontSize: 16,
+      marginLeft: 8,
+      width: 120,
       textOverflow: 'ellipsis',
     },
   };
   const scrollView = layout.getElementsByClassName('scrollView')[0];
-  Layout.insertElement(template, style, scrollview);
+  Layout.insertElement(template, style, scrollView);
 ```
 
 ## ticker
