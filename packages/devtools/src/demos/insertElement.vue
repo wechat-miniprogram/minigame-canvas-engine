@@ -70,37 +70,49 @@ export default defineComponent({
           openId: '1',
           avatarUrl:
             'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
-          nickName: 'zim',
+          nickName: 'zim1',
         },
         {
           openId: '2',
           avatarUrl:
             'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
-          nickName: '折面',
+          nickName: 'zim2',
         },
         {
           openId: '3',
           avatarUrl:
             'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
-          nickName: 'zim',
+          nickName: 'zim3',
         },
         {
           openId: '4',
           avatarUrl:
             'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
-          nickName: '折面',
+          nickName: 'zim4',
         },
         {
           openId: '5',
           avatarUrl:
             'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
-          nickName: 'zim',
+          nickName: 'zim5',
         },
         {
           openId: '6',
           avatarUrl:
             'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
-          nickName: '折面',
+          nickName: 'zim6',
+        },
+        {
+          openId: '7',
+          avatarUrl:
+            'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
+          nickName: 'zim7',
+        },
+        {
+          openId: '8',
+          avatarUrl:
+            'https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg',
+          nickName: 'zim8',
         },
       ];
       data.forEach((user) => {

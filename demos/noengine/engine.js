@@ -6310,34 +6310,8 @@ var Layout = /** @class */ (function (_super) {
     };
     Layout.prototype.init = function (template, style, attrValueProcessor) {
         debugInfo.start('init');
-        var parseConfig = {
-            attributeNamePrefix: '',
-            attrNodeName: 'attr', // default is 'false'
-            textNodeName: '#text',
-            ignoreAttributes: false,
-            ignoreNameSpace: true,
-            allowBooleanAttributes: true,
-            parseNodeValue: false,
-            parseAttributeValue: false,
-            trimValues: true,
-            parseTrueNumberOnly: false,
-            alwaysCreateTextNode: true,
-        };
-        if (attrValueProcessor && typeof attrValueProcessor === 'function') {
-            // @ts-ignore
-            parseConfig.attrValueProcessor = attrValueProcessor;
-        }
-        debugInfo.start('init_xmlParse');
-        // 将xml字符串解析成xml节点树
-        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__.parse(template, parseConfig, true);
-        // console.log(jsonObj)
-        debugInfo.end('init_xmlParse');
-        var xmlTree = jsonObj.children[0];
-        // XML树生成渲染树
-        debugInfo.start('init_xml2Layout');
-        var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_10__.create.call(this, xmlTree, style);
-        debugInfo.end('init_xml2Layout');
-        this.add(layoutTree);
+        var elementArray = this.insertElementArray(template, style, attrValueProcessor, true);
+        this.add(elementArray[0]);
         this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.INITED;
         this.ticker.add(this.tickerFunc, true);
         this.ticker.start();
@@ -6574,37 +6548,14 @@ var Layout = /** @class */ (function (_super) {
      * 创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
      */
     Layout.prototype.insertElement = function (template, style, parent) {
-        var _this = this;
-        var parseConfig = {
-            attributeNamePrefix: '',
-            attrNodeName: 'attr', // default is 'false'
-            textNodeName: '#text',
-            ignoreAttributes: false,
-            ignoreNameSpace: true,
-            allowBooleanAttributes: true,
-            parseNodeValue: false,
-            parseAttributeValue: false,
-            trimValues: true,
-            parseTrueNumberOnly: false,
-            alwaysCreateTextNode: true,
-        };
-        debugInfo.start('create_xmlParse');
-        // 将xml字符串解析成xml节点树
-        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__.parse(template, parseConfig, true);
-        // console.log(jsonObj)
-        debugInfo.end('create_xmlParse');
-        var getElements = [];
-        jsonObj.children.forEach(function (xmlTree) {
-            // XML树生成渲染树
-            debugInfo.start('create_xml2Layout');
-            var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_10__.create.call(_this, xmlTree, style);
-            debugInfo.end('create_xml2Layout');
+        var elementArray = this.insertElementArray(template, style);
+        elementArray.forEach(function (it) {
+            (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.iterateTree)(it, function (element) { return element.observeStyleAndEvent(); });
             if (parent) {
-                parent.appendChild(layoutTree);
+                parent.appendChild(it);
             }
-            getElements.push(layoutTree);
         });
-        return getElements;
+        return elementArray;
     };
     /**
      * 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中
@@ -6648,6 +6599,46 @@ var Layout = /** @class */ (function (_super) {
         }
         // console.log(`[Layout] 插件 ${plugin.name || ''} 已卸载`)
         Layout.installedPlugins.splice(pluginIndex, 1);
+    };
+    /**
+     * 创建节点，创建之后会返回Element列表
+     */
+    Layout.prototype.insertElementArray = function (template, style, attrValueProcessor, onlyFirst) {
+        var _this = this;
+        var parseConfig = {
+            attributeNamePrefix: '',
+            attrNodeName: 'attr', // default is 'false'
+            textNodeName: '#text',
+            ignoreAttributes: false,
+            ignoreNameSpace: true,
+            allowBooleanAttributes: true,
+            parseNodeValue: false,
+            parseAttributeValue: false,
+            trimValues: true,
+            parseTrueNumberOnly: false,
+            alwaysCreateTextNode: true,
+        };
+        if (attrValueProcessor && typeof attrValueProcessor === 'function') {
+            // @ts-ignore
+            parseConfig.attrValueProcessor = attrValueProcessor;
+        }
+        debugInfo.start('insert_xmlParse');
+        // 将xml字符串解析成xml节点树
+        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__.parse(template, parseConfig, true);
+        // console.log(jsonObj)
+        debugInfo.end('insert_xmlParse');
+        var getElements = [];
+        jsonObj.children.forEach(function (xmlTree, index) {
+            if (onlyFirst && index > 0) {
+                return;
+            }
+            // XML树生成渲染树
+            debugInfo.start('insert_xml2Layout');
+            var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_10__.create.call(_this, xmlTree, style);
+            debugInfo.end('insert_xml2Layout');
+            getElements.push(layoutTree);
+        });
+        return getElements;
     };
     Layout.installedPlugins = [];
     return Layout;

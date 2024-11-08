@@ -703,6 +703,10 @@ export declare class Layout extends Element$1 {
 	 * 卸载给定插件
 	 */
 	unUse(plugin: IPlugin<Layout>, ...options: any[]): void;
+	/**
+	 * 创建节点，创建之后会返回Element列表
+	 */
+	private insertElementArray;
 }
 declare const layout: Layout;
 

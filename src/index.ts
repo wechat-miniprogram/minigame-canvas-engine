@@ -202,39 +202,10 @@ class Layout extends Element {
 
   init(template: string, style: Record<string, IStyle>, attrValueProcessor?: Callback) {
     debugInfo.start('init');
-    const parseConfig = {
-      attributeNamePrefix: '',
-      attrNodeName: 'attr', // default is 'false'
-      textNodeName: '#text',
-      ignoreAttributes: false,
-      ignoreNameSpace: true,
-      allowBooleanAttributes: true,
-      parseNodeValue: false,
-      parseAttributeValue: false,
-      trimValues: true,
-      parseTrueNumberOnly: false,
-      alwaysCreateTextNode: true,
-    };
 
-    if (attrValueProcessor && typeof attrValueProcessor === 'function') {
-      // @ts-ignore
-      parseConfig.attrValueProcessor = attrValueProcessor;
-    }
+    const elementArray = this.insertElementArray(template, style, attrValueProcessor, true);
 
-    debugInfo.start('init_xmlParse');
-    // 将xml字符串解析成xml节点树
-    const jsonObj = parser.parse(template, parseConfig, true);
-    // console.log(jsonObj)
-    debugInfo.end('init_xmlParse');
-
-    const xmlTree = jsonObj.children[0];
-
-    // XML树生成渲染树
-    debugInfo.start('init_xml2Layout');
-    const layoutTree = create.call(this, xmlTree, style);
-    debugInfo.end('init_xml2Layout');
-
-    this.add(layoutTree);
+    this.add(elementArray[0]);
 
     this.state = STATE.INITED;
 
@@ -573,42 +544,16 @@ class Layout extends Element {
    * 创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
    */
   insertElement(template: string, style: Record<string, IStyle>, parent?: Element | null): Element[] {
-    const parseConfig = {
-      attributeNamePrefix: '',
-      attrNodeName: 'attr', // default is 'false'
-      textNodeName: '#text',
-      ignoreAttributes: false,
-      ignoreNameSpace: true,
-      allowBooleanAttributes: true,
-      parseNodeValue: false,
-      parseAttributeValue: false,
-      trimValues: true,
-      parseTrueNumberOnly: false,
-      alwaysCreateTextNode: true,
-    };
+    const elementArray = this.insertElementArray(template, style);
+    elementArray.forEach(it => {
+      iterateTree(it, element => element.observeStyleAndEvent());
 
-    debugInfo.start('create_xmlParse');
-    // 将xml字符串解析成xml节点树
-    const jsonObj = parser.parse(template, parseConfig, true);
-    // console.log(jsonObj)
-    debugInfo.end('create_xmlParse');
-
-    const getElements: Element[] = [];
-    jsonObj.children.forEach((xmlTree: TreeNode) => {
-      // XML树生成渲染树
-      debugInfo.start('create_xml2Layout');
-      const layoutTree = create.call(this, xmlTree, style);
-      debugInfo.end('create_xml2Layout');
-
-      iterateTree(layoutTree, element => element.observeStyleAndEvent());
-  
       if (parent) {
-        parent.appendChild(layoutTree);
+        parent.appendChild(it);
       }
-      getElements.push(layoutTree);
-    });
-
-    return getElements;
+    })
+    
+    return elementArray;
   }
 
   /**
@@ -666,6 +611,50 @@ class Layout extends Element {
 
     // console.log(`[Layout] 插件 ${plugin.name || ''} 已卸载`)
     Layout.installedPlugins.splice(pluginIndex, 1);
+  }
+
+  /**
+   * 创建节点，创建之后会返回Element列表
+   */
+  private insertElementArray(template: string, style: Record<string, IStyle>, attrValueProcessor?: Callback, onlyFirst?: boolean): Element[] {
+    const parseConfig = {
+      attributeNamePrefix: '',
+      attrNodeName: 'attr', // default is 'false'
+      textNodeName: '#text',
+      ignoreAttributes: false,
+      ignoreNameSpace: true,
+      allowBooleanAttributes: true,
+      parseNodeValue: false,
+      parseAttributeValue: false,
+      trimValues: true,
+      parseTrueNumberOnly: false,
+      alwaysCreateTextNode: true,
+    };
+
+    if (attrValueProcessor && typeof attrValueProcessor === 'function') {
+      // @ts-ignore
+      parseConfig.attrValueProcessor = attrValueProcessor;
+    }
+
+    debugInfo.start('insert_xmlParse');
+    // 将xml字符串解析成xml节点树
+    const jsonObj = parser.parse(template, parseConfig, true);
+    // console.log(jsonObj)
+    debugInfo.end('insert_xmlParse');
+
+    const getElements: Element[] = [];
+    jsonObj.children.forEach((xmlTree: TreeNode, index: number) => {
+      if (onlyFirst && index > 0) {
+        return;
+      }
+      // XML树生成渲染树
+      debugInfo.start('insert_xml2Layout');
+      const layoutTree = create.call(this, xmlTree, style);
+      debugInfo.end('insert_xml2Layout');
+      getElements.push(layoutTree);
+    });
+
+    return getElements;
   }
 }
 
