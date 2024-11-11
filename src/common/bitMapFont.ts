@@ -1,5 +1,5 @@
 import imageManager from './imageManager';
-const Emitter = require('tiny-emitter');
+import TinyEmitter from 'tiny-emitter';
 
 interface CharData {
   x: number;
@@ -41,7 +41,7 @@ export default class BitMapFont {
   constructor(name: string, src: string, config: string) {
     this.config = config;
     this.chars = this.parseConfig(config);
-    this.event = new Emitter();
+    this.event = new TinyEmitter.TinyEmitter();
 
     this.texture = imageManager.loadImage(src, (texture, fromCache) => {
       if (fromCache) {

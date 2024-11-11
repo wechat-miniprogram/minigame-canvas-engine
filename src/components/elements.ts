@@ -3,12 +3,11 @@ import { repaintAffectedStyles, reflowAffectedStyles, renderAffectStyles, IStyle
 import Rect from '../common/rect';
 import imageManager from '../common/imageManager';
 import TinyEmitter from 'tiny-emitter';
-import { IDataset } from '../types/index'
+import { IDataset, Callback } from '../types/index'
 import { IElementOptions } from './types';
-import { Callback } from '../types/index';
 import { backgroundImageParser, parseTransform, IRenderForLayout } from './styleParser';
 
-export function getElementsById<T>(tree: Element, list: (Element | T)[] = [], id: string): T[] {
+export function getElementsById<T extends Element>(tree: Element, list: (Element | T)[] = [], id: string): T[] {
   tree.children.forEach((child: Element) => {
     if (child.idName === id) {
       list.push(child);
@@ -22,13 +21,13 @@ export function getElementsById<T>(tree: Element, list: (Element | T)[] = [], id
   return list as T[];
 }
 
-export function getElementById<T>(tree: Element, id: string): T {
+export function getElementById<T extends Element>(tree: Element, id: string): T {
   const list = getElementsById(tree, [], id);
 
   return list?.[0] || null;
 }
 
-export function getElementsByClassName<T>(tree: Element, list: (Element | T)[] = [], className: string): T[] {
+export function getElementsByClassName<T extends Element>(tree: Element, list: (Element | T)[] = [], className: string): T[] {
   tree.children.forEach((child: Element) => {
     if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
       list.push(child);
@@ -57,7 +56,7 @@ export function setDirty(ele: Element, reason?: string) {
 }
 
 // 全局事件管道
-const EE = new TinyEmitter();
+const EE = new TinyEmitter.TinyEmitter();
 
 let uuid = 0;
 
@@ -409,7 +408,7 @@ export default class Element {
    * 查询当前节点树下，idName 为给定参数的的节点
    * 节点的 id 唯一性 Layout 并不保证，但这里只返回符合条件的第一个节点 
    */
-  getElementById<T = Element>(id: string): T | null {
+  getElementById<T extends Element>(id: string): T | null {
     return getElementById<T>(this, id);
   }
 
@@ -417,14 +416,14 @@ export default class Element {
    * 查询当前节点树下，idName 为给定参数的的节点
    * 节点的 id 唯一性 Layout 并不保证，这里返回符合条件的节点集合
    */
-  getElementsById<T = Element>(id: string): (T | null)[] {
+  getElementsById<T extends Element>(id: string): (T | null)[] {
     return getElementsById<T>(this, [], id);
   }
 
   /**
    * 查询当前节点树下，className 包含给定参数的的节点集合
    */
-  getElementsByClassName<T = Element>(className: string): (T | null)[] {
+  getElementsByClassName<T extends Element>(className: string): (T | null)[] {
     return getElementsByClassName<T>(this, [], className);
   }
 

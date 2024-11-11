@@ -25,6 +25,8 @@ import Invite from "./invite.vue";
 import Rotate from "./rotate.vue";
 // @ts-ignore
 import Button from "./button.vue";
+// @ts-ignore
+import InsertElement from "./insertElement.vue";
 
 
 export default defineComponent({
@@ -43,6 +45,7 @@ export default defineComponent({
     Invite,
     // Rotate,
     Button,
+    InsertElement,
   },
   data() {
     return {
@@ -109,6 +112,9 @@ export default defineComponent({
     </TabPanel>
     <TabPanel header="Button">
       <Button ref="panel__9" />
+    </TabPanel>
+    <TabPanel header="InsertElement">
+      <InsertElement ref="panel__10" />
     </TabPanel>
   </TabView>
 </template>

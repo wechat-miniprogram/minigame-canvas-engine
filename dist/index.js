@@ -177,7 +177,7 @@ function setDirty(ele, reason) {
     }
 }
 // 全局事件管道
-var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default())();
+var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default().TinyEmitter)();
 var uuid = 0;
 var toEventName = function (event, id) {
     var elementEvent = [
@@ -3029,8 +3029,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _imageManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
+/* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_1__);
 
-var Emitter = __webpack_require__(8);
+
 /**
  * http://www.angelcode.com/products/bmfont/doc/file_format.html
  */
@@ -3041,7 +3043,7 @@ var BitMapFont = /** @class */ (function () {
         this.ready = false;
         this.config = config;
         this.chars = this.parseConfig(config);
-        this.event = new Emitter();
+        this.event = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_1___default().TinyEmitter)();
         this.texture = _imageManager__WEBPACK_IMPORTED_MODULE_0__["default"].loadImage(src, function (texture, fromCache) {
             if (fromCache) {
                 _this.texture = texture;
@@ -3398,7 +3400,7 @@ function create(node, style, parent) {
         if (typeof thisStyle.opacity === 'undefined') {
             thisStyle.opacity = 1;
         }
-        if (parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
+        if (parentStyle && parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
             thisStyle.opacity = parentStyle.opacity * thisStyle.opacity;
         }
     }
@@ -6060,8 +6062,16 @@ var __webpack_exports__ = {};
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BitMapText: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.BitMapText),
+/* harmony export */   Button: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Button),
+/* harmony export */   Canvas: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Canvas),
 /* harmony export */   EE: () => (/* binding */ EE),
+/* harmony export */   Element: () => (/* reexport safe */ _components_elements__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   Image: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Image),
 /* harmony export */   Layout: () => (/* binding */ Layout),
+/* harmony export */   ScrollView: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.ScrollView),
+/* harmony export */   Text: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.Text),
+/* harmony export */   View: () => (/* reexport safe */ _components__WEBPACK_IMPORTED_MODULE_13__.View),
 /* harmony export */   "default": () => (/* binding */ layout),
 /* harmony export */   env: () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
@@ -6120,7 +6130,7 @@ var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from
 
 
 // 全局事件管道
-var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default())();
+var EE = new (tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default().TinyEmitter)();
 var imgPool = new _common_pool__WEBPACK_IMPORTED_MODULE_2__["default"]('imgPool');
 var bitMapPool = new _common_pool__WEBPACK_IMPORTED_MODULE_2__["default"]('bitMapPool');
 var debugInfo = new _common_debugInfo__WEBPACK_IMPORTED_MODULE_8__["default"]();
@@ -6145,7 +6155,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.12';
+        _this.version = '1.0.13';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context
@@ -6300,34 +6310,8 @@ var Layout = /** @class */ (function (_super) {
     };
     Layout.prototype.init = function (template, style, attrValueProcessor) {
         debugInfo.start('init');
-        var parseConfig = {
-            attributeNamePrefix: '',
-            attrNodeName: 'attr', // default is 'false'
-            textNodeName: '#text',
-            ignoreAttributes: false,
-            ignoreNameSpace: true,
-            allowBooleanAttributes: true,
-            parseNodeValue: false,
-            parseAttributeValue: false,
-            trimValues: true,
-            parseTrueNumberOnly: false,
-            alwaysCreateTextNode: true,
-        };
-        if (attrValueProcessor && typeof attrValueProcessor === 'function') {
-            // @ts-ignore
-            parseConfig.attrValueProcessor = attrValueProcessor;
-        }
-        debugInfo.start('init_xmlParse');
-        // 将xml字符串解析成xml节点树
-        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__.parse(template, parseConfig, true);
-        // console.log(jsonObj)
-        debugInfo.end('init_xmlParse');
-        var xmlTree = jsonObj.children[0];
-        // XML树生成渲染树
-        debugInfo.start('init_xml2Layout');
-        var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_10__.create.call(this, xmlTree, style);
-        debugInfo.end('init_xml2Layout');
-        this.add(layoutTree);
+        var elementArray = this.insertElementArray(template, style, attrValueProcessor, true);
+        this.add(elementArray[0]);
         this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.INITED;
         this.ticker.add(this.tickerFunc, true);
         this.ticker.start();
@@ -6561,6 +6545,19 @@ var Layout = /** @class */ (function (_super) {
         }
     };
     /**
+     * 创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
+     */
+    Layout.prototype.insertElement = function (template, style, parent) {
+        var elementArray = this.insertElementArray(template, style);
+        elementArray.forEach(function (it) {
+            (0,_common_vd__WEBPACK_IMPORTED_MODULE_10__.iterateTree)(it, function (element) { return element.observeStyleAndEvent(); });
+            if (parent) {
+                parent.appendChild(it);
+            }
+        });
+        return elementArray;
+    };
+    /**
      * 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中
      * 该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。
      */
@@ -6602,6 +6599,46 @@ var Layout = /** @class */ (function (_super) {
         }
         // console.log(`[Layout] 插件 ${plugin.name || ''} 已卸载`)
         Layout.installedPlugins.splice(pluginIndex, 1);
+    };
+    /**
+     * 创建节点，创建之后会返回Element列表
+     */
+    Layout.prototype.insertElementArray = function (template, style, attrValueProcessor, onlyFirst) {
+        var _this = this;
+        var parseConfig = {
+            attributeNamePrefix: '',
+            attrNodeName: 'attr', // default is 'false'
+            textNodeName: '#text',
+            ignoreAttributes: false,
+            ignoreNameSpace: true,
+            allowBooleanAttributes: true,
+            parseNodeValue: false,
+            parseAttributeValue: false,
+            trimValues: true,
+            parseTrueNumberOnly: false,
+            alwaysCreateTextNode: true,
+        };
+        if (attrValueProcessor && typeof attrValueProcessor === 'function') {
+            // @ts-ignore
+            parseConfig.attrValueProcessor = attrValueProcessor;
+        }
+        debugInfo.start('insert_xmlParse');
+        // 将xml字符串解析成xml节点树
+        var jsonObj = _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__.parse(template, parseConfig, true);
+        // console.log(jsonObj)
+        debugInfo.end('insert_xmlParse');
+        var getElements = [];
+        jsonObj.children.forEach(function (xmlTree, index) {
+            if (onlyFirst && index > 0) {
+                return;
+            }
+            // XML树生成渲染树
+            debugInfo.start('insert_xml2Layout');
+            var layoutTree = _common_vd__WEBPACK_IMPORTED_MODULE_10__.create.call(_this, xmlTree, style);
+            debugInfo.end('insert_xml2Layout');
+            getElements.push(layoutTree);
+        });
+        return getElements;
     };
     Layout.installedPlugins = [];
     return Layout;

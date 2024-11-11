@@ -261,16 +261,16 @@ declare class Element {
      * 查询当前节点树下，idName 为给定参数的的节点
      * 节点的 id 唯一性 Layout 并不保证，但这里只返回符合条件的第一个节点
      */
-    getElementById<T = Element>(id: string): T | null;
+    getElementById<T extends Element>(id: string): T | null;
     /**
      * 查询当前节点树下，idName 为给定参数的的节点
      * 节点的 id 唯一性 Layout 并不保证，这里返回符合条件的节点集合
      */
-    getElementsById<T = Element>(id: string): (T | null)[];
+    getElementsById<T extends Element>(id: string): (T | null)[];
     /**
      * 查询当前节点树下，className 包含给定参数的的节点集合
      */
-    getElementsByClassName<T = Element>(className: string): (T | null)[];
+    getElementsByClassName<T extends Element>(className: string): (T | null)[];
     /**
      * 布局计算完成，准备执行渲染之前执行的操作，不同的子类有不同的行为
      * 比如 ScrollView 在渲染之前还需要初始化滚动相关的能力
@@ -534,7 +534,7 @@ interface Constructor {
 }
 declare function registerComponent(name: string, Constructor: Constructor): void;
 
-declare const EE: TinyEmitter;
+declare const EE: TinyEmitter.TinyEmitter;
 interface IViewPort {
     width: number;
     height: number;
@@ -689,6 +689,10 @@ declare class Layout extends Element {
      */
     registBitMapFont(name: string, src: string, config: string): void;
     /**
+     * 创建节点，创建之后会返回Element列表，可以传入parent立刻插入节点，也可以稍后主动appendChild到需要的节点下
+     */
+    insertElement(template: string, style: Record<string, IStyle>, parent?: Element | null): Element[];
+    /**
      * 克隆节点，克隆后的节点可以添加到 Layout 的某个节点中
      * 该方法可以在数据有变化的时候避免重新执行 Layout.init 流程。
      */
@@ -714,7 +718,11 @@ declare class Layout extends Element {
      * 卸载给定插件
      */
     unUse(plugin: IPlugin<Layout>, ...options: any[]): void;
+    /**
+     * 创建节点，创建之后会返回Element列表
+     */
+    private insertElementArray;
 }
 declare const layout: Layout;
 
-export { EE, Layout, layout as default, _default as env };
+export { BitMapText, Button, Canvas, EE, Element, type IStyle, Image, Layout, ScrollView, Text, View, layout as default, _default as env };

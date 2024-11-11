@@ -1,3 +1,8 @@
+#### 2024.11.11
+1. `A` 新增insertElement;
+2. `U` 优化ts声明协议；
+3. `U` 小游戏插件发布1.0.13版本；
+
 #### 2024.11.1
 1. `F` 修复 BitMapText textAlign = 'right' 不生效问题；
 2. `U` 修改 ScrollBar 的默认样式；
