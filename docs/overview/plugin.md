@@ -17,7 +17,7 @@
   "openDataContext": "sub",
   "plugins": {
     "Layout": {
-      "version": "1.0.12",
+      "version": "1.0.13",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"openDataContext"}]
     }
@@ -52,7 +52,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.12",
+      "version": "1.0.13",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}]
     }
@@ -75,7 +75,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.12",
+      "version": "1.0.13",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}, {"type":"openDataContext"}]
     }
@@ -86,6 +86,7 @@ const Layout = requirePlugin('Layout').default;
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
+| 1.0.13        | 新增insertElement，优化ts声明协议|
 | 1.0.12        | 修复 BitMapText textAlign = 'right' 不生效问题，修改 ScrollBar 的默认样式|
 | 1.0.11        | 修复样式伪类功能在touchend没有触发的bug |
 | 1.0.10        | 修复1.0.9背景渲染的bug |
