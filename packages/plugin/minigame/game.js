@@ -16,13 +16,25 @@ const ctx = canvas.getContext('2d');
 // 初始化开放数据域
 const RANK_WIDTH = 960;
 const RANK_HEIGHT = 1410;
-let openDataContext = wx.getOpenDataContext();
-let sharedCanvas = openDataContext.canvas;
-sharedCanvas.width = RANK_WIDTH;
-sharedCanvas.height = RANK_HEIGHT;
+
+let openDataContext
 
 function updateRankViewPort(rankCanvas) {
   const rect = Layout.getElementViewportRect(rankCanvas);  
+  openDataContext = wx.getOpenDataContext({
+    sharedCanvasMode: 'screenCanvas'
+  });
+  let sharedCanvas = openDataContext.canvas;
+  sharedCanvas.width = RANK_WIDTH;
+  sharedCanvas.height = RANK_HEIGHT;
+  console.log('rect', rect)
+  const cvs = openDataContext.canvas
+  // cvs.width = RANK_WIDTH; // 设置分辨率宽
+  // cvs.height = RANK_HEIGHT;// 设置分辨率高
+  cvs.style.width = `${rect.width}px` // 设置显示宽
+  cvs.style.height = `${rect.height}px` // 设置显示高
+  cvs.style.left = `${rect.left}px` // 设置屏幕左边距
+  cvs.style.top = `${rect.top}px` // 设置屏幕上边距
 
   openDataContext.postMessage({
     event: 'updateViewPort',
@@ -108,13 +120,13 @@ testText.on('click', () => {
     updateRankViewPort(rank);
 
     // 手动指定排行榜的 canvas 实例
-    rank.canvas = sharedCanvas;
+    // rank.canvas = sharedCanvas;
 
     // 发送事件到开放数据域，要求加载好友数据并展示
     showRank();
 
     // 要求Layout每帧刷新开放数据域 canvas 的绘制
-    Layout.ticker.add(updateRank);
+    // Layout.ticker.add(updateRank);
   } else {
     testText.value = '打开排行榜';
     closeRank();
