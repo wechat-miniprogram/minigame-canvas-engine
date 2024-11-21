@@ -6,6 +6,19 @@ import TinyEmitter from 'tiny-emitter';
 import { IDataset, Callback } from '../types/index'
 import { IElementOptions } from './types';
 import { backgroundImageParser, parseTransform, IRenderForLayout } from './styleParser';
+// import { convertPercent } from '../common/vd';
+import env from '../env';
+
+function convertPercent(data: string | number, parentData: number) {
+  if (typeof data === 'number' || data === null) {
+    return data;
+  }
+
+  const matchData = data.match(/(\d+(?:\.\d+)?)%/);
+  if (matchData && matchData[1]) {
+    return parentData * parseFloat(matchData[1]) * 0.01;
+  }
+}
 
 export function getElementsById<T extends Element>(tree: Element, list: (Element | T)[] = [], id: string): T[] {
   tree.children.forEach((child: Element) => {
@@ -124,11 +137,6 @@ export default class Element {
   public idName: string;
 
   /**
-   * 在 xml 模板里面声明的 class 属性，一般用于模板插件
-   */
-  public className: string;
-
-  /**
    * 当前节点所在节点树的根节点，指向 Layout
    */
   public root: Element | null = null;
@@ -186,6 +194,11 @@ export default class Element {
   private originStyle: IStyle;
 
   /**
+   * 在 xml 模板里面声明的 class 属性，一般用于模板插件
+   */
+  private innerClassName: string;
+
+  /**
    * 有些 style 属性并不能直接用来渲染，需要经过解析之后才能进行渲染，这些值不会存储在 style 上
    * 比如 style.transform，如果每次都解析性能太差了
    */
@@ -204,7 +217,7 @@ export default class Element {
   }: IElementOptions) {
     this.id = id;
     this.idName = idName;
-    this.className = className;
+    this.innerClassName = className
     this.layoutBox = {
       left: 0,
       top: 0,
@@ -229,6 +242,67 @@ export default class Element {
     this.style = style;
     this.rect = null;
     this.classNameList = null;
+  }
+
+  get className() {
+    return this.innerClassName;
+  }
+
+  set className(value: string) {
+    this.innerClassName = value
+    this.classNameList = this.innerClassName.split(/\s+/);
+
+    console.log(this.innerClassName, this.classNameList)
+
+    const oldStyle = Object.assign({}, this.style);
+    // 根据 className 从样式表中算出当前应该作用的样式
+    // @ts-ignore
+    const newStyle: IStyle = this.classNameList.reduce((res, oneClass) => Object.assign(res, this.root.styleSheet![oneClass]), {});
+    
+    console.log('newStyle', newStyle)
+
+    let parentStyle: IStyle
+    if (this.parent) {
+      parentStyle = this.parent.style;
+    } else {
+      parentStyle = env.getRootCanvasSize();
+    }
+
+    if (typeof newStyle.opacity === 'undefined') {
+      newStyle.opacity = 1;
+    }
+
+    Object.keys(newStyle).concat(Object.keys(oldStyle)).forEach((key) => {
+      // 手动通过this.style设置过的样式认为是内联样式，优先级最高，也就是 className 的属性不影响
+      if (!Reflect.has(this.innerStyle, key)) {
+        if (Reflect.has(newStyle, key)) {
+
+          // @ts-ignore
+          let newValue = newStyle[key]
+          if (key === 'width') {
+            newValue = parentStyle.width ? convertPercent(newValue, parentStyle.width) : 0;
+          }
+
+          if (key === 'height') {
+            newValue = parentStyle.height ? convertPercent(newValue, parentStyle.height) : 0;
+          }
+
+          if (key === 'opacity' && parentStyle && parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
+            newValue = parentStyle.opacity * newValue;
+          }
+
+          // @ts-ignore
+          // 根据 className 计算出的样式覆盖当前样式
+          this.style[key] = newValue
+        } else {
+          // 不在内联样式，根据 className 计算出的样式又没有，认为这些样式都应该删除了
+          console.log('del key', key)
+          delete this.style[key as keyof IStyle]
+        }
+      }
+    })
+
+    console.log('current style', this.style)
   }
 
   private calculateRenderForLayout(init: boolean, prop: string, styleOpType: StyleOpType, val?: any) {
@@ -284,18 +358,30 @@ export default class Element {
     }
   }
 
+  private innerStyle: Record<string, IStyle> = {}
+
   observeStyleAndEvent() {
     if (typeof Proxy === 'function') {
       const ele = this;
+      const innerStyle = this.innerStyle
       
       this.style = new Proxy(this.originStyle, {
         get(target, prop, receiver) {
           return Reflect.get(target, prop, receiver);
         },
         set(target, prop, val, receiver) {
+          // 判断初始化的className是否包含该属性
+          const isSetForInnerStyle = !Reflect.has(target, prop)
           let oldVal = Reflect.get(target, prop, receiver);
           if (typeof prop === 'string' && oldVal !== val) {
+            console.log('set', prop, oldVal, val)
+
             ele.calculateRenderForLayout(false, prop, StyleOpType.Set, val);
+          }
+
+          if (isSetForInnerStyle) {
+            // 将私有属性同步一份到 innerStyle
+            Reflect.set(innerStyle, prop, val)            
           }
 
           return Reflect.set(target, prop, val, receiver);
@@ -303,7 +389,7 @@ export default class Element {
         deleteProperty(target, prop: string) {
           ele.calculateRenderForLayout(false, prop as string, StyleOpType.Delete);
 
-          return Reflect.deleteProperty(target, prop); 
+          return Reflect.deleteProperty(target, prop);
         },
       });
     }
@@ -332,7 +418,7 @@ export default class Element {
       });
     });
 
-    this.classNameList = this.className.split(/\s+/);
+    this.classNameList = this.innerClassName.split(/\s+/);
   }
 
   protected cacheStyle!: IStyle;
@@ -500,7 +586,7 @@ export default class Element {
     // element 在画布中的位置和尺寸信息
     // this.layoutBox = null;
     // this.style = null;
-    this.className = '';
+    this.innerClassName = '';
     this.classNameList = null;
   }
 

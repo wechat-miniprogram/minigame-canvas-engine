@@ -3,7 +3,7 @@ import { defineComponent } from "vue";
 
 let template = `
   <view id="container">
-    <text id="testText" class="redText" value="Hello World"></text>
+    <text id="testText" class="" value="Hello World"></text>
   </view>
 `;
 
@@ -17,7 +17,7 @@ let style = {
     alignItems: "center",
   },
   testText: {
-    color: "#ffffff",
+    color: "black",
     width: "100%",
     height: "100%",
     lineHeight: 200,
@@ -55,6 +55,16 @@ export default defineComponent({
       Layout.layout(context);
 
       let testText = Layout.getElementById('testText');
+
+      testText.style.backgroundColor = '#f3f3f3'
+
+      testText.on('click', () => {
+        console.log(testText.className)
+        const newClass = (testText.className === 'testText' ? 'testText redText' : 'testText')
+        console.log(newClass)
+
+        testText.className = newClass
+      })
 
       // console.log(testText.style.textShadow)
 

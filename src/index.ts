@@ -125,6 +125,8 @@ class Layout extends Element {
     }
   };
 
+  public styleSheet: Record<string, IStyle> = {}
+
   private eventHandlerData: EventHandlerData;
 
   protected activeElements: Element[] = [];
@@ -617,6 +619,9 @@ class Layout extends Element {
    * 创建节点，创建之后会返回Element列表
    */
   private insertElementArray(template: string, style: Record<string, IStyle>, attrValueProcessor?: Callback, onlyFirst?: boolean): Element[] {
+    // 样式表存到全局
+    this.styleSheet = Object.assign(this.styleSheet, style);
+
     const parseConfig = {
       attributeNamePrefix: '',
       attrNodeName: 'attr', // default is 'false'
@@ -649,7 +654,7 @@ class Layout extends Element {
       }
       // XML树生成渲染树
       debugInfo.start('insert_xml2Layout');
-      const layoutTree = create.call(this, xmlTree, style);
+      const layoutTree = create.call(this, xmlTree, this.styleSheet);
       debugInfo.end('insert_xml2Layout');
       getElements.push(layoutTree);
     });

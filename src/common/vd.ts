@@ -24,11 +24,11 @@ export function registerComponent(name: string, Constructor: Constructor) {
   constructorMap[name] = Constructor;
 }
 
-function isPercent(data: string | number) {
+export function isPercent(data: string | number) {
   return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
 }
 
-function convertPercent(data: string | number, parentData: number) {
+export function convertPercent(data: string | number, parentData: number) {
   if (typeof data === 'number' || data === null) {
     return data;
   }

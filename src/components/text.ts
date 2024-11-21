@@ -181,7 +181,7 @@ export default class Text extends Element {
     this.ctx = ctx;
     this.shouldUpdate = false;
 
-    this.toCanvasData();
+    // this.toCanvasData();
 
     if (needRender) {
       this.render();
@@ -192,6 +192,8 @@ export default class Text extends Element {
     const style = this.style;
     const ctx = this.ctx as CanvasRenderingContext2D;
     ctx.save();
+
+    this.toCanvasData();
 
     let { needStroke, originX, originY, drawX, drawY, width, height } = this.baseRender('test');
     ctx.textBaseline = this.textBaseline;
