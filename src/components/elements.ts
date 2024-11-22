@@ -31,7 +31,7 @@ export function getElementById<T extends Element>(tree: Element, id: string): T 
 
 export function getElementsByClassName<T extends Element>(tree: Element, list: (Element | T)[] = [], className: string): T[] {
   tree.children.forEach((child: Element) => {
-    if (child.classList.contains(className)) {
+    if (child.classList!.contains(className)) {
       list.push(child);      
     }
 
@@ -120,7 +120,7 @@ class ElementClassList {
     return Array.from(this.tokens).join(' ');
   }
 
-  public changeHandler() {
+  private changeHandler() {
     const ele = this.element
     const oldStyle = Object.assign({}, ele.style);
     // 根据 className 从样式表中算出当前应该作用的样式
@@ -179,21 +179,23 @@ class ElementClassList {
     })
   }
 
-  // 添加一个令牌
-  add(token: string) {
-    this.tokens.add(token);
-    this.changeHandler();
+  add(className: string) {
+    if (!this.contains(className)) {
+      this.tokens.add(className);
+      this.changeHandler();  
+    }
   }
 
   // 检查列表中是否存在指定的令牌
-  contains(token: string) {
-    return this.tokens.has(token);
+  contains(className: string) {
+    return this.tokens.has(className);
   }
 
-  // 删除一个令牌
-  remove(token: string) {
-    this.tokens.delete(token);
-    this.changeHandler();
+  remove(className: string) {
+    if (this.contains(className)) {
+      this.tokens.delete(className);
+      this.changeHandler();  
+    }
   }
 }
 
@@ -274,7 +276,7 @@ export default class Element {
    */
   public tagName?: string;
 
-  public classList: ElementClassList
+  public classList: ElementClassList | null;
 
   public originStyle: IStyle;
 
@@ -326,7 +328,6 @@ export default class Element {
     this.originStyle = style;
     this.style = style;
     this.rect = null;
-    // this.classNameList = null;
 
     const initialTokens = className.split(/\s+/).filter(item => !!item)
     initialTokens.push(idName)
@@ -611,11 +612,7 @@ export default class Element {
     // this.EE = null;
     this.parent = null;
     this.ctx = null;
-
-    // element 在画布中的位置和尺寸信息
-    // this.layoutBox = null;
-    // this.style = null;
-    // this.classNameList = null;
+    this.classList = null;
   }
 
   add(element: Element) {

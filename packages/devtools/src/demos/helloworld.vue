@@ -3,7 +3,7 @@ import { defineComponent } from "vue";
 
 let template = `
   <view id="container">
-    <text id="testText" class="" value="Hello World"></text>
+    <text id="testText" class="redText" value="Hello World"></text>
   </view>
 `;
 

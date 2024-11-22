@@ -1,5 +1,3 @@
-[[toc]]
-
 # Element
 
 Element 是所有组件的基类，Element 描述了所有组件所普遍具有的方法和属性。一些组件继承自 Element 并且增加了一些额外功能的接口描述了具体的行为。
@@ -27,6 +25,34 @@ Element 是所有组件的基类，Element 描述了所有组件所普遍具有�
 | top | Number | 以父节点左上角为坐标系原点的 Y 坐标值 | -->
 
 
+## 属性
+
+### dataset
+标签上通过 **data-\*** 设置的属性会存到 dataset 字段，方便记录一些节点信息。
+
+### classList: [ClassList](./classList.md)
+返回一个元素 class 属性的集合，通过 ClassList 可以动态操作元素的 class 集合，需要特别注意的是，id 会默认添加到 class 集合
+
+```js
+// <view id="container" class="info"></view>
+const container = Layout.getElementById('container');
+
+console.log(container.classList.value); // `container info`
+
+container.classList.add('test');
+
+container.classList.remove('test');
+
+```
+
+### style
+元素的样式集合，可以通过 style 属性动态修改样式。
+``` js
+let testText = Layout.getElementById('testText');
+
+testText.style.backgroundColor = '#f3f3f3'
+```
+
 ## 方法
 
 ### getElementsById(elementId: string): Element[]
@@ -48,7 +74,6 @@ Layout.getElementById(String elementId)
 // <view id="container"></view>
 const container = Layout.getElementById('container');
 ```
-
 
 ### getElementsByClassName(className: string): Element[]
 

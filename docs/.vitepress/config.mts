@@ -94,6 +94,7 @@ export default defineConfig({
         link: '/tutorial/cocos2.x',
         items: [
           { text: '模板引擎使用', link: '/tutorial/templateengine'},
+          { text: '动态修改样式', link: '/tutorial/style'},
           { text: 'cocos2.x版本适配', link: '/tutorial/cocos2.x'},
           { text: '使用字体', link: '/tutorial/font'},
           { text: '加载中效果实现', link: '/tutorial/loading'},

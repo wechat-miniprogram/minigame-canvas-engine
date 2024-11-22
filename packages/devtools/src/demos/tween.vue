@@ -21,6 +21,12 @@ let style = {
     borderRadius: 25,
     top: 0,
   },
+
+  bigBall: {
+    backgroundColor: 'red',
+    width: 100,
+    height: 100,
+  }
 };
 
 export default defineComponent({
@@ -47,13 +53,22 @@ export default defineComponent({
       Layout.layout(context);
 
       const ball = Layout.getElementsByClassName("ball")[0];
+
+      ball.on('click', () => {
+        if (ball.classList.contains('bigBall')) {
+          ball.classList.remove('bigBall')
+        } else {
+          ball.classList.add('bigBall')
+        }
+      })
+
       // 将缓动系统的 update 逻辑加入 Layout 的帧循环
       Layout.ticker.add(() => {
         TWEEN.update();
       });
 
       new TWEEN.Tween(ball.style)
-        .to({ top: 250 }, 1000)
+        .to({ top: 250 }, 5000)
         .easing(TWEEN.Easing.Bounce.Out)
         .yoyo(true)
         .repeat(Infinity)
