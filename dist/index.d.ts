@@ -163,6 +163,17 @@ declare enum StyleOpType {
     Set = 0,
     Delete = 1
 }
+declare class ElementClassList {
+    tokens: Set<string>;
+    private element;
+    constructor(ele: Element, initialTokens: string[]);
+    get length(): number;
+    get value(): string;
+    private changeHandler;
+    add(className: string): void;
+    contains(className: string): boolean;
+    remove(className: string): void;
+}
 declare class Element {
     /**
      * 子节点列表
@@ -180,10 +191,6 @@ declare class Element {
      * 在 xml 模板里面声明的 id 属性，一般用于节点查询
      */
     idName: string;
-    /**
-     * 在 xml 模板里面声明的 class 属性，一般用于模板插件
-     */
-    className: string;
     /**
      * 当前节点所在节点树的根节点，指向 Layout
      */
@@ -208,7 +215,6 @@ declare class Element {
      * 执行 getBoundingClientRect 的结果缓存，如果业务高频调用，可以减少 GC
      */
     private rect;
-    classNameList: string[] | null;
     layoutBox: ILayoutBox;
     backgroundImage: any;
     ctx: CanvasRenderingContext2D | null;
@@ -228,7 +234,12 @@ declare class Element {
      * 当前节点在 xml 的标签名称，比如 image、view
      */
     tagName?: string;
-    private originStyle;
+    classList: ElementClassList | null;
+    originStyle: IStyle;
+    /**
+     * 在 xml 模板里面声明的 class 属性，一般用于模板插件
+     */
+    className: string;
     /**
      * 有些 style 属性并不能直接用来渲染，需要经过解析之后才能进行渲染，这些值不会存储在 style 上
      * 比如 style.transform，如果每次都解析性能太差了
@@ -237,6 +248,7 @@ declare class Element {
     protected styleChangeHandler(prop: string, styleOpType: StyleOpType, val?: any): void;
     constructor({ style, idName, className, id, dataset, }: IElementOptions);
     private calculateRenderForLayout;
+    innerStyle: Record<string, IStyle>;
     observeStyleAndEvent(): void;
     protected cacheStyle: IStyle;
     activeHandler(e?: any): void;
@@ -613,6 +625,7 @@ declare class Layout extends Element {
     isNeedRepaint: boolean;
     ticker: Ticker;
     tickerFunc: () => void;
+    styleSheet: Record<string, IStyle>;
     private eventHandlerData;
     protected activeElements: Element[];
     constructor({ style, }: {
