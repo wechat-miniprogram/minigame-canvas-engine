@@ -59,17 +59,12 @@ export default defineComponent({
       testText.style.backgroundColor = '#f3f3f3'
 
       testText.on('click', () => {
-        console.log(testText.className)
-        const newClass = (testText.className === 'testText' ? 'testText redText' : 'testText')
-        console.log(newClass)
-
-        testText.className = newClass
+        if (testText.classList.contains('redText')) {
+          testText.classList.remove('redText')
+        } else {
+          testText.classList.add('redText')
+        }
       })
-
-      // console.log(testText.style.textShadow)
-
-      // testText.style.textShadow = '2px 2px 2px blue'
-
     },
   },
 });

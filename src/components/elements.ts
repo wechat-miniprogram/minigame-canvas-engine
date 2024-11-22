@@ -6,19 +6,8 @@ import TinyEmitter from 'tiny-emitter';
 import { IDataset, Callback } from '../types/index'
 import { IElementOptions } from './types';
 import { backgroundImageParser, parseTransform, IRenderForLayout } from './styleParser';
-// import { convertPercent } from '../common/vd';
+import { convertPercent } from '../common/util'
 import env from '../env';
-
-function convertPercent(data: string | number, parentData: number) {
-  if (typeof data === 'number' || data === null) {
-    return data;
-  }
-
-  const matchData = data.match(/(\d+(?:\.\d+)?)%/);
-  if (matchData && matchData[1]) {
-    return parentData * parseFloat(matchData[1]) * 0.01;
-  }
-}
 
 export function getElementsById<T extends Element>(tree: Element, list: (Element | T)[] = [], id: string): T[] {
   tree.children.forEach((child: Element) => {
@@ -42,8 +31,8 @@ export function getElementById<T extends Element>(tree: Element, id: string): T 
 
 export function getElementsByClassName<T extends Element>(tree: Element, list: (Element | T)[] = [], className: string): T[] {
   tree.children.forEach((child: Element) => {
-    if ((child.classNameList || child.className.split(/\s+/)).indexOf(className) > -1) {
-      list.push(child);
+    if (child.classList.contains(className)) {
+      list.push(child);      
     }
 
     if (child.children.length) {
@@ -114,6 +103,100 @@ export enum StyleOpType {
   Delete,
 }
 
+class ElementClassList {
+  public tokens: Set<string>
+  private element: Element;
+
+  constructor(ele: Element, initialTokens: string[]) {
+    this.element = ele;
+    this.tokens = new Set(initialTokens || [])
+  }
+
+  get length() {
+    return this.tokens.size;
+  }
+
+  get value() {
+    return Array.from(this.tokens).join(' ');
+  }
+
+  public changeHandler() {
+    const ele = this.element
+    const oldStyle = Object.assign({}, ele.style);
+    // 根据 className 从样式表中算出当前应该作用的样式
+    // @ts-ignore
+    const newStyle: IStyle = Array.from(this.tokens).reduce((res, oneClass) => Object.assign(res, ele.root.styleSheet![oneClass]), {});
+
+    // console.log('newStyle', newStyle)
+
+    let parentStyle: IStyle
+    if (ele.parent) {
+      parentStyle = ele.parent.style;
+    } else {
+      parentStyle = env.getRootCanvasSize();
+    }
+
+    if (typeof newStyle.opacity === 'undefined') {
+      newStyle.opacity = 1;
+    }
+
+    Object.keys(newStyle).concat(Object.keys(oldStyle)).forEach((key) => {
+      // 手动通过this.style设置过的样式认为是内联样式，优先级最高，也就是 className 的属性不影响
+      if (!Reflect.has(ele.innerStyle, key)) {
+        // 根据 className 计算出来的新增或者修改的样式
+        if (Reflect.has(newStyle, key)) {
+          /**
+           * 新增的样式，需要区分出是 className 导致的还是开发者手动修改的
+           * 临时占位，因为后续的 reflow 和 repaint 逻辑在 style Proxy 处理，这样做在 style Proxy 也不会认为是开发者手动设置的样式
+           */
+          if (!Reflect.has(oldStyle, key)) {
+            Reflect.set(ele.originStyle, key, undefined)
+          }
+
+          // @ts-ignore
+          let newValue = newStyle[key]
+          if (key === 'width') {
+            newValue = parentStyle.width ? convertPercent(newValue, parentStyle.width) : 0;
+          }
+
+          if (key === 'height') {
+            newValue = parentStyle.height ? convertPercent(newValue, parentStyle.height) : 0;
+          }
+
+          if (key === 'opacity' && parentStyle && parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
+            newValue = parentStyle.opacity * newValue;
+          }
+
+          // @ts-ignore
+          // 根据 className 计算出的样式覆盖当前样式
+          ele.style[key] = newValue
+        } else {
+          // console.log('del', key)
+          // 不在内联样式，根据 className 计算出的样式又没有，认为这些样式都应该删除了
+          delete ele.style[key as keyof IStyle]
+        }
+      }
+    })
+  }
+
+  // 添加一个令牌
+  add(token: string) {
+    this.tokens.add(token);
+    this.changeHandler();
+  }
+
+  // 检查列表中是否存在指定的令牌
+  contains(token: string) {
+    return this.tokens.has(token);
+  }
+
+  // 删除一个令牌
+  remove(token: string) {
+    this.tokens.delete(token);
+    this.changeHandler();
+  }
+}
+
 export default class Element {
   /**
    * 子节点列表
@@ -165,7 +248,7 @@ export default class Element {
    * 执行 getBoundingClientRect 的结果缓存，如果业务高频调用，可以减少 GC
    */
   private rect: Rect | null;
-  public classNameList: string[] | null;
+  // public classNameList: string[] | null;
   public layoutBox: ILayoutBox;
   public backgroundImage: any;
   public ctx: CanvasRenderingContext2D | null = null
@@ -191,12 +274,14 @@ export default class Element {
    */
   public tagName?: string;
 
-  private originStyle: IStyle;
+  public classList: ElementClassList
+
+  public originStyle: IStyle;
 
   /**
    * 在 xml 模板里面声明的 class 属性，一般用于模板插件
    */
-  private innerClassName: string;
+  public className: string;
 
   /**
    * 有些 style 属性并不能直接用来渲染，需要经过解析之后才能进行渲染，这些值不会存储在 style 上
@@ -217,7 +302,7 @@ export default class Element {
   }: IElementOptions) {
     this.id = id;
     this.idName = idName;
-    this.innerClassName = className
+    this.className = className;
     this.layoutBox = {
       left: 0,
       top: 0,
@@ -241,68 +326,11 @@ export default class Element {
     this.originStyle = style;
     this.style = style;
     this.rect = null;
-    this.classNameList = null;
-  }
+    // this.classNameList = null;
 
-  get className() {
-    return this.innerClassName;
-  }
-
-  set className(value: string) {
-    this.innerClassName = value
-    this.classNameList = this.innerClassName.split(/\s+/);
-
-    console.log(this.innerClassName, this.classNameList)
-
-    const oldStyle = Object.assign({}, this.style);
-    // 根据 className 从样式表中算出当前应该作用的样式
-    // @ts-ignore
-    const newStyle: IStyle = this.classNameList.reduce((res, oneClass) => Object.assign(res, this.root.styleSheet![oneClass]), {});
-    
-    console.log('newStyle', newStyle)
-
-    let parentStyle: IStyle
-    if (this.parent) {
-      parentStyle = this.parent.style;
-    } else {
-      parentStyle = env.getRootCanvasSize();
-    }
-
-    if (typeof newStyle.opacity === 'undefined') {
-      newStyle.opacity = 1;
-    }
-
-    Object.keys(newStyle).concat(Object.keys(oldStyle)).forEach((key) => {
-      // 手动通过this.style设置过的样式认为是内联样式，优先级最高，也就是 className 的属性不影响
-      if (!Reflect.has(this.innerStyle, key)) {
-        if (Reflect.has(newStyle, key)) {
-
-          // @ts-ignore
-          let newValue = newStyle[key]
-          if (key === 'width') {
-            newValue = parentStyle.width ? convertPercent(newValue, parentStyle.width) : 0;
-          }
-
-          if (key === 'height') {
-            newValue = parentStyle.height ? convertPercent(newValue, parentStyle.height) : 0;
-          }
-
-          if (key === 'opacity' && parentStyle && parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
-            newValue = parentStyle.opacity * newValue;
-          }
-
-          // @ts-ignore
-          // 根据 className 计算出的样式覆盖当前样式
-          this.style[key] = newValue
-        } else {
-          // 不在内联样式，根据 className 计算出的样式又没有，认为这些样式都应该删除了
-          console.log('del key', key)
-          delete this.style[key as keyof IStyle]
-        }
-      }
-    })
-
-    console.log('current style', this.style)
+    const initialTokens = className.split(/\s+/).filter(item => !!item)
+    initialTokens.push(idName)
+    this.classList = new ElementClassList(this, initialTokens)
   }
 
   private calculateRenderForLayout(init: boolean, prop: string, styleOpType: StyleOpType, val?: any) {
@@ -358,7 +386,7 @@ export default class Element {
     }
   }
 
-  private innerStyle: Record<string, IStyle> = {}
+  public innerStyle: Record<string, IStyle> = {}
 
   observeStyleAndEvent() {
     if (typeof Proxy === 'function') {
@@ -374,14 +402,15 @@ export default class Element {
           const isSetForInnerStyle = !Reflect.has(target, prop)
           let oldVal = Reflect.get(target, prop, receiver);
           if (typeof prop === 'string' && oldVal !== val) {
-            console.log('set', prop, oldVal, val)
+            // console.log('set', prop, oldVal, val)
 
             ele.calculateRenderForLayout(false, prop, StyleOpType.Set, val);
           }
 
           if (isSetForInnerStyle) {
+            // console.log('set innerStyle', prop, val)
             // 将私有属性同步一份到 innerStyle
-            Reflect.set(innerStyle, prop, val)            
+            Reflect.set(innerStyle, prop, val);   
           }
 
           return Reflect.set(target, prop, val, receiver);
@@ -418,7 +447,7 @@ export default class Element {
       });
     });
 
-    this.classNameList = this.innerClassName.split(/\s+/);
+    // this.classNameList = this.innerClassName.split(/\s+/);
   }
 
   protected cacheStyle!: IStyle;
@@ -586,8 +615,7 @@ export default class Element {
     // element 在画布中的位置和尺寸信息
     // this.layoutBox = null;
     // this.style = null;
-    this.innerClassName = '';
-    this.classNameList = null;
+    // this.classNameList = null;
   }
 
   add(element: Element) {

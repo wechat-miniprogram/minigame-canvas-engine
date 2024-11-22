@@ -66,7 +66,7 @@ let style = {
   },
   rankList: {
     width: 960,
-    height: 1000,
+    height: 1410 - 120,
     backgroundColor: "#ffffff",
   },
   list: {
@@ -128,7 +128,7 @@ let style = {
   },
   selfListItem: {
     borderRadius: 20,
-    marginTop: 50,
+    marginTop: 20,
     backgroundColor: "#ffffff",
   },
   listTips: {
@@ -193,6 +193,18 @@ export default defineComponent({
       Layout.layout(context);
 
       const list = Layout.getElementById('list');
+
+      const selfListItem = Layout.getElementsByClassName('listItem')[0]
+
+      selfListItem.on('click', () => {
+        if (selfListItem.classList.contains('listItemOld')) {
+          selfListItem.classList.remove('listItemOld');
+          selfListItem.classList.remove('selfListItem');
+        } else {
+          selfListItem.classList.add('listItemOld');
+          selfListItem.classList.add('selfListItem');
+        }
+      })
 
       // @ts-ignore
       window.list = list;

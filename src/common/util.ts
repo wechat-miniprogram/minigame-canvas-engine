@@ -80,3 +80,18 @@ export function clamp(number: number, min: number, max: number): number {
 export function lerp(from: number, to: number, ratio: number): number {
   return from + (to - from) * ratio;
 }
+
+export function convertPercent(data: string | number, parentData: number) {
+  if (typeof data === 'number' || data === null) {
+    return data;
+  }
+
+  const matchData = data.match(/(\d+(?:\.\d+)?)%/);
+  if (matchData && matchData[1]) {
+    return parentData * parseFloat(matchData[1]) * 0.01;
+  }
+}
+
+export function isPercent(data: string | number) {
+  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
+}

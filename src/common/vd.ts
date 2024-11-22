@@ -4,6 +4,7 @@ import { View, Text, Image, ScrollView, BitMapText, Canvas, Element, Button } fr
 import { IStyle } from '../components/style';
 import { ILayout, ILayoutBox } from '../components/elements';
 import { Callback, TreeNode } from '../types';
+import { convertPercent, isPercent } from './util';
 import env from '../env';
 
 interface Constructor {
@@ -22,21 +23,6 @@ const constructorMap: { [key: string]: Constructor } = {
 
 export function registerComponent(name: string, Constructor: Constructor) {
   constructorMap[name] = Constructor;
-}
-
-export function isPercent(data: string | number) {
-  return typeof data === 'string' && /\d+(?:\.\d+)?%/.test(data);
-}
-
-export function convertPercent(data: string | number, parentData: number) {
-  if (typeof data === 'number' || data === null) {
-    return data;
-  }
-
-  const matchData = data.match(/(\d+(?:\.\d+)?)%/);
-  if (matchData && matchData[1]) {
-    return parentData * parseFloat(matchData[1]) * 0.01;
-  }
 }
 
 export function create(node: TreeNode, style: Record<string, IStyle>, parent?: Record<string, any>) {
