@@ -120,6 +120,34 @@ interface IStyle {
    */
   textShadow?: string;
 
+  // 文字换行相关属性
+
+  /**
+   * 属性用于设置如何处理元素内的空白字符
+   * 
+   * normal: 连续的空白符会被合并。源码中的换行符会被当作空白符来处理。并根据填充行框盒子的需要来换行。
+   * nowrap: 和 normal 一样合并空白符，但阻止源码中的文本换行。
+   * pre: 连续的空白符会被保留。仅在遇到换行符才会换行。
+   * pre-wrap: 连续的空白符会被保留。在遇到换行符时根据填充行框盒子的需要换行。
+   * pre-line: 连续的空白符会被合并。在遇到换行符时根据填充行框盒子的需要换行。
+   */
+  whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-wrap' | 'pre-line';
+
+  /**
+   * wordBreak 指定了怎样在单词内断行
+   * normal: 使用默认的断行规则。
+   * break-all: 对于 non-CJK (CJK 指中文/日文/韩文) 文本，可在任意字符间断行。
+   * keep-all: CJK 文本不断行。Non-CJK 文本表现同 normal。
+   */
+  wordBreak?: 'normal' | 'break-all' | 'keep-all';
+
+  /**
+   * 用来设置是否应该在一个本来不能断开的字符串中插入换行符，以防止文本溢出其行向盒。
+   * normal: 行只能在正常的单词断点（例如两个单词之间的空格）处换行
+   * break-word: 如果行中没有其他可接受的断点，则允许在任意点将通常不可断的单词换行
+   */
+  overflowWrap?: 'normal' | 'break-word';
+
   ':active'?: IStyle;
 }
 
