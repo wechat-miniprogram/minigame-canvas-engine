@@ -49,124 +49,199 @@ function truncateText(style: IStyle, value: string, maxWidth: number): string {
   return length ? `${str}...` : str;
 }
 
-function truncateTextPure(value: string, maxWidth: number): string {
-  let length = value.length;
-  let str = value.substring(0, length);
-
-  while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
-    length -= 1;
-    str = value.substring(0, length);
-  }
-
-  return str
-}
+/**
+ * 判断文本是否包含 CJK（中日韩）字符
+ * @param text 要检查的文本
+ * @returns 是否包含 CJK 字符
+ */
+const isCJKText = (text: string): boolean => {
+  // 匹配中文、日文、韩文的 Unicode 范围
+  return /[\u4e00-\u9fa5\u3040-\u30ff\u3400-\u4dbf]/.test(text);
+};
 
 /**
  * 文字解析器
+ * 一些知识点：
+ * 1. \s 匹配一个空白字符，包括空格、制表符、换页符和换行符。
+ * 2. \r 匹配一个回车符 (U+000D)。
+ * 3. \n 匹配一个换行符 (U+000A)。
+ * 4. \S 匹配一个非空白字符。
  */
 function parseText(style: IStyle, value: string): string {
   value = String(value);
 
-  console.log('origin value', value)
+  // 1. 首先处理空白符和换行符
+  const whiteSpace = style.whiteSpace || 'normal';
+  
+  // 根据 whiteSpace 处理空白符和换行符
+  switch (whiteSpace) {
+    case 'pre':
+      /**
+       * 连续的空白符会被保留。仅在遇到换行符时才会换行，这里统一换行符格式
+       * 这里对字符的初步处理跟 pre-warp 是一样的，实际的分行处理上，pre 只有遇到分行符才会分行
+       * 而 pre-wrap 除了换行符，正常的文本过长也能够自动进行换行
+       */
+      value = value.replace(/\r\n|\r/g, '\n');
+      break;
+    case 'pre-wrap':
+      // 连续的空白符会被保留。在遇到换行符时根据填充行框盒子的需要换行。
+      value = value.replace(/\r\n|\r/g, '\n');
+      break;
+    case 'pre-line':
+      // 合并空白符，保留换行符
+      value = value.replace(/[^\S\n]+/g, ' ')  // 合并空白符（不包括换行符）
+                   .replace(/\r\n|\r/g, '\n')   // 统一换行符
+                   .replace(/ \n/g, '\n')       // 删除换行符前的空格
+                   .replace(/\n /g, '\n');      // 删除换行符后的空格
+      break;
+    case 'nowrap':
+      // nowrap的空白符处理会在后面统一处理
+      break;
+    case 'normal':
+    default:
+      // 合并所有空白符
+      value = value.replace(/\s+/g, ' ');
+      break;
+  }
 
-  /**
-   * 没有设置宽度的时候通过canvas计算出文字宽度，文字不会自动换行
-   * TODO: 原则上来讲，没有设置宽度文字应该也是可以根据父容器的剩余宽度自动换行的，但这样会非常复杂，而且在初始化的时候，文字还不了解父容器和兄弟
-   * 容器的状态，所以这里先简单处理。
-   */
+  // 2. 如果没有设置宽度，直接返回处理后的文本
   if (style.width === undefined) {
     style.width = getTextWidth(style, value);
-    
     return value;
   }
 
-  // 初步计算文字的总长度
-  const wordWidth = getTextWidth(style, value);
-  let maxWidth = style.width as number;
+  const maxWidth = style.width as number;
 
-  // 如果设置了超出省略号处理，进行截断处理
-  if (style.textOverflow === 'ellipsis' && wordWidth > maxWidth) {
-    return truncateText(style, value, maxWidth);
-  }
-  
-  style.whiteSpace = style.whiteSpace || 'normal';
-  // 处理空白符
-  if (style.whiteSpace === 'pre' || style.whiteSpace === 'pre-wrap' || style.whiteSpace === 'pre-line') {
-    // 保留换行符
-    value = value.replace(/\r\n|\r|\n/g, '\n');
-  } else {
-    // 合并空白符( whiteSpace 是 normal 或者缺省）
-    value = value.replace(/\s+/g, ' ');
-  }
-
-  // 如果设置了不换行，直接返回
-  if (style.whiteSpace === 'nowrap') {
+  // 3. 如果设置了不换行，只需要处理省略号
+  if (whiteSpace === 'nowrap') {
+    // nowrap 模式下文本强制在一行显示，不允许换行
+    value = value.replace(/\s+/g, ' '); // 合并空白符
+    if (style.textOverflow === 'ellipsis' && getTextWidth(style, value) > maxWidth) {
+      return truncateText(style, value, maxWidth);
+    }
     return value;
   }
 
-  // 处理需要换行的情况
-  const words = splitIntoWords(value, style);
-
-  console.log('words', words)
+  // 4. 处理需要换行的情况
   const lines: string[] = [];
-  let currentLine = '';
-  let currentWidth = 0;
+  const wordBreak = style.wordBreak || 'normal';
+  const overflowWrap = style.overflowWrap || 'normal';
 
-  for (const word of words) {
-    // 计算每个分词宽度
-    const wordWidth = getTextWidth(style, word);
-    
-    // 如果当前行为空且单词宽度超过最大宽度
-    if (!currentLine && wordWidth > maxWidth) {
-      if (style.wordBreak === 'break-all' || style.overflowWrap === 'break-word') {
-        let remainingWord = word;
-        let truncated = '';
-
-        while (remainingWord) {
-          truncated = truncateTextPure(remainingWord, maxWidth);
-          lines.push(truncated); 
-          remainingWord = remainingWord.slice(truncated.length);
-        }
-        console.log('truncated1', truncated)
-      } else if (style.whiteSpace === 'normal') {
-        let remainingWord = word;
-        let truncated = '';
-
-        while (remainingWord) {
-          truncated = truncateTextPure(remainingWord, maxWidth);
-          console.log('truncated', truncated)
-          lines.push(truncated);
-          remainingWord = remainingWord.slice(truncated.length);
-        }
-
-        console.log('truncated', truncated)
-      } else {
-        // 其他情况（pre-wrap等），即使超出也只能作为一行
-        lines.push(word);
-        currentLine = '';
-        currentWidth = 0;
-      }
-
-      continue;
+  // 首先按照自然断点（空格、换行符等）分割文本
+  const segments = value.split('\n').map(line => {
+    if (whiteSpace === 'pre') {
+      // pre 模式下保持整行不分割，保留所有空白符
+      return [line];
+    } else if (whiteSpace === 'pre-wrap' || whiteSpace === 'pre-line') {
+      return [line];
     }
-    
-    if (currentWidth + wordWidth <= maxWidth) {
-      currentLine += word;
-      currentWidth += wordWidth;
-    } else {
-      if (currentLine) {
-        lines.push(currentLine);
+    return line.split(' ').filter(Boolean);
+  });
+
+  for (const lineSegments of segments) {
+    let currentLine = '';
+    let currentWidth = 0;
+
+    for (const segment of lineSegments) {
+      const segmentWidth = getTextWidth(style, segment + ' ');  // 加上空格的宽度
+      
+      // 处理单个片段超过最大宽度的情况
+      if (currentLine === '' && segmentWidth > maxWidth) {
+        // CJK 文字特殊处理
+        const isCJK = isCJKText(segment);
+        
+        if (wordBreak === 'break-all' || 
+            (overflowWrap === 'break-word' && !isCJK) || 
+            (wordBreak === 'normal' && isCJK)) {
+          // 需要强制断行的情况
+          let remainingText = segment;
+          while (remainingText) {
+            const truncated = truncateTextPure(remainingText, maxWidth);
+            lines.push(truncated);
+            remainingText = remainingText.slice(truncated.length);
+          }
+        } else {
+          // 不需要强制断行，作为一个整体
+          lines.push(segment);
+        }
+        continue;
       }
-      currentLine = word;
-      currentWidth = wordWidth;
+
+      // 正常的行处理
+      if (currentWidth + segmentWidth <= maxWidth) {
+        currentLine += (currentLine ? ' ' : '') + segment;
+        currentWidth += segmentWidth;
+      } else {
+        if (currentLine) {
+          lines.push(currentLine);
+        }
+        currentLine = segment;
+        currentWidth = getTextWidth(style, segment);
+      }
+    }
+
+    if (currentLine) {
+      lines.push(currentLine);
     }
   }
 
-  if (currentLine) {
-    lines.push(currentLine);
+  // 5. 最后处理省略号
+  if (style.textOverflow === 'ellipsis' && lines.length > 0) {
+    const lastLine = lines[lines.length - 1];
+    const lastLineWidth = getTextWidth(style, lastLine);
+    
+    if (lastLineWidth > maxWidth) {
+      lines[lines.length - 1] = truncateText(style, lastLine, maxWidth);
+    }
   }
 
   return lines.join('\n');
+}
+
+// 辅助函数：优化版本的 truncateTextPure
+function truncateTextPure(value: string, maxWidth: number): string {
+  const isCJK = isCJKText(value);
+  
+  // CJK 文字可以单字切分
+  if (isCJK) {
+    let length = value.length;
+    let str = value.substring(0, length);
+
+    while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
+      length -= 1;
+      str = value.substring(0, length);
+    }
+    return str;
+  }
+  
+  // 非 CJK 文字尽量在单词边界切分
+  const words = value.split(/(\s+)/).filter(Boolean);
+  let result = '';
+  let currentWidth = 0;
+  
+  for (const word of words) {
+    const wordWidth = getTextWidthWithoutSetFont(word);
+    if (currentWidth + wordWidth <= maxWidth) {
+      result += word;
+      currentWidth += wordWidth;
+    } else {
+      break;
+    }
+  }
+  
+  // 如果一个完整单词都放不下，则按字符切分
+  if (!result && words[0]) {
+    let length = words[0].length;
+    let str = words[0].substring(0, length);
+    
+    while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
+      length -= 1;
+      str = words[0].substring(0, length);
+    }
+    return str;
+  }
+  
+  return result;
 }
 
 function splitIntoWords(text: string, style: IStyle): string[] {
@@ -174,7 +249,14 @@ function splitIntoWords(text: string, style: IStyle): string[] {
     return text.split('');
   }
   
-  // 根据空格分词，保留空格
+  if (style.wordBreak === 'keep-all') {
+    // 对CJK文本特殊处理
+    const isCJK = isCJKText(text);
+    if (isCJK) {
+      return [text];
+    }
+  }
+  
   return text.match(/\S+|\s+/g) || [];
 }
 
