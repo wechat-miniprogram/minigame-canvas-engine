@@ -112,17 +112,22 @@ function parseText(style: IStyle, value: string): string {
 
   const maxWidth = style.width as number;
 
-  // 3. 如果设置了不换行，只需要处理省略号
-  if (whiteSpace === 'nowrap') {
-    // nowrap 模式下文本强制在一行显示，不允许换行
-    value = value.replace(/\s+/g, ' '); // 合并空白符
-    if (style.textOverflow === 'ellipsis' && getTextWidth(style, value) > maxWidth) {
+  // 3. 如果设置了省略号，强制在一行显示
+  if (style.textOverflow === 'ellipsis') {
+    value = value.replace(/\s+/g, ' '); // 合并所有空白符
+    if (getTextWidth(style, value) > maxWidth) {
       return truncateText(style, value, maxWidth);
     }
     return value;
   }
 
-  // 4. 处理需要换行的情况
+  // 4. 如果设置了不换行，直接返回
+  if (whiteSpace === 'nowrap') {
+    value = value.replace(/\s+/g, ' '); // 合并空白符
+    return value;
+  }
+
+  // 5. 处理需要换行的情况
   const lines: string[] = [];
   const wordBreak = style.wordBreak || 'normal';
   const overflowWrap = style.overflowWrap || 'normal';
@@ -142,56 +147,79 @@ function parseText(style: IStyle, value: string): string {
     let currentLine = '';
     let currentWidth = 0;
 
-    for (const segment of lineSegments) {
-      const segmentWidth = getTextWidth(style, segment + ' ');  // 加上空格的宽度
+    for (let i = 0; i < lineSegments.length; i++) {
+      const segment = lineSegments[i];
+      // 行内的最后一段不应该有空格
+      const segmentWidth = i < lineSegments.length - 1 ? getTextWidth(style, segment + ' ') : getTextWidth(style, segment);
       
       // 处理单个片段超过最大宽度的情况
-      if (currentLine === '' && segmentWidth > maxWidth) {
+      if (segmentWidth + currentWidth > maxWidth) {
         // CJK 文字特殊处理
         const isCJK = isCJKText(segment);
         
+        // 需要强制断行的情况
         if (wordBreak === 'break-all' || 
             (overflowWrap === 'break-word' && !isCJK) || 
             (wordBreak === 'normal' && isCJK)) {
-          // 需要强制断行的情况
           let remainingText = segment;
+
           while (remainingText) {
-            const truncated = truncateTextPure(remainingText, maxWidth);
-            lines.push(truncated);
+            const remainingWidth = maxWidth - currentWidth;
+            // 这里要考虑当前行已经不是空的场景，所以可用长度要把当前用掉的长度减掉
+            const truncated = truncateTextPure(remainingText, remainingWidth);
+  
             remainingText = remainingText.slice(truncated.length);
+
+            // 代表还没分割完，truncated 会完整占据一行
+            if (remainingText) {
+              if (currentLine) {
+                // 如果不是行内的最后一段，拼接的时候应该额外加一个空格
+                lines.push(i < lineSegments.length - 1 ? currentLine + ' ' + truncated : currentLine + truncated);
+              } else {
+                lines.push(truncated);
+              }
+
+              // 当前行用完了，重置
+              currentLine = '';
+              // 换行之后重置当前已用长度
+              currentWidth = 0;
+            } else {
+              // 分割完了，但是未必占满了一行，需要记录下，可能给后续的 segment 使用
+              // 也可能是刚好分割完
+              currentLine = i < lineSegments.length - 1 ? currentLine + ' ' + truncated : currentLine + truncated;
+              currentWidth = getTextWidth(style, currentLine);
+            } 
           }
         } else {
-          // 不需要强制断行，作为一个整体
-          lines.push(segment);
+          /**
+           * 这里有几种情况
+           * 1. 当前行内这一段会超长，但是按照规则不需要强制断行，作为一个整体
+           * 2. 不符合1的情况，而是会把 currentLine 消费完，因此需要把 currentLine push之后处理
+           */
+          if (currentLine) {
+            lines.push(currentLine);
+            currentLine = segment;
+          } else {
+            lines.push(segment);
+          }
         }
-        continue;
-      }
-
-      // 正常的行处理
-      if (currentWidth + segmentWidth <= maxWidth) {
-        currentLine += (currentLine ? ' ' : '') + segment;
-        currentWidth += segmentWidth;
       } else {
-        if (currentLine) {
-          lines.push(currentLine);
+        // 正常的行处理
+        if (currentWidth + segmentWidth <= maxWidth) {
+          currentLine += (currentLine ? ' ' : '') + segment;
+          currentWidth += segmentWidth;
+        } else {
+          if (currentLine) {
+            lines.push(currentLine);
+          }
+          currentLine = segment;
+          currentWidth = getTextWidth(style, segment);
         }
-        currentLine = segment;
-        currentWidth = getTextWidth(style, segment);
       }
     }
 
     if (currentLine) {
       lines.push(currentLine);
-    }
-  }
-
-  // 5. 最后处理省略号
-  if (style.textOverflow === 'ellipsis' && lines.length > 0) {
-    const lastLine = lines[lines.length - 1];
-    const lastLineWidth = getTextWidth(style, lastLine);
-    
-    if (lastLineWidth > maxWidth) {
-      lines[lines.length - 1] = truncateText(style, lastLine, maxWidth);
     }
   }
 

@@ -96,11 +96,31 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | textStrokeWidth  **(v1.0.8开始支持)**| number | 文字描边的宽度，默认不描边 |
 | textStrokeColor  **(v1.0.8开始支持)**|  string | 描边的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色， 如果指定了描边颜色但是没有指定描边宽度，描边宽度默认设置为1 |
 | textShadow  **(v1.0.8开始支持)** | string |  文字阴影效果，textShadow的格式并不是严格的CSS格式，仅支持两种格式 如`textShadow: 1px 1px 2px pink`和`textShadow: 1px 1px 2px red, 0 0 1px blue, 0 0 1px blue, 1px 1px 2px red`，也就是支持任意数量的阴影效果，每个阴影效果由四个值指定，分别是 shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor |
+| whiteSpace | normal, nowrap, pre, pre-wrap, pre-line | normal | 设置如何处理元素内的空白字符和换行。normal：合并空白符和换行符；nowrap：合并空白符但阻止换行；pre：保留空白符和换行符；pre-wrap：保留空白符和换行符，允许自动换行；pre-line：合并空白符，保留换行符 |
+| wordBreak | normal, break-all, keep-all | normal | 指定如何在单词内断行。normal：使用默认的断行规则；break-all：对于非CJK文本可在任意字符间断行；keep-all：CJK文本不断行，非CJK文本表现同normal |
+| overflowWrap | normal, break-word | normal | 设置是否允许在本来不能断开的单词内插入换行符。normal：只在允许的断点处换行；break-word：在没有其他断点时可在单词内换行 |
 
 ::: tip textShadow 特殊说明
-微信小游戏开放数据域暂不支持文字阴影效果，近期版本支持中。
+微信小游戏开放数据域暂不支持文字阴影效果。
 :::
 
+::: tip 文本换行处理说明
+white-space 属性对空白符和换行的处理规则：
+
+| 属性值    | 换行符  | 空格/制表符 | 文本换行 | 行末空格 | 其他空白分隔符 |
+|----------|---------|------------|---------|---------|--------------|
+| normal   | 合并    | 合并       | 换行    | 移除    | 挂起         |
+| nowrap   | 合并    | 合并       | 不换行  | 移除    | 挂起         |
+| pre      | 保留    | 保留       | 不换行  | 保留    | 不换行       |
+| pre-wrap | 保留    | 保留       | 换行    | 挂起    | 挂起         |
+| pre-line | 保留    | 合并       | 换行    | 移除    | 挂起         |
+
+术语说明：
+- "合并"：连续空白符合并为单个空格
+- "保留"：保留原始空白符（包括换行和空格）
+- "挂起"：允许在单词内换行（类似英文的 word-break）
+- "移除"：删除行末的空格
+:::
 
 ### 容器
 
