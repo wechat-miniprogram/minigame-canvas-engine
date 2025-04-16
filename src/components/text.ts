@@ -206,6 +206,7 @@ function parseText(style: IStyle, value: string): string {
           if (currentLine) {
             lines.push(currentLine);
             currentLine = segment;
+            currentWidth = getTextWidth(style, currentLine);
           } else {
             lines.push(segment);
           }
