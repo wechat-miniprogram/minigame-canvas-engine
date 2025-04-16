@@ -59,20 +59,7 @@ const isCJKText = (text: string): boolean => {
   return /[\u4e00-\u9fa5\u3040-\u30ff\u3400-\u4dbf]/.test(text);
 };
 
-/**
- * 文字解析器
- * 一些知识点：
- * 1. \s 匹配一个空白字符，包括空格、制表符、换页符和换行符。
- * 2. \r 匹配一个回车符 (U+000D)。
- * 3. \n 匹配一个换行符 (U+000A)。
- * 4. \S 匹配一个非空白字符。
- */
-function parseText(style: IStyle, value: string): string {
-  value = String(value);
-
-  // 1. 首先处理空白符和换行符
-  const whiteSpace = style.whiteSpace || 'normal';
-  
+function processTextWhiteSpace(value: string, whiteSpace: string): string {
   // 根据 whiteSpace 处理空白符和换行符
   switch (whiteSpace) {
     case 'pre':
@@ -90,9 +77,9 @@ function parseText(style: IStyle, value: string): string {
     case 'pre-line':
       // 合并空白符，保留换行符
       value = value.replace(/[^\S\n]+/g, ' ')  // 合并空白符（不包括换行符）
-                   .replace(/\r\n|\r/g, '\n')   // 统一换行符
-                   .replace(/ \n/g, '\n')       // 删除换行符前的空格
-                   .replace(/\n /g, '\n');      // 删除换行符后的空格
+        .replace(/\r\n|\r/g, '\n')   // 统一换行符
+        .replace(/ \n/g, '\n')       // 删除换行符前的空格
+        .replace(/\n /g, '\n');      // 删除换行符后的空格
       break;
     case 'nowrap':
       // nowrap的空白符处理会在后面统一处理
@@ -103,6 +90,25 @@ function parseText(style: IStyle, value: string): string {
       value = value.replace(/\s+/g, ' ');
       break;
   }
+
+  return value;
+}
+
+/**
+ * 文字解析器
+ * 一些知识点：
+ * 1. \s 匹配一个空白字符，包括空格、制表符、换页符和换行符。
+ * 2. \r 匹配一个回车符 (U+000D)。
+ * 3. \n 匹配一个换行符 (U+000A)。
+ * 4. \S 匹配一个非空白字符。
+ */
+function parseText(style: IStyle, value: string): string {
+  value = String(value);
+
+  // 1. 首先处理空白符和换行符
+  const whiteSpace = style.whiteSpace || 'normal';
+
+  value = processTextWhiteSpace(value, whiteSpace);
 
   // 2. 如果没有设置宽度，直接返回处理后的文本
   if (style.width === undefined) {
@@ -151,23 +157,23 @@ function parseText(style: IStyle, value: string): string {
       const segment = lineSegments[i];
       // 行内的最后一段不应该有空格
       const segmentWidth = i < lineSegments.length - 1 ? getTextWidth(style, segment + ' ') : getTextWidth(style, segment);
-      
+
       // 处理单个片段超过最大宽度的情况
       if (segmentWidth + currentWidth > maxWidth) {
         // CJK 文字特殊处理
         const isCJK = isCJKText(segment);
-        
+
         // 需要强制断行的情况
-        if (wordBreak === 'break-all' || 
-            (overflowWrap === 'break-word' && !isCJK) || 
-            (wordBreak === 'normal' && isCJK)) {
+        if (wordBreak === 'break-all' ||
+          (overflowWrap === 'break-word' && !isCJK) ||
+          (wordBreak === 'normal' && isCJK)) {
           let remainingText = segment;
 
           while (remainingText) {
             const remainingWidth = maxWidth - currentWidth;
             // 这里要考虑当前行已经不是空的场景，所以可用长度要把当前用掉的长度减掉
             const truncated = truncateTextPure(remainingText, remainingWidth);
-  
+
             remainingText = remainingText.slice(truncated.length);
 
             // 代表还没分割完，truncated 会完整占据一行
@@ -188,7 +194,8 @@ function parseText(style: IStyle, value: string): string {
               // 也可能是刚好分割完
               currentLine = i < lineSegments.length - 1 ? currentLine + ' ' + truncated : currentLine + truncated;
               currentWidth = getTextWidth(style, currentLine);
-            } 
+
+            }
           }
         } else {
           /**
@@ -229,7 +236,7 @@ function parseText(style: IStyle, value: string): string {
 // 辅助函数：优化版本的 truncateTextPure
 function truncateTextPure(value: string, maxWidth: number): string {
   const isCJK = isCJKText(value);
-  
+
   // CJK 文字可以单字切分
   if (isCJK) {
     let length = value.length;
@@ -241,12 +248,12 @@ function truncateTextPure(value: string, maxWidth: number): string {
     }
     return str;
   }
-  
+
   // 非 CJK 文字尽量在单词边界切分
   const words = value.split(/(\s+)/).filter(Boolean);
   let result = '';
   let currentWidth = 0;
-  
+
   for (const word of words) {
     const wordWidth = getTextWidthWithoutSetFont(word);
     if (currentWidth + wordWidth <= maxWidth) {
@@ -256,19 +263,19 @@ function truncateTextPure(value: string, maxWidth: number): string {
       break;
     }
   }
-  
+
   // 如果一个完整单词都放不下，则按字符切分
   if (!result && words[0]) {
     let length = words[0].length;
     let str = words[0].substring(0, length);
-    
+
     while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
       length -= 1;
       str = words[0].substring(0, length);
     }
     return str;
   }
-  
+
   return result;
 }
 
@@ -276,7 +283,7 @@ function splitIntoWords(text: string, style: IStyle): string[] {
   if (style.wordBreak === 'break-all') {
     return text.split('');
   }
-  
+
   if (style.wordBreak === 'keep-all') {
     // 对CJK文本特殊处理
     const isCJK = isCJKText(text);
@@ -284,7 +291,7 @@ function splitIntoWords(text: string, style: IStyle): string[] {
       return [text];
     }
   }
-  
+
   return text.match(/\S+|\s+/g) || [];
 }
 
@@ -302,7 +309,7 @@ export default class Text extends Element {
   public fillStyle = '#000000';
 
   protected renderForLayout: ITextRenderForLayout = {};
-  
+
   constructor({
     style = {},
     idName = '',
@@ -404,7 +411,7 @@ export default class Text extends Element {
     const ctx = this.ctx;
 
     ctx.save();
-    
+
     // 调用基类的渲染方法
     const { needStroke, originX, originY, drawX, drawY, width, height } = this.baseRender();
 
@@ -422,7 +429,7 @@ export default class Text extends Element {
 
     // 垂直对齐方式处理
     const totalHeight = lines.length * lineHeight;
-    
+
     if (style.verticalAlign === 'middle' || style.lineHeight) {
       // 如果设置了 lineHeight 或要求垂直居中，则居中对齐
       y += height / 2; // 先移动到容器中心
@@ -438,7 +445,7 @@ export default class Text extends Element {
     // 渲染每一行文字
     lines.forEach((line, index) => {
       let x = drawX - originX;
-      
+
       // 水平对齐方式处理
       if (style.textAlign === 'center') {
         x += width / 2;
