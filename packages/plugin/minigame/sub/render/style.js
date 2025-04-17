@@ -18,7 +18,6 @@ export const style = {
   title: {
     width: 144,
     fontSize: 48,
-    height: 120,
     lineHeight: 120,
     textAlign: 'center',
     fontWeight: 'bold',
@@ -26,7 +25,6 @@ export const style = {
     borderColor: '#000000',
     textStrokeColor: 'red',
     textStrokeWidth: 1,
-    // textShadow: '1px 1px 2px #f3f3f3',
   },
 
   rankList: {
@@ -59,7 +57,6 @@ export const style = {
     fontWeight: 'bold',
     color: '#452E27',
     lineHeight: 150,
-    height: 150,
     textAlign: 'center',
     width: 120,
   },
@@ -74,17 +71,16 @@ export const style = {
     fontSize: 48,
     fontWeight: 'bold',
     marginLeft: 10,
-    height: 150,
     lineHeight: 150,
-    width: 300,
+    width: 100,
     textAlign: 'right',
   },
 
   listItemName: {
     fontSize: 36,
     height: 150,
-    lineHeight: 150,
-    width: 350,
+    verticalAlign: 'middle',
+    width: 550,
     marginLeft: 30,
     textShadow: '1px 1px 2px blue',
   },
@@ -117,7 +113,5 @@ export const style = {
     color: 'rgba(0,0,0,0.5)',
     backgroundColor: '#ffffff',
     borderRadius: 10,
-    /*borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.3)',*/
   }
 }

@@ -64,6 +64,9 @@ function loadFriendDataAndRender(key, info, needRender = true) {
       data[i] = JSON.parse(JSON.stringify(data[0]));
       data[i].rank = i;
       data[i].rankScore = Math.floor(Math.random() * 1000 + 1)
+      if (i % 2 === 1) {
+        data[i].nickname = '这是一个很长的玩家昵称，他会自动换行'
+      }
     }
 
     if (needRender) {

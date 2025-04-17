@@ -1,69 +1,62 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { template } from "dot";
+
+
 let tpl = `
 <scrollview id="container" scrollY = "true">
-    <text class="text lineHeightText" value="文本可以指定行高实现垂直居中"></text>
+  <text class="text lineHeightText" value="文本可以指定行高实现垂直居中"></text>
   
-    <text class="text fontSizeText" value="文本可以指定字体大小"></text>
-  
-    <text class="text fontFamilyText" value="文本可以指定字体，比如这是仿宋体"></text>
-  
-    <text class="text textAlignText" value="文本可以指定横向对齐方式，比如右对齐"></text>
-  
-    <view class="textBox">
-      <text class="text verticalAlignText" value="文本可以指定纵向对齐方式，比如底部对齐"></text>
-      <image src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg" class="wegoing"></image>
-    </view>
-    <text class="text colorText" value="文本可以设置颜色"></text>
-  
-    <text class="text textOverflowText" value="很长很长很长的文本可以设置截断方式，比如这段文字超出屏幕，但是会省略号展示"></text>
+  <text class="text fontSizeText" value="文本可以指定字体大小"></text>
 
-    <text class="text textStroke" value="文字可以描边，一定程度上就不需要BitMapText"></text>
+  <text class="text fontFamilyText" value="文本可以指定字体，比如这是仿宋体，不过这需要当前系统支持该字体"></text>
 
-    <text class="text textShadow" value="文字可以设置阴影效果，一定程度上也不需要BitMapText"></text>
+  <text class="text textAlignText" value="文本可以指定横向对齐方式，比如右对齐"></text>
 
-    <text class="text normalWrap" value="这是一段很长的文本，在设置了文字宽度的时候会自动换行，这是为了测试文本的自动换行效果，可以看到文本会在容器宽度位置自动换行显示"></text>
+  <view class="textBox">
+    <text class="text verticalAlignText" value="文本可以指定纵向对齐方式，比如底部对齐"></text>
+    <image src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg" class="wegoing"></image>
+  </view>
+  <text class="text colorText" value="文本可以设置颜色"></text>
 
-    <text class="text normalWrap" value="- 这是一段很长的文本，在设置示设 -"></text>
+  <text class="text normalWrap" value="设置了文本宽度，文本会根据宽度自动换行，这在页面宽度有限的场景下非常有用，比如在展示用户昵称的时候，用户昵称可能是很长的"></text>
 
-    <text class="text normalWrap" value="如果使用了emoji表情，建议谨慎使用，因为emoji表情的处理非常复杂，请留意会不会有emoji表情被截断的情况😊😊😊😊😊😊😊😊😊😊"></text>
+  <text class="text textOverflowText" value="很长很长很长的文本可以设置截断方式，比如这段文字超出屏幕，但是会省略号展示"></text>
 
-    <text class="text preWrap" value="这是一段保留空格和换行的文本，     前面有很多空格
-    还可以换行，  空格也会保留"></text>
+  <text class="text textMiddle" value="设置了文本宽度，文本会根据宽度自动换行，有时候换行的文本也想要垂直居中，可以通过设置高度和verticalAlign来实现"></text>
 
-    <text class="text breakAll" value="ThisIsAVeryLongWordThatShouldBreakIntoMultipleLines"></text>
+  <text class="text" value="如果是一个很长的英文单词，默认是不会截断的，比如 supercalifragilisticexpialidocious 可以发现第一行放不下他就会换行"></text>
 
-    <text class="text breakWord" value="https://this-is-a-very-long-url-that-should-break-into-multiple-lines.com"></text>
+  <text class="text textBreakAll" value="如果你想忽略英文的排版规则，可以通过wordBreak=break-all，比如 supercalifragilisticexpialidocious 第一行放不下他也不会换行"></text>
 
-     <text class="text breakWordLines" value="This is Very long word that should break into multiple lines"></text>
-  </scrollview>
+  <text class="text textStroke" value="文字可以描边，一定程度上就不需要BitMapText"></text>
+
+  <text class="text textShadow" value="文字可以设置阴影效果，一定程度上也不需要BitMapText"></text>
+</scrollview>
   `;
 
 let style = {
   container: {
     width: 800,
     height: 1500,
-    backgroundColor: '#f3f3f3',
   },
   text: {
     width: '100%',
-    height: 50,
     fontSize: 24,
-    marginTop: 20,
+    marginTop: 30,
+    // backgroundColor: 'red'
   },
   textBox: {
     width: '100%',
-    height: 50,
+    height: 80,
     flexDirection: 'row',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   wegoing: {
-    width: 50,
-    height: 50,
+    width: 80,
+    height: 80,
   },
   lineHeightText: {
-    height: 100,
     lineHeight: 100,
     verticalAlign: 'middle',
   },
@@ -87,6 +80,7 @@ let style = {
   },
   textOverflowText: {
     textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   textStroke: {
     textStrokeWidth: 1,
@@ -95,32 +89,12 @@ let style = {
   textShadow: {
     textShadow: '1px 1px 2px blue',
   },
-  normalWrap: {
-    width: 400,
-    whiteSpace: 'normal',
-    height: 200,
+  textMiddle: {
+    height: 150,
+    verticalAlign: 'middle',
   },
-  preWrap: {
-    width: 400,
-    whiteSpace: 'pre-wrap',
-    backgroundColor:'#ffffff',
-    height: 100,
-    textAlign: 'center'
-  },
-  breakAll: {
-    width: 400,
+  textBreakAll: {
     wordBreak: 'break-all',
-    height: 80,
-  },
-  breakWord: {
-    width: 400,
-    overflowWrap: 'break-word',
-    height: 80,
-  },
-
-  breakWordLines: {
-    width: 400,
-    height: 80,
   }
 };
 
@@ -152,10 +126,11 @@ export default defineComponent({
 
       const texts = Layout.getElementsByClassName('text');
 
-      console.log('texts', texts)
       texts.forEach((text, index) => {
         if (index % 2 === 1) {
-          text.style.backgroundColor = '#ffffff' 
+          text.style.backgroundColor = '#f8f8f8' 
+        } else {
+          text.style.backgroundColor = '#f3f3f3' 
         }
       })
     },

@@ -240,8 +240,6 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
   const wordBreak = style.wordBreak || 'normal';
   const overflowWrap = style.overflowWrap || 'normal';
 
-  console.log(value);
-
   // 首先按照自然断点（空格、换行符等）分割文本
   const segments = value.split('\n').map(line => {
     if (whiteSpace === 'pre') {
