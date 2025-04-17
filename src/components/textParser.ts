@@ -238,7 +238,6 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
   // 4. 处理需要换行的情况
   const lines: string[] = [];
   const wordBreak = style.wordBreak || 'normal';
-  const overflowWrap = style.overflowWrap || 'normal';
 
   // 首先按照自然断点（空格、换行符等）分割文本
   const segments = value.split('\n').map(line => {
@@ -266,9 +265,7 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
         const isCJK = isCJKText(segment);
 
         // 需要强制断行的情况
-        if (wordBreak === 'break-all' ||
-          (overflowWrap === 'break-word' && !isCJK) ||
-          (wordBreak === 'normal' && isCJK)) {
+        if (wordBreak === 'break-all' || (wordBreak === 'normal' && isCJK)) {
           let remainingText = segment;
 
           while (remainingText) {

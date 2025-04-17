@@ -162,13 +162,6 @@ interface IStyle {
    */
   wordBreak?: 'normal' | 'break-all';
 
-  /**
-   * 用来设置是否应该在一个本来不能断开的字符串中插入换行符，以防止文本溢出其行向盒。
-   * normal: 行只能在正常的单词断点（例如两个单词之间的空格）处换行
-   * break-word: 如果行中没有其他可接受的断点，则允许在任意点将通常不可断的单词换行
-   */
-  overflowWrap?: 'normal' | 'break-word';
-
   ':active'?: IStyle;
 }
 

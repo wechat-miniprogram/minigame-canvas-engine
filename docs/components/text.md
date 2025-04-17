@@ -46,13 +46,6 @@ Text 组件提供了丰富的文字换行控制能力，主要通过以下样式
 | normal | 允许在字符间断行 | 仅在空格或连字符处断行 | 遵循语言默认的断行规则，中文可以在任意字符间断行，英文在单词边界断行 | 最常用的断行方式，适合大多数场景 |
 | break-all | 允许在字符间断行 | 允许在任意字符间断行 | 允许在任意字符间断行，包括单词中间，可能会破坏单词的可读性 | 处理超长的连续英文字符，如 hash 值 |
 
-#### overflowWrap (wordWrap) 样式属性
-控制是否允许在单词内部换行：
-
-| 值 | 行为 | 对比 wordBreak | 说明 | 常见用途 |
-|---|------|----------------|------|----------|
-| normal | 仅在允许的断点换行 | 与 wordBreak: normal 配合使用 | 遵循语言规则，不会在单词中间断行 | 一般的文本排版 |
-| break-word | 必要时在单词内换行 | 比 wordBreak: break-all 更温和 | 优先在单词边界断行，实在放不下时才会在单词中间断行 | 处理长 URL、长邮箱等内容 |
 
 ## 示例
 
@@ -63,16 +56,10 @@ Text 组件提供了丰富的文字换行控制能力，主要通过以下样式
    - `text-overflow: ellipsis` 需要配合 `white-space: nowrap` 使用
 
 2. 文本换行的关键点：
-   - 设置 `width` 是触发自动换行的前提
-   - CJK 文本（中日韩）可以在任意字符间换行
-   - 英文单词默认在空格、连字符等位置换行
-   - `word-break: break-all` 用于强制断词
-   - `overflow-wrap: break-word` 用于长 URL 等特殊场景
-
-3. 性能建议：
-   - 使用类选择器而不是内联样式
-   - 避免频繁改变文本内容导致重复计算高度
-   - 注意 emoji 表情可能的截断问题
+   - 设置 `width` 是触发自动换行的前提;
+   - CJK 文本（中日韩）可以在任意字符间换行;
+   - 英文单词默认在空格、连字符等位置换行;
+   - `word-break: break-all` 用于强制断词;
 
 ## 在线示例
 <iframe height="580.0000915527344" style="width: 100%;" scrolling="no" title="Layout Text" src="https://codepen.io/yuanzm/embed/bGZdjEg?default-tab=html%2Cresult&editable=true" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">

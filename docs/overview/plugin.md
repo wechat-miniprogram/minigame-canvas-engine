@@ -86,7 +86,7 @@ const Layout = requirePlugin('Layout').default;
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
-| 1.0.15        | 新增文本换行相关特性：whiteSpace、wordBreak、overflowWrap |
+| 1.0.15        | 新增文本换行相关特性：whiteSpace、wordBreak |
 | 1.0.14        | 新增 classList 特性 |
 | 1.0.13        | 新增insertElement，优化ts声明协议|
 | 1.0.12        | 修复 BitMapText textAlign = 'right' 不生效问题，修改 ScrollBar 的默认样式|
