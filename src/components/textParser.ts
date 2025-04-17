@@ -1,4 +1,3 @@
-
 import { IStyle } from './style';
 import env from '../env';
 
@@ -106,31 +105,47 @@ function truncateText(value: string, maxWidth: number): string {
     return truncateTextPure(value, maxWidth);
   }
 
-  // 非 CJK 文字尽量在单词边界切分
-  const words = value.split(/(\s+)/).filter(Boolean);
+  // 非 CJK 文字尽量在单词边界或特殊字符处切分
+  // 1. 首先尝试在空格处切分
+  const spaceWords = value.split(/(\s+)/).filter(Boolean);
   let result = '';
   let currentWidth = 0;
 
-  for (const word of words) {
+  const spaceWidth = getTextWidthWithoutSetFont(' ');
+  for (let i = 0; i < spaceWords.length; i++) {
+    const word = spaceWords[i];
     const wordWidth = getTextWidthWithoutSetFont(word);
     if (currentWidth + wordWidth <= maxWidth) {
-      result += word;
-      currentWidth += wordWidth;
+      result += i < spaceWords.length - 1 ? word + ' ' : word;
+      currentWidth += i < spaceWords.length - 1 ? wordWidth + spaceWidth : wordWidth;
     } else {
       break;
     }
   }
 
-  // 如果一个完整单词都放不下，则按字符切分
-  if (!result && words[0]) {
-    let length = words[0].length;
-    let str = words[0].substring(0, length);
+  // 2. 如果一个完整单词都放不下，尝试在特殊字符处切分
+  if (!result && spaceWords[0]) {
+    const word = spaceWords[0];
+    // 在URL常见的分隔符处切分
+    const subWords = word.split(/([\/\-\._~:?#\[\]@!$&'()*+,;=])/g).filter(Boolean);
+    
+    result = '';
+    currentWidth = 0;
 
-    while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
-      length -= 1;
-      str = words[0].substring(0, length);
+    for (const subWord of subWords) {
+      const subWordWidth = getTextWidthWithoutSetFont(subWord);
+      if (currentWidth + subWordWidth <= maxWidth) {
+        result += subWord;
+        currentWidth += subWordWidth;
+      } else {
+        break;
+      }
     }
-    return str;
+
+    // 3. 如果在特殊字符处切分后还是放不下，则按字符切分
+    if (!result) {
+      return truncateTextPure(word, maxWidth);
+    }
   }
 
   return result;
@@ -211,26 +226,21 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
 
   const maxWidth = style.width as number;
 
-  // 3. 如果设置了省略号，强制在一行显示
-  if (style.textOverflow === 'ellipsis') {
+  // 3. 如果设置了不换行，强制在一行显示
+  if (whiteSpace === 'nowrap') {
     value = value.replace(/\s+/g, ' '); // 合并所有空白符
-    if (getTextWidth(style, value) > maxWidth) {
+    if (style.textOverflow === 'ellipsis' && getTextWidth(style, value) > maxWidth) {
       return [truncateTextWithDots(style, value, maxWidth)];
     }
-
     return [value];
   }
 
-  // 4. 如果设置了不换行，直接返回
-  if (whiteSpace === 'nowrap') {
-    value = value.replace(/\s+/g, ' '); // 合并空白符
-    return [value];
-  }
-
-  // 5. 处理需要换行的情况
+  // 4. 处理需要换行的情况
   const lines: string[] = [];
   const wordBreak = style.wordBreak || 'normal';
   const overflowWrap = style.overflowWrap || 'normal';
+
+  console.log(value);
 
   // 首先按照自然断点（空格、换行符等）分割文本
   const segments = value.split('\n').map(line => {

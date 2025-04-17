@@ -159,9 +159,8 @@ interface IStyle {
    * wordBreak 指定了怎样在单词内断行
    * normal: 使用默认的断行规则。
    * break-all: 对于 non-CJK (CJK 指中文/日文/韩文) 文本，可在任意字符间断行。
-   * keep-all: CJK 文本不断行。Non-CJK 文本表现同 normal。
    */
-  wordBreak?: 'normal' | 'break-all' | 'keep-all';
+  wordBreak?: 'normal' | 'break-all';
 
   /**
    * 用来设置是否应该在一个本来不能断开的字符串中插入换行符，以防止文本溢出其行向盒。
