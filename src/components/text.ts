@@ -102,7 +102,7 @@ function processTextWhiteSpace(value: string, whiteSpace: string): string {
  * 3. \n 匹配一个换行符 (U+000A)。
  * 4. \S 匹配一个非空白字符。
  */
-function parseText(style: IStyle, value: string): string {
+function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleInfo, value: string): string[] {
   value = String(value);
 
   // 1. 首先处理空白符和换行符
@@ -111,9 +111,9 @@ function parseText(style: IStyle, value: string): string {
   value = processTextWhiteSpace(value, whiteSpace);
 
   // 2. 如果没有设置宽度，直接返回处理后的文本
-  if (style.width === undefined) {
+  if (originSomeStyleInfo.width === undefined) {
     style.width = getTextWidth(style, value);
-    return value;
+    return [value];
   }
 
   const maxWidth = style.width as number;
@@ -122,15 +122,16 @@ function parseText(style: IStyle, value: string): string {
   if (style.textOverflow === 'ellipsis') {
     value = value.replace(/\s+/g, ' '); // 合并所有空白符
     if (getTextWidth(style, value) > maxWidth) {
-      return truncateText(style, value, maxWidth);
+      return [truncateText(style, value, maxWidth)];
     }
-    return value;
+
+    return [value];
   }
 
   // 4. 如果设置了不换行，直接返回
   if (whiteSpace === 'nowrap') {
     value = value.replace(/\s+/g, ' '); // 合并空白符
-    return value;
+    return [value];
   }
 
   // 5. 处理需要换行的情况
@@ -231,7 +232,21 @@ function parseText(style: IStyle, value: string): string {
     }
   }
 
-  return lines.join('\n');
+  return lines;
+}
+
+function parseTextHeight(style: IStyle, originSomeStyleInfo: IOriginSomeStyleInfo, parsedValue: string[]) {
+  const fontSize = style.fontSize || 12;
+  if (originSomeStyleInfo.lineHeight === undefined) {
+    style.lineHeight = fontSize * 1.2;
+  } else if (typeof style.lineHeight === 'string' && style.lineHeight.endsWith('%')) {
+    style.lineHeight = fontSize * parseFloat(style.lineHeight); 
+  }
+
+  // 如果没有强行指定高度，通过 lineHeight * 行高
+  if (originSomeStyleInfo.height === undefined) {
+    style.height = style.lineHeight as number * parsedValue.length;
+  }
 }
 
 // 辅助函数：优化版本的 truncateTextPure
@@ -280,29 +295,21 @@ function truncateTextPure(value: string, maxWidth: number): string {
   return result;
 }
 
-function splitIntoWords(text: string, style: IStyle): string[] {
-  if (style.wordBreak === 'break-all') {
-    return text.split('');
-  }
-
-  if (style.wordBreak === 'keep-all') {
-    // 对CJK文本特殊处理
-    const isCJK = isCJKText(text);
-    if (isCJK) {
-      return [text];
-    }
-  }
-
-  return text.match(/\S+|\s+/g) || [];
-}
-
 export interface ITextProps extends IElementOptions {
   value?: string;
 }
 
+interface IOriginSomeStyleInfo {
+  width: number | string | undefined;
+  height: number | string | undefined;
+  lineHeight: number | string | undefined;
+}
+
 export default class Text extends Element {
   private valuesrc = '';
-  private originStyleWidth: number | string | undefined;
+  private parsedValue: string[] = [];
+  private originSomeStyleInfo: IOriginSomeStyleInfo;
+  
   public fontSize?: number;
   public textBaseline: CanvasTextBaseline = 'bottom';
   public font = '';
@@ -318,11 +325,6 @@ export default class Text extends Element {
     value = '',
     dataset,
   }: ITextProps) {
-    value = parseText(style, value);
-
-    if (style.height === undefined) {
-      style.height = style.lineHeight as number || style.fontSize || 12;
-    }
     super({
       idName,
       className,
@@ -333,7 +335,16 @@ export default class Text extends Element {
     this.type = 'Text';
     this.ctx = null;
     this.valuesrc = value;
-    this.originStyleWidth = style.width;
+
+    this.originSomeStyleInfo = {
+      width: style.width,
+      height: style.height,
+      lineHeight: style.lineHeight,
+    }
+
+    // 文本解析
+    this.parsedValue = parseText(style, this.originSomeStyleInfo, value);
+    parseTextHeight(style, this.originSomeStyleInfo,this.parsedValue);
 
     if (style.textShadow) {
       this.parseTextShadow(style.textShadow);
@@ -373,14 +384,11 @@ export default class Text extends Element {
 
   set value(newValue) {
     if (newValue !== this.valuesrc) {
-      if (this.originStyleWidth === undefined) {
-        this.style.width = getTextWidth(this.style, newValue);
-      } else if (this.style.whiteSpace === 'pre-wrap' || this.style.whiteSpace === 'normal' || this.style.textOverflow === 'ellipsis') {
-        // 需要换行或设置了省略号时，都需要处理文本
-        newValue = parseText(this.style, newValue);
-      }
-
       this.valuesrc = newValue;
+
+      this.parsedValue = parseText(this.style, this.originSomeStyleInfo, newValue);
+      parseTextHeight(this.style, this.originSomeStyleInfo, this.parsedValue);
+
       setDirty(this, 'value change');
     }
   }
@@ -425,14 +433,13 @@ export default class Text extends Element {
     ctx.fillStyle = style.color || '#000000';
 
     // 处理文字换行
-    const lines = this.value.split('\n');
+    const lines = this.parsedValue;
     let y = drawY - originY;
 
-    // 垂直对齐方式处理
+    // 垂直对齐方式处理，totalHeight 代表文字实际占用的高度
     const totalHeight = lines.length * lineHeight;
 
-    if (style.verticalAlign === 'middle' || style.lineHeight) {
-      // 如果设置了 lineHeight 或要求垂直居中，则居中对齐
+    if (style.verticalAlign === 'middle') {
       y += height / 2; // 先移动到容器中心
       y -= (totalHeight - lineHeight) / 2; // 再减去多行文本的一半高度(不包括第一行)
     } else if (style.verticalAlign === 'bottom') {
