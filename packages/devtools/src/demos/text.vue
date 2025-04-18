@@ -2,14 +2,13 @@
 import { defineComponent } from "vue";
 import { template } from "dot";
 
-
 let tpl = `
 <scrollview id="container" scrollY = "true">
   <text class="text lineHeightText" value="文本可以指定行高实现垂直居中"></text>
   
   <text class="text fontSizeText" value="文本可以指定字体大小"></text>
 
-  <text class="text fontFamilyText" value="文本可以指定字体，比如这是仿宋体，不过这需要当前系统支持该字体"></text>
+  <text class="text fontFamilyText" value="文本可以指定字体，比如这是仿宋体(需要当前系统支持)"></text>
 
   <text class="text textAlignText" value="文本可以指定横向对齐方式，比如右对齐"></text>
 
@@ -27,7 +26,7 @@ let tpl = `
 
   <text class="text" value="如果是一个很长的英文单词，默认是不会截断的，比如 supercalifragilisticexpialidocious 可以发现第一行放不下他就会换行"></text>
 
-  <text class="text textBreakAll" value="如果你想忽略英文的排版规则，可以通过wordBreak=break-all，比如 supercalifragilisticexpialidocious 第一行放不下他也不会换行"></text>
+  <text class="text textBreakAll" value="如果你想忽略英文的排版规则，比如 supercalifragilisticexpialidocious 第一行放不下他也会强行换行"></text>
 
   <text class="text textStroke" value="文字可以描边，一定程度上就不需要BitMapText"></text>
 
@@ -42,9 +41,8 @@ let style = {
   },
   text: {
     width: '100%',
-    fontSize: 24,
-    marginTop: 30,
-    // backgroundColor: 'red'
+    fontSize: 28,
+    marginTop: 35,
   },
   textBox: {
     width: '100%',
@@ -70,7 +68,7 @@ let style = {
     textAlign: 'right',
   },
   verticalAlignText: {
-    width: 460,
+    width: 600,
     height: 24,
     marginTop: 0,
     verticalAlign: 'bottom',

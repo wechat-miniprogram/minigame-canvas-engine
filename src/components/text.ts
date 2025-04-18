@@ -1,9 +1,7 @@
 import Element, { StyleOpType, setDirty } from './elements';
 import { IElementOptions } from './types';
-import { isValidTextShadow, ITextRenderForLayout } from './styleParser';
-import { parseText, parseTextHeight, IOriginSomeStyleInfo } from './textParser';
-
-const DEFAULT_FONT_FAMILY = 'sans-serif';
+import { ITextRenderForLayout } from './styleParser';
+import { parseText, parseTextHeight, getFontFromStyle, parseTextShadow, IOriginSomeStyleInfo } from './textParser';
 
 export interface ITextProps extends IElementOptions {
   value?: string;
@@ -46,39 +44,21 @@ export default class Text extends Element {
       lineHeight: style.lineHeight,
     }
 
-    // 文本解析
     this.parsedValue = parseText(style, this.originSomeStyleInfo, value);
     parseTextHeight(style, this.originSomeStyleInfo,this.parsedValue);
 
     if (style.textShadow) {
-      this.parseTextShadow(style.textShadow);
+      this.renderForLayout.textShadows = parseTextShadow(style.textShadow);
     }
   }
 
   styleChangeHandler(prop: string, styleOpType: StyleOpType, val?: any) {
     if (prop === 'textShadow') {
       if (styleOpType === StyleOpType.Set) {
-        this.parseTextShadow(val);
+        this.renderForLayout.textShadows = parseTextShadow(val);
       } else {
         this.renderForLayout.textShadows = null;
       }
-    }
-  }
-
-  private parseTextShadow(textShadow: string) {
-    if (!isValidTextShadow(textShadow)) {
-      console.error(`[Layout]: ${textShadow} is not a valid textShadow`);
-    } else {
-      // 解析 text-shadow 字符串
-      this.renderForLayout.textShadows = textShadow.split(',').map(shadow => {
-        const parts = shadow.trim().split(/\s+/);
-        const offsetX = parseFloat(parts[0]);
-        const offsetY = parseFloat(parts[1]);
-        const blurRadius = parseFloat(parts[2]);
-        const color = parts[3];
-
-        return { offsetX, offsetY, blurRadius, color };
-      });
     }
   }
 
@@ -109,7 +89,6 @@ export default class Text extends Element {
     this.ctx = ctx;
     this.shouldUpdate = false;
 
-
     if (needRender) {
       this.render();
     }
@@ -129,14 +108,13 @@ export default class Text extends Element {
     const { needStroke, originX, originY, drawX, drawY, width, height } = this.baseRender();
 
     // 设置文字渲染属性
-    const fontSize = style.fontSize || 12;
-    const lineHeight = (style.lineHeight as number) || fontSize;
-    ctx.font = `${style.fontWeight || 'normal'} ${fontSize}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
+    ctx.font = getFontFromStyle(style);
     ctx.textBaseline = 'middle';
     ctx.textAlign = style.textAlign || 'left';
     ctx.fillStyle = style.color || '#000000';
 
     // 处理文字换行
+    const lineHeight = style.lineHeight as number;
     const lines = this.parsedValue;
     let y = drawY - originY;
 

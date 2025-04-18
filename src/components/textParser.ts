@@ -23,28 +23,26 @@ const getContext = (): CanvasRenderingContext2D => {
   return context;
 };
 
+export function getFontFromStyle(style: IStyle) {
+  return `${style.fontWeight || 'normal'} ${style.fontSize || 12}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
+}
+
 function getTextWidth(style: IStyle, value: string) {
   const context = getContext();
 
-  context.font = `${style.fontWeight || 'normal'} ${style.fontSize || 12}px ${style.fontFamily || DEFAULT_FONT_FAMILY}`;
+  context.font = getFontFromStyle(style);
 
   return context.measureText(value).width || 0;
-}
-
-// let count = 0;
-function getTextWidthWithoutSetFont(value: string) {
-  // console.log(count++)
-  return getContext().measureText(value).width || 0;
 }
 
 /**
  * 使用线性查找进行文本截断
  */
-function truncateTextByLinear(value: string, maxWidth: number): string {
+function truncateTextByLinear(style: IStyle, value: string, maxWidth: number): string {
   let length = value.length;
   let str = value.substring(0, length);
 
-  while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
+  while (getTextWidth(style, str) > maxWidth && length > 0) {
     length -= 1;
     str = value.substring(0, length);
   }
@@ -54,7 +52,7 @@ function truncateTextByLinear(value: string, maxWidth: number): string {
 /**
  * 使用二分查找进行文本截断
  */
-function truncateTextByBinary(value: string, maxWidth: number): string {
+function truncateTextByBinary(style: IStyle, value: string, maxWidth: number): string {
   let left = 0;
   let right = value.length;
   let result = '';
@@ -62,7 +60,7 @@ function truncateTextByBinary(value: string, maxWidth: number): string {
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
     const str = value.substring(0, mid);
-    const width = getTextWidthWithoutSetFont(str);
+    const width = getTextWidth(style, str);
 
     if (width === maxWidth) {
       return str;
@@ -83,26 +81,26 @@ function truncateTextByBinary(value: string, maxWidth: number): string {
  * 1. 当文本较短时使用线性查找
  * 2. 当文本较长时使用二分查找
  */
-function truncateTextPure(value: string, maxWidth: number): string {
+function truncateTextPure(style: IStyle, value: string, maxWidth: number): string {
   // 估算每个字符的平均宽度（假设使用的是等宽字体）
   const avgCharWidth = maxWidth / value.length;
   
   // 如果平均每个字符的宽度大于等于 maxWidth 的 1/20，说明文本较短，使用线性查找
   // 这个阈值可以根据实际情况调整
   if (avgCharWidth >= maxWidth / 20 || value.length <= 20) {
-    return truncateTextByLinear(value, maxWidth);
+    return truncateTextByLinear(style, value, maxWidth);
   }
   
   // 文本较长，使用二分查找
-  return truncateTextByBinary(value, maxWidth);
+  return truncateTextByBinary(style, value, maxWidth);
 }
 
-function truncateText(value: string, maxWidth: number): string {
+function truncateText(style: IStyle, value: string, maxWidth: number): string {
   const isCJK = isCJKText(value);
 
   // CJK 文字可以单字切分
   if (isCJK) {
-    return truncateTextPure(value, maxWidth);
+    return truncateTextPure(style, value, maxWidth);
   }
 
   // 非 CJK 文字尽量在单词边界或特殊字符处切分
@@ -111,10 +109,10 @@ function truncateText(value: string, maxWidth: number): string {
   let result = '';
   let currentWidth = 0;
 
-  const spaceWidth = getTextWidthWithoutSetFont(' ');
+  const spaceWidth = getTextWidth(style, ' ');
   for (let i = 0; i < spaceWords.length; i++) {
     const word = spaceWords[i];
-    const wordWidth = getTextWidthWithoutSetFont(word);
+    const wordWidth = getTextWidth(style, word);
     if (currentWidth + wordWidth <= maxWidth) {
       result += i < spaceWords.length - 1 ? word + ' ' : word;
       currentWidth += i < spaceWords.length - 1 ? wordWidth + spaceWidth : wordWidth;
@@ -133,7 +131,7 @@ function truncateText(value: string, maxWidth: number): string {
     currentWidth = 0;
 
     for (const subWord of subWords) {
-      const subWordWidth = getTextWidthWithoutSetFont(subWord);
+      const subWordWidth = getTextWidth(style, subWord);
       if (currentWidth + subWordWidth <= maxWidth) {
         result += subWord;
         currentWidth += subWordWidth;
@@ -144,7 +142,7 @@ function truncateText(value: string, maxWidth: number): string {
 
     // 3. 如果在特殊字符处切分后还是放不下，则按字符切分
     if (!result) {
-      return truncateTextPure(word, maxWidth);
+      return truncateTextPure(style, word, maxWidth);
     }
   }
 
@@ -152,8 +150,8 @@ function truncateText(value: string, maxWidth: number): string {
 }
 
 function truncateTextWithDots(style: IStyle, value: string, maxWidth: number): string {
-  maxWidth -= getTextWidthWithoutSetFont('...');
-  let str = truncateTextPure(value, maxWidth);
+  maxWidth -= getTextWidth(style, '...');
+  let str = truncateTextPure(style, value, maxWidth);
   return str === value ? str : `${str}...`;
 }
 
@@ -190,8 +188,6 @@ function processTextWhiteSpace(value: string, whiteSpace: string): string {
         .replace(/\n /g, '\n');      // 删除换行符后的空格
       break;
     case 'nowrap':
-      // nowrap的空白符处理会在后面统一处理
-      break;
     case 'normal':
     default:
       // 合并所有空白符
@@ -228,7 +224,6 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
 
   // 3. 如果设置了不换行，强制在一行显示
   if (whiteSpace === 'nowrap') {
-    value = value.replace(/\s+/g, ' '); // 合并所有空白符
     if (style.textOverflow === 'ellipsis' && getTextWidth(style, value) > maxWidth) {
       return [truncateTextWithDots(style, value, maxWidth)];
     }
@@ -271,7 +266,7 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
           while (remainingText) {
             const remainingWidth = maxWidth - currentWidth;
             // 这里要考虑当前行已经不是空的场景，所以可用长度要把当前用掉的长度减掉
-            const truncated = truncateText(remainingText, remainingWidth);
+            const truncated = truncateText(style, remainingText, remainingWidth);
 
             remainingText = remainingText.slice(truncated.length);
 
@@ -344,5 +339,29 @@ export function parseTextHeight(style: IStyle, originSomeStyleInfo: IOriginSomeS
   // 如果没有强行指定高度，通过 lineHeight * 行高
   if (originSomeStyleInfo.height === undefined) {
     style.height = style.lineHeight as number * parsedValue.length;
+  }
+}
+
+
+const textShadowReg = /^(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6})(,\s*(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6}))*$/;
+function isValidTextShadow(textShadow: string) {
+  return textShadowReg.test(textShadow);
+}
+
+export function parseTextShadow(textShadow: string) {
+  if (!isValidTextShadow(textShadow)) {
+    console.error(`[Layout]: ${textShadow} is not a valid textShadow`);
+    return null;
+  } else {
+    // 解析 text-shadow 字符串
+    return textShadow.split(',').map(shadow => {
+      const parts = shadow.trim().split(/\s+/);
+      const offsetX = parseFloat(parts[0]);
+      const offsetY = parseFloat(parts[1]);
+      const blurRadius = parseFloat(parts[2]);
+      const color = parts[3];
+
+      return { offsetX, offsetY, blurRadius, color };
+    });
   }
 }

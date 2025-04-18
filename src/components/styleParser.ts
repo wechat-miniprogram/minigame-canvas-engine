@@ -23,11 +23,6 @@ export function backgroundImageParser(val: string) {
   return null;
 }
 
-const textShadowReg = /^(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6})(,\s*(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6}))*$/;
-export function isValidTextShadow(textShadow: string) {
-  return textShadowReg.test(textShadow);
-}
-
 function isValidTransformValue(value: string) {
   // 使用正则表达式验证数字或逗号分隔的数字，后面可以跟可选的角度单位（deg）
   return /^(-?\d+(\.\d+)?)(deg)?(,\s*(-?\d+(\.\d+)?)(deg)?)*$/.test(value);
