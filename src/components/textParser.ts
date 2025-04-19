@@ -84,13 +84,13 @@ function truncateTextByBinary(style: IStyle, value: string, maxWidth: number): s
 function truncateTextPure(style: IStyle, value: string, maxWidth: number): string {
   // 估算每个字符的平均宽度（假设使用的是等宽字体）
   const avgCharWidth = maxWidth / value.length;
-  
+
   // 如果平均每个字符的宽度大于等于 maxWidth 的 1/20，说明文本较短，使用线性查找
   // 这个阈值可以根据实际情况调整
   if (avgCharWidth >= maxWidth / 20 || value.length <= 20) {
     return truncateTextByLinear(style, value, maxWidth);
   }
-  
+
   // 文本较长，使用二分查找
   return truncateTextByBinary(style, value, maxWidth);
 }
@@ -126,7 +126,7 @@ function truncateText(style: IStyle, value: string, maxWidth: number): string {
     const word = spaceWords[0];
     // 在URL常见的分隔符处切分
     const subWords = word.split(/([\/\-\._~:?#\[\]@!$&'()*+,;=])/g).filter(Boolean);
-    
+
     result = '';
     currentWidth = 0;
 
@@ -259,8 +259,13 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
         // CJK 文字特殊处理
         const isCJK = isCJKText(segment);
 
-        // 需要强制断行的情况
-        if (wordBreak === 'break-all' || (wordBreak === 'normal' && isCJK)) {
+        /**
+         * 需要强制断行的情况
+         * 1. 通过 wordBreak 设置了需要强制换行
+         * 2. 虽然 wordBreak 没设置需要强制还寒，但因为是 CJK 文字，可以逐字换行
+         * 3. whiteSpace 需要满足条件，whiteSpace 为 pre 和 nowrap 是不会换行的，nowrap 已经在上面的处理拦截了
+         */
+        if (whiteSpace !== 'pre' && (wordBreak === 'break-all' || (wordBreak === 'normal' && isCJK))) {
           let remainingText = segment;
 
           while (remainingText) {
@@ -288,7 +293,6 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
               // 也可能是刚好分割完
               currentLine = i < lineSegments.length - 1 ? currentLine + ' ' + truncated : currentLine + truncated;
               currentWidth = getTextWidth(style, currentLine);
-
             }
           }
         } else {
@@ -315,7 +319,7 @@ export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleIn
             lines.push(currentLine);
           }
           currentLine = segment;
-          currentWidth = getTextWidth(style, segment);
+          currentWidth = getTextWidth(style, currentLine);
         }
       }
     }
@@ -333,7 +337,7 @@ export function parseTextHeight(style: IStyle, originSomeStyleInfo: IOriginSomeS
   if (originSomeStyleInfo.lineHeight === undefined) {
     style.lineHeight = fontSize * 1.2;
   } else if (typeof style.lineHeight === 'string' && style.lineHeight.endsWith('%')) {
-    style.lineHeight = fontSize * parseFloat(style.lineHeight); 
+    style.lineHeight = fontSize * parseFloat(style.lineHeight);
   }
 
   // 如果没有强行指定高度，通过 lineHeight * 行高
@@ -341,7 +345,6 @@ export function parseTextHeight(style: IStyle, originSomeStyleInfo: IOriginSomeS
     style.height = style.lineHeight as number * parsedValue.length;
   }
 }
-
 
 const textShadowReg = /^(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6})(,\s*(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6}))*$/;
 function isValidTextShadow(textShadow: string) {
