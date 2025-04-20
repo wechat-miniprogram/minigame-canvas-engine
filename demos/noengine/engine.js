@@ -1128,7 +1128,6 @@ module.exports.TinyEmitter = E;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   backgroundImageParser: () => (/* binding */ backgroundImageParser),
-/* harmony export */   isValidTextShadow: () => (/* binding */ isValidTextShadow),
 /* harmony export */   parseTransform: () => (/* binding */ parseTransform)
 /* harmony export */ });
 function degreesToRadians(degrees) {
@@ -1147,10 +1146,6 @@ function backgroundImageParser(val) {
     }
     console.error("[Layout]: ".concat(val, " is not a valid backgroundImage"));
     return null;
-}
-var textShadowReg = /^(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6})(,\s*(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6}))*$/;
-function isValidTextShadow(textShadow) {
-    return textShadowReg.test(textShadow);
 }
 function isValidTransformValue(value) {
     // 使用正则表达式验证数字或逗号分隔的数字，后面可以跟可选的角度单位（deg）
@@ -3637,11 +3632,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
 /* harmony import */ var _image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
 /* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(24);
-/* harmony import */ var _scrollview__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(25);
-/* harmony import */ var _bitmaptext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(29);
-/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(30);
+/* harmony import */ var _scrollview__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(26);
+/* harmony import */ var _bitmaptext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(30);
+/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(31);
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2);
-/* harmony import */ var _button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(31);
+/* harmony import */ var _button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(32);
 
 
 
@@ -3838,8 +3833,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
-/* harmony import */ var _styleParser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
+/* harmony import */ var _textParser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(25);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3857,74 +3851,18 @@ var __extends = (undefined && undefined.__extends) || (function () {
 })();
 
 
-
-var DEFAULT_FONT_FAMILY = 'sans-serif';
-var context = null;
-var getContext = function () {
-    if (context) {
-        return context;
-    }
-    var canvas = _env__WEBPACK_IMPORTED_MODULE_1__["default"].createCanvas();
-    canvas.width = 1;
-    canvas.height = 1;
-    context = canvas.getContext('2d');
-    return context;
-};
-function getTextWidth(style, value) {
-    var context = getContext();
-    context.font = "".concat(style.fontWeight || 'normal', " ").concat(style.fontSize || 12, "px ").concat(style.fontFamily || DEFAULT_FONT_FAMILY);
-    return context.measureText(value).width || 0;
-}
-function getTextWidthWithoutSetFont(value) {
-    return getContext().measureText(value).width || 0;
-}
-function parseText(style, value) {
-    value = String(value);
-    var maxWidth = style.width;
-    var wordWidth = getTextWidth(style, value);
-    // 对文字溢出的处理，默认用...
-    var textOverflow = style.textOverflow || 'ellipsis';
-    // 文字最大长度不超限制
-    if (wordWidth <= maxWidth) {
-        return value;
-    }
-    // 对于用点点点处理的情况，先将最大宽度减去...的宽度
-    if (textOverflow === 'ellipsis') {
-        maxWidth -= getTextWidthWithoutSetFont('...');
-    }
-    var length = value.length - 1;
-    var str = value.substring(0, length);
-    while (getTextWidthWithoutSetFont(str) > maxWidth && length > 0) {
-        length -= 1;
-        str = value.substring(0, length);
-    }
-    return (length && textOverflow === 'ellipsis'
-        ? "".concat(str, "...")
-        : str);
-}
 var Text = /** @class */ (function (_super) {
     __extends(Text, _super);
     function Text(_a) {
         var _b = _a.style, style = _b === void 0 ? {} : _b, _c = _a.idName, idName = _c === void 0 ? '' : _c, _d = _a.className, className = _d === void 0 ? '' : _d, _e = _a.value, value = _e === void 0 ? '' : _e, dataset = _a.dataset;
-        var _this = this;
-        var originStyleWidth = style.width;
-        // 没有设置宽度的时候通过canvas计算出文字宽度
-        if (originStyleWidth === undefined) {
-            style.width = getTextWidth(style, value);
-        }
-        else if (style.textOverflow === 'ellipsis') {
-            value = parseText(style, value);
-        }
-        if (style.height === undefined) {
-            style.height = style.lineHeight || style.fontSize || 12;
-        }
-        _this = _super.call(this, {
+        var _this = _super.call(this, {
             idName: idName,
             className: className,
             style: style,
             dataset: dataset,
         }) || this;
         _this.valuesrc = '';
+        _this.parsedValue = [];
         _this.textBaseline = 'bottom';
         _this.font = '';
         _this.textAlign = 'left';
@@ -3933,36 +3871,26 @@ var Text = /** @class */ (function (_super) {
         _this.type = 'Text';
         _this.ctx = null;
         _this.valuesrc = value;
-        _this.originStyleWidth = originStyleWidth;
+        _this.originSomeStyleInfo = {
+            width: style.width,
+            height: style.height,
+            lineHeight: style.lineHeight,
+        };
+        _this.parsedValue = (0,_textParser__WEBPACK_IMPORTED_MODULE_1__.parseText)(style, _this.originSomeStyleInfo, value);
+        (0,_textParser__WEBPACK_IMPORTED_MODULE_1__.parseTextHeight)(style, _this.originSomeStyleInfo, _this.parsedValue);
         if (style.textShadow) {
-            _this.parseTextShadow(style.textShadow);
+            _this.renderForLayout.textShadows = (0,_textParser__WEBPACK_IMPORTED_MODULE_1__.parseTextShadow)(style.textShadow);
         }
         return _this;
     }
     Text.prototype.styleChangeHandler = function (prop, styleOpType, val) {
         if (prop === 'textShadow') {
             if (styleOpType === _elements__WEBPACK_IMPORTED_MODULE_0__.StyleOpType.Set) {
-                this.parseTextShadow(val);
+                this.renderForLayout.textShadows = (0,_textParser__WEBPACK_IMPORTED_MODULE_1__.parseTextShadow)(val);
             }
             else {
                 this.renderForLayout.textShadows = null;
             }
-        }
-    };
-    Text.prototype.parseTextShadow = function (textShadow) {
-        if (!(0,_styleParser__WEBPACK_IMPORTED_MODULE_2__.isValidTextShadow)(textShadow)) {
-            console.error("[Layout]: ".concat(textShadow, " is not a valid textShadow"));
-        }
-        else {
-            // 解析 text-shadow 字符串
-            this.renderForLayout.textShadows = textShadow.split(',').map(function (shadow) {
-                var parts = shadow.trim().split(/\s+/);
-                var offsetX = parseFloat(parts[0]);
-                var offsetY = parseFloat(parts[1]);
-                var blurRadius = parseFloat(parts[2]);
-                var color = parts[3];
-                return { offsetX: offsetX, offsetY: offsetY, blurRadius: blurRadius, color: color };
-            });
         }
     };
     Object.defineProperty(Text.prototype, "value", {
@@ -3971,27 +3899,15 @@ var Text = /** @class */ (function (_super) {
         },
         set: function (newValue) {
             if (newValue !== this.valuesrc) {
-                if (this.originStyleWidth === undefined) {
-                    this.style.width = getTextWidth(this.style, newValue);
-                }
-                else if (this.style.textOverflow === 'ellipsis') {
-                    newValue = parseText(this.style, newValue);
-                }
                 this.valuesrc = newValue;
+                this.parsedValue = (0,_textParser__WEBPACK_IMPORTED_MODULE_1__.parseText)(this.style, this.originSomeStyleInfo, newValue);
+                (0,_textParser__WEBPACK_IMPORTED_MODULE_1__.parseTextHeight)(this.style, this.originSomeStyleInfo, this.parsedValue);
                 (0,_elements__WEBPACK_IMPORTED_MODULE_0__.setDirty)(this, 'value change');
             }
         },
         enumerable: false,
         configurable: true
     });
-    Text.prototype.toCanvasData = function () {
-        var style = this.style || {};
-        this.fontSize = style.fontSize || 12;
-        this.textBaseline = 'top';
-        this.font = "".concat(style.fontWeight || '', " ").concat(style.fontSize || 12, "px ").concat(style.fontFamily || DEFAULT_FONT_FAMILY);
-        this.textAlign = style.textAlign || 'left';
-        this.fillStyle = style.color || '#000';
-    };
     Text.prototype.repaint = function () {
         this.render();
     };
@@ -4001,56 +3917,78 @@ var Text = /** @class */ (function (_super) {
     Text.prototype.insert = function (ctx, needRender) {
         this.ctx = ctx;
         this.shouldUpdate = false;
-        // this.toCanvasData();
         if (needRender) {
             this.render();
         }
     };
     Text.prototype.render = function () {
         var _this = this;
+        if (!this.ctx) {
+            return;
+        }
         var style = this.style;
         var ctx = this.ctx;
         ctx.save();
-        this.toCanvasData();
-        var _a = this.baseRender('test'), needStroke = _a.needStroke, originX = _a.originX, originY = _a.originY, drawX = _a.drawX, drawY = _a.drawY, width = _a.width, height = _a.height;
-        ctx.textBaseline = this.textBaseline;
-        ctx.font = this.font;
-        ctx.textAlign = this.textAlign;
+        // 调用基类的渲染方法
+        var _a = this.baseRender(), needStroke = _a.needStroke, originX = _a.originX, originY = _a.originY, drawX = _a.drawX, drawY = _a.drawY, width = _a.width, height = _a.height;
+        // 设置文字渲染属性
+        ctx.font = (0,_textParser__WEBPACK_IMPORTED_MODULE_1__.getFontFromStyle)(style);
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = style.textAlign || 'left';
+        ctx.fillStyle = style.color || '#000000';
+        // 处理文字换行
+        var lineHeight = style.lineHeight;
+        var lines = this.parsedValue;
+        var y = drawY - originY;
+        // 垂直对齐方式处理，totalHeight 代表文字实际占用的高度
+        var totalHeight = lines.length * lineHeight;
+        if (style.verticalAlign === 'middle') {
+            y += height / 2; // 先移动到容器中心
+            y -= (totalHeight - lineHeight) / 2; // 再减去多行文本的一半高度(不包括第一行)
+        }
+        else if (style.verticalAlign === 'bottom') {
+            y += height; // 移动到容器底部
+            y -= totalHeight - lineHeight / 2; // 减去文本总高度，但保留半行
+        }
+        else {
+            // top alignment
+            y += lineHeight / 2; // 只需要移动半个行高，因为使用了 middle 基线
+        }
+        // 渲染每一行文字
+        lines.forEach(function (line, index) {
+            var x = drawX - originX;
+            // 水平对齐方式处理
+            if (style.textAlign === 'center') {
+                x += width / 2;
+            }
+            else if (style.textAlign === 'right') {
+                x += width;
+            }
+            var currentY = y + lineHeight * index;
+            // 渲染文字阴影
+            if (_this.renderForLayout.textShadows) {
+                _this.renderForLayout.textShadows.forEach(function (shadow) {
+                    ctx.save();
+                    ctx.shadowOffsetX = shadow.offsetX;
+                    ctx.shadowOffsetY = shadow.offsetY;
+                    ctx.shadowBlur = shadow.blurRadius;
+                    ctx.shadowColor = shadow.color;
+                    ctx.fillText(line, x, currentY);
+                    ctx.restore();
+                });
+            }
+            // 渲染文字描边
+            if (style.textStrokeWidth && style.textStrokeColor) {
+                ctx.strokeStyle = style.textStrokeColor;
+                ctx.lineWidth = style.textStrokeWidth;
+                ctx.strokeText(line, x, currentY);
+            }
+            // 渲染文字
+            ctx.fillText(line, x, currentY);
+        });
         if (needStroke) {
             ctx.stroke();
         }
-        ctx.fillStyle = this.fillStyle;
-        if (this.textAlign === 'center') {
-            drawX += width / 2;
-        }
-        else if (this.textAlign === 'right') {
-            drawX += width;
-        }
-        if (style.lineHeight) {
-            ctx.textBaseline = 'middle';
-            drawY += style.lineHeight / 2;
-        }
-        // 纹理文字描边
-        if (style.textStrokeColor) {
-            ctx.lineWidth = style.textStrokeWidth || 1;
-            ctx.strokeStyle = style.textStrokeColor;
-            ctx.strokeText(this.value, drawX - originX, drawY - originY);
-        }
-        // 处理文字阴影
-        if (this.renderForLayout.textShadows) {
-            this.renderForLayout.textShadows.forEach(function (_a) {
-                var offsetX = _a.offsetX, offsetY = _a.offsetY, blurRadius = _a.blurRadius, color = _a.color;
-                ctx.shadowOffsetX = offsetX;
-                ctx.shadowOffsetY = offsetY;
-                ctx.shadowBlur = blurRadius;
-                ctx.shadowColor = color;
-                ctx.fillText(_this.value, drawX - originX, drawY - originY);
-            });
-        }
-        else {
-            ctx.fillText(this.value, drawX - originX, drawY - originY);
-        }
-        ctx.translate(-originX, -originY);
         ctx.restore();
     };
     return Text;
@@ -4065,14 +4003,354 @@ var Text = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getFontFromStyle: () => (/* binding */ getFontFromStyle),
+/* harmony export */   parseText: () => (/* binding */ parseText),
+/* harmony export */   parseTextHeight: () => (/* binding */ parseTextHeight),
+/* harmony export */   parseTextShadow: () => (/* binding */ parseTextShadow)
+/* harmony export */ });
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+
+var DEFAULT_FONT_FAMILY = 'sans-serif';
+var context = null;
+var getContext = function () {
+    if (context) {
+        return context;
+    }
+    var canvas = _env__WEBPACK_IMPORTED_MODULE_0__["default"].createCanvas();
+    canvas.width = 1;
+    canvas.height = 1;
+    context = canvas.getContext('2d');
+    return context;
+};
+function getFontFromStyle(style) {
+    return "".concat(style.fontWeight || 'normal', " ").concat(style.fontSize || 12, "px ").concat(style.fontFamily || DEFAULT_FONT_FAMILY);
+}
+function getTextWidth(style, value) {
+    var context = getContext();
+    context.font = getFontFromStyle(style);
+    return context.measureText(value).width || 0;
+}
+/**
+ * 使用线性查找进行文本截断
+ */
+function truncateTextByLinear(style, value, maxWidth) {
+    var length = value.length;
+    var str = value.substring(0, length);
+    while (getTextWidth(style, str) > maxWidth && length > 0) {
+        length -= 1;
+        str = value.substring(0, length);
+    }
+    return str;
+}
+/**
+ * 使用二分查找进行文本截断
+ */
+function truncateTextByBinary(style, value, maxWidth) {
+    var left = 0;
+    var right = value.length;
+    var result = '';
+    while (left <= right) {
+        var mid = Math.floor((left + right) / 2);
+        var str = value.substring(0, mid);
+        var width = getTextWidth(style, str);
+        if (width === maxWidth) {
+            return str;
+        }
+        else if (width < maxWidth) {
+            result = str;
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+    return result;
+}
+/**
+ * 文字截断辅助函数
+ * 根据文本长度选择合适的截断算法：
+ * 1. 当文本较短时使用线性查找
+ * 2. 当文本较长时使用二分查找
+ */
+function truncateTextPure(style, value, maxWidth) {
+    // 估算每个字符的平均宽度（假设使用的是等宽字体）
+    var avgCharWidth = maxWidth / value.length;
+    // 如果平均每个字符的宽度大于等于 maxWidth 的 1/20，说明文本较短，使用线性查找
+    // 这个阈值可以根据实际情况调整
+    if (avgCharWidth >= maxWidth / 20 || value.length <= 20) {
+        return truncateTextByLinear(style, value, maxWidth);
+    }
+    // 文本较长，使用二分查找
+    return truncateTextByBinary(style, value, maxWidth);
+}
+function truncateText(style, value, maxWidth) {
+    var isCJK = isCJKText(value);
+    // CJK 文字可以单字切分
+    if (isCJK) {
+        return truncateTextPure(style, value, maxWidth);
+    }
+    // 非 CJK 文字尽量在单词边界或特殊字符处切分
+    // 1. 首先尝试在空格处切分
+    var spaceWords = value.split(/(\s+)/).filter(Boolean);
+    var result = '';
+    var currentWidth = 0;
+    var spaceWidth = getTextWidth(style, ' ');
+    for (var i = 0; i < spaceWords.length; i++) {
+        var word = spaceWords[i];
+        var wordWidth = getTextWidth(style, word);
+        if (currentWidth + wordWidth <= maxWidth) {
+            result += i < spaceWords.length - 1 ? word + ' ' : word;
+            currentWidth += i < spaceWords.length - 1 ? wordWidth + spaceWidth : wordWidth;
+        }
+        else {
+            break;
+        }
+    }
+    // 2. 如果一个完整单词都放不下，尝试在特殊字符处切分
+    if (!result && spaceWords[0]) {
+        var word = spaceWords[0];
+        // 在URL常见的分隔符处切分
+        var subWords = word.split(/([\/\-\._~:?#\[\]@!$&'()*+,;=])/g).filter(Boolean);
+        result = '';
+        currentWidth = 0;
+        for (var _i = 0, subWords_1 = subWords; _i < subWords_1.length; _i++) {
+            var subWord = subWords_1[_i];
+            var subWordWidth = getTextWidth(style, subWord);
+            if (currentWidth + subWordWidth <= maxWidth) {
+                result += subWord;
+                currentWidth += subWordWidth;
+            }
+            else {
+                break;
+            }
+        }
+        // 3. 如果在特殊字符处切分后还是放不下，则按字符切分
+        if (!result) {
+            return truncateTextPure(style, word, maxWidth);
+        }
+    }
+    return result;
+}
+function truncateTextWithDots(style, value, maxWidth) {
+    maxWidth -= getTextWidth(style, '...');
+    var str = truncateTextPure(style, value, maxWidth);
+    return str === value ? str : "".concat(str, "...");
+}
+/**
+ * 判断文本是否包含 CJK（中日韩）字符
+ * @param text 要检查的文本
+ * @returns 是否包含 CJK 字符
+ */
+var isCJKText = function (text) {
+    // 匹配中文、日文、韩文的 Unicode 范围
+    return /[\u4e00-\u9fa5\u3040-\u30ff\u3400-\u4dbf]/.test(text);
+};
+/**
+ * 一些知识点：
+ * 1. \s 匹配一个空白字符，包括空格、制表符、换页符和换行符。
+ * 2. \r 匹配一个回车符 (U+000D)。
+ * 3. \n 匹配一个换行符 (U+000A)。
+ * 4. \S 匹配一个非空白字符。
+ */
+function processTextWhiteSpace(value, whiteSpace) {
+    // 根据 whiteSpace 处理空白符和换行符
+    switch (whiteSpace) {
+        case 'pre':
+        case 'pre-wrap':
+            /**
+             * 连续的空白符会被保留。仅在遇到换行符时才会换行，这里统一换行符格式
+             * 这里对字符的初步处理跟 pre-warp 是一样的，实际的分行处理上，pre 只有遇到分行符才会分行
+             * 而 pre-wrap 除了换行符，正常的文本过长也能够自动进行换行，pre 和 pre-wrap 在whiteSpace处理阶段的逻辑是一样的
+             * 差异在于后续的分行处理逻辑
+             */
+            value = value.replace(/\r\n|\r/g, '\n');
+            break;
+        case 'pre-line':
+            // 合并空白符，保留换行符
+            value = value.replace(/[^\S\n]+/g, ' ') // 合并空白符（不包括换行符）
+                .replace(/\r\n|\r/g, '\n') // 统一换行符
+                .replace(/ \n/g, '\n') // 删除换行符前的空格
+                .replace(/\n /g, '\n'); // 删除换行符后的空格
+            break;
+        case 'nowrap':
+        case 'normal':
+        default:
+            // 合并所有空白符(换行、空格、制表符)，移除行首和行末的空格
+            value = value.replace(/\s+/g, ' ').trim();
+            break;
+    }
+    return value;
+}
+/**
+ * 文字解析器
+ */
+function parseText(style, originSomeStyleInfo, value) {
+    value = String(value);
+    // 1. 首先处理空白符和换行符
+    var whiteSpace = style.whiteSpace || 'normal';
+    value = processTextWhiteSpace(value, whiteSpace);
+    // 2. 如果没有设置宽度，直接返回处理后的文本
+    if (originSomeStyleInfo.width === undefined) {
+        style.width = getTextWidth(style, value);
+        return [value];
+    }
+    var maxWidth = style.width;
+    // 3. 如果设置了不换行，强制在一行显示
+    if (whiteSpace === 'nowrap') {
+        if (style.textOverflow === 'ellipsis' && getTextWidth(style, value) > maxWidth) {
+            return [truncateTextWithDots(style, value, maxWidth)];
+        }
+        return [value];
+    }
+    // 4. 处理需要换行的情况
+    var lines = [];
+    var wordBreak = style.wordBreak || 'normal';
+    // 首先按照自然断点（空格、换行符等）分割文本
+    var segments = value.split('\n').map(function (line) {
+        if (whiteSpace === 'pre') {
+            // pre 模式下保持整行不分割，保留所有空白符
+            return [line];
+        }
+        else if (whiteSpace === 'pre-wrap' || whiteSpace === 'pre-line') {
+            return [line];
+        }
+        return line.split(' ').filter(Boolean);
+    });
+    for (var _i = 0, segments_1 = segments; _i < segments_1.length; _i++) {
+        var lineSegments = segments_1[_i];
+        var currentLine = '';
+        var currentWidth = 0;
+        for (var i = 0; i < lineSegments.length; i++) {
+            var segment = lineSegments[i];
+            // 行内的最后一段不应该有空格
+            var segmentWidth = i < lineSegments.length - 1 ? getTextWidth(style, segment + ' ') : getTextWidth(style, segment);
+            // 处理单个片段超过最大宽度的情况
+            if (segmentWidth + currentWidth > maxWidth) {
+                // CJK 文字特殊处理
+                var isCJK = isCJKText(segment);
+                /**
+                 * 需要强制断行的情况
+                 * 1. 通过 wordBreak 设置了需要强制换行
+                 * 2. 虽然 wordBreak 没设置需要强制还寒，但因为是 CJK 文字，可以逐字换行
+                 * 3. whiteSpace 需要满足条件，whiteSpace 为 pre 和 nowrap 是不会换行的，nowrap 已经在上面的处理拦截了
+                 */
+                if (whiteSpace !== 'pre' && (wordBreak === 'break-all' || (wordBreak === 'normal' && isCJK))) {
+                    var remainingText = segment;
+                    while (remainingText) {
+                        var remainingWidth = maxWidth - currentWidth;
+                        // 这里要考虑当前行已经不是空的场景，所以可用长度要把当前用掉的长度减掉
+                        var truncated = truncateText(style, remainingText, remainingWidth);
+                        remainingText = remainingText.slice(truncated.length);
+                        // 代表还没分割完，truncated 会完整占据一行
+                        if (remainingText) {
+                            if (currentLine) {
+                                // 如果不是行内的最后一段，拼接的时候应该额外加一个空格
+                                lines.push(i < lineSegments.length - 1 ? currentLine + ' ' + truncated : currentLine + truncated);
+                            }
+                            else {
+                                lines.push(truncated);
+                            }
+                            // 当前行用完了，重置
+                            currentLine = '';
+                            // 换行之后重置当前已用长度
+                            currentWidth = 0;
+                        }
+                        else {
+                            // 分割完了，但是未必占满了一行，需要记录下，可能给后续的 segment 使用
+                            // 也可能是刚好分割完
+                            currentLine = i < lineSegments.length - 1 ? currentLine + ' ' + truncated : currentLine + truncated;
+                            currentWidth = getTextWidth(style, currentLine);
+                        }
+                    }
+                }
+                else {
+                    /**
+                     * 这里有几种情况
+                     * 1. 当前行内这一段会超长，但是按照规则不需要强制断行，作为一个整体
+                     * 2. 不符合1的情况，而是会把 currentLine 消费完，因此需要把 currentLine push之后处理
+                     */
+                    if (currentLine) {
+                        lines.push(currentLine);
+                        currentLine = segment;
+                        currentWidth = getTextWidth(style, currentLine);
+                    }
+                    else {
+                        lines.push(segment);
+                    }
+                }
+            }
+            else {
+                // 正常的行处理
+                if (currentWidth + segmentWidth <= maxWidth) {
+                    currentLine += (currentLine ? ' ' : '') + segment;
+                    currentWidth += segmentWidth;
+                }
+                else {
+                    if (currentLine) {
+                        lines.push(currentLine);
+                    }
+                    currentLine = segment;
+                    currentWidth = getTextWidth(style, currentLine);
+                }
+            }
+        }
+        if (currentLine) {
+            lines.push(currentLine);
+        }
+    }
+    return lines;
+}
+function parseTextHeight(style, originSomeStyleInfo, parsedValue) {
+    var fontSize = style.fontSize || 12;
+    if (originSomeStyleInfo.lineHeight === undefined) {
+        style.lineHeight = fontSize * 1.2;
+    }
+    else if (typeof style.lineHeight === 'string' && style.lineHeight.endsWith('%')) {
+        style.lineHeight = fontSize * parseFloat(style.lineHeight);
+    }
+    // 如果没有强行指定高度，通过 lineHeight * 行高
+    if (originSomeStyleInfo.height === undefined) {
+        style.height = style.lineHeight * parsedValue.length;
+    }
+}
+var textShadowReg = /^(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6})(,\s*(\d+px\s){2}\d+px\s(?:[a-zA-Z]+|#[0-9a-fA-F]{3,6}))*$/;
+function isValidTextShadow(textShadow) {
+    return textShadowReg.test(textShadow);
+}
+function parseTextShadow(textShadow) {
+    if (!isValidTextShadow(textShadow)) {
+        console.error("[Layout]: ".concat(textShadow, " is not a valid textShadow"));
+        return null;
+    }
+    else {
+        // 解析 text-shadow 字符串
+        return textShadow.split(',').map(function (shadow) {
+            var parts = shadow.trim().split(/\s+/);
+            var offsetX = parseFloat(parts[0]);
+            var offsetY = parseFloat(parts[1]);
+            var blurRadius = parseFloat(parts[2]);
+            var color = parts[3];
+            return { offsetX: offsetX, offsetY: offsetY, blurRadius: blurRadius, color: color };
+        });
+    }
+}
+
+
+/***/ }),
+/* 26 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var _libs_scroller_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(26);
+/* harmony import */ var _libs_scroller_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(27);
 /* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2);
-/* harmony import */ var _scrollbar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(28);
+/* harmony import */ var _scrollbar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(29);
 /* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(1);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4430,7 +4708,7 @@ var ScrollView = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4438,7 +4716,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _animate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(27);
+/* harmony import */ var _animate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(28);
 /* harmony import */ var _animate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_animate__WEBPACK_IMPORTED_MODULE_0__);
 /*
  * Scroller
@@ -5378,7 +5656,7 @@ var Scroller = /** @class */ (function () {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 "use strict";
@@ -5525,7 +5803,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5743,7 +6021,7 @@ var ScrollBar = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5905,7 +6183,7 @@ var BitMapText = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6000,7 +6278,7 @@ var Canvas = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6261,7 +6539,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.14';
+        _this.version = '1.0.15';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context
@@ -6495,6 +6773,7 @@ var Layout = /** @class */ (function (_super) {
         this.state = _common_util__WEBPACK_IMPORTED_MODULE_5__.STATE.RENDERED;
         debugInfo.end('layout');
         debugInfo.end('layout_other');
+        // console.log(this.debugInfo)
     };
     /**
      * 执行节点数的重绘制，一般业务侧无需调用该方法

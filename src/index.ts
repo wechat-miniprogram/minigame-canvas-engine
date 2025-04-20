@@ -304,6 +304,8 @@ class Layout extends Element {
 
     debugInfo.end('layout');
     debugInfo.end('layout_other');
+
+    // console.log(this.debugInfo)
   }
 
   /**

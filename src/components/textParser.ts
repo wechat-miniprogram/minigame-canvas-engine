@@ -165,19 +165,24 @@ const isCJKText = (text: string): boolean => {
   return /[\u4e00-\u9fa5\u3040-\u30ff\u3400-\u4dbf]/.test(text);
 };
 
+/**
+ * 一些知识点：
+ * 1. \s 匹配一个空白字符，包括空格、制表符、换页符和换行符。
+ * 2. \r 匹配一个回车符 (U+000D)。
+ * 3. \n 匹配一个换行符 (U+000A)。
+ * 4. \S 匹配一个非空白字符。
+ */
 function processTextWhiteSpace(value: string, whiteSpace: string): string {
   // 根据 whiteSpace 处理空白符和换行符
   switch (whiteSpace) {
     case 'pre':
+    case 'pre-wrap':
       /**
        * 连续的空白符会被保留。仅在遇到换行符时才会换行，这里统一换行符格式
        * 这里对字符的初步处理跟 pre-warp 是一样的，实际的分行处理上，pre 只有遇到分行符才会分行
-       * 而 pre-wrap 除了换行符，正常的文本过长也能够自动进行换行
+       * 而 pre-wrap 除了换行符，正常的文本过长也能够自动进行换行，pre 和 pre-wrap 在whiteSpace处理阶段的逻辑是一样的
+       * 差异在于后续的分行处理逻辑
        */
-      value = value.replace(/\r\n|\r/g, '\n');
-      break;
-    case 'pre-wrap':
-      // 连续的空白符会被保留。在遇到换行符时根据填充行框盒子的需要换行。
       value = value.replace(/\r\n|\r/g, '\n');
       break;
     case 'pre-line':
@@ -190,8 +195,8 @@ function processTextWhiteSpace(value: string, whiteSpace: string): string {
     case 'nowrap':
     case 'normal':
     default:
-      // 合并所有空白符
-      value = value.replace(/\s+/g, ' ');
+      // 合并所有空白符(换行、空格、制表符)，移除行首和行末的空格
+      value = value.replace(/\s+/g, ' ').trim();
       break;
   }
 
@@ -200,11 +205,6 @@ function processTextWhiteSpace(value: string, whiteSpace: string): string {
 
 /**
  * 文字解析器
- * 一些知识点：
- * 1. \s 匹配一个空白字符，包括空格、制表符、换页符和换行符。
- * 2. \r 匹配一个回车符 (U+000D)。
- * 3. \n 匹配一个换行符 (U+000A)。
- * 4. \S 匹配一个非空白字符。
  */
 export function parseText(style: IStyle, originSomeStyleInfo: IOriginSomeStyleInfo, value: string): string[] {
   value = String(value);

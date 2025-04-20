@@ -68,7 +68,7 @@ export default defineComponent({
       });
 
       new TWEEN.Tween(ball.style)
-        .to({ top: 250 }, 5000)
+        .to({ top: 250 }, 1000)
         .easing(TWEEN.Easing.Bounce.Out)
         .yoyo(true)
         .repeat(Infinity)

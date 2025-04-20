@@ -93,6 +93,42 @@ export interface IStyle {
 	 * 也就是支持任意数量的阴影效果，每个阴影效果由四个值指定，分别是 shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor
 	 */
 	textShadow?: string;
+	/**
+	 * 属性用于设置如何处理元素内的空白字符，这个属性指定了两件事：空白字符是否合并，以及如何合并。是否换行，以及如何换行
+	 * 详细的规则可参考:
+	 * https://developer.mozilla.org/zh-CN/docs/Web/CSS/white-space
+	 *
+	 * normal: 连续的空白符会被合并。源码中的换行符会被当作空白符来处理。并根据填充行框盒子的需要来换行。
+	 * nowrap: 和 normal 一样合并空白符，但阻止源码中的文本换行。
+	 * pre: 连续的空白符会被保留。仅在遇到换行符时才会换行。
+	 * pre-wrap: 连续的空白符会被保留。在遇到换行符时根据填充行框盒子的需要换行。
+	 * pre-line: 连续的空白符会被合并。在遇到换行符时根据填充行框盒子的需要换行。
+	 */
+	/**
+	 * white-space 属性对空白符和换行的处理规则：
+	 *
+	 * | 属性值      | 换行符  | 空格/制表符   | 文本换行 | 行末空格 |
+	 * |------------|--------|------------ |---------|---------|
+	 * | normal     | 合并    | 合并        | 换行     | 移除     |
+	 * | nowrap     | 合并    | 合并        | 不换行   | 移除     |
+	 * | pre        | 保留    | 保留        | 不换行   | 保留     |
+	 * | pre-wrap   | 保留    | 保留        | 换行     | 挂起     |
+	 * | pre-line   | 保留    | 合并        | 换行     | 移除     |
+	 *
+	 * 术语说明：
+	 * - "合并"：连续空白符合并为单个空格
+	 * - "保留"：保留原始空白符（包括换行和空格）
+	 * - "移除"：删除行末的空格
+	 *
+	 * 请注意 break-spaces 不支持
+	*/
+	whiteSpace?: "normal" | "nowrap" | "pre" | "pre-wrap" | "pre-line";
+	/**
+	 * wordBreak 指定了怎样在单词内断行
+	 * normal: 使用默认的断行规则。
+	 * break-all: 对于 non-CJK (CJK 指中文/日文/韩文) 文本，可在任意字符间断行。
+	 */
+	wordBreak?: "normal" | "break-all";
 	":active"?: IStyle;
 }
 declare class Rect {
@@ -416,7 +452,8 @@ interface ITextProps extends IElementOptions {
 }
 declare class Text$1 extends Element$1 {
 	private valuesrc;
-	private originStyleWidth;
+	private parsedValue;
+	private originSomeStyleInfo;
 	fontSize?: number;
 	textBaseline: CanvasTextBaseline;
 	font: string;
@@ -425,10 +462,8 @@ declare class Text$1 extends Element$1 {
 	protected renderForLayout: ITextRenderForLayout;
 	constructor({ style, idName, className, value, dataset, }: ITextProps);
 	styleChangeHandler(prop: string, styleOpType: StyleOpType, val?: any): void;
-	private parseTextShadow;
 	get value(): string;
 	set value(newValue: string);
-	toCanvasData(): void;
 	repaint(): void;
 	destroySelf(): void;
 	insert(ctx: CanvasRenderingContext2D, needRender: boolean): void;
