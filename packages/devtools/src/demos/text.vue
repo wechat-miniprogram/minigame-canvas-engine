@@ -2,7 +2,7 @@
 import { defineComponent } from "vue";
 import { template } from "dot";
 
-let tpl2 = `
+let tpl = `
 <scrollview id="container" scrollY = "true">
   <text class="text lineHeightText" value="文本可以指定行高实现垂直居中"></text>
   
@@ -20,8 +20,6 @@ let tpl2 = `
 
   <text class="text normalWrap" value="设置了文本宽度，文本会根据宽度自动换行，这在页面宽度有限的场景下非常有用，比如在展示用户昵称的时候，用户昵称可能是很长的"></text>
 
-  <text class="text normalWrap" value="😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊😊"></text>
-
   <text class="text textOverflowText" value="很长很长很长的文本可以设置截断方式，比如这段文字超出屏幕，但是会省略号展示"></text>
 
   <text class="text textMiddle" value="设置了文本宽度，文本会根据宽度自动换行，有时候换行的文本也想要垂直居中，可以通过设置高度和verticalAlign来实现"></text>
@@ -33,13 +31,6 @@ let tpl2 = `
   <text class="text textStroke" value="文字可以描边，一定程度上就不需要BitMapText"></text>
 
   <text class="text textShadow" value="文字可以设置阴影效果，一定程度上也不需要BitMapText"></text>
-</scrollview>
-  `;
-
-  
-let tpl = `
-<scrollview id="container" scrollY = "true">
-  <text id="test" class="text normalWrap" value="设置了文本宽度，文本会根据宽度自动换行，这在页面宽度有限的场景下非常有用，比如在展示用户昵称的时候，用户昵称可能是很长的"></text> 
 </scrollview>
   `;
 
@@ -102,10 +93,6 @@ let style = {
   },
   textBreakAll: {
     wordBreak: 'break-all',
-  },
-  normalWrap: {
-    whiteSpace: 'pre-wrap',
-    width: 100
   }
 };
 
@@ -144,15 +131,6 @@ export default defineComponent({
           text.style.backgroundColor = '#f3f3f3' 
         }
       })
-
-      const test = Layout.getElementById('test');
-      test.value = `这是很长的      文字很长很长   
-      3
-      
-      4
-      
-      5
-      6`
     },
   },
 });
