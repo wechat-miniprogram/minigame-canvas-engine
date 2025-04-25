@@ -111,4 +111,4 @@ Layout.ticker.add(manualTween);
 
 ## 一些参考资料
 1. [JavaScript HTML DOM 动画](https://www.w3school.com.cn/js/js_htmldom_animate.asp)
-2. [CSS positon](https://developer.mozilla.org/en-US/docs/Web/CSS/position)
+2. [CSS position](https://developer.mozilla.org/en-US/docs/Web/CSS/position)
