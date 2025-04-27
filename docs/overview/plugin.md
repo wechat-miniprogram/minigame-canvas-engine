@@ -92,8 +92,8 @@ const Layout = requirePlugin('Layout').default;
 | 1.0.12        | 修复 BitMapText textAlign = 'right' 不生效问题，修改 ScrollBar 的默认样式|
 | 1.0.11        | 修复样式伪类功能在touchend没有触发的bug |
 | 1.0.10        | 修复1.0.9背景渲染的bug |
-| 1.0.9        | 样式支持伪类能力，transform支持scale，详情可见[布局和样式](../components//overview.md) |
-| 1.0.8        | 支持文字描边和文字阴影效果，详情可见[布局和样式](../components//overview.md) |
+| 1.0.9        | 样式支持伪类能力，transform支持scale，详情可见[布局和样式](../components/overview.md) |
+| 1.0.8        | 支持文字描边和文字阴影效果，详情可见[布局和样式](../components/overview.md) |
 | 1.0.7        | 修复1.0.6版本Image的borderRadius失效问题 |
 | 1.0.6        | 1. 修复圆角矩形在有borderRadius的时候绘制不够圆润问题；2. 文字样式支持fontFamily属性；3. 修复 ScrollView 的滚动条在页面布局变化时会位置异常问题; |
 | 1.0.5        | transform 部分属性支持，使用可见[教程](../tutorial/loading.md) |
