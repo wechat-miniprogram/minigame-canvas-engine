@@ -151,6 +151,10 @@ export default defineComponent({
   mounted() {},
   methods: {
     init() {
+      // for devtools debug
+      if (process.env.NODE_ENV !== 'production') {
+        (window as any).layoutTpl = tpl;
+      }
       const Layout = (window as any).Layout;
       // 创建mock数据
       let item = {

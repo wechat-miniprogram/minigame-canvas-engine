@@ -5,7 +5,7 @@ const renderRect = {
   width: 400,
   height: 600,
 };
-const template = `
+const tpl = `
     <view class="container">
       <text class="loading" value="加载中..."></text>
       <scrollview class="scrollView" scrollY="true"></scrollview>
@@ -45,6 +45,10 @@ export default defineComponent({
   mounted() {},
   methods: {
     init() {
+      // for devtools debug
+      if (process.env.NODE_ENV !== 'production') {
+        (window as any).layoutTpl = tpl;
+      }
       let canvas = document.getElementById("insertElement") as HTMLCanvasElement;
       let context = canvas.getContext("2d");
       canvas.style.width = 400 / 2 + 'px';
@@ -54,7 +58,7 @@ export default defineComponent({
 
       const Layout = (window as any).Layout;
       Layout.updateViewPort(canvas.getBoundingClientRect());
-      Layout.init(template, style);
+      Layout.init(tpl, style);
 
       Layout.layout(context);
       // 模拟数据加载

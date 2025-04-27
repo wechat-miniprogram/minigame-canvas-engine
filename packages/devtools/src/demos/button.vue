@@ -4,7 +4,7 @@ import { defineComponent } from "vue";
 
 // <image src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg" id="wegoing"></image>
 
-let template = `
+let tpl = `
   <view id="container">
     <button id="testButton" value="邀请"></button>
   </view>
@@ -31,8 +31,13 @@ export default defineComponent({
   mounted() {},
   methods: {
     init() {
+      // for devtools debug
+      if (process.env.NODE_ENV !== 'production') {
+        (window as any).layoutTpl = tpl;
+      }
+
       const Layout = (window as any).Layout;
-      Layout.init(template, style);
+      Layout.init(tpl, style);
 
       let canvas = document.getElementById("button") as HTMLCanvasElement;
       let context = canvas.getContext("2d");

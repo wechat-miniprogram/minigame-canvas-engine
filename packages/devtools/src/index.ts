@@ -27,8 +27,6 @@ class LayoutDevtools {
     if (process.env.NODE_ENV !== 'production') {
       const Layout: typeof import('minigame-canvas-engine').default = require('minigame-canvas-engine').default;
 
-      // const env = require('minigame-canvas-engine').env;
-
       (window as any).Layout = Layout;
     }
 

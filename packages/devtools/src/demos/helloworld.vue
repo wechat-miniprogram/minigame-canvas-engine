@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-let template = `
+let tpl = `
   <view id="container">
     <text id="testText" class="redText" value="Hello World"></text>
   </view>
@@ -38,9 +38,13 @@ export default defineComponent({
   mounted() {},
   methods: {
     init() {
+      // for devtools debug
+        if (process.env.NODE_ENV !== 'production') {
+        (window as any).layoutTpl = tpl;
+      }
       const Layout = (window as any).Layout;
       
-      Layout.init(template, style);
+      Layout.init(tpl, style);
       let canvas = document.getElementById("helloworld") as HTMLCanvasElement;
       let context = canvas.getContext("2d");
       document.body.append(canvas);

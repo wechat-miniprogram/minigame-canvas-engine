@@ -66,13 +66,28 @@ export default defineComponent({
     doTCompile() {
       let xml = document.getElementById("template")?.innerHTML;
 
+      if (process.env.NODE_ENV !== 'production') {
+        xml = (window as any).layoutTpl;
+      }
+
       // 没有监听到模板的情况
       if (!xml) {
         this.showNoXMLDialog = true;
         return;
       }
 
-      let comment = `/**\n * xml经过doT.js编译出的模板函数\n * 因为小游戏不支持new Function，模板函数只能外部编译\n * 可直接拷贝本函数到小游戏中使用\n */\n`;
+      let comment = 
+  `
+/**
+ * 模板引擎使用教程可见：https://wechat-miniprogram.github.io/minigame-canvas-engine/tutorial/templateengine.html
+ * xml经过doT.js编译出的模板函数
+ * 因为小游戏不支持new Function，模板函数只能外部编译
+ * 可直接拷贝本函数到小游戏中使用
+ * 原始的模板如下：
+ * ${xml}
+ * 
+ */
+`;
 
       const tplFunc = String(template(xml));
 
