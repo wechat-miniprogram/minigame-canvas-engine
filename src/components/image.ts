@@ -91,6 +91,7 @@ export default class Image extends Element {
       } else {
         if (!this.isDestroyed) {
           this.img = img;
+          // 当图片加载完成，实例可能已经被销毁了
           this.root?.emit('repaint');
         }
       }
