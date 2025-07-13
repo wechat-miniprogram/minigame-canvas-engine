@@ -5,7 +5,8 @@ import imageManager from '../common/imageManager';
 import TinyEmitter from 'tiny-emitter';
 import { IDataset, Callback } from '../types/index'
 import { IElementOptions } from './types';
-import { backgroundImageParser, parseTransform, IRenderForLayout } from './styleParser';
+import { backgroundImageParser, parseTransform, parseInsetParams, validateImageType, IRenderForLayout } from './styleParser';
+import { ImageRenderer, ImageRenderMode } from '../common/imageRenderer';
 import { convertPercent } from '../common/util'
 import env from '../env';
 
@@ -355,6 +356,22 @@ export default class Element {
           }
           break;
         
+        case 'backgroundImageType':
+          this.renderForLayout.backgroundImageType = validateImageType(val);
+          break;
+        
+        case 'backgroundImageInset':
+          this.renderForLayout.backgroundImageInset = parseInsetParams(val) || undefined;
+          break;
+        
+        case 'imageType':
+          this.renderForLayout.imageType = validateImageType(val);
+          break;
+        
+        case 'imageInset':
+          this.renderForLayout.imageInset = parseInsetParams(val) || undefined;
+          break;
+        
         case 'transform':
           delete this.renderForLayout.scaleX;
           delete this.renderForLayout.scaleY;
@@ -366,6 +383,22 @@ export default class Element {
       switch (prop) {
         case 'backgroundImage':
           this.renderForLayout.backgroundImage = undefined;
+          break;
+        
+        case 'backgroundImageType':
+          this.renderForLayout.backgroundImageType = undefined;
+          break;
+        
+        case 'backgroundImageInset':
+          this.renderForLayout.backgroundImageInset = undefined;
+          break;
+        
+        case 'imageType':
+          this.renderForLayout.imageType = undefined;
+          break;
+        
+        case 'imageInset':
+          this.renderForLayout.imageInset = undefined;
           break;
         
         case 'transform':
@@ -764,9 +797,28 @@ export default class Element {
     }
 
     if (this.renderForLayout.backgroundImage) {
-      ctx.drawImage(this.renderForLayout.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
+      this.renderBackgroundImage(ctx, drawX, drawY, originX, originY, box.width, box.height);
     }
 
     return { needStroke, needClip, originX, originY, drawX, drawY, width, height };
+  }
+
+  /**
+   * 渲染背景图片，支持三种模式：simple、sliced、tiled
+   */
+  private renderBackgroundImage(ctx: CanvasRenderingContext2D, drawX: number, drawY: number, originX: number, originY: number, width: number, height: number) {
+    const img = this.renderForLayout.backgroundImage!;
+    const mode = (this.renderForLayout.backgroundImageType || 'simple') as ImageRenderMode;
+    const inset = this.renderForLayout.backgroundImageInset;
+    
+    ImageRenderer.render(ctx, {
+      img,
+      x: drawX - originX,
+      y: drawY - originY,
+      width,
+      height,
+      mode,
+      inset
+    });
   }
 }
