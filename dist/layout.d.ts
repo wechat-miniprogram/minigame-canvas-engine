@@ -77,6 +77,17 @@ export interface IStyle {
 	borderColor?: string;
 	borderTopColor?: string;
 	backgroundImage?: string;
+	/**
+	 * 背景图片的渲染模式
+	 * simple: 简单拉伸（默认）
+	 * sliced: 九宫格拉伸
+	 * tiled: 平铺模式
+	 */
+	backgroundImageType?: "simple" | "sliced" | "tiled";
+	/**
+	 * 背景图片的九宫格参数，格式为 "left top right bottom"
+	 */
+	backgroundImageInset?: string;
 	borderBottomColor?: string;
 	borderLeftColor?: string;
 	borderRightColor?: string;
@@ -84,6 +95,17 @@ export interface IStyle {
 	fontWeight?: string;
 	fontFamily?: string;
 	transform?: string;
+	/**
+	 * 图片渲染模式（用于Image组件）
+	 * simple: 简单拉伸（默认）
+	 * sliced: 九宫格拉伸
+	 * tiled: 平铺模式
+	 */
+	imageType?: "simple" | "sliced" | "tiled";
+	/**
+	 * 图片的九宫格参数，格式为 "left top right bottom"
+	 */
+	imageInset?: string;
 	textStrokeWidth?: number;
 	textStrokeColor?: string;
 	/**
@@ -170,11 +192,26 @@ interface IElementOptions {
 	id?: number;
 	dataset?: IDataset;
 }
+interface IInsetParams {
+	/** 左边界距离 */
+	left: number;
+	/** 上边界距离 */
+	top: number;
+	/** 右边界距离 */
+	right: number;
+	/** 下边界距离 */
+	bottom: number;
+}
+type ImageRenderMode = "simple" | "sliced" | "tiled";
 interface IRenderForLayout {
 	rotate?: number;
 	scaleX?: number;
 	scaleY?: number;
 	backgroundImage?: HTMLImageElement;
+	backgroundImageType?: ImageRenderMode;
+	backgroundImageInset?: IInsetParams;
+	imageType?: ImageRenderMode;
+	imageInset?: IInsetParams;
 }
 interface ITextShadow {
 	offsetX: number;
@@ -370,6 +407,10 @@ declare class Element$1 {
 		width: number;
 		height: number;
 	};
+	/**
+	 * 渲染背景图片，支持三种模式：simple、sliced、tiled
+	 */
+	private renderBackgroundImage;
 }
 declare enum STATE {
 	UNINIT = "UNINIT",
