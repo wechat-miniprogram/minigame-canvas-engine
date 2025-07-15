@@ -112,9 +112,28 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 |---------------|--------|--------|--------------------------|
 | backgroundColor | string | | 背景的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色 |
 | backgroundImage | string | | 背景图，格式为 'url(https:/www.foo.com/xxx.png)'  |
+| backgroundImageType | string | simple | 背景图片的渲染类型，详见下方"图像渲染模式"说明 |
+| backgroundImageInset | string | | 背景图片九宫格设置的区域，backgroundImageType为 sliced生效，格式为 'left top right bottom'，如'10 20 30 10' |
 | opacity | number | 1 | 透明度，范围[0, 1]，0表示透明，1表示不透明 |
 | transform | string | | transform 属性允许你旋转和缩放给定元素，目前支持的格式 `rotate(360deg)` |
 
+### 图像
+
+支持的标签：`image`
+| 属性 | 类型 | 默认值 | 说明 |
+|---------------|--------|--------|--------------------------|
+| imageType | string | simple | 图像的渲染类型，详见下方"图像渲染模式"说明 |
+| imageInset | string | | 图像九宫格设置的区域，imageType值为sliced生效，格式为 'left top right bottom'，如'15 15 15 15' |
+
+#### 图像渲染模式
+
+> v1.0.16 支持三种图像渲染模式，这些模式既适用于 Image 组件（通过 `imageType` 属性），也适用于所有支持背景图片的容器（通过 `backgroundImageType` 属性）。
+
+| 渲染模式 | 描述 | 适用场景 | 参数要求 | 性能 |
+|---------|------|----------|----------|------|
+| **simple** | 图像被拉伸以适应容器尺寸 | 大多数普通场景、图标、头像等 | 无 |
+| **sliced** | 图像分为9个区域，角部保持原始尺寸，边部单方向拉伸，中心双方向拉伸 | 按钮、面板、对话框等UI元素 | 需要设置 `*Inset` 参数 |
+| **tiled** | 图像以原始尺寸重复平铺，自动处理边界裁剪 | 背景纹理、图案、瓷砖效果等 | 无 |
 
 #### transform 特殊说明
 v1.0.5版本开始支持 transform，目前为止，transform 不会递归影响子节点，也就是父节点旋转缩放了之后子节点不会连带旋转缩放，要实现连带旋转缩放的能力，一方面是目前为止需求不够强，另一方面，对代码体积影响较大，会违背 Layout 轻量的初衷，暂时不做改造。

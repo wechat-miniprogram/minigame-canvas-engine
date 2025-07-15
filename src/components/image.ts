@@ -1,6 +1,7 @@
 import Element from './elements';
 import imageManager from '../common/imageManager';
 import { IElementOptions } from './types';
+import { ImageRenderer, ImageRenderMode } from '../common/imageRenderer';
 
 interface IImageOptions extends IElementOptions {
   src?: string;
@@ -67,13 +68,12 @@ export default class Image extends Element {
   destroySelf() {
     this.isDestroyed = true;
     this.img = null;
-
     this.src = '';
     this.root = null;
   }
 
   render() {
-    if (!this.img || !this.img?.complete) {
+    if (!this.img || !this.img.complete) {
       return;
     }
 
@@ -82,9 +82,20 @@ export default class Image extends Element {
 
     const { needStroke, needClip, originX, originY, drawX, drawY, width, height } = this.baseRender();
 
-    // 自定义渲染逻辑 开始
-    ctx.drawImage(this.img, drawX - originX, drawY - originY, width, height);
-    // 自定义渲染逻辑 结束
+    // 从 renderForLayout 中获取渲染参数（已在样式解析时校验）
+    const mode = this.renderForLayout.imageType || 'simple';
+    const imageInset = this.renderForLayout.imageInset;
+
+    // 使用统一的图像渲染器
+    ImageRenderer.render(ctx, {
+      img: this.img,
+      x: drawX - originX,
+      y: drawY - originY,
+      width,
+      height,
+      mode: mode as ImageRenderMode,
+      inset: imageInset
+    });
 
     if (needClip) {
       this.renderBorder(ctx, originX, originY);
@@ -95,8 +106,6 @@ export default class Image extends Element {
     }
 
     ctx.translate(-originX, -originY);
-
     ctx.restore();
   }
 }
-

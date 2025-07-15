@@ -33,12 +33,20 @@ const repaintAffectedStyles = [
   'textStrokeColor',
   'textStrokeWidth',
   'textShadow',
+  'imageType',
+  'imageInset',
+  'backgroundImageType',
+  'backgroundImageInset',
 ];
 
 export const renderAffectStyles = [
   'textShadow',
   'transform',
   'backgroundImage',
+  'imageType',
+  'imageInset',
+  'backgroundImageType',
+  'backgroundImageInset',
 ]
 
 interface IStyle {
@@ -97,6 +105,18 @@ interface IStyle {
   borderTopColor?: string;
 
   backgroundImage?: string;
+  /**
+   * 背景图片的渲染模式
+   * simple: 简单拉伸（默认）
+   * sliced: 九宫格拉伸
+   * tiled: 平铺模式
+   */
+  backgroundImageType?: 'simple' | 'sliced' | 'tiled';
+  /**
+   * 背景图片的九宫格参数，格式为 "left top right bottom"
+   */
+  backgroundImageInset?: string;
+  
   borderBottomColor?: string;
   borderLeftColor?: string;
   borderRightColor?: string;
@@ -106,6 +126,18 @@ interface IStyle {
   fontFamily?: string;
 
   transform?: string;
+
+  /**
+   * 图片渲染模式（用于Image组件）
+   * simple: 简单拉伸（默认）
+   * sliced: 九宫格拉伸
+   * tiled: 平铺模式
+   */
+  imageType?: 'simple' | 'sliced' | 'tiled';
+  /**
+   * 图片的九宫格参数，格式为 "left top right bottom"
+   */
+  imageInset?: string;
 
   // 文字描边的宽度，默认不描边
   textStrokeWidth?: number;

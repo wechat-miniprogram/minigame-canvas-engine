@@ -120,8 +120,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8);
 /* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _styleParser__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9);
-/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
-/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(1);
+/* harmony import */ var _common_imageRenderer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
+/* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(7);
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(1);
 var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -132,6 +133,7 @@ var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 /* eslint-disable no-param-reassign */
+
 
 
 
@@ -233,7 +235,7 @@ var ElementClassList = /** @class */ (function () {
             parentStyle = ele.parent.style;
         }
         else {
-            parentStyle = _env__WEBPACK_IMPORTED_MODULE_6__["default"].getRootCanvasSize();
+            parentStyle = _env__WEBPACK_IMPORTED_MODULE_7__["default"].getRootCanvasSize();
         }
         if (typeof newStyle.opacity === 'undefined') {
             newStyle.opacity = 1;
@@ -253,10 +255,10 @@ var ElementClassList = /** @class */ (function () {
                     // @ts-ignore
                     var newValue = newStyle[key];
                     if (key === 'width') {
-                        newValue = parentStyle.width ? (0,_common_util__WEBPACK_IMPORTED_MODULE_5__.convertPercent)(newValue, parentStyle.width) : 0;
+                        newValue = parentStyle.width ? (0,_common_util__WEBPACK_IMPORTED_MODULE_6__.convertPercent)(newValue, parentStyle.width) : 0;
                     }
                     if (key === 'height') {
-                        newValue = parentStyle.height ? (0,_common_util__WEBPACK_IMPORTED_MODULE_5__.convertPercent)(newValue, parentStyle.height) : 0;
+                        newValue = parentStyle.height ? (0,_common_util__WEBPACK_IMPORTED_MODULE_6__.convertPercent)(newValue, parentStyle.height) : 0;
                     }
                     if (key === 'opacity' && parentStyle && parentStyle.opacity !== 1 && typeof parentStyle.opacity === 'number') {
                         newValue = parentStyle.opacity * newValue;
@@ -377,6 +379,18 @@ var Element = /** @class */ (function () {
                         });
                     }
                     break;
+                case 'backgroundImageType':
+                    this.renderForLayout.backgroundImageType = (0,_styleParser__WEBPACK_IMPORTED_MODULE_4__.validateImageType)(val);
+                    break;
+                case 'backgroundImageInset':
+                    this.renderForLayout.backgroundImageInset = (0,_styleParser__WEBPACK_IMPORTED_MODULE_4__.parseInsetParams)(val) || undefined;
+                    break;
+                case 'imageType':
+                    this.renderForLayout.imageType = (0,_styleParser__WEBPACK_IMPORTED_MODULE_4__.validateImageType)(val);
+                    break;
+                case 'imageInset':
+                    this.renderForLayout.imageInset = (0,_styleParser__WEBPACK_IMPORTED_MODULE_4__.parseInsetParams)(val) || undefined;
+                    break;
                 case 'transform':
                     delete this.renderForLayout.scaleX;
                     delete this.renderForLayout.scaleY;
@@ -389,6 +403,18 @@ var Element = /** @class */ (function () {
             switch (prop) {
                 case 'backgroundImage':
                     this.renderForLayout.backgroundImage = undefined;
+                    break;
+                case 'backgroundImageType':
+                    this.renderForLayout.backgroundImageType = undefined;
+                    break;
+                case 'backgroundImageInset':
+                    this.renderForLayout.backgroundImageInset = undefined;
+                    break;
+                case 'imageType':
+                    this.renderForLayout.imageType = undefined;
+                    break;
+                case 'imageInset':
+                    this.renderForLayout.imageInset = undefined;
                     break;
                 case 'transform':
                     delete this.renderForLayout.scaleX;
@@ -723,9 +749,26 @@ var Element = /** @class */ (function () {
             ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
         }
         if (this.renderForLayout.backgroundImage) {
-            ctx.drawImage(this.renderForLayout.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
+            this.renderBackgroundImage(ctx, drawX, drawY, originX, originY, box.width, box.height);
         }
         return { needStroke: needStroke, needClip: needClip, originX: originX, originY: originY, drawX: drawX, drawY: drawY, width: width, height: height };
+    };
+    /**
+     * 渲染背景图片，支持三种模式：simple、sliced、tiled
+     */
+    Element.prototype.renderBackgroundImage = function (ctx, drawX, drawY, originX, originY, width, height) {
+        var img = this.renderForLayout.backgroundImage;
+        var mode = (this.renderForLayout.backgroundImageType || 'simple');
+        var inset = this.renderForLayout.backgroundImageInset;
+        _common_imageRenderer__WEBPACK_IMPORTED_MODULE_5__.ImageRenderer.render(ctx, {
+            img: img,
+            x: drawX - originX,
+            y: drawY - originY,
+            width: width,
+            height: height,
+            mode: mode,
+            inset: inset
+        });
     };
     return Element;
 }());
@@ -777,11 +820,19 @@ var repaintAffectedStyles = [
     'textStrokeColor',
     'textStrokeWidth',
     'textShadow',
+    'imageType',
+    'imageInset',
+    'backgroundImageType',
+    'backgroundImageInset',
 ];
 var renderAffectStyles = [
     'textShadow',
     'transform',
     'backgroundImage',
+    'imageType',
+    'imageInset',
+    'backgroundImageType',
+    'backgroundImageInset',
 ];
 
 
@@ -1128,7 +1179,9 @@ module.exports.TinyEmitter = E;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   backgroundImageParser: () => (/* binding */ backgroundImageParser),
-/* harmony export */   parseTransform: () => (/* binding */ parseTransform)
+/* harmony export */   parseInsetParams: () => (/* binding */ parseInsetParams),
+/* harmony export */   parseTransform: () => (/* binding */ parseTransform),
+/* harmony export */   validateImageType: () => (/* binding */ validateImageType)
 /* harmony export */ });
 function degreesToRadians(degrees) {
     return degrees * Math.PI / 180;
@@ -1146,6 +1199,49 @@ function backgroundImageParser(val) {
     }
     console.error("[Layout]: ".concat(val, " is not a valid backgroundImage"));
     return null;
+}
+/**
+ * 验证图像渲染类型
+ * @param imageType 图像类型
+ * @returns 有效的图像类型，无效时返回 'simple'
+ */
+function validateImageType(imageType) {
+    if (!imageType || typeof imageType !== 'string') {
+        return 'simple';
+    }
+    var validTypes = ['simple', 'sliced', 'tiled'];
+    if (validTypes.includes(imageType)) {
+        return imageType;
+    }
+    console.warn("[Layout] Invalid image type: ".concat(imageType, ", fallback to 'simple'"));
+    return 'simple';
+}
+/**
+ * 解析九宫格参数
+ * @param inset 格式为 "left top right bottom" 的字符串
+ * @returns 解析后的九宫格参数对象，如果解析失败返回null
+ */
+function parseInsetParams(inset) {
+    if (!inset || typeof inset !== 'string') {
+        return null;
+    }
+    var values = inset.trim().split(/\s+/).map(Number);
+    if (values.length !== 4) {
+        console.warn('[Layout] Invalid inset parameter format. Expected: "left top right bottom"');
+        return null;
+    }
+    var left = values[0], top = values[1], right = values[2], bottom = values[3];
+    // 检查是否都是有效数字
+    if (values.some(function (v) { return isNaN(v); })) {
+        console.warn('[Layout] Invalid inset parameter format. All values must be numbers');
+        return null;
+    }
+    // 检查是否都是非负数
+    if (values.some(function (v) { return v < 0; })) {
+        console.warn('[Layout] Invalid inset parameters. All values must be non-negative');
+        return null;
+    }
+    return { left: left, top: top, right: right, bottom: bottom };
 }
 function isValidTransformValue(value) {
     // 使用正则表达式验证数字或逗号分隔的数字，后面可以跟可选的角度单位（deg）
@@ -1183,6 +1279,158 @@ function parseTransform(transform) {
 
 /***/ }),
 /* 10 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ImageRenderer: () => (/* binding */ ImageRenderer)
+/* harmony export */ });
+/**
+ * 图像渲染器 - 统一处理图像渲染逻辑
+ */
+var ImageRenderer = /** @class */ (function () {
+    function ImageRenderer() {
+    }
+    /**
+     * 渲染图像
+     */
+    ImageRenderer.render = function (ctx, options) {
+        var img = options.img, x = options.x, y = options.y, width = options.width, height = options.height, mode = options.mode, inset = options.inset;
+        switch (mode) {
+            case 'simple':
+                ImageRenderer.renderSimple(ctx, img, x, y, width, height);
+                break;
+            case 'sliced':
+                ImageRenderer.renderSliced(ctx, img, x, y, width, height, inset);
+                break;
+            case 'tiled':
+                ImageRenderer.renderTiled(ctx, img, x, y, width, height);
+                break;
+        }
+    };
+    /**
+     * 简单拉伸渲染
+     */
+    ImageRenderer.renderSimple = function (ctx, img, x, y, width, height) {
+        ctx.drawImage(img, x, y, width, height);
+    };
+    /**
+     * 九宫格渲染
+     */
+    ImageRenderer.renderSliced = function (ctx, img, x, y, width, height, inset) {
+        if (!inset) {
+            console.warn('[Layout] sliced render need inset parameters');
+            ImageRenderer.renderSimple(ctx, img, x, y, width, height);
+            return;
+        }
+        var left = inset.left, top = inset.top, right = inset.right, bottom = inset.bottom;
+        var imgWidth = img.width;
+        var imgHeight = img.height;
+        // 先检查原始inset值是否合法
+        if (left < 0 || top < 0 || right < 0 || bottom < 0) {
+            console.warn('[Layout] inset values cannot be negative, fallback to simple render');
+            ImageRenderer.renderSimple(ctx, img, x, y, width, height);
+            return;
+        }
+        if (left + right >= imgWidth || top + bottom >= imgHeight) {
+            console.warn("[Layout] inset values too large for image size (".concat(imgWidth, "x").concat(imgHeight, "), fallback to simple render"));
+            ImageRenderer.renderSimple(ctx, img, x, y, width, height);
+            return;
+        }
+        // 确保inset值不超过图片尺寸（此时已经验证过合法性）
+        var safeLeft = Math.min(left, imgWidth);
+        var safeTop = Math.min(top, imgHeight);
+        var safeRight = Math.min(right, imgWidth);
+        var safeBottom = Math.min(bottom, imgHeight);
+        // 计算源区域尺寸
+        var centerSrcWidth = imgWidth - safeLeft - safeRight;
+        var centerSrcHeight = imgHeight - safeTop - safeBottom;
+        // 计算目标区域尺寸
+        var targetCenterWidth = Math.max(0, width - safeLeft - safeRight);
+        var targetCenterHeight = Math.max(0, height - safeTop - safeBottom);
+        // 1. 渲染四个角（保持原样）
+        ImageRenderer.renderCorners(ctx, img, x, y, width, height, imgWidth, imgHeight, safeLeft, safeTop, safeRight, safeBottom);
+        // 2. 渲染四条边（拉伸）
+        ImageRenderer.renderEdges(ctx, img, x, y, width, height, imgWidth, imgHeight, safeLeft, safeTop, safeRight, safeBottom, centerSrcWidth, centerSrcHeight, targetCenterWidth, targetCenterHeight);
+        // 3. 渲染中心区域（拉伸）
+        if (targetCenterWidth > 0 && targetCenterHeight > 0 && centerSrcWidth > 0 && centerSrcHeight > 0) {
+            ctx.drawImage(img, safeLeft, safeTop, centerSrcWidth, centerSrcHeight, x + safeLeft, y + safeTop, targetCenterWidth, targetCenterHeight);
+        }
+    };
+    /**
+     * 平铺渲染
+     */
+    ImageRenderer.renderTiled = function (ctx, img, x, y, width, height) {
+        var imgWidth = img.width;
+        var imgHeight = img.height;
+        ctx.save();
+        // 设置裁剪区域
+        ctx.beginPath();
+        ctx.rect(x, y, width, height);
+        ctx.clip();
+        // 预计算完整块和边界块的数量，避免重复计算
+        var fullCols = Math.ceil(width / imgWidth);
+        var fullRows = Math.ceil(height / imgHeight);
+        // 绘制所有的块，无需考虑边界
+        for (var row = 0; row < fullRows; row++) {
+            var drawY = y + row * imgHeight;
+            for (var col = 0; col < fullCols; col++) {
+                var drawX = x + col * imgWidth;
+                ctx.drawImage(img, drawX, drawY);
+            }
+        }
+        ctx.restore();
+    };
+    /**
+     * 渲染九宫格的四个角
+     */
+    ImageRenderer.renderCorners = function (ctx, img, x, y, width, height, imgWidth, imgHeight, left, top, right, bottom) {
+        // 左上角
+        if (left > 0 && top > 0) {
+            ctx.drawImage(img, 0, 0, left, top, x, y, left, top);
+        }
+        // 右上角
+        if (right > 0 && top > 0) {
+            ctx.drawImage(img, imgWidth - right, 0, right, top, x + width - right, y, right, top);
+        }
+        // 左下角
+        if (left > 0 && bottom > 0) {
+            ctx.drawImage(img, 0, imgHeight - bottom, left, bottom, x, y + height - bottom, left, bottom);
+        }
+        // 右下角
+        if (right > 0 && bottom > 0) {
+            ctx.drawImage(img, imgWidth - right, imgHeight - bottom, right, bottom, x + width - right, y + height - bottom, right, bottom);
+        }
+    };
+    /**
+     * 渲染九宫格的四条边
+     */
+    ImageRenderer.renderEdges = function (ctx, img, x, y, width, height, imgWidth, imgHeight, left, top, right, bottom, centerSrcWidth, centerSrcHeight, targetCenterWidth, targetCenterHeight) {
+        // 上边 - 水平拉伸
+        if (top > 0 && targetCenterWidth > 0) {
+            ctx.drawImage(img, left, 0, centerSrcWidth, top, x + left, y, targetCenterWidth, top);
+        }
+        // 下边 - 水平拉伸  
+        if (bottom > 0 && targetCenterWidth > 0) {
+            ctx.drawImage(img, left, imgHeight - bottom, centerSrcWidth, bottom, x + left, y + height - bottom, targetCenterWidth, bottom);
+        }
+        // 左边 - 垂直拉伸
+        if (left > 0 && targetCenterHeight > 0) {
+            ctx.drawImage(img, 0, top, left, centerSrcHeight, x, y + top, left, targetCenterHeight);
+        }
+        // 右边 - 垂直拉伸
+        if (right > 0 && targetCenterHeight > 0) {
+            ctx.drawImage(img, imgWidth - right, top, right, centerSrcHeight, x + width - right, y + top, right, targetCenterHeight);
+        }
+    };
+    return ImageRenderer;
+}());
+
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// UMD (Universal Module Definition)
@@ -2397,16 +2645,16 @@ if (true) {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var nodeToJson = __webpack_require__(12);
-var xmlToNodeobj = __webpack_require__(14);
-var x2xmlnode = __webpack_require__(14);
-var buildOptions = (__webpack_require__(13).buildOptions);
-var validator = __webpack_require__(16);
+var nodeToJson = __webpack_require__(13);
+var xmlToNodeobj = __webpack_require__(15);
+var x2xmlnode = __webpack_require__(15);
+var buildOptions = (__webpack_require__(14).buildOptions);
+var validator = __webpack_require__(17);
 exports.parse = function (xmlData, options, validationOption) {
     if (validationOption) {
         if (validationOption === true)
@@ -2422,12 +2670,12 @@ exports.parse = function (xmlData, options, validationOption) {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var util = __webpack_require__(13);
+var util = __webpack_require__(14);
 var convertToJson = function (node, options) {
     var jObj = {
         name: node.tagname
@@ -2461,7 +2709,7 @@ exports.convertToJson = convertToJson;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2546,14 +2794,14 @@ exports.getAllMatches = getAllMatches;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var util = __webpack_require__(13);
-var buildOptions = (__webpack_require__(13).buildOptions);
-var xmlNode = __webpack_require__(15);
+var util = __webpack_require__(14);
+var buildOptions = (__webpack_require__(14).buildOptions);
+var xmlNode = __webpack_require__(16);
 var TagType = { OPENING: 1, CLOSING: 2, SELF: 3, CDATA: 4 };
 var regx = '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
@@ -2790,7 +3038,7 @@ exports.getTraversalObj = getTraversalObj;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ ((module) => {
 
 "use strict";
@@ -2816,12 +3064,12 @@ module.exports = function (tagname, parent, val) {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var util = __webpack_require__(13);
+var util = __webpack_require__(14);
 var defaultOptions = {
     allowBooleanAttributes: false, //A tag can have attributes without any value
     localeRange: 'a-zA-Z',
@@ -3130,7 +3378,7 @@ function validateTagName(tagname, regxTagName) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3244,7 +3492,7 @@ var BitMapFont = /** @class */ (function () {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3301,7 +3549,7 @@ var DebugInfo = /** @class */ (function () {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3402,7 +3650,7 @@ var Ticker = /** @class */ (function () {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3417,7 +3665,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   repaintChildren: () => (/* binding */ repaintChildren),
 /* harmony export */   repaintTree: () => (/* binding */ repaintTree)
 /* harmony export */ });
-/* harmony import */ var _components_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(21);
+/* harmony import */ var _components_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 /* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1);
 /* eslint-disable no-param-reassign */
@@ -3614,7 +3862,7 @@ function clone(root, element, deep, parent) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3629,14 +3877,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Text: () => (/* reexport safe */ _text__WEBPACK_IMPORTED_MODULE_2__["default"]),
 /* harmony export */   View: () => (/* reexport safe */ _view__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
-/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
-/* harmony import */ var _image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
-/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(24);
-/* harmony import */ var _scrollview__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(26);
-/* harmony import */ var _bitmaptext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(30);
-/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(31);
+/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
+/* harmony import */ var _image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(24);
+/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(25);
+/* harmony import */ var _scrollview__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(27);
+/* harmony import */ var _bitmaptext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(31);
+/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(32);
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(2);
-/* harmony import */ var _button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(32);
+/* harmony import */ var _button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(33);
 
 
 
@@ -3649,7 +3897,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3712,7 +3960,7 @@ var View = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3722,6 +3970,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
+/* harmony import */ var _common_imageRenderer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(10);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3737,6 +3986,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 var Image = /** @class */ (function (_super) {
@@ -3799,16 +4049,25 @@ var Image = /** @class */ (function (_super) {
         this.root = null;
     };
     Image.prototype.render = function () {
-        var _a;
-        if (!this.img || !((_a = this.img) === null || _a === void 0 ? void 0 : _a.complete)) {
+        if (!this.img || !this.img.complete) {
             return;
         }
         var ctx = this.ctx;
         ctx.save();
-        var _b = this.baseRender(), needStroke = _b.needStroke, needClip = _b.needClip, originX = _b.originX, originY = _b.originY, drawX = _b.drawX, drawY = _b.drawY, width = _b.width, height = _b.height;
-        // 自定义渲染逻辑 开始
-        ctx.drawImage(this.img, drawX - originX, drawY - originY, width, height);
-        // 自定义渲染逻辑 结束
+        var _a = this.baseRender(), needStroke = _a.needStroke, needClip = _a.needClip, originX = _a.originX, originY = _a.originY, drawX = _a.drawX, drawY = _a.drawY, width = _a.width, height = _a.height;
+        // 从 renderForLayout 中获取渲染参数（已在样式解析时校验）
+        var mode = this.renderForLayout.imageType || 'simple';
+        var imageInset = this.renderForLayout.imageInset;
+        // 使用统一的图像渲染器
+        _common_imageRenderer__WEBPACK_IMPORTED_MODULE_2__.ImageRenderer.render(ctx, {
+            img: this.img,
+            x: drawX - originX,
+            y: drawY - originY,
+            width: width,
+            height: height,
+            mode: mode,
+            inset: imageInset
+        });
         if (needClip) {
             this.renderBorder(ctx, originX, originY);
         }
@@ -3824,7 +4083,7 @@ var Image = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3833,7 +4092,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _textParser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(25);
+/* harmony import */ var _textParser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(26);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3997,7 +4256,7 @@ var Text = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4337,7 +4596,7 @@ function parseTextShadow(textShadow) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4345,12 +4604,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var _libs_scroller_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(27);
-/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
+/* harmony import */ var _libs_scroller_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(28);
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(21);
 /* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2);
-/* harmony import */ var _scrollbar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(29);
+/* harmony import */ var _scrollbar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(30);
 /* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(1);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4708,7 +4967,7 @@ var ScrollView = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4716,7 +4975,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _animate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(28);
+/* harmony import */ var _animate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(29);
 /* harmony import */ var _animate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_animate__WEBPACK_IMPORTED_MODULE_0__);
 /*
  * Scroller
@@ -5656,7 +5915,7 @@ var Scroller = /** @class */ (function () {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 "use strict";
@@ -5803,7 +6062,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5812,7 +6071,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ScrollBarDirection: () => (/* binding */ ScrollBarDirection),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -6021,7 +6280,7 @@ var ScrollBar = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6183,7 +6442,7 @@ var BitMapText = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6278,7 +6537,7 @@ var Canvas = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6286,7 +6545,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(24);
+/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(25);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -6464,17 +6723,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_pool__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
 /* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(8);
 /* harmony import */ var tiny_emitter__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tiny_emitter__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(10);
+/* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(11);
 /* harmony import */ var css_layout__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(css_layout__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _common_util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
-/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(11);
-/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(17);
-/* harmony import */ var _common_debugInfo__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(18);
-/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(19);
-/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(20);
+/* harmony import */ var _libs_fast_xml_parser_parser_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(12);
+/* harmony import */ var _common_bitMapFont__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(18);
+/* harmony import */ var _common_debugInfo__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(19);
+/* harmony import */ var _common_ticker__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(20);
+/* harmony import */ var _common_vd__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(21);
 /* harmony import */ var _common_rect__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(4);
 /* harmony import */ var _common_imageManager__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(5);
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(21);
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(22);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6539,7 +6798,7 @@ var Layout = /** @class */ (function (_super) {
         /**
          * 当前 Layout 版本，一般跟小游戏插件版本对齐
          */
-        _this.version = '1.0.15';
+        _this.version = '1.0.16';
         _this.env = _env__WEBPACK_IMPORTED_MODULE_0__["default"];
         /**
          * Layout 渲染的目标画布对应的 2d context
