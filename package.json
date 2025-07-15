@@ -23,8 +23,6 @@
     "@tweenjs/tween.js": "^18.6.4",
     "concurrently": "^8.0.1",
     "dts-bundle-generator": "^9.5.1",
-    "eslint": "^8.30.0",
-    "eslint-config-tencent": "^1.0.4",
     "rollup": "^3.29.5",
     "rollup-plugin-dts": "^6.1.1",
     "sass-embedded": "^1.80.4",
