@@ -133,48 +133,15 @@ export class ImageRenderer {
     ctx.clip();
 
     // 预计算完整块和边界块的数量，避免重复计算
-    const fullCols = Math.floor(width / imgWidth);
-    const fullRows = Math.floor(height / imgHeight);
-    const hasPartialCol = width % imgWidth > 0;
-    const hasPartialRow = height % imgHeight > 0;
+    const fullCols = Math.ceil(width / imgWidth);
+    const fullRows = Math.ceil(height / imgHeight);
 
-    // 1. 优先绘制所有完整的块（最常见的情况，无需边界计算）
+    // 绘制所有的块，无需考虑边界
     for (let row = 0; row < fullRows; row++) {
       const drawY = y + row * imgHeight;
       for (let col = 0; col < fullCols; col++) {
         const drawX = x + col * imgWidth;
         ctx.drawImage(img, drawX, drawY);
-      }
-    }
-
-    // 2. 处理右边界的部分列（如果存在）
-    if (hasPartialCol) {
-      const partialWidth = width - fullCols * imgWidth;
-      const partialColX = x + fullCols * imgWidth;
-
-      // 完整行的部分列
-      for (let row = 0; row < fullRows; row++) {
-        const drawY = y + row * imgHeight;
-        ctx.drawImage(img, 0, 0, partialWidth, imgHeight, partialColX, drawY, partialWidth, imgHeight);
-      }
-
-      // 右下角的部分块（如果底边界也是部分的）
-      if (hasPartialRow) {
-        const partialHeight = height - fullRows * imgHeight;
-        const partialRowY = y + fullRows * imgHeight;
-        ctx.drawImage(img, 0, 0, partialWidth, partialHeight, partialColX, partialRowY, partialWidth, partialHeight);
-      }
-    }
-
-    // 3. 处理底边界的部分行（如果存在）
-    if (hasPartialRow) {
-      const partialHeight = height - fullRows * imgHeight;
-      const partialRowY = y + fullRows * imgHeight;
-
-      // 完整列的部分行
-      for (let col = 0; col < fullCols; col++) {
-        const drawX = x + col * imgWidth;
-        ctx.drawImage(img, 0, 0, imgWidth, partialHeight, drawX, partialRowY, imgWidth, partialHeight);
       }
     }
 

@@ -113,7 +113,7 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | backgroundColor | string | | 背景的颜色，支持 6 位 16 进制、8 位 16 进制、rgb、rgba 四种格式的颜色 |
 | backgroundImage | string | | 背景图，格式为 'url(https:/www.foo.com/xxx.png)'  |
 | backgroundImageType | string | simple | 背景图片的渲染类型，详见下方"图像渲染模式"说明 |
-| backgroundImageInset | string | | 背景图片九宫格设置的区域，格式为 'left top right bottom'，如'10 20 30 10' |
+| backgroundImageInset | string | | 背景图片九宫格设置的区域，backgroundImageType为 sliced生效，格式为 'left top right bottom'，如'10 20 30 10' |
 | opacity | number | 1 | 透明度，范围[0, 1]，0表示透明，1表示不透明 |
 | transform | string | | transform 属性允许你旋转和缩放给定元素，目前支持的格式 `rotate(360deg)` |
 
@@ -123,7 +123,7 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | 属性 | 类型 | 默认值 | 说明 |
 |---------------|--------|--------|--------------------------|
 | imageType | string | simple | 图像的渲染类型，详见下方"图像渲染模式"说明 |
-| imageInset | string | | 图像九宫格设置的区域，格式为 'left top right bottom'，如'15 15 15 15' |
+| imageInset | string | | 图像九宫格设置的区域，imageType值为sliced生效，格式为 'left top right bottom'，如'15 15 15 15' |
 
 #### 图像渲染模式
 
