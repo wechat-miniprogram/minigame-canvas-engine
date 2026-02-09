@@ -179,28 +179,43 @@ export default class ScrollBar extends View {
   }
 
   calculteScrollValue(left: number, top: number) {
-    let scrollLeft = 0;
-    let scrollTop = 0;
-    if (this.direction === ScrollBarDirection.Vertival) {
-      const canScrollPercent = 1 - this.dimensions.height / this.dimensions.contentHeight;
-
-      // 滚动条最大滚动高度
-      const scrollBarMaxScrollTop = this.dimensions.height * canScrollPercent;
-
-      const percent = top / this.dimensions.maxScrollTop;
-      const percentTop = scrollBarMaxScrollTop * percent;
-
-      scrollTop = clamp(percentTop, 0, scrollBarMaxScrollTop);
+    const isVertical = this.direction === ScrollBarDirection.Vertival;
+    const scrollPosition = isVertical ? top : left;
+    const containerSize = isVertical ? this.dimensions.height : this.dimensions.width;
+    const contentSize = isVertical ? this.dimensions.contentHeight : this.dimensions.contentWidth;
+    const maxScroll = isVertical ? this.dimensions.maxScrollTop : this.dimensions.maxScrollLeft;
+    
+    const canScrollPercent = 1 - containerSize / contentSize;
+    const scrollBarMaxScroll = containerSize * canScrollPercent;
+    
+    let finalScrollPosition = 0;
+    let rubberBandScale = 1;
+    let overscrollDirection = 0;
+    
+    if (scrollPosition < 0) {
+      // 向前超出边界（顶部/左侧）
+      const overscrollPercent = Math.abs(scrollPosition) / containerSize;
+      rubberBandScale = Math.max(0.02, 1 - Math.pow(overscrollPercent, 0.4) * 0.98);
+      finalScrollPosition = 0;
+      overscrollDirection = -1;
+    } else if (scrollPosition > maxScroll) {
+      // 向后超出边界（底部/右侧）
+      const overscrollPercent = (scrollPosition - maxScroll) / containerSize;
+      rubberBandScale = Math.max(0.02, 1 - Math.pow(overscrollPercent, 0.4) * 0.98);
+      finalScrollPosition = scrollBarMaxScroll;
+      overscrollDirection = 1;
     } else {
-      const canScrollPercent = 1 - this.dimensions.width / this.dimensions.contentWidth;
-      const scrollBarMaxScrollLeft = this.dimensions.width * canScrollPercent;
-
-      const percent = left / this.dimensions.maxScrollLeft;
-
-      scrollLeft = clamp(scrollBarMaxScrollLeft * percent, 0, scrollBarMaxScrollLeft);
+      // 正常范围内
+      const percent = scrollPosition / maxScroll;
+      finalScrollPosition = clamp(scrollBarMaxScroll * percent, 0, scrollBarMaxScroll);
     }
-
-    return { scrollLeft, scrollTop };
+    
+    return {
+      scrollLeft: isVertical ? 0 : finalScrollPosition,
+      scrollTop: isVertical ? finalScrollPosition : 0,
+      rubberBandScale,
+      overscrollDirection
+    };
   }
 
   onScroll(left: number, top: number) {
@@ -211,16 +226,34 @@ export default class ScrollBar extends View {
     this.currLeft = left;
     this.currTop = top;
   
-    const { scrollLeft, scrollTop } = this.calculteScrollValue(left, top);
+    const { scrollLeft, scrollTop, rubberBandScale, overscrollDirection } = this.calculteScrollValue(left, top);
 
+    // 应用橡皮筋缩放效果
     if (this.direction === ScrollBarDirection.Vertival) {
+      const originalHeight = this.dimensions.height * (this.dimensions.height / this.dimensions.contentHeight);
+      const newHeight = originalHeight * rubberBandScale;
+      
       this.layoutBox.absoluteY = this.parent!.layoutBox.originalAbsoluteY + scrollTop;
+      this.layoutBox.height = newHeight;
+      
+      // 如果是底部超出，需要调整位置让滚动条从底部收缩
+      if (overscrollDirection === 1) {
+        this.layoutBox.absoluteY += (originalHeight - newHeight);
+      }
     } else {
+      const originalWidth = this.dimensions.width * (this.dimensions.width / this.dimensions.contentWidth);
+      const newWidth = originalWidth * rubberBandScale;
+      
       this.layoutBox.absoluteX = this.parent!.layoutBox.originalAbsoluteX + scrollLeft;
+      this.layoutBox.width = newWidth;
+      
+      // 如果是右侧超出，需要调整位置让滚动条从右侧收缩
+      if (overscrollDirection === 1) {
+        this.layoutBox.absoluteX += (originalWidth - newWidth);
+      }
     }
 
     if (this.autoHide) {
-      // this.autoHideRemainingTime = this.autoHideTime;
       this.autoHideRemainingTime = this.autoHideTime + this.autoHideDelayTime;
     }
 
