@@ -2,7 +2,8 @@ import env from './env';
 import Element from './components/elements';
 import Pool from './common/pool';
 import TinyEmitter from 'tiny-emitter';
-import computeLayout from 'css-layout';
+// import computeLayout from 'css-layout';
+import * as cssLayout from './libs/css-layout';
 import { isClick, STATE, clearCanvas, isGameTouchEvent } from './common/util';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
@@ -229,7 +230,7 @@ class Layout extends Element {
      * Layout本身并不作为布局计算，只是作为节点树的容器
      */
     debugInfo.start('computeLayout', true);
-    computeLayout(this.children[0]);
+    cssLayout.computeLayout(this.children[0]);
     debugInfo.end('computeLayout');
 
     const rootEle = this.children[0];
