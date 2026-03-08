@@ -30,3 +30,8 @@
 
 ## web端调试
 为了方便调试，可以基于 codepen [模板](https://codepen.io/pen?template=VwEeLKw) 构建demo，codepen 上有一系列[在线 demo](https://codepen.io/collection/PYrdpO)。
+
+## Phase 1：Lobster Theme Toggle（demo）
+- 文件：`demos/noengine/theme.config.js`
+- 开关：`ENABLE_LOBSTER_THEME`（默认 `false`）
+- 说明：Phase 1 仅做主题开关与配色映射，确保行为不变；资源占位目录见 `demos/noengine/theme/lobster/`。

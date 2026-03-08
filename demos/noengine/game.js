@@ -1,4 +1,5 @@
 import Layout from './engine';
+import { activeTheme, palette } from './theme.config';
 // const Layout = requirePlugin('Layout').default;
 
 GameGlobal.Layout = Layout;
@@ -48,10 +49,13 @@ function closeRank() {
   });
 }
 
+const rankOpenText = activeTheme === 'lobster' ? '打开龙虾榜' : '打开排行榜';
+const rankCloseText = activeTheme === 'lobster' ? '关闭龙虾榜' : '关闭排行榜';
+
 let template = `
   <view id="container">
     <canvas id="rank" width="960" height="1410"></canvas>
-    <text id="rankText" value="打开排行榜"></text>
+    <text id="rankText" value="${rankOpenText}"></text>
   </view>
 `;
 
@@ -59,14 +63,14 @@ let style = {
   container: {
     width: GAME_WIDTH,
     height: GAME_HEIGHT,
-    backgroundColor: '#f3f3f3',
+    backgroundColor: palette.pageBg,
     justifyContent: 'center',
     alignItems: 'center',
   },
   rankText: {
-    backgroundColor: '#34a123',
+    backgroundColor: palette.primary,
     borderRadius: 10,
-    color: '#ffffff',
+    color: palette.textOnPrimary,
     width: 400,
     height: 120,
     lineHeight: 120,
@@ -104,8 +108,8 @@ const updateRank = () => {
 }
 
 testText.on('click', () => {
-  if (testText.value === '打开排行榜') {
-    testText.value = '关闭排行榜';
+  if (testText.value === rankOpenText) {
+    testText.value = rankCloseText;
     // 更新开放数据域最终被绘制到屏幕的位置，方便开放数据域做事件处理
     updateRankViewPort(rank);
 
@@ -118,7 +122,7 @@ testText.on('click', () => {
     // 要求Layout每帧刷新开放数据域 canvas 的绘制
     Layout.ticker.add(updateRank);
   } else {
-    testText.value = '打开排行榜';
+    testText.value = rankOpenText;
     closeRank();
     Layout.ticker.remove(updateRank);
   }
