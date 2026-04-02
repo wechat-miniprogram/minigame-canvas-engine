@@ -50,6 +50,8 @@ var computeLayout = (function() {
   var CSS_ALIGN_FLEX_END = 'flex-end';
   var CSS_ALIGN_STRETCH = 'stretch';
 
+  var CSS_DISPLAY_NONE = 'none';
+
   var CSS_POSITION_RELATIVE = 'relative';
   var CSS_POSITION_ABSOLUTE = 'absolute';
 
@@ -102,6 +104,21 @@ var computeLayout = (function() {
     }
     node.children.forEach(fillNodes);
     return node;
+  }
+
+  // 参照 Yoga: 递归将 display:none 节点及其子树的布局清零
+  function zeroOutLayoutRecursively(node) {
+    node.layout.width = 0;
+    node.layout.height = 0;
+    node.layout.top = 0;
+    node.layout.left = 0;
+    node.layout.right = 0;
+    node.layout.bottom = 0;
+    node.shouldUpdate = false;
+
+    if (node.children) {
+      node.children.forEach(zeroOutLayoutRecursively);
+    }
   }
 
   function isUndefined(value) {
@@ -604,6 +621,15 @@ var computeLayout = (function() {
       var/*float*/ maxWidth;
       for (i = startLine; i < childCount; ++i) {
         child = node.children[i];
+
+        // 参照 Yoga: display:none 的节点递归清零并跳过布局计算
+        if (child.style.display === CSS_DISPLAY_NONE) {
+          zeroOutLayoutRecursively(child);
+          child.isDirty = false;
+          endLine = i + 1;
+          continue;
+        }
+
         child.lineIndex = linesCount;
 
         child.nextAbsoluteChild = null;
@@ -868,6 +894,10 @@ var computeLayout = (function() {
       for (i = firstComplexMain; i < endLine; ++i) {
         child = node.children[i];
 
+        if (child.style.display === CSS_DISPLAY_NONE) {
+          continue;
+        }
+
         if (getPositionType(child) === CSS_POSITION_ABSOLUTE &&
             isPosDefined(child, leading[mainAxis])) {
           // In case the child is position absolute and has left/top being
@@ -914,6 +944,10 @@ var computeLayout = (function() {
       // <Loop D> Position elements in the cross axis
       for (i = firstComplexCross; i < endLine; ++i) {
         child = node.children[i];
+
+        if (child.style.display === CSS_DISPLAY_NONE) {
+          continue;
+        }
 
         if (getPositionType(child) === CSS_POSITION_ABSOLUTE &&
             isPosDefined(child, leading[crossAxis])) {
@@ -1015,6 +1049,9 @@ var computeLayout = (function() {
         var/*float*/ lineHeight = 0;
         for (ii = startIndex; ii < childCount; ++ii) {
           child = node.children[ii];
+          if (child.style.display === CSS_DISPLAY_NONE) {
+            continue;
+          }
           if (getPositionType(child) !== CSS_POSITION_RELATIVE) {
             continue;
           }
@@ -1033,6 +1070,9 @@ var computeLayout = (function() {
 
         for (ii = startIndex; ii < endIndex; ++ii) {
           child = node.children[ii];
+          if (child.style.display === CSS_DISPLAY_NONE) {
+            continue;
+          }
           if (getPositionType(child) !== CSS_POSITION_RELATIVE) {
             continue;
           }
@@ -1095,6 +1135,10 @@ var computeLayout = (function() {
     if (needsMainTrailingPos || needsCrossTrailingPos) {
       for (i = 0; i < childCount; ++i) {
         child = node.children[i];
+
+        if (child.style.display === CSS_DISPLAY_NONE) {
+          continue;
+        }
 
         if (needsMainTrailingPos) {
           setTrailingPosition(node, child, mainAxis);

@@ -15,6 +15,7 @@ const reflowAffectedStyles = [
   'flexWrap',
   'position',
   'fontWeight',
+  'display',
 ];
 
 const repaintAffectedStyles = [
@@ -90,6 +91,13 @@ interface IStyle {
   alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
   alignSelf?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
   position?: string;
+  /**
+   * 控制元素的显示模式
+   * flex: 默认值，正常参与布局和渲染
+   * none: 不参与布局计算、不占空间、不渲染、不响应事件
+   * block: 语义上等同于 flex（在 Flexbox 上下文中）
+   */
+  display?: 'flex' | 'none' | 'block';
 
   // repaintAffectedStyles
   fontSize?: number;

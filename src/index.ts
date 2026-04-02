@@ -2,8 +2,8 @@ import env from './env';
 import Element from './components/elements';
 import Pool from './common/pool';
 import TinyEmitter from 'tiny-emitter';
-// import computeLayout from 'css-layout';
-import * as cssLayout from './libs/css-layout';
+// @ts-ignore
+import computeLayout from './libs/css-layout/index.js';
 import { isClick, STATE, clearCanvas, isGameTouchEvent } from './common/util';
 import parser from './libs/fast-xml-parser/parser.js';
 import BitMapFont from './common/bitMapFont';
@@ -230,7 +230,8 @@ class Layout extends Element {
      * Layout本身并不作为布局计算，只是作为节点树的容器
      */
     debugInfo.start('computeLayout', true);
-    cssLayout.computeLayout(this.children[0]);
+    // @ts-ignore
+    computeLayout(this.children[0]);
     debugInfo.end('computeLayout');
 
     const rootEle = this.children[0];
@@ -346,6 +347,10 @@ class Layout extends Element {
 
   getChildByPos(tree: Layout | Element, x: number, y: number, itemList: (Layout | Element)[]) {
     tree.children.forEach((ele) => {
+      if (ele.style.display === 'none') {
+        return;
+      }
+
       const {
         absoluteX,
         absoluteY,

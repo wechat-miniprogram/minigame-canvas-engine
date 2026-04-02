@@ -67,7 +67,7 @@ export default class ScrollView extends View {
   get scrollHeight() {
     let maxHeight = 0;
     this.children.forEach((item: Element) => {
-      if (!(item instanceof ScrollBar)) {
+      if (!(item instanceof ScrollBar) && item.style.display !== 'none') {
         maxHeight = Math.max(maxHeight, item.layoutBox.top + item.layoutBox.height);
       }
     });
@@ -77,7 +77,7 @@ export default class ScrollView extends View {
   get scrollWidth() {
     let maxWidth = 0;
     this.children.forEach((item: Element) => {
-      if (!(item instanceof ScrollBar)) {
+      if (!(item instanceof ScrollBar) && item.style.display !== 'none') {
         maxWidth = Math.max(maxWidth, item.layoutBox.left + item.layoutBox.width);
       }
     });
@@ -178,6 +178,10 @@ export default class ScrollView extends View {
     ctx.clip();
 
     this.children.forEach((child) => {
+      if (child.style.display === 'none') {
+        return;
+      }
+
       const { width, height, absoluteX, absoluteY } = child.layoutBox;
 
       // 判断处于可视窗口内的子节点，递归渲染该子节点

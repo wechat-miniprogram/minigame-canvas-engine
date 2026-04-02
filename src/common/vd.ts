@@ -176,6 +176,10 @@ export function iterateTree(element: Element, callback: Callback = none) {
 
 export const repaintChildren = (children: Element[]) => {
   children.forEach((child: Element) => {
+    if (child.style.display === 'none') {
+      return;
+    }
+
     child.repaint();
 
     if (child.type !== 'ScrollView') {
@@ -188,6 +192,10 @@ export const repaintTree = (tree: Element) => {
   tree.repaint();
 
   tree.children.forEach((child: Element) => {
+    if (child.style.display === 'none') {
+      return;
+    }
+
     child.repaint();
 
     repaintTree(child);
