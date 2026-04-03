@@ -35,6 +35,7 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | --------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------- |
 | width, height                                                                     | number/string(百分比场景，如 100%)                        | 0          |
 | minWidth, minHeight                                                               | number/string(百分比场景，如 100%)                        | 0          |
+| display  **(v1.0.17开始支持)**                                                    | flex, none                                                | flex       |
 | left, right, top, bottom                                                          | number                                                    | 0          |
 | margin, marginLeft, marginRight, marginTop, marginBottom                          | number                                                    | 0          |
 | padding, paddingLeft, paddingRight, paddingTop, paddingBottom                     | number                                                    | 0          |
@@ -47,6 +48,29 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | justifyContent                                                                    | flex-start, center, flex-end, space-between, space-around | flex-start |
 | alignItems, alignSelf                                                             | flex-start, center, flex-end, stretch                     | flex-start |
 | position                                                                          | relative, absolute                                        | relative   |
+
+#### display **(v1.0.17)**
+
+控制节点的显示与隐藏。
+
+| 值     | 说明 |
+| ------ | ---- |
+| `flex` | 默认值，节点正常参与布局和渲染 |
+| `none` | 节点完全隐藏：不占据布局空间、不渲染、不响应任何触摸/点击事件，子树同理 |
+
+```js
+// 隐藏节点
+element.style.display = 'none';
+
+// 恢复显示
+element.style.display = 'flex';
+```
+
+::: tip
+`display:none` 的节点仍然存在于节点树中，可以继续修改其属性（如 `style`、`value`），改动会在节点重新显示时生效。
+:::
+
+
 
 ### 伪类
 用来添加一些选择器的特殊效果，目前仅支持最场景的 `:active` 场景，后续会试场景补充。

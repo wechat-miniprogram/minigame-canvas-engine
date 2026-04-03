@@ -170,6 +170,10 @@ export function iterateTree(element: Element, callback: Callback = none) {
   callback(element);
 
   element.children.forEach((child: Element) => {
+    // display:none 的子树不参与遍历（与不渲染、不布局保持一致）
+    if (child.style.display === 'none') {
+      return;
+    }
     iterateTree(child, callback);
   });
 }
@@ -189,14 +193,17 @@ export const repaintChildren = (children: Element[]) => {
 };
 
 export const repaintTree = (tree: Element) => {
+  // 入口守卫：若节点本身是 display:none，整棵子树都不渲染
+  if (tree.style.display === 'none') {
+    return;
+  }
+
   tree.repaint();
 
   tree.children.forEach((child: Element) => {
     if (child.style.display === 'none') {
       return;
     }
-
-    child.repaint();
 
     repaintTree(child);
   });

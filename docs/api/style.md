@@ -9,6 +9,7 @@
 | --------------------- | --------------------------------------------------------- | ---------- |
 | width                 | number/string(百分比场景，如 100%)                                                    | 0         |
 | height                | number/string(百分比场景，如 100%)                                                       | 0          |
+| display               | flex, none                                                | flex       |
 | position              | relative, absolute                                        | relative   |
 | left                  | number                                                    | 0          |
 | top                   | number                                                    | 0          |
@@ -32,6 +33,27 @@
 | flexWrap              | wrap, nowrap                                              | nowrap     |
 | justifyContent        | flex-start, center, flex-end, space-between, space-around | flex-start |
 | alignItems, alignSelf | flex-start, center, flex-end, stretch                     | flex-start |
+
+### display
+
+控制节点的显示与隐藏。
+
+| 值     | 说明 |
+| ------ | ---- |
+| `flex` | 默认值，节点正常参与布局和渲染 |
+| `none` | 节点完全隐藏：不占据布局空间、不渲染、不响应任何触摸/点击事件，子树同理 |
+
+```js
+// 隐藏节点
+element.style.display = 'none';
+
+// 恢复显示
+element.style.display = 'flex';
+```
+
+::: tip
+`display:none` 的节点仍然存在于节点树中，可以继续修改其属性（如 `style`、`value`），改动会在节点重新显示时生效。
+:::
 
 ## 文本
 支持的标签：`text`

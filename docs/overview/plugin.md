@@ -17,7 +17,7 @@
   "openDataContext": "sub",
   "plugins": {
     "Layout": {
-      "version": "1.0.14",
+      "version": "1.0.17",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"openDataContext"}]
     }
@@ -75,7 +75,7 @@ const Layout = requirePlugin('Layout').default;
   "deviceOrientation": "portrait",
   "plugins": {
     "Layout": {
-      "version": "1.0.14",
+      "version": "1.0.17",
       "provider": "wx7a727ff7d940bb3f",
       "contexts":[{"type":"gameContext"}, {"type":"openDataContext"}]
     }
@@ -86,6 +86,7 @@ const Layout = requirePlugin('Layout').default;
 ## 版本列表
 | 版本          | 特性      | 
 | --------------- | ------------------- |
+| 1.0.17        | 支持 `display:none` 属性，节点隐藏后不参与布局、不渲染、不响应事件 |
 | 1.0.16        | 新增图片九宫格拉伸、平铺渲染模式 | 
 | 1.0.15        | 新增文本换行相关特性：whiteSpace、wordBreak |
 | 1.0.14        | 新增 classList 特性 |

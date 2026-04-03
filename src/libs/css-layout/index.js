@@ -623,10 +623,10 @@ var computeLayout = (function() {
         child = node.children[i];
 
         // 参照 Yoga: display:none 的节点递归清零并跳过布局计算
+        // 注意：不能修改 endLine，它由正常参与布局的节点推进，否则会导致 flex line 计算错乱
         if (child.style.display === CSS_DISPLAY_NONE) {
           zeroOutLayoutRecursively(child);
           child.isDirty = false;
-          endLine = i + 1;
           continue;
         }
 
@@ -1153,6 +1153,14 @@ var computeLayout = (function() {
     // <Loop G> Calculate dimensions for absolutely positioned elements
     currentAbsoluteChild = firstAbsoluteChild;
     while (currentAbsoluteChild !== null) {
+      // display:none 的绝对定位节点跳过（理论上已被 Loop A 过滤，此处做双重保险）
+      if (currentAbsoluteChild.style.display === CSS_DISPLAY_NONE) {
+        child = currentAbsoluteChild;
+        currentAbsoluteChild = currentAbsoluteChild.nextAbsoluteChild;
+        child.nextAbsoluteChild = null;
+        continue;
+      }
+
       // Pre-fill dimensions when using absolute position and both offsets for
       // the axis are defined (either both left and right or top and bottom).
       for (ii = 0; ii < 2; ii++) {
@@ -1216,8 +1224,11 @@ var computeLayout = (function() {
       node.lastLayout.parentMaxWidth = parentMaxWidth;
       node.lastLayout.direction = direction;
 
-      // Reset child layouts
+      // Reset child layouts（跳过 display:none 的节点，其布局已由 zeroOutLayoutRecursively 清零）
       node.children.forEach(function(child) {
+        if (child.style && child.style.display === CSS_DISPLAY_NONE) {
+          return;
+        }
         child.layout.width = undefined;
         child.layout.height = undefined;
         child.layout.top = 0;
