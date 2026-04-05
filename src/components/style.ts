@@ -38,6 +38,7 @@ const repaintAffectedStyles = [
   'imageInset',
   'backgroundImageType',
   'backgroundImageInset',
+  'visibility',
 ];
 
 export const renderAffectStyles = [
@@ -98,6 +99,14 @@ interface IStyle {
    * block: 语义上等同于 flex（在 Flexbox 上下文中）
    */
   display?: 'flex' | 'none' | 'block';
+
+  /**
+   * 控制元素的可见性
+   * visible: 默认值，元素正常可见
+   * hidden: 元素不可见（不绘制），但仍然占据布局空间，不响应事件
+   * 该属性可继承：父元素 hidden 时子元素默认也 hidden，但子元素可显式设为 visible 覆盖
+   */
+  visibility?: 'visible' | 'hidden';
 
   // repaintAffectedStyles
   fontSize?: number;

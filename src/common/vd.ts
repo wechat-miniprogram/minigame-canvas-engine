@@ -126,14 +126,21 @@ export function create(node: TreeNode, style: Record<string, IStyle>, parent?: R
   return element;
 }
 
-export function renderChildren(children: Element[], context: CanvasRenderingContext2D, needRender = true) {
+export function renderChildren(children: Element[], context: CanvasRenderingContext2D, needRender = true, parentVisible = true) {
   children.forEach((child) => {
     // child.shouldUpdate = false;
     child.isDirty = false;
-    child.insert(context, needRender);
+
+    // visibility 继承：显式设置优先，否则继承父节点可见性
+    const selfVisibility = child.style.visibility;
+    const isVisible = selfVisibility === 'visible' ? true
+      : selfVisibility === 'hidden' ? false
+      : parentVisible;
+
+    child.insert(context, needRender && isVisible);
 
     // ScrollView的子节点渲染交给ScrollView自己，不支持嵌套ScrollView
-    return renderChildren(child.children, context,  child.type === 'ScrollView' ? false : needRender);
+    return renderChildren(child.children, context, child.type === 'ScrollView' ? false : needRender, isVisible);
   });
 }
 
@@ -178,34 +185,47 @@ export function iterateTree(element: Element, callback: Callback = none) {
   });
 }
 
-export const repaintChildren = (children: Element[]) => {
+export const repaintChildren = (children: Element[], parentVisible = true) => {
   children.forEach((child: Element) => {
     if (child.style.display === 'none') {
       return;
     }
 
-    child.repaint();
+    const selfVisibility = child.style.visibility;
+    const isVisible = selfVisibility === 'visible' ? true
+      : selfVisibility === 'hidden' ? false
+      : parentVisible;
+
+    if (isVisible) {
+      child.repaint();
+    }
 
     if (child.type !== 'ScrollView') {
-      repaintChildren(child.children);
+      repaintChildren(child.children, isVisible);
     }
   });
 };
 
-export const repaintTree = (tree: Element) => {
-  // 入口守卫：若节点本身是 display:none，整棵子树都不渲染
+export const repaintTree = (tree: Element, parentVisible = true) => {
   if (tree.style.display === 'none') {
     return;
   }
 
-  tree.repaint();
+  const selfVisibility = tree.style.visibility;
+  const isVisible = selfVisibility === 'visible' ? true
+    : selfVisibility === 'hidden' ? false
+    : parentVisible;
+
+  if (isVisible) {
+    tree.repaint();
+  }
 
   tree.children.forEach((child: Element) => {
     if (child.style.display === 'none') {
       return;
     }
 
-    repaintTree(child);
+    repaintTree(child, isVisible);
   });
 };
 

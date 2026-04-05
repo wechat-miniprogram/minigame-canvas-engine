@@ -138,6 +138,161 @@ function batchHideAndRestore(scrollView) {
   });
 }
 
+/**
+ * 给 scrollview 所有 listItem 绑定点击：
+ * 点击后随机选择 display:none 或 visibility:hidden 来隐藏，5 秒后自动恢复。
+ * 这样可以直观对比两种隐藏方式的差异：
+ *   - display:none 后周围元素会填充空隙（不占空间）
+ *   - visibility:hidden 后位置留空白但不塌陷（仍占空间）
+ */
+function bindListItemClickForRandomHideTest(scrollView) {
+  if (!scrollView) return;
+
+  scrollView.children.forEach((item, index) => {
+    if (!item.className || !item.className.includes('listItem')) return;
+
+    item.on('click', () => {
+      if (item.style.display === 'none' || item.style.visibility === 'hidden') return;
+
+      const useVisibility = Math.random() > 0.5;
+
+      if (useVisibility) {
+        console.log(`[RandomHide] 点击第 ${index + 1} 条 → visibility:hidden（占位保留）`);
+        item.style.visibility = 'hidden';
+      } else {
+        console.log(`[RandomHide] 点击第 ${index + 1} 条 → display:none（不占空间）`);
+        item.style.display = 'none';
+      }
+
+      // 隐藏期间修改子节点，验证恢复后是否正确渲染
+      const nameText = item.children.find(c => c.className && c.className.includes('listItemName'));
+      if (nameText) {
+        nameText.style.color = useVisibility ? '#9b59b6' : '#ff4444';
+        console.log(`[RandomHide] 隐藏期间修改颜色 → ${nameText.style.color}`);
+      }
+
+      setTimeout(() => {
+        if (item.isDestroyed) {
+          console.log(`[RandomHide] 第 ${index + 1} 条：节点已销毁，跳过恢复`);
+          return;
+        }
+        if (useVisibility) {
+          item.style.visibility = 'visible';
+        } else {
+          item.style.display = 'flex';
+        }
+        console.log(`[RandomHide] 第 ${index + 1} 条已恢复`);
+      }, 2000);
+    });
+  });
+}
+
+/**
+ * 批量将所有 listItem 设为 visibility:hidden，验证：
+ *   1. scrollHeight 不变（因为仍然占空间）
+ *   2. 节点不可见、不响应事件
+ * 然后逐条恢复（每 300ms 一条）
+ */
+function batchVisibilityHideAndRestore(scrollView) {
+  if (!scrollView) return;
+  const items = scrollView.children.filter(
+    c => c.className && c.className.includes('listItem')
+  );
+
+  const heightBefore = scrollView.scrollHeight;
+  items.forEach(item => { item.style.visibility = 'hidden'; });
+  const heightAfter = scrollView.scrollHeight;
+
+  console.log(`[BatchVisibility] 全部 hidden(${items.length}条)，scrollHeight: ${heightBefore} → ${heightAfter}（期望不变）`);
+
+  items.forEach((item, i) => {
+    setTimeout(() => {
+      if (item.isDestroyed) return;
+      item.style.visibility = 'visible';
+      console.log(`[BatchVisibility] 恢复第 ${i + 1} 条`);
+    }, (i + 1) * 300);
+  });
+}
+
+/**
+ * 混合测试：奇数条 display:none，偶数条 visibility:hidden，3 秒后全部恢复。
+ * 可以直观对比两种方式对布局的影响差异。
+ */
+function mixedHideTest(scrollView) {
+  if (!scrollView) return;
+  const items = scrollView.children.filter(
+    c => c.className && c.className.includes('listItem')
+  );
+
+  items.forEach((item, i) => {
+    if (i % 2 === 0) {
+      item.style.visibility = 'hidden';
+      console.log(`[MixedHide] 第 ${i + 1} 条 → visibility:hidden`);
+    } else {
+      item.style.display = 'none';
+      console.log(`[MixedHide] 第 ${i + 1} 条 → display:none`);
+    }
+  });
+
+  console.log(`[MixedHide] 混合隐藏后 scrollHeight=${scrollView.scrollHeight}（display:none 的不占空间，visibility:hidden 的仍占空间）`);
+
+  setTimeout(() => {
+    items.forEach((item, i) => {
+      if (item.isDestroyed) return;
+      if (i % 2 === 0) {
+        item.style.visibility = 'visible';
+      } else {
+        item.style.display = 'flex';
+      }
+    });
+    console.log(`[MixedHide] 全部恢复，scrollHeight=${scrollView.scrollHeight}`);
+  }, 3000);
+}
+
+/**
+ * 子节点覆盖父节点 hidden 测试（符合 CSS 规范）：
+ * 将父容器（listItem）设为 visibility:hidden，然后将其中的「分数」子节点单独设为 visibility:visible。
+ * 预期行为：
+ *   - 父容器整体不可见（背景色、序号、头像、昵称都消失）
+ *   - 但「分数」子节点单独可见（因为显式设了 visible 覆盖了继承的 hidden）
+ *   - 布局不变，占位保留
+ * 5 秒后恢复。
+ */
+function childOverrideParentHiddenTest(scrollView) {
+  if (!scrollView) return;
+  const items = scrollView.children.filter(
+    c => c.className && c.className.includes('listItem')
+  );
+
+  items.forEach((item, i) => {
+    // 父容器 hidden
+    item.style.visibility = 'hidden';
+
+    // 分数子节点显式 visible，覆盖父级 hidden
+    const scoreText = item.children.find(c => c.className && c.className.includes('listItemScore'));
+    if (scoreText) {
+      scoreText.style.visibility = 'visible';
+    }
+
+    console.log(`[ChildOverride] 第 ${i + 1} 条：父 hidden，分数子节点 visible`);
+  });
+
+  console.log(`[ChildOverride] scrollHeight=${scrollView.scrollHeight}（期望不变，布局仍占位）`);
+
+  setTimeout(() => {
+    items.forEach((item, i) => {
+      if (item.isDestroyed) return;
+      item.style.visibility = 'visible';
+      // 子节点恢复删除显式设置，跟随父节点
+      const scoreText = item.children.find(c => c.className && c.className.includes('listItemScore'));
+      if (scoreText) {
+        delete scoreText.style.visibility;
+      }
+      console.log(`[ChildOverride] 第 ${i + 1} 条恢复`);
+    });
+  }, 5000);
+}
+
 // ─── 核心绘制流程 ──────────────────────────────────────────────────────────────
 
 function draw(data = []) {
@@ -148,13 +303,16 @@ function draw(data = []) {
 
   const scrollView = Layout.getElementsByClassName('list')[0];
 
-  // 绑定榜单条目点击 → display:none 测试
-  bindListItemClickForNoneTest(scrollView);
+  // 绑定榜单条目点击 → 随机 display:none 或 visibility:hidden 测试
+  bindListItemClickForRandomHideTest(scrollView);
 
   // 绑定测试按钮（节点已在模板里，直接查询绑定）
   let cloneCount = 0;
   const cloneBtn     = Layout.getElementsById('cloneInsertBtn')[0];
   const batchBtn     = Layout.getElementsById('batchHideBtn')[0];
+  const batchVisBtn  = Layout.getElementsById('batchVisibilityBtn')[0];
+  const mixedBtn     = Layout.getElementsById('mixedHideBtn')[0];
+  const childOverrideBtn = Layout.getElementsById('childOverrideBtn')[0];
   const statusText   = Layout.getElementsById('testStatusText')[0];
 
   cloneBtn && cloneBtn.on('click', () => {
@@ -164,7 +322,7 @@ function draw(data = []) {
   });
 
   batchBtn && batchBtn.on('click', () => {
-    if (statusText) statusText.value = '批量隐藏中...';
+    if (statusText) statusText.value = '批量 display:none 中...';
     batchHideAndRestore(scrollView);
     const total = scrollView ? scrollView.children.filter(
       c => c.className && c.className.includes('listItem')
@@ -172,6 +330,33 @@ function draw(data = []) {
     setTimeout(() => {
       if (statusText) statusText.value = `恢复完毕（${total}条）`;
     }, total * 300 + 500);
+  });
+
+  batchVisBtn && batchVisBtn.on('click', () => {
+    if (statusText) statusText.value = '批量 visibility:hidden 中...';
+    batchVisibilityHideAndRestore(scrollView);
+    const total = scrollView ? scrollView.children.filter(
+      c => c.className && c.className.includes('listItem')
+    ).length : 0;
+    setTimeout(() => {
+      if (statusText) statusText.value = `visibility 恢复完毕（${total}条）`;
+    }, total * 300 + 500);
+  });
+
+  mixedBtn && mixedBtn.on('click', () => {
+    if (statusText) statusText.value = '混合隐藏测试中...';
+    mixedHideTest(scrollView);
+    setTimeout(() => {
+      if (statusText) statusText.value = '混合隐藏已恢复';
+    }, 3500);
+  });
+
+  childOverrideBtn && childOverrideBtn.on('click', () => {
+    if (statusText) statusText.value = '子覆盖父hidden中(只显示分数)';
+    childOverrideParentHiddenTest(scrollView);
+    setTimeout(() => {
+      if (statusText) statusText.value = '子覆盖父hidden已恢复';
+    }, 5500);
   });
 
   // 原有礼物按钮逻辑（保留）

@@ -139,13 +139,21 @@ export default class ScrollView extends View {
     this.root = null;
   }
 
-  renderTreeWithTop(tree: Element) {
-    if (!(tree instanceof ScrollBar)) {
+  renderTreeWithTop(tree: Element, parentVisible = true) {
+    const selfVisibility = tree.style.visibility;
+    const isVisible = selfVisibility === 'visible' ? true
+      : selfVisibility === 'hidden' ? false
+      : parentVisible;
+
+    if (!(tree instanceof ScrollBar) && isVisible) {
       tree.render();
     }
 
     tree.children.forEach((child: Element) => {
-      this.renderTreeWithTop(child);
+      if (child.style.display === 'none') {
+        return;
+      }
+      this.renderTreeWithTop(child, isVisible);
     });
   }
 

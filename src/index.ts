@@ -345,11 +345,16 @@ class Layout extends Element {
     );
   }
 
-  getChildByPos(tree: Layout | Element, x: number, y: number, itemList: (Layout | Element)[]) {
+  getChildByPos(tree: Layout | Element, x: number, y: number, itemList: (Layout | Element)[], parentVisible = true) {
     tree.children.forEach((ele) => {
       if (ele.style.display === 'none') {
         return;
       }
+
+      const selfVisibility = ele.style.visibility;
+      const isVisible = selfVisibility === 'visible' ? true
+        : selfVisibility === 'hidden' ? false
+        : parentVisible;
 
       const {
         absoluteX,
@@ -363,13 +368,11 @@ class Layout extends Element {
       const realHeight = height * this.viewportScale;
 
       if ((realX <= x && x <= realX + realWidth) && (realY <= y && y <= realY + realHeight)) {
-        /**
-         * 相关issue：https://github.com/wechat-miniprogram/minigame-canvas-engine/issues/17
-         * 这里只要满足条件的都要记录，否则可能出现 issue 里面提到的问题
-         */
-        itemList.push(ele);
+        if (isVisible) {
+          itemList.push(ele);
+        }
         if (ele.children.length) {
-          this.getChildByPos(ele, x, y, itemList);
+          this.getChildByPos(ele, x, y, itemList, isVisible);
         }
       }
     });

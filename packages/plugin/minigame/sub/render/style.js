@@ -27,10 +27,10 @@ export const style = {
     textStrokeWidth: 1,
   },
 
-  // ── 测试按钮栏（display:none 验证用） ─────────────────────────────────────────
+  // ── 测试按钮栏（display:none / visibility:hidden 验证用） ────────────────────
   testBtnBar: {
     width: 960,
-    height: 100,
+    height: 90,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -40,10 +40,10 @@ export const style = {
   testBtn: {
     color: '#ffffff',
     borderRadius: 8,
-    width: 240,
-    height: 68,
-    lineHeight: 68,
-    fontSize: 28,
+    width: 210,
+    height: 60,
+    lineHeight: 60,
+    fontSize: 24,
     textAlign: 'center',
   },
 
@@ -57,24 +57,47 @@ export const style = {
     ':active': { transform: 'scale(1.05, 1.05)' },
   },
 
+  testBtnVisibility: {
+    backgroundColor: '#e94560',
+    ':active': { transform: 'scale(1.05, 1.05)' },
+  },
+
+  testBtnMixed: {
+    backgroundColor: '#16813d',
+    ':active': { transform: 'scale(1.05, 1.05)' },
+  },
+
+  testBtnChildOverride: {
+    backgroundColor: '#e67e22',
+    ':active': { transform: 'scale(1.05, 1.05)' },
+  },
+
+  testStatusBar: {
+    width: 960,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1a1a2e',
+  },
+
   testStatusText: {
     color: '#cccccc',
     fontSize: 22,
-    width: 360,
+    width: 600,
     textAlign: 'center',
   },
   // ─────────────────────────────────────────────────────────────────────────────
 
   rankList: {
     width: 960,
-    // container(1410) - header(120) - testBtnBar(100) = 1190 给榜单区域
-    height: 1190,
+    // container(1410) - header(120) - testBtnBar*2(180) - testStatusBar(50) = 1060 给榜单区域
+    height: 1060,
     backgroundImage: 'url(https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM7mL9dDQ8VibStCkTOfNVluNXh3rqZnWAKF27npl0S04l2EFgRutKI7LNxfibiakibE3VA84HNAswmoyg/132)'
   },
 
   list: {
     width: 960,
-    height: 1100,
+    height: 970,
     marginTop: 30,
   },
 
