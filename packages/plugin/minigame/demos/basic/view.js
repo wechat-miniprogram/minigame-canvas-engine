@@ -79,15 +79,9 @@ module.exports = function viewDemo(Layout, canvas, ctx) {
         <text class="text" value="flexGrow 可以让盒子按比例占满剩余空间"></text>
 
         <view class="flexContainer flexRow alignCenter">
-          <view class="growItem grow1">
-            <text class="growLabel" value="1"></text>
-          </view>
-          <view class="growItem grow2">
-            <text class="growLabel" value="2"></text>
-          </view>
-          <view class="growItem grow1">
-            <text class="growLabel" value="1"></text>
-          </view>
+          <view class="growItem grow1 growColor1"></view>
+          <view class="growItem grow2 growColor2"></view>
+          <view class="growItem grow1 growColor3"></view>
         </view>
 
         <text class="text" value="嵌套布局：View可以无限嵌套来实现复杂布局"></text>
@@ -138,7 +132,6 @@ module.exports = function viewDemo(Layout, canvas, ctx) {
       backgroundColor: '#ffffff',
       marginTop: 16,
       borderRadius: 12,
-      padding: 10,
     },
     flexContainerTall: {
       height: 400,
@@ -163,20 +156,11 @@ module.exports = function viewDemo(Layout, canvas, ctx) {
     growItem: {
       height: 80,
       margin: 8,
-      backgroundColor: '#f2a93b',
       borderRadius: 8,
-      justifyContent: 'center',
-      alignItems: 'center',
     },
-    growLabel: {
-      width: '100%',
-      height: 80,
-      lineHeight: 80,
-      fontSize: 36,
-      color: '#ffffff',
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
+    growColor1: { backgroundColor: '#f2a93b' },
+    growColor2: { backgroundColor: '#4FC3F7' },
+    growColor3: { backgroundColor: '#81C784' },
     alignCenter: {
       alignItems: 'center',
     },

@@ -220,6 +220,7 @@ module.exports = function scrollviewDemo(Layout, canvas, ctx) {
     },
     gridRow: {
       flexDirection: 'row',
+      width: 10 * (GRID_CELL + 12),
     },
     gridCell: {
       width: GRID_CELL,
