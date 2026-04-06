@@ -39,7 +39,9 @@
     "ignoreUploadUnusedFiles": true,
     "lazyloadPlaceholderEnable": false,
     "minifyWXML": true,
-    "condition": false
+    "condition": false,
+    "swc": true,
+    "disableSWC": false
   },
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},

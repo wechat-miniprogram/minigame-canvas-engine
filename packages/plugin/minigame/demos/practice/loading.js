@@ -1,7 +1,7 @@
 module.exports = function loading(Layout, canvas, ctx) {
   const tpl = `
     <view id="container">
-      <image src="https://res.wx.qq.com/wechatgame/product/webpack/userupload/20191119/wegoing.jpeg" id="loading"></image>
+      <image src="https://mmgame.qpic.cn/image/3d1e23022b2ffe0a5dc046c10428d5826c383042d8e993706fa1d630aa3917fd/0" id="loading"></image>
     </view>
   `;
 

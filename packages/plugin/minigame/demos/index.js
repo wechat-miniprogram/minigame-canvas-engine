@@ -8,13 +8,13 @@ const categories = [
   {
     title: '基础组件',
     demos: {
-      helloworld:    require('./basic/helloworld'),
+      view:          require('./basic/view'),
       text:          require('./basic/text'),
+      image:         require('./basic/image'),
+      scrollview:    require('./basic/scrollview'),
       button:        require('./basic/button'),
       bitmaptext:    require('./basic/bitmaptext'),
       canvas:        require('./basic/canvas'),
-      loading:       require('./basic/loading'),
-      insertElement: require('./basic/insertElement'),
       richtext:      require('./basic/richtext'),
     },
   },
@@ -43,8 +43,8 @@ const categories = [
   {
     title: '实践案例',
     demos: {
-      invite:   require('./practice/invite'),
-      ranklist: require('./practice/ranklist'),
+      loading:       require('./practice/loading'),
+      styleAdvanced: require('./practice/styleAdvanced'),
     },
   },
 ];

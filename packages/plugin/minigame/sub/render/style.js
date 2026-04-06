@@ -23,81 +23,17 @@ export const style = {
     fontWeight: 'bold',
     borderBottomWidth: 6,
     borderColor: '#000000',
-    textStrokeColor: 'red',
-    textStrokeWidth: 1,
   },
-
-  // ── 测试按钮栏（display:none / visibility:hidden 验证用） ────────────────────
-  testBtnBar: {
-    width: 960,
-    height: 90,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: '#1a1a2e',
-  },
-
-  testBtn: {
-    color: '#ffffff',
-    borderRadius: 8,
-    width: 210,
-    height: 60,
-    lineHeight: 60,
-    fontSize: 24,
-    textAlign: 'center',
-  },
-
-  testBtnClone: {
-    backgroundColor: '#0f3460',
-    ':active': { transform: 'scale(1.05, 1.05)' },
-  },
-
-  testBtnBatch: {
-    backgroundColor: '#533483',
-    ':active': { transform: 'scale(1.05, 1.05)' },
-  },
-
-  testBtnVisibility: {
-    backgroundColor: '#e94560',
-    ':active': { transform: 'scale(1.05, 1.05)' },
-  },
-
-  testBtnMixed: {
-    backgroundColor: '#16813d',
-    ':active': { transform: 'scale(1.05, 1.05)' },
-  },
-
-  testBtnChildOverride: {
-    backgroundColor: '#e67e22',
-    ':active': { transform: 'scale(1.05, 1.05)' },
-  },
-
-  testStatusBar: {
-    width: 960,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1a1a2e',
-  },
-
-  testStatusText: {
-    color: '#cccccc',
-    fontSize: 22,
-    width: 600,
-    textAlign: 'center',
-  },
-  // ─────────────────────────────────────────────────────────────────────────────
 
   rankList: {
     width: 960,
-    // container(1410) - header(120) - testBtnBar*2(180) - testStatusBar(50) = 1060 给榜单区域
-    height: 1060,
-    backgroundImage: 'url(https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM7mL9dDQ8VibStCkTOfNVluNXh3rqZnWAKF27npl0S04l2EFgRutKI7LNxfibiakibE3VA84HNAswmoyg/132)'
+    // container(1410) - header(120) = 1290，其中 list + listTips(90) + selfListItem(150+50margin) = 1290
+    height: 1290,
   },
 
   list: {
     width: 960,
-    height: 970,
+    height: 960,
     marginTop: 30,
   },
 
@@ -143,7 +79,6 @@ export const style = {
     verticalAlign: 'middle',
     width: 550,
     marginLeft: 30,
-    textShadow: '1px 1px 2px blue',
   },
 
   listScoreUnit: {
@@ -161,9 +96,7 @@ export const style = {
     backgroundColor: '#ffffff',
   },
 
-  listItemNameSelf: {
-    textShadow: '1px 1px 2px blue',
-  },
+  listItemNameSelf: {},
 
   listTips: {
     width: 960,

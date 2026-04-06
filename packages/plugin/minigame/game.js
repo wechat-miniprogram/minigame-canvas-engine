@@ -128,7 +128,8 @@ function showMenu() {
   sections += `
     <text class="catTitle catTitleC${categories.length}" value="开放数据域"></text>
     <view class="menuGrid">
-      <text id="demo____" class="menuBtn menuBtnC${categories.length}" value="排行榜(开放数据域)"></text>
+      <text id="demo____" class="menuBtn menuBtnC${categories.length}" value="排行榜"></text>
+      <text id="demo__invite__" class="menuBtn menuBtnC${categories.length}" value="邀请好友"></text>
     </view>
   `;
 
@@ -240,6 +241,15 @@ function showMenu() {
         runOpenDataRank();
       });
     }
+
+    // 绑定开放数据域邀请好友按钮
+    const inviteBtn = Layout.getElementsById('demo__invite__')[0];
+    if (inviteBtn) {
+      inviteBtn.on('click', () => {
+        if (switching) return;
+        runOpenDataInvite();
+      });
+    }
   }, 100);
 }
 
@@ -279,7 +289,7 @@ function runDemo(name) {
 }
 
 /**
- * 运行原有的排行榜功能（开放数据域）
+ * 运行排行榜功能（开放数据域）
  */
 function runOpenDataRank() {
   if (switching) return;
@@ -294,18 +304,19 @@ function runOpenDataRank() {
   setTimeout(() => {
     switching = false;
 
+    var updateRankFn;
+
     setupDoubleTap(() => {
       if (switching) return;
       closeRank();
-      if (typeof updateRankFn === 'function') Layout.ticker.remove(updateRankFn);
+      if (updateRankFn) Layout.ticker.remove(updateRankFn);
       console.log('[Demo] 双击返回菜单');
       showMenu();
     });
 
     const tpl = `
       <view id="container">
-        <canvas id="rank" width="960" height="1410"></canvas>
-        <text id="rankText" value="打开排行榜"></text>
+        <canvas id="rank" width="${RANK_WIDTH}" height="${RANK_HEIGHT}"></canvas>
       </view>
     `;
 
@@ -317,20 +328,6 @@ function runOpenDataRank() {
         justifyContent: 'center',
         alignItems: 'center',
       },
-      rankText: {
-        color: '#ffffff',
-        backgroundColor: '#34a123',
-        borderRadius: 10,
-        width: 400,
-        height: 120,
-        lineHeight: 120,
-        fontSize: 50,
-        textAlign: 'center',
-        marginTop: 20,
-        ':active': {
-          transform: 'scale(1.05, 1.05)',
-        },
-      },
       rank: {
         width: RANK_WIDTH,
         height: RANK_HEIGHT,
@@ -340,28 +337,100 @@ function runOpenDataRank() {
     Layout.init(tpl, style);
     Layout.layout(ctx);
 
-    const testText = Layout.getElementsById('rankText')[0];
     const rank = Layout.getElementsById('rank')[0];
 
-    var updateRankFn = () => {
+    // 设置 sharedCanvas 尺寸并直接打开排行榜
+    sharedCanvas.width = RANK_WIDTH;
+    sharedCanvas.height = RANK_HEIGHT;
+    rank.canvas = sharedCanvas;
+    updateRankViewPort(rank);
+    showRank();
+
+    updateRankFn = () => {
       rank.update();
     };
-
-    testText.on('click', () => {
-      if (testText.value === '打开排行榜') {
-        testText.value = '关闭排行榜';
-        updateRankViewPort(rank);
-        rank.canvas = sharedCanvas;
-        showRank();
-        Layout.ticker.add(updateRankFn);
-      } else {
-        testText.value = '打开排行榜';
-        closeRank();
-        Layout.ticker.remove(updateRankFn);
-      }
-    });
+    Layout.ticker.add(updateRankFn);
 
     console.log('[Demo] 运行排行榜(开放数据域)，双击屏幕返回菜单');
+  }, 50);
+}
+
+/**
+ * 运行邀请好友功能（开放数据域）
+ */
+function runOpenDataInvite() {
+  if (switching) return;
+  switching = true;
+  Layout.clearAll();
+  currentDemo = 'invite';
+  resetCanvas();
+
+  ctx.fillStyle = '#f3f3f3';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const INVITE_WIDTH = RANK_WIDTH;
+  const INVITE_HEIGHT = RANK_HEIGHT;
+
+  setTimeout(() => {
+    switching = false;
+
+    setupDoubleTap(() => {
+      if (switching) return;
+      closeRank();
+      if (typeof updateInviteFn === 'function') Layout.ticker.remove(updateInviteFn);
+      console.log('[Demo] 双击返回菜单');
+      showMenu();
+    });
+
+    const tpl = `
+      <view id="container">
+        <canvas id="inviteCanvas" width="${INVITE_WIDTH}" height="${INVITE_HEIGHT}"></canvas>
+      </view>
+    `;
+
+    const style = {
+      container: {
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
+        backgroundColor: '#f3f3f3',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      inviteCanvas: {
+        width: INVITE_WIDTH,
+        height: INVITE_HEIGHT,
+      },
+    };
+
+    Layout.init(tpl, style);
+    Layout.layout(ctx);
+
+    const inviteCanvasEl = Layout.getElementsById('inviteCanvas')[0];
+
+    // 设置 sharedCanvas 尺寸并绑定
+    sharedCanvas.width = INVITE_WIDTH;
+    sharedCanvas.height = INVITE_HEIGHT;
+    inviteCanvasEl.canvas = sharedCanvas;
+
+    // 通知开放数据域显示邀请界面
+    const rect = Layout.getElementViewportRect(inviteCanvasEl);
+    openDataContext.postMessage({
+      event: 'showInvite',
+      box: {
+        width: rect.width,
+        height: rect.height,
+        x: rect.left,
+        y: rect.top,
+      },
+    });
+
+    // 每帧同步 sharedCanvas 内容到主域
+    var updateInviteFn = () => {
+      inviteCanvasEl.update();
+    };
+    Layout.ticker.add(updateInviteFn);
+
+    console.log('[Demo] 运行邀请好友(开放数据域)，双击屏幕返回菜单');
   }, 50);
 }
 
