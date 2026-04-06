@@ -109,7 +109,7 @@ function showMenu() {
 
   // 按分类生成模板
   let sections = '';
-  const catColors = ['#34a123', '#2980b9', '#d35400'];
+  const catColors = ['#34a123', '#2980b9', '#c0392b', '#d35400'];
 
   categories.forEach((cat, ci) => {
     const color = catColors[ci % catColors.length];

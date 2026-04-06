@@ -1,4 +1,4 @@
-var TWEEN = require('./lib/tween');
+var TWEEN = require('../lib/tween');
 
 /**
  * 复刻 tween.js 11_stop_all_chained_tweens

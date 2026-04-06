@@ -1,4 +1,4 @@
-var RichText = require('./lib/richtext');
+var RichText = require('../lib/richtext');
 
 module.exports = function richtext(Layout, canvas, ctx) {
   const W = canvas.width;
