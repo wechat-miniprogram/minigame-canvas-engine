@@ -759,6 +759,8 @@ function install(layout) {
                 ctx.fillStyle = style.backgroundColor;
                 ctx.fillRect(drawX - originX, drawY - originY, box.width, box.height);
             }
+            // 恢复文字颜色，避免 backgroundColor 污染后续 fillText
+            ctx.fillStyle = this.fillStyle;
             if (style.backgroundImage && this.backgroundImage) {
                 ctx.drawImage(this.backgroundImage, drawX - originX, drawY - originY, box.width, box.height);
             }
