@@ -1,5 +1,6 @@
 const Layout = requirePlugin('Layout').default;
 const demos = require('./demos/index');
+const categories = demos.categories || [];
 
 GameGlobal.Layout = Layout;
 
@@ -70,8 +71,8 @@ wx.onTouchEnd((e) => {
 
 // ─── Demo 菜单系统 ────────────────────────────────────────────────────────────
 
-// 把排行榜也加入菜单
-const allDemoNames = Object.keys(demos).concat(['排行榜(开放数据域)']);
+// 收集所有 demo 名称（扁平列表，用于事件绑定）
+const allDemoNames = Object.keys(demos).filter(k => k !== 'categories');
 let currentDemo = null;
 let switching = false; // 防止切换期间事件穿透
 
@@ -87,7 +88,7 @@ function resetCanvas() {
 }
 
 /**
- * 渲染 demo 选择菜单
+ * 渲染 demo 选择菜单（按分类分组）
  */
 function showMenu() {
   switching = true;
@@ -100,24 +101,42 @@ function showMenu() {
   const safeArea = info.safeArea || { top: 0 };
   const statusBarH = (safeArea.top || info.statusBarHeight || 20) * info.pixelRatio;
 
-  const BTN_H = 130;
-  const GAP = 24;
-  const COLS = 2;
-  const COL_W = Math.floor(GAME_WIDTH / COLS);
+  const BTN_H = 110;
+  const GAP = 16;
+  const COLS = 3;
+  const SIDE_PAD = 24;
+  const COL_W = Math.floor((GAME_WIDTH - SIDE_PAD * 2) / COLS);
 
-  let buttons = '';
-  allDemoNames.forEach((name) => {
-    const safeName = name.replace(/[^a-zA-Z0-9]/g, '_');
-    buttons += `<text id="demo_${safeName}" class="menuBtn" value="${name}"></text>`;
+  // 按分类生成模板
+  let sections = '';
+  const catColors = ['#34a123', '#2980b9', '#d35400'];
+
+  categories.forEach((cat, ci) => {
+    const color = catColors[ci % catColors.length];
+    let btns = '';
+    Object.keys(cat.demos).forEach((name) => {
+      const safeName = name.replace(/[^a-zA-Z0-9]/g, '_');
+      btns += `<text id="demo_${safeName}" class="menuBtn menuBtnC${ci}" value="${name}"></text>`;
+    });
+    sections += `
+      <text class="catTitle catTitleC${ci}" value="${cat.title}"></text>
+      <view class="menuGrid">${btns}</view>
+    `;
   });
+
+  // 追加开放数据域排行榜
+  sections += `
+    <text class="catTitle catTitleC${categories.length}" value="开放数据域"></text>
+    <view class="menuGrid">
+      <text id="demo____" class="menuBtn menuBtnC${categories.length}" value="排行榜(开放数据域)"></text>
+    </view>
+  `;
 
   const tpl = `
     <view id="menuContainer">
       <view class="statusBar"></view>
       <text class="menuTitle" value="Layout 示例"></text>
-      <view class="menuGrid">
-        ${buttons}
-      </view>
+      ${sections}
       <text class="menuTip" value="进入 Demo 后双击屏幕可返回此菜单"></text>
     </view>
   `;
@@ -134,9 +153,9 @@ function showMenu() {
     },
     menuTitle: {
       width: GAME_WIDTH,
-      height: 160,
-      lineHeight: 160,
-      fontSize: 72,
+      height: 130,
+      lineHeight: 130,
+      fontSize: 60,
       textAlign: 'center',
       color: '#333333',
       fontWeight: 'bold',
@@ -144,22 +163,34 @@ function showMenu() {
       borderBottomWidth: 1,
       borderColor: 'rgba(0,0,0,0.1)',
     },
+    catTitle: {
+      width: GAME_WIDTH - SIDE_PAD * 2,
+      height: 76,
+      lineHeight: 76,
+      fontSize: 40,
+      color: '#999999',
+      fontWeight: 'bold',
+      marginLeft: SIDE_PAD,
+      marginTop: 20,
+      borderBottomWidth: 1,
+      borderColor: 'rgba(0,0,0,0.06)',
+    },
     menuGrid: {
       width: GAME_WIDTH,
       flexDirection: 'row',
       flexWrap: 'wrap',
-      justifyContent: 'center',
-      padding: GAP,
+      padding: SIDE_PAD,
+      paddingTop: GAP,
+      paddingBottom: 0,
     },
     menuBtn: {
-      width: COL_W - GAP * 2,
+      width: COL_W - GAP,
       height: BTN_H,
       lineHeight: BTN_H,
-      fontSize: 42,
+      fontSize: 38,
       textAlign: 'center',
       color: '#ffffff',
-      backgroundColor: '#34a123',
-      borderRadius: 12,
+      borderRadius: 10,
       margin: GAP / 2,
       ':active': {
         transform: 'scale(1.05, 1.05)',
@@ -167,14 +198,20 @@ function showMenu() {
     },
     menuTip: {
       width: GAME_WIDTH,
-      height: 80,
-      lineHeight: 80,
+      height: 70,
+      lineHeight: 70,
       fontSize: 32,
       textAlign: 'center',
-      color: 'rgba(0,0,0,0.4)',
-      marginTop: 20,
+      color: 'rgba(0,0,0,0.35)',
+      marginTop: 16,
     },
   };
+
+  // 每个分类的按钮颜色 + 标题颜色
+  catColors.concat(['#8e44ad']).forEach((color, i) => {
+    style['menuBtnC' + i] = { backgroundColor: color };
+    style['catTitleC' + i] = { color: color };
+  });
 
   Layout.init(tpl, style);
   Layout.layout(ctx);
@@ -182,20 +219,27 @@ function showMenu() {
   // 延迟绑定事件，确保旧事件链路完全清理
   setTimeout(() => {
     switching = false;
+
+    // 绑定所有 demo 按钮
     allDemoNames.forEach((name) => {
       const safeName = name.replace(/[^a-zA-Z0-9]/g, '_');
       const btn = Layout.getElementsById('demo_' + safeName)[0];
       if (btn) {
         btn.on('click', () => {
           if (switching) return;
-          if (name === '排行榜(开放数据域)') {
-            runOpenDataRank();
-          } else {
-            runDemo(name);
-          }
+          runDemo(name);
         });
       }
     });
+
+    // 绑定开放数据域排行榜按钮
+    const rankBtn = Layout.getElementsById('demo____')[0];
+    if (rankBtn) {
+      rankBtn.on('click', () => {
+        if (switching) return;
+        runOpenDataRank();
+      });
+    }
   }, 100);
 }
 

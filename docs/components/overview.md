@@ -36,6 +36,7 @@ Layout 通过 xml 组织布局，Layout 支持的标签列表如下。
 | width, height                                                                     | number/string(百分比场景，如 100%)                        | 0          |
 | minWidth, minHeight                                                               | number/string(百分比场景，如 100%)                        | 0          |
 | display  **(v1.0.17开始支持)**                                                    | flex, none                                                | flex       |
+| visibility  **(v1.0.17开始支持)**                                                 | visible, hidden                                           | visible    |
 | left, right, top, bottom                                                          | number                                                    | 0          |
 | margin, marginLeft, marginRight, marginTop, marginBottom                          | number                                                    | 0          |
 | padding, paddingLeft, paddingRight, paddingTop, paddingBottom                     | number                                                    | 0          |
@@ -70,6 +71,33 @@ element.style.display = 'flex';
 `display:none` 的节点仍然存在于节点树中，可以继续修改其属性（如 `style`、`value`），改动会在节点重新显示时生效。
 :::
 
+#### visibility **(v1.0.17)**
+
+控制节点的可见性，与 `display` 不同的是，`visibility:hidden` 的节点仍然占据布局空间。
+
+| 值 | 说明 |
+| --- | --- |
+| `visible` | 默认值，节点正常可见 |
+| `hidden` | 节点不可见（不渲染、不响应触摸/点击事件），但仍然占据布局空间 |
+
+**继承性**：`visibility` 具有继承特性。父节点设为 `hidden` 时，子节点默认也会隐藏；但子节点可以显式设置 `visibility: 'visible'` 来覆盖父节点的隐藏状态。
+
+```js
+// 隐藏节点（保留布局空间）
+element.style.visibility = 'hidden';
+
+// 恢复显示
+element.style.visibility = 'visible';
+```
+
+::: tip display 与 visibility 的区别
+| 特性 | `display: 'none'` | `visibility: 'hidden'` |
+| --- | --- | --- |
+| 是否渲染 | 否 | 否 |
+| 是否占据布局空间 | 否 | **是** |
+| 是否响应事件 | 否 | 否 |
+| 子节点能否单独覆盖 | 否 | **是**（子节点可设为 `visible`） |
+:::
 
 
 ### 伪类
