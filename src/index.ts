@@ -383,10 +383,12 @@ class Layout extends Element {
         return;
       }
 
-      if (!touch.timeStamp) {
-        // @ts-ignore
-        touch.timeStamp = e.timeStamp;
-      }
+      // 统一使用 Date.now() 作为时间戳，避免不同机型 e.timeStamp 单位/基准不一致
+      const now = Date.now();
+      // @ts-ignore
+      e.timeStamp = now;
+      // @ts-ignore
+      touch.timeStamp = now;
 
       const list: (Layout | Element)[] = [];
       if (touch) {
