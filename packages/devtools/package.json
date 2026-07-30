@@ -27,7 +27,7 @@
     "dot": "^1.1.3",
     "highlight.js": "^11.7.0",
     "html-webpack-plugin": "^5.5.1",
-    "js-beautify": "^1.15.1",
+    "js-beautify": "^2.0.3",
     "minigame-canvas-engine": "file:../..",
     "minigame-canvas-engine-richtext": "file:../richtext",
     "primevue": "^3.26.0",
