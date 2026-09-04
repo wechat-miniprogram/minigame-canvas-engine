@@ -1,7 +1,7 @@
 {
   "name": "minigame-canvas-engine",
   "version": "1.0.28",
-  "description": "1. 安装Node 2. 安装tnpm: 3. 安装webpack: npm install --save-dev webpack",
+  "description": "1. \u5b89\u88c5Node 2. \u5b89\u88c5tnpm: 3. \u5b89\u88c5webpack: npm install --save-dev webpack",
   "main": "dist/index.js",
   "scripts": {
     "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix packages/richtext\" \"npm run dev --prefix packages/devtools\"",
@@ -50,6 +50,44 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "overrides": {
+    "@webpack-cli/configtest": {
+      "browserslist": "4.28.7"
+    },
+    "@webpack-cli/info": {
+      "browserslist": "4.28.7"
+    },
+    "@webpack-cli/serve": {
+      "browserslist": "4.28.7"
+    },
+    "browserslist": {
+      "browserslist": "4.28.7"
+    },
+    "html-webpack-plugin": {
+      "browserslist": "4.28.7"
+    },
+    "terser-webpack-plugin": {
+      "browserslist": "4.28.7"
+    },
+    "ts-loader": {
+      "browserslist": "4.28.7"
+    },
+    "update-browserslist-db": {
+      "browserslist": "4.28.7"
+    },
+    "webpack": {
+      "browserslist": "4.28.7"
+    },
+    "webpack-cli": {
+      "browserslist": "4.28.7"
+    },
+    "webpack-dev-middleware": {
+      "browserslist": "4.28.7"
+    },
+    "webpack-dev-server": {
+      "browserslist": "4.28.7"
     }
   }
 }
